@@ -1,0 +1,21 @@
+<?php if ($block->isEnabled()): ?>
+    <div class="actions-toolbar social-btn foursquare-login">
+        <div class="primary">
+            <button class="action btn-foursquare-login" type="button">
+                <span>
+                    <span><?php echo __('Foursquare Sign In') ?></span>
+                </span>
+            </button>
+        </div>
+    </div>
+   <script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn-foursquare-login').each(function (el) {
+                return $(el).observe('click', function() {
+                    var foPopup = new SocialLoginPopup();
+                foPopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Foursquare')?>');
+                });
+            });
+        });
+    </script>
+<?php endif; ?>

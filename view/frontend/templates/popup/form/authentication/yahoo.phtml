@@ -1,0 +1,21 @@
+<?php if ($block->isEnabled()): ?>
+    <div class="actions-toolbar social-btn yahoo-login">
+        <div class="primary">
+            <button class="action btn-yahoo btn_yahoo_login" id="btn_yahoo_login" type="button">
+                <span>
+                    <span><?php echo __('Yahoo Sign In') ?></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn_yahoo_login').each(function (el) {
+                return $(el).observe('click', function() {
+                    var yhPopup = new SocialLoginPopup();
+                     yhPopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Yahoo')?>');
+                });
+            });
+        });
+    </script>
+<?php endif; ?>

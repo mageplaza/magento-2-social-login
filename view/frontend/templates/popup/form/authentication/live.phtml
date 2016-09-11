@@ -1,0 +1,22 @@
+<?php if ($block->isEnabled()): ?>
+	<div class="actions-toolbar social-btn live-login">
+        <div class="primary">
+            <button class="action btn_live_login" id="btn_live_login" type="button">
+                <span>
+                    <span><?php echo __('Live Sign In') ?></span>
+                </span>
+            </button>
+
+        </div>
+    </div>
+	<script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+			$$('.btn_live_login').each(function (el) {
+				return $(el).observe('click', function () {
+					var livePopup = new SocialLoginPopup();
+					livePopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Live')?>');
+				});
+			});
+		});
+    </script>
+<?php endif; ?>

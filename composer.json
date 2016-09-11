@@ -1,0 +1,33 @@
+{
+  "name": "social-login-m2",
+  "description": "Social Login M2",
+  "require": {
+    "php": "~5.5.0|~5.6.0|~7.0.0"
+  },
+  "repositories": {
+    "type": "git",
+    "url": "git@gitlab.com:mageplaza/social-login-m2.git"
+  },
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Mageplaza",
+      "email": "hi@mageplaza.com",
+      "homepage": "https://www.mageplaza.com",
+      "role": "Leader"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Mageplaza\\SocialLogin\\": ""
+    }
+  }
+}

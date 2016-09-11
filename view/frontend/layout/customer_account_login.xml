@@ -1,0 +1,6 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="customer.login.container">
+        <block class="Mageplaza\SocialLogin\Block\SocialLogin" after="customer.new" name="mp.sociallogin.after.customer.login" template="Mageplaza_SocialLogin::form/newcustomer.phtml">
+        </block>
+    </referenceContainer>
+</page>

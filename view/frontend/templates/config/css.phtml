@@ -1,0 +1,21 @@
+<?php $style_color = $block->getStyleColor(); ?>
+<style>
+    #social-login-popup .social-login-title {
+        background-color: <?php echo $style_color?>
+    }
+
+    #social-login-popup .social-login #bnt-social-login-authentication {
+        background-color: <?php echo $style_color?>;
+        border:<?php echo $style_color?>
+
+    }
+    #social-login-popup .forgot .primary button {
+        background-color: <?php echo $style_color?>;
+        border:<?php echo $style_color?>
+    }
+    #social-login-popup .create .primary button {
+        background-color: <?php echo $style_color?>;
+        border:<?php echo $style_color?>
+    }
+    <?php echo $block->getCustomCss() ?>
+</style>

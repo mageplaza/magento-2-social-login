@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza_SocialLogin extension
+ *                     NOTICE OF LICENSE
+ *
+ *                     This source file is subject to the MIT License
+ *                     that is bundled with this package in the file LICENSE.txt.
+ *                     It is also available through the world-wide-web at this URL:
+ *                     http://opensource.org/licenses/mit-license.php
+ *
+ *                     @category  Mageplaza
+ *                     @package   Mageplaza_SocialLogin
+ *                     @copyright Copyright (c) 2016
+ *                     @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Mageplaza_SocialLogin::css/style.css"/>
+        <css src="Mageplaza_SocialLogin::css/bootstrap-grid.css"/>
+        <css src="Mageplaza_SocialLogin::css/magnific-popup.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Mageplaza\SocialLogin\Block\SocialLogin" name="social-login-popup" as="popup.modal" template="popup.phtml">
+                <block class="Mageplaza\SocialLogin\Block\Popup\Authentication" name="social-login-popup-authentication" as="popup.authentication" template="popup/form/authentication.phtml">
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Facebook" name="social-login-popup-authentication-facebook" as="popup.authentication.facebook" template="popup/form/authentication/facebook.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Google" name="social-login-popup-authentication-google" as="popup.authentication.google" template="popup/form/authentication/google.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Twitter" name="social-login-popup-authentication-twitter" as="popup.authentication.twitter" template="popup/form/authentication/twitter.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Linkedin" name="social-login-popup-authentication-linkedin" as="popup.authentication.linkedin" template="popup/form/authentication/linkedin.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Instagram" name="social-login-popup-authentication-instagram" as="popup.authentication.instagram" template="popup/form/authentication/instagram.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Yahoo" name="social-login-popup-authentication-yahoo" as="popup.authentication.yahoo" template="popup/form/authentication/yahoo.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Github" name="social-login-popup-authentication-github" as="popup.authentication.github" template="popup/form/authentication/github.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Vkontakte" name="social-login-popup-authentication-vkontakte" as="popup.authentication.vkontakte" template="popup/form/authentication/vkontakte.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Foursquare" name="social-login-popup-authentication-foursquare" as="popup.authentication.foursquare" template="popup/form/authentication/foursquare.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Amazon" name="social-login-popup-authentication-amazon" as="popup.authentication.amazon" template="popup/form/authentication/amazon.phtml"/>
+                    <block class="Mageplaza\SocialLogin\Block\SocialLogin\Live" name="social-login-popup-authentication-live" as="popup.authentication.live" template="popup/form/authentication/live.phtml"/>
+
+                    <block class="Magento\Captcha\Block\Captcha" name="social-login-captcha" as="login.captcha" after="-">
+                        <action method="setFormId">
+                            <argument name="formId" xsi:type="string">user_login</argument>
+                        </action>
+                        <action method="setImgWidth">
+                            <argument name="width" xsi:type="string">230</argument>
+                        </action>
+                        <action method="setImgHeight">
+                            <argument name="width" xsi:type="string">50</argument>
+                        </action>
+                    </block>
+                </block>
+                <block class="Mageplaza\SocialLogin\Block\Popup\Create" name="social-login-popup-create" as="popup.create" template="popup/form/create.phtml">
+                    <block class="Magento\Captcha\Block\Captcha" name="social-create-captcha" as="create.captcha" after="-">
+                        <action method="setFormId">
+                            <argument name="formId" xsi:type="string">user_create</argument>
+                        </action>
+                        <action method="setImgWidth">
+                            <argument name="width" xsi:type="string">230</argument>
+                        </action>
+                        <action method="setImgHeight">
+                            <argument name="width" xsi:type="string">50</argument>
+                        </action>
+                    </block>
+                </block>
+                <block class="Mageplaza\SocialLogin\Block\Popup\Forgot" name="social-login-popup-forgot" as="popup.forgot" template="popup/form/forgot.phtml">
+                    <block class="Magento\Captcha\Block\Captcha" name="social-forgot-password-captcha" as="forgot.captcha" after="-">
+                        <action method="setFormId">
+                            <argument name="formId" xsi:type="string">user_forgotpassword</argument>
+                        </action>
+                        <action method="setImgWidth">
+                            <argument name="width" xsi:type="string">230</argument>
+                        </action>
+                        <action method="setImgHeight">
+                            <argument name="width" xsi:type="string">50</argument>
+                        </action>
+                    </block>
+                </block>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="head.components">
+            <block class="Magento\Framework\View\Element\Js\Components" name="captcha_page_head_components" template="Magento_Captcha::js/components.phtml"/>
+            <block class="Mageplaza\SocialLogin\Block\SocialLogin" name="social_login_custom_style" template="Mageplaza_SocialLogin::config/css.phtml"/>
+        </referenceBlock>
+
+    </body>
+</page>

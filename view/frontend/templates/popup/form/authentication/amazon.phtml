@@ -1,0 +1,35 @@
+
+<?php if ($block->isEnabled()): ?>
+<div id="amazon-root"></div>
+    <div class="actions-toolbar social-btn amazon-login">
+        <div class="primary">
+            <button class="action btn_amazon_login" id="btn_amazon_login" type="button">
+                <span>
+                    <span><?php echo __('Amazon Sign In') ?></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <script type="text/javascript">
+    require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn_amazon_login').each(function (el) {
+                return $(el).observe('click', function() {
+                    options = { scope : 'profile' };
+                    amazon.Login.authorize(options, 'https://localhost.com/ma2/sociallogin/amazon/login');
+
+                });
+            });
+    });
+    </script>
+    <script>
+        window.onAmazonLoginReady = function() {
+        amazon.Login.setClientId('amzn1.application-oa2-client.0e2bb5e532ce4050aed5872d6818b128');
+        };
+        (function(d) {
+         var a = d.createElement('script'); a.type = 'text/javascript';
+            a.async = true; a.id = 'amazon-login-sdk';
+        a.src = 'https://api-cdn.amazon.com/sdk/login1.js';
+         d.getElementById('amazon-root').appendChild(a);
+        })(document);
+    </script>
+<?php endif; ?>
