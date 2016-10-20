@@ -1,4 +1,3 @@
-
 **Magento 2 Social Login extension** is designed for quick login to your Magento store without procesing complex register steps. Let say goodbye the complicated registration process and ignore a lot of unnecessarily required fields. *Magento 2 Social Login extension* is simply and powerful tool to integrate your Magento customer account to Facebook, Google Plus, Twitter, LinkedIn, and Instagram channel. Logging in via the social medias is the great idea to enhance your customer’s satisfaction.
 
 ## Highligh features for Social Login
@@ -6,6 +5,14 @@
 - Quickly login step with five most common social channels
 - Easy to change the personal information after registering
 - The biggest preparation step for the loyalty of customers
+
+## Download Social Login
+
+- Download from our Live site: https://www.mageplaza.com/magento-2-social-login-extension/
+- Installation guide: https://docs.mageplaza.com/kb/installation.html
+- User guide: https://docs.mageplaza.com/social-login-m2/index.html
+- Help desk: https://mageplaza.freshdesk.com/
+
 
 ### Get [Magento 2 Social Login](https://www.mageplaza.com/magento-2-social-login-extension/) or https://www.mageplaza.com/
 
