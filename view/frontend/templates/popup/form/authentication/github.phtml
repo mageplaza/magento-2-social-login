@@ -1,0 +1,22 @@
+<?php if ($block->isEnabled()): ?>
+	<div class="actions-toolbar social-btn github-login">
+        <div class="primary">
+            <button class="action btn_github_login" id="btn_github_login" type="button">
+                <span>
+                    <span><?php echo __('Github Sign In') ?></span>
+                </span>
+            </button>
+
+        </div>
+    </div>
+	<script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn_github_login').each(function (el) {
+                return $(el).observe('click', function() {
+                    var gitPopup = new SocialLoginPopup();
+                     gitPopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Github')?>');
+                });
+            });
+		});
+    </script>
+<?php endif; ?>

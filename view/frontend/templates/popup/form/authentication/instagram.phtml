@@ -1,0 +1,37 @@
+<?php
+/**
+ * Mageplaza_SocialLogin extension
+ *                     NOTICE OF LICENSE
+ *
+ *                     This source file is subject to the MIT License
+ *                     that is bundled with this package in the file LICENSE.txt.
+ *                     It is also available through the world-wide-web at this URL:
+ *                     http://opensource.org/licenses/mit-license.php
+ *
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) 2016
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
+?>
+<?php if ($block->isEnabled()): ?>
+    <div class="actions-toolbar social-btn instagram-login">
+        <div class="primary">
+            <button class="action btn_instagram_login" id="btn_instagram_login" type="button">
+                <span>
+                    <span><?php echo __('Instagram Sign In') ?></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn_instagram_login').each(function (el) {
+                return $(el).observe('click', function() {
+                    var insPopup = new SocialLoginPopup();
+                    insPopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Instagram')?>');
+                });
+            });
+        });
+    </script>
+<?php endif; ?>

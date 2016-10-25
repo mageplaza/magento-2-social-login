@@ -1,0 +1,93 @@
+
+<div class="register-sociallogin">
+    <?php
+        $facebook= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Facebook');
+        if ($facebook->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $facebook->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/facebook.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $google= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Google');
+        if ($google->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $google->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/google.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $twitter= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Twitter');
+        if ($twitter->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $twitter->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/twitter.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $linkedin= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Linkedin');
+        if ($linkedin->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $linkedin->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/linkedin.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $instagram= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Instagram');
+        if ($instagram->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $instagram->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/instagram.phtml")->toHtml();
+             ?>
+    </div> 
+    <?php endif; ?>
+    <?php
+        $yahoo= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Yahoo');
+        if ($yahoo->isEnabled()):
+    ?> 
+    <div class="block social-login-authentication-channel col-mg mg-2"> 
+            <?php    echo $yahoo->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/yahoo.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $github= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Github');
+        if ($github->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $github->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/github.phtml")->toHtml(); ?>
+    </div> 
+    <?php endif; ?>
+    <?php
+        $vkontakte= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Vkontakte');
+        if ($vkontakte->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $vkontakte->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/vkontakte.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $foursquare= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Foursquare');
+        if ($foursquare->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $foursquare->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/foursquare.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $amazon= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Amazon');
+        if ($amazon->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $amazon->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/amazon.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+    <?php
+        $live= $block->getLayout()->createBlock('Mageplaza\SocialLogin\Block\SocialLogin\Live');
+        if ($live->isEnabled()):
+    ?>
+    <div class="block social-login-authentication-channel col-mg mg-2">
+            <?php    echo $live->setTemplate("Mageplaza_SocialLogin::popup/form/authentication/live.phtml")->toHtml(); ?>
+    </div>
+    <?php endif; ?>
+   
+</div>

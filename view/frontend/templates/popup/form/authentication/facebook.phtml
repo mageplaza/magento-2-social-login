@@ -1,0 +1,21 @@
+<?php if ($block->isEnabled()): ?>
+    <div class="actions-toolbar social-btn facebook-login">
+        <div class="primary">
+            <button class="action btn_facebook_login" id="btn_facebook_login" type="button">
+                <span>
+                    <span><?php echo __('Facebook Sign In') ?></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn_facebook_login').each(function (el) {
+                return $(el).observe('click', function() {
+                    var fbPopup = new SocialLoginPopup();
+                    fbPopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Facebook')?>');
+                });
+            });
+        });
+    </script>
+<?php endif; ?>

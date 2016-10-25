@@ -1,0 +1,21 @@
+<?php if ($block->isEnabled()): ?>
+    <div class="actions-toolbar social-btn linkedin-login">
+        <div class="primary">
+            <button class="action btn_linkedin_login" id="btn_linkedin_login" type="button">
+                <span>
+                    <span><?php echo __('Linkedin Sign In') ?></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <script>
+        require(['Mageplaza_SocialLogin/js/sociallogin'], function (SocialLoginPopup) {
+            $$('.btn_linkedin_login').each(function (el) {
+                return $(el).observe('click', function() {
+                   var lkPopup = new SocialLoginPopup();
+                    lkPopup.openPopup('<?php echo $block->getLoginUrl()?>', '<?php echo __('Login By Linkedin')?>');
+                });
+            });
+        });
+    </script>
+<?php endif; ?>
