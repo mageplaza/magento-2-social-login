@@ -1,12 +1,8 @@
 {
-  "name": "social-login-m2",
-  "description": "Social Login M2",
+  "name": "mageplaza/magento-2-social-login",
+  "description": "Magento 2 Social Login Extension",
   "require": {
     "php": "~5.5.0|~5.6.0|~7.0.0"
-  },
-  "repositories": {
-    "type": "git",
-    "url": "git@gitlab.com:mageplaza/social-login-m2.git"
   },
   "type": "magento2-module",
   "version": "1.0.0",
