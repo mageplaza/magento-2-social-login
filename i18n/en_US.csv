@@ -1,0 +1,104 @@
+"Email is Null, Please enter email in your %1 profile","Email is Null, Please enter email in your %1 profile"
+Amazon,Amazon
+Facebook,Facebook
+Foursquare,Foursquare
+GitHub,GitHub
+Google,Google
+Instagram,Instagram
+LinkedIn,LinkedIn
+"Microsoft Live","Microsoft Live"
+"Please make sure your passwords match.","Please make sure your passwords match."
+"You must confirm your account. Please check your email for the confirmation link or <a href=""%1"">click here</a> for a new link.","You must confirm your account. Please check your email for the confirmation link or <a href=""%1"">click here</a> for a new link."
+"Create an account successfully. Please wait...","Create an account successfully. Please wait..."
+"There is already an account with this email address. If you are sure that it is your email address, <a href=""%1"">click here</a> to get your password and access your account.","There is already an account with this email address. If you are sure that it is your email address, <a href=""%1"">click here</a> to get your password and access your account."
+"Please correct the email address.","Please correct the email address."
+"If there is an account associated with %1 you will receive an email with a link to reset your password.","If there is an account associated with %1 you will receive an email with a link to reset your password."
+"We're unable to send the password reset email.","We're unable to send the password reset email."
+"Login successfully. Please wait ...","Login successfully. Please wait ..."
+"Please enter a username and password.","Please enter a username and password."
+Twitter,Twitter
+Vkontakte,Vkontakte
+Yahoo,Yahoo
+Default,Default
+Orange,Orange
+Green,Green
+Black,Black
+Blue,Blue
+"Dark Blue","Dark Blue"
+Pink,Pink
+Red,Red
+Violet,Violet
+Custom,Custom
+Zoom,Zoom
+Newspaper,Newspaper
+"Horizontal move","Horizontal move"
+"Move from top","Move from top"
+"3D unfold","3D unfold"
+Zoom-out,Zoom-out
+"Incorrect CAPTCHA.","Incorrect CAPTCHA."
+"%1 Sign In","%1 Sign In"
+"Login By %1","Login By %1"
+"Sign In","Sign In"
+"Registered Customers","Registered Customers"
+"* Required Fields","* Required Fields"
+Email,Email
+Password,Password
+Login,Login
+"Forgot Your Password?","Forgot Your Password?"
+"Create New Account?","Create New Account?"
+"Amazon Sign In","Amazon Sign In"
+"Or Sign In With","Or Sign In With"
+"Create New Account","Create New Account"
+"Sign Up for Newsletter","Sign Up for Newsletter"
+"Address Information","Address Information"
+Company,Company
+"Phone Number","Phone Number"
+"Street Address","Street Address"
+Address,Address
+"Street Address %1","Street Address %1"
+City,City
+State/Province,State/Province
+"Please select a region, state or province.","Please select a region, state or province."
+"Zip/Postal Code","Zip/Postal Code"
+Country,Country
+"Confirm Password","Confirm Password"
+"Create an Account","Create an Account"
+Back,Back
+"Forgot Password","Forgot Password"
+"Please enter your email address below to receive a password reset link.","Please enter your email address below to receive a password reset link."
+Submit,Submit
+"Go back","Go back"
+"Social Login","Social Login"
+General,General
+Enable,Enable
+"Popup Effect","Popup Effect"
+"Style Management","Style Management"
+"Custom Color","Custom Color"
+"Custom CSS","Custom CSS"
+"Create app <a href=""https://developers.facebook.com/apps"" target=""_bank"">here</a>","Create app <a href=""https://developers.facebook.com/apps"" target=""_bank"">here</a>"
+"Facebook App Id","Facebook App Id"
+"Facebook App Secret","Facebook App Secret"
+"Valid OAuth redirect URIs","Valid OAuth redirect URIs"
+"Send Password To Customer","Send Password To Customer"
+"Create app <a href=""https://code.google.com/apis/console/"" target=""_bank"">here</a>","Create app <a href=""https://code.google.com/apis/console/"" target=""_bank"">here</a>"
+"Client ID","Client ID"
+"Client Secret","Client Secret"
+"REDIRECT URIS","REDIRECT URIS"
+"Create app <a href=""https://dev.twitter.com/apps"" target=""_bank"">here</a>","Create app <a href=""https://dev.twitter.com/apps"" target=""_bank"">here</a>"
+"Consumer Key","Consumer Key"
+"Consumer Secret","Consumer Secret"
+"Create app <a href=""https://www.linkedin.com/secure/developer"" target=""_bank"">here</a>","Create app <a href=""https://www.linkedin.com/secure/developer"" target=""_bank"">here</a>"
+"API Key","API Key"
+"Client Key","Client Key"
+"Create app <a href=""http://instagram.com/developer/clients/manage/"" target=""_bank"">here</a>","Create app <a href=""http://instagram.com/developer/clients/manage/"" target=""_bank"">here</a>"
+"Create app <a href=""https://developer.yahoo.com/apps/"" target=""_bank"">here</a>","Create app <a href=""https://developer.yahoo.com/apps/"" target=""_bank"">here</a>"
+Github,Github
+"Create app <a href=""https://github.com/settings/applications/new"" target=""_bank"">here</a>","Create app <a href=""https://github.com/settings/applications/new"" target=""_bank"">here</a>"
+"Callback Url","Callback Url"
+"Create app <a href=""https://new.vk.com/dev"" target=""_bank"">here</a>","Create app <a href=""https://new.vk.com/dev"" target=""_bank"">here</a>"
+"Application ID","Application ID"
+"Secure Key","Secure Key"
+"Create app <a href=""https://www.foursquare.com/oauth/"" target=""_bank"">here</a>","Create app <a href=""https://www.foursquare.com/oauth/"" target=""_bank"">here</a>"
+Live,Live
+"Create app <a href=""https://account.live.com/developers/applications/create"" target=""_bank"">here</a>","Create app <a href=""https://account.live.com/developers/applications/create"" target=""_bank"">here</a>"
+"Application Secret","Application Secret"

@@ -1,0 +1,5 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="customer.login.container">
+        <block class="Mageplaza\SocialLogin\Block\Popup\Authentication\Social" after="customer.new" ifconfig="sociallogin/general/is_enabled" name="social-login-popup-authentication-social-login" template="Mageplaza_SocialLogin::form/social.phtml" cacheable="false"/>
+    </referenceContainer>
+</page>

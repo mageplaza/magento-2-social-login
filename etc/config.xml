@@ -1,0 +1,31 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <sociallogin>
+            <general>
+                <is_enabled>1</is_enabled>
+                <popup_effect>mfp-move-from-top</popup_effect>
+                <style_management>#3399cc</style_management>
+            </general>
+            <facebook>
+                <is_enabled>0</is_enabled>
+                <send_password>1</send_password>
+            </facebook>
+            <google>
+                <is_enabled>0</is_enabled>
+                <send_password>1</send_password>
+            </google>
+            <linkedin>
+                <is_enabled>0</is_enabled>
+                <send_password>1</send_password>
+            </linkedin>
+            <instagram>
+                <is_enabled>0</is_enabled>
+                <send_password>1</send_password>
+            </instagram>
+            <twitter>
+                <is_enabled>0</is_enabled>
+                <send_password>1</send_password>
+            </twitter>
+        </sociallogin>
+    </default>
+</config>

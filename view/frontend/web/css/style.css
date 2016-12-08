@@ -1,0 +1,433 @@
+/* text-based popup styling */
+.white-popup {
+    position: relative;
+    background: #FFF;
+    padding: 0;
+    width: auto;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/*Form Style*/
+#social-login-popup .block-container {
+    width: 100%;
+    display: inline-block;
+}
+
+#social-login-popup .social-login-title {
+    padding: 10px 10px;
+    background-color: #3399cc;
+}
+
+#social-login-popup .block-container .block {
+    padding: 20px 25px;
+    margin: 0;
+}
+
+.social-login-ajax-loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0.6;
+    background: #fbfaf6;
+    background-image: url('images/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#social-login-popup .block-container .block .block-title {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#social-login-popup .fieldset {
+    margin: 0 0 20px;
+}
+
+.actions-toolbar {
+    margin-top: 10px;
+}
+
+#social-login-popup .actions-toolbar > .secondary .action.back {
+    display: block;
+}
+
+.social-login-title h2 {
+    margin: 0;
+    padding-left: 40px;
+    background-position: 12px center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+
+.social-login-title .login-title {
+    background-image: url(images/login-title.png);
+}
+
+.social-login-title .create-account-title {
+    background-image: url(images/create-account-title.png);
+}
+
+.social-login-title .forgot-pass-title {
+    background-image: url(images/forgot-pass-title.png);
+}
+
+#social-login-popup .mfp-close {
+    color: #ffffff;
+}
+
+.success-msg {
+    color: green;
+    font-weight: bold;
+}
+
+.error-msg {
+    color: red;
+    font-weight: bold;
+}
+
+.success-msg ol, .error-msg ol {
+    padding: 0;
+}
+
+.success-msg ol li, .error-msg ol li {
+    list-style: none;
+}
+
+/*Button Style*/
+.actions-toolbar button {
+    border-radius: 0;
+}
+
+.social-btn button {
+    height: 33px;
+    border: none;
+}
+
+.social-btn button span span {
+    margin-left: 25px;
+    color: #ffffff;
+}
+
+.social-login-authentication-channel .actions-toolbar.social-btn > .primary .action {
+    width: 100%;
+    margin: 0;
+    min-width: 170px;
+    text-align: left;
+    border-radius: 5px;
+}
+.social-login-authentication-channel .actions-toolbar.social-btn > .primary .action:hover{
+    opacity: 0.9;
+}
+
+.social-btn-actions-toolbar{
+    display: inline-block !important;
+}
+
+.facebook-login button {
+    background: url("images/buttons/facebook.png") no-repeat;
+}
+
+.google-login button {
+    background: url("images/buttons/google.png") no-repeat;
+}
+
+.twitter-login button {
+    background: url("images/buttons/twitter.png") no-repeat;
+}
+
+.linkedin-login button {
+    background: url("images/buttons/linkedin.png") no-repeat;
+}
+.instagram-login button {
+    background: url("images/buttons/instagram.png") no-repeat;
+}
+.foursquare-login button{
+    background: url("images/buttons/foursquare.png") no-repeat;
+}
+.github-login button{
+    background: url("images/buttons/github.png") no-repeat;
+}
+.vkontakte-login button{
+    background: url("images/buttons/vkontakte.png") no-repeat;
+}
+.yahoo-login button{
+    background: url("images/buttons/yahoo.png") no-repeat;
+}
+.amazon-login button{
+    background: url("images/buttons/amazon.png") no-repeat;
+}
+.live-login button{
+    background: url("images/buttons/live.png") no-repeat;
+}
+.register-sociallogin{
+    float: left;
+}
+#fb-customer,#gg-customer,#tw-customer,#li-customer,#ins-customer,#ya-customer,#git-customer,#vk-customer,#fo-customer,#live-customer,#am-customer{
+    float: left;
+}
+#group-button{
+    width: 48.8%;
+    /*margin-left: 37px;*/
+    /*margin-top: 0px;*/
+    float:right;
+    clear:none;
+}
+#group-button .block.social-login-authentication-channel.col-mg.mg-5 {
+    margin-bottom: 2px;
+}
+/*.block-new-customer{*/
+    /*float: left;*/
+/*}*/
+
+/*
+
+====== Zoom effect ======
+
+*/
+.mfp-zoom-in {
+    /* start state */
+    /* animate in */
+    /* animate out */
+}
+
+.mfp-zoom-in .mfp-with-anim {
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+    transform: scale(0.8);
+}
+
+.mfp-zoom-in.mfp-bg {
+    opacity: 0;
+    transition: all 0.3s ease-out;
+}
+
+.mfp-zoom-in.mfp-ready .mfp-with-anim {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.mfp-zoom-in.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-zoom-in.mfp-removing .mfp-with-anim {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.mfp-zoom-in.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+/* 
+
+====== Newspaper effect ======
+
+*/
+.mfp-newspaper {
+    /* start state */
+    /* animate in */
+    /* animate out */
+}
+
+.mfp-newspaper .mfp-with-anim {
+    opacity: 0;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.5s;
+    transform: scale(0) rotate(500deg);
+}
+
+.mfp-newspaper.mfp-bg {
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.mfp-newspaper.mfp-ready .mfp-with-anim {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.mfp-newspaper.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-newspaper.mfp-removing .mfp-with-anim {
+    transform: scale(0) rotate(500deg);
+    opacity: 0;
+}
+
+.mfp-newspaper.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+/* 
+
+====== Move-horizontal effect ======
+
+*/
+.mfp-move-horizontal {
+    /* start state */
+    /* animate in */
+    /* animate out */
+}
+
+.mfp-move-horizontal .mfp-with-anim {
+    opacity: 0;
+    transition: all 0.3s;
+    transform: translateX(-50px);
+}
+
+.mfp-move-horizontal.mfp-bg {
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.mfp-move-horizontal.mfp-ready .mfp-with-anim {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mfp-move-horizontal.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-move-horizontal.mfp-removing .mfp-with-anim {
+    transform: translateX(50px);
+    opacity: 0;
+}
+
+.mfp-move-horizontal.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+/* 
+
+====== Move-from-top effect ======
+
+*/
+.mfp-move-from-top {
+    /* start state */
+    /* animate in */
+    /* animate out */
+}
+
+.mfp-move-from-top .mfp-content {
+    vertical-align: top;
+    margin-top: 50px;
+}
+
+.mfp-move-from-top .mfp-with-anim {
+    opacity: 0;
+    transition: all 0.2s;
+    transform: translateY(-100px);
+}
+
+.mfp-move-from-top.mfp-bg {
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.mfp-move-from-top.mfp-ready .mfp-with-anim {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mfp-move-from-top.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-move-from-top.mfp-removing .mfp-with-anim {
+    transform: translateY(-50px);
+    opacity: 0;
+}
+
+.mfp-move-from-top.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+/* 
+
+====== 3d unfold ======
+
+*/
+.mfp-3d-unfold {
+    /* start state */
+    /* animate in */
+    /* animate out */
+}
+
+.mfp-3d-unfold .mfp-content {
+    perspective: 2000px;
+}
+
+.mfp-3d-unfold .mfp-with-anim {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transform-style: preserve-3d;
+    transform: rotateY(-60deg);
+}
+
+.mfp-3d-unfold.mfp-bg {
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.mfp-3d-unfold.mfp-ready .mfp-with-anim {
+    opacity: 1;
+    transform: rotateY(0deg);
+}
+
+.mfp-3d-unfold.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-3d-unfold.mfp-removing .mfp-with-anim {
+    transform: rotateY(60deg);
+    opacity: 0;
+}
+
+.mfp-3d-unfold.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+/* 
+
+====== Zoom-out effect ======
+
+*/
+.mfp-zoom-out {
+    /* start state */
+    /* animate in */
+    /* animate out */
+}
+
+.mfp-zoom-out .mfp-with-anim {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transform: scale(1.3);
+}
+
+.mfp-zoom-out.mfp-bg {
+    opacity: 0;
+    transition: all 0.3s ease-out;
+}
+
+.mfp-zoom-out.mfp-ready .mfp-with-anim {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.mfp-zoom-out.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-zoom-out.mfp-removing .mfp-with-anim {
+    transform: scale(1.3);
+    opacity: 0;
+}
+
+.mfp-zoom-out.mfp-removing.mfp-bg {
+    opacity: 0;
+}

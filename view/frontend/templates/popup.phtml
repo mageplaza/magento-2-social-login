@@ -1,0 +1,95 @@
+<!--
+/**
+ * Mageplaza_SocialLogin extension
+ *                     NOTICE OF LICENSE
+ *
+ *                     This source file is subject to the MIT License
+ *                     that is bundled with this package in the file LICENSE.txt.
+ *                     It is also available through the world-wide-web at this URL:
+ *                     http://opensource.org/licenses/mit-license.php
+ *
+ *                     @category  Mageplaza
+ *                     @package   Mageplaza_SocialLogin
+ *                     @copyright Copyright (c) 2016
+ *                     @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
+-->
+<?php if ($block->isEnabled()): ?>
+    <div id="social-login-popup" class="white-popup mfp-with-anim mfp-hide">
+        <?php echo $block->getChildHtml('popup.authentication') ?>
+        <?php echo $block->getChildHtml('popup.create') ?>
+        <?php echo $block->getChildHtml('popup.forgot') ?>
+    </div>
+    <div style="clear: both"></div>
+    <script>
+        require(['Mageplaza_SocialLogin/js/sociallogin/form'], function (SocialLoginForm) {
+            var config = {
+                /*General*/
+                popup: '#social-login-popup',
+                popupEffect: '<?php echo $block->getPopupEffect()?>',
+                headerLink: '.header .links',
+                sectionLink: '.section-item-content .header.links',
+                ajaxLoading: '#social-login-popup .ajax-loading',
+                /*Login*/
+                loginFormContainer: '.social-login.authentication',
+                loginFormContent: '.social-login.authentication .block-content',
+                loginForm: '#social-form-login',
+                loginBtn: '#bnt-social-login-authentication',
+                forgotBtn: '#social-form-login .action.remind',
+                createBtn: '#social-form-login .action.create',
+                formLoginUrl: '<?php echo $block->getFormLoginUrl();?>',
+                /*Forgot*/
+                forgotFormContainer: '.social-login.forgot',
+                forgotFormContent: '.social-login.forgot .block-content',
+                forgotForm: '#social-form-password-forget',
+                forgotSendBtn: '#social-form-password-forget .action.send',
+                forgotBackBtn: '#social-form-password-forget .action.back',
+                forgotFormUrl: '<?php echo $block->getForgotFormUrl();?>',
+                /*Create*/
+                createFormContainer: '.social-login.create',
+                createFormContent: '.social-login.create .block-content',
+                createForm: '#social-form-create',
+                createAccBtn: '#social-form-create .action.create',
+                createBackBtn: '#social-form-create .action.back',
+                createFormUrl: '<?php echo $block->getCreateFormUrl();?>',
+                /*Captcha*/
+                loginCaptchaImg: '.authentication .captcha-img',
+                createCaptchaImg: '.create .captcha-img',
+                forgotCaptchaImg: '.forgot .captcha-img'
+
+            };
+            new SocialLoginForm(config);
+        });
+        require(['jquery', 'mageplaza/core/jquery/popup'], function ($) {
+            var headerLink = $('.header .links');
+            if(headerLink.length) {
+                headerLink.magnificPopup({
+                    delegate: 'a.social-login',
+                    removalDelay: 500, //delay removal by X to allow out-animation
+                    callbacks: {
+                        beforeOpen: function () {
+                            this.st.mainClass = this.st.el.attr('data-effect');
+                        }
+                    },
+                    midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
+                });
+            }
+
+            var menuSection = $('.section-item-content');
+            if(menuSection.length) {
+                menuSection.magnificPopup({
+                    delegate: 'a.social-login',
+                    removalDelay: 500, //delay removal by X to allow out-animation
+                    callbacks: {
+                        beforeOpen: function () {
+                            this.st.mainClass = this.st.el.attr('data-effect');
+                        }
+                    },
+                    midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
+                });
+            }
+        });
+
+    </script>
+<?php endif; ?>
+

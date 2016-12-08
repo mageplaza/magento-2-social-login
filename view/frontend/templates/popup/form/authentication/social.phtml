@@ -1,0 +1,29 @@
+<?php $availableSocials = $this->getAvailableSocials(); ?>
+<?php if (sizeof($availableSocials)): ?>
+<div class="block social-login-authentication-channel col-mg mg-5">
+    <div class="block-title">
+        <?php echo __('Or Sign In With') ?>
+    </div>
+    <div class="block-content">
+        <?php foreach ($availableSocials as $key => $social): ?>
+			<div class="actions-toolbar social-btn <?= $key ?>-login">
+                <div class="primary">
+                    <button class="action btn_<?= $key ?>_login" id="btn_<?= $key ?>_login" type="button">
+                        <span>
+                            <span><?php echo __('%1 Sign In', $social->getLabel()) ?></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+			<script>
+                require(['jquery', 'Mageplaza_SocialLogin/js/sociallogin'], function ($, SocialLoginPopup) {
+					$('#btn_<?= $key ?>_login').click(function () {
+						var popup = new SocialLoginPopup();
+						popup.openPopup('<?php echo $social->getLoginUrl()?>', '<?php echo __('Login By %1', $social->getLabel())?>');
+					});
+				});
+            </script>
+		<?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
