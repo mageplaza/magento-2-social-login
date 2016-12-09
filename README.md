@@ -14,6 +14,7 @@
 - Installation guide: https://docs.mageplaza.com/kb/installation.html
 - User guide: https://docs.mageplaza.com/social-login-m2/index.html
 - Help desk: https://mageplaza.freshdesk.com/
+- Github Pages: http://mageplaza.github.io/Magento-2-Social-Login-Extension/
 
 ## FAQ
 
