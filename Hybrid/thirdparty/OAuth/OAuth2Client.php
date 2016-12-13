@@ -209,8 +209,10 @@ class OAuth2Client
     Logger::info( "Enter OAuth2Client::request( $url )" );
     Logger::debug( "OAuth2Client::request(). dump request params: ", serialize( $params ) );
 
+    $urlEncodedParams = http_build_query($params, '', '&');
+    
     if( $type == "GET" ){
-      $url = $url . ( strpos( $url, '?' ) ? '&' : '?' ) . http_build_query($params, '', '&');
+      $url = $url . ( strpos( $url, '?' ) ? '&' : '?' ) . $urlEncodedParams;
     }
 
     $this->http_info = array();
@@ -235,7 +237,12 @@ class OAuth2Client
 
     if( $type == "POST" ){
       curl_setopt($ch, CURLOPT_POST, 1);
-      if($params) curl_setopt( $ch, CURLOPT_POSTFIELDS, $params );
+      
+      // Using URL encoded params here instead of a more convenient array
+	  // cURL will set a wrong HTTP Content-Type header if using an array (cf. http://www.php.net/manual/en/function.curl-setopt.php, Notes section for "CURLOPT_POSTFIELDS")
+	  // OAuth requires application/x-www-form-urlencoded Content-Type (cf. https://tools.ietf.org/html/rfc6749#section-2.3.1)
+      if($params) curl_setopt( $ch, CURLOPT_POSTFIELDS, $urlEncodedParams);
+      
     }
     if( $type == "DELETE" ){
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
