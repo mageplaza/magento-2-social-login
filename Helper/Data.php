@@ -21,7 +21,9 @@ class Data extends CoreHelper
 	protected $customerFactory;
 	protected $socialFactory;//them
 	protected $collectionFactory;
-
+	protected $storeManager;
+    protected $logger;
+	protected $request;
 
 	public function __construct(
 		Context $context,
@@ -29,12 +31,16 @@ class Data extends CoreHelper
 		StoreManagerInterface $storeManager,
 		CustomerFactory $customerFactory,
 		SocialFactory $socialFactory,
+		\Magento\Framework\App\RequestInterface $request,
 		CollectionFactory $collectionFactory
 	)
 	{
 		$this->customerFactory   = $customerFactory;
 		$this->socialFactory     = $socialFactory;
 		$this->collectionFactory = $collectionFactory;
+		$this->storeManager = $storeManager;
+        $this->logger = $context->getLogger();
+		$this->request = $request;
 
 		parent::__construct($context, $objectManager, $storeManager);
 	}
@@ -201,6 +207,28 @@ class Data extends CoreHelper
 		$isSecure = $this->isSecure();
 
 		return $this->_getUrl('customer/account/edit', array('_secure' => $isSecure));
+	}
+
+	public function getCurrentScope()
+    {
+		$scopeType = \Magento\Framework\App\Config\ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+       	$scopeCode = 0;
+       	if ($this->request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+        	$scopeType = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+        	$scopeCode = $this->storeManager->getStore($this->request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_STORE))->getBaseUrl();
+        	return $scopeCode;
+       	} elseif ($this->request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE)) {
+        		$scopeType = \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE;
+        		$scopeCode = $this->storeManager->getWebsite($this->request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE));
+        		$storeId = $scopeCode->getDefaultStore()->getStoreId();
+
+			return $this->objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore($storeId)->getBaseUrl();
+       	} else {
+				$scopeCode = $this->storeManager->getStore()->getId();
+				$scopeCode = ($scopeCode)? $scopeCode : 0;
+       	}
+
+       	return $this->objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore($scopeCode)->getBaseUrl();
 	}
 
 }
