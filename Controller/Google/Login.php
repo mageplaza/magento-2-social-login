@@ -17,7 +17,7 @@ class Login extends AbstractSocial
 
 		$customer = $this->checkCustomer($user_profile->identifier);
 		if (!$customer || !$customer->getId()) {
-			$name     = $user_profile->displayName;
+			$name     = ($user_profile->displayName)? $user_profile->displayName : __('NewUser');
 			$user     = [
 				'email'      => $user_profile->email,
 				'firstname'  => $user_profile->firstName ?: $name,
