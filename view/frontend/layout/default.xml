@@ -33,7 +33,7 @@
         <referenceContainer name="content">
             <block class="Mageplaza\SocialLogin\Block\SocialLogin" name="social-login-popup" as="popup.modal" template="popup.phtml" ifconfig="sociallogin/general/is_enabled">
                 <block class="Mageplaza\SocialLogin\Block\Popup\Authentication" name="social-login-popup-authentication" as="popup.authentication" template="popup/form/authentication.phtml">
-                    <block class="Mageplaza\SocialLogin\Block\Popup\Authentication\Social" name="social-login-popup-authentication-social" as="popup.authentication.social" template="popup/form/authentication/social.phtml" cacheable="false"/>
+                    <block class="Mageplaza\SocialLogin\Block\Popup\Authentication\Social" name="social-login-popup-authentication-social" as="popup.authentication.social" template="popup/form/authentication/social.phtml" />
 
                     <block class="Magento\Captcha\Block\Captcha" name="social-login-captcha" as="login.captcha" after="-">
                         <action method="setFormId">
