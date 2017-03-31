@@ -6,7 +6,9 @@
  * (c) 2009-2012, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
 
-namespace Mageplaza\SocialLogin\Hybrid;
+namespace Mageplaza\SocialLogin\Hybrid\Providers;
+
+use Mageplaza\SocialLogin\Hybrid\ProviderModelOpenID;
 
 /**
  * OpenID provider adapter for any idp openid based

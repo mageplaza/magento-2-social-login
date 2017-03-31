@@ -5,7 +5,13 @@
 *  (c) 2009-2015 HybridAuth authors | hybridauth.sourceforge.net/licenses.html
 */
 
-namespace Mageplaza\SocialLogin\Hybrid;
+namespace Mageplaza\SocialLogin\Hybrid\Providers;
+
+use Mageplaza\SocialLogin\Hybrid\Auth;
+use Mageplaza\SocialLogin\Hybrid\Exception;
+use Mageplaza\SocialLogin\Hybrid\OAuth2Client;
+use Mageplaza\SocialLogin\Hybrid\ProviderModelOAuth2;
+use Mageplaza\SocialLogin\Hybrid\UserContact;
 
 /**
  * Providers_Vkontakte provider adapter based on OAuth2 protocol

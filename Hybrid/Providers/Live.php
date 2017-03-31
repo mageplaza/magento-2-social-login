@@ -6,12 +6,17 @@
  * (c) 2009-2012, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
 
-namespace Mageplaza\SocialLogin\Hybrid;
+namespace Mageplaza\SocialLogin\Hybrid\Providers;
+
+use Mageplaza\SocialLogin\Hybrid\Exception;
+use Mageplaza\SocialLogin\Hybrid\Logger;
+use Mageplaza\SocialLogin\Hybrid\ProviderModelOAuth2;
+use Mageplaza\SocialLogin\Hybrid\UserContact;
 
 /**
  * Windows Live OAuth2 Class
- * 
- * @package             HybridAuth providers package 
+ *
+ * @package             HybridAuth providers package
  * @author              Lukasz Koprowski <azram19@gmail.com>
  * @version             0.2
  * @license             BSD License
@@ -22,83 +27,89 @@ namespace Mageplaza\SocialLogin\Hybrid;
  */
 class Live extends ProviderModelOAuth2 {
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public $scope = "wl.basic wl.contacts_emails wl.emails wl.signin wl.share wl.birthday";
+    /**
+     * {@inheritdoc}
+     */
+    public $scope = "wl.basic wl.contacts_emails wl.emails wl.signin wl.share wl.birthday";
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function initialize() {
-		parent::initialize();
+    /**
+     * {@inheritdoc}
+     */
+    function initialize() {
+        parent::initialize();
 
-		// Provider api end-points
-		$this->api->api_base_url = 'https://apis.live.net/v5.0/';
-		$this->api->authorize_url = 'https://login.live.com/oauth20_authorize.srf';
-		$this->api->token_url = 'https://login.live.com/oauth20_token.srf';
+        // Provider api end-points
+        $this->api->api_base_url = 'https://apis.live.net/v5.0/';
+        $this->api->authorize_url = 'https://login.live.com/oauth20_authorize.srf';
+        $this->api->token_url = 'https://login.live.com/oauth20_token.srf';
 
-		$this->api->curl_authenticate_method = "GET";
-	}
+        $this->api->curl_authenticate_method = "GET";
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function getUserProfile() {
-		$data = $this->api->get("me");
+        // Override the redirect uri when it's set in the config parameters. This way we prevent
+        // redirect uri mismatches when authenticating with Live.com
+        if (isset($this->config['redirect_uri']) && !empty($this->config['redirect_uri'])) {
+            $this->api->redirect_uri = $this->config['redirect_uri'];
+        }
+    }
 
-		if (!isset($data->id)) {
-			throw new Exception("User profile request failed! {$this->providerId} returned an invalid response: " . Logger::dumpData( $data ), 6);
-		}
+    /**
+     * {@inheritdoc}
+     */
+    function getUserProfile() {
+        $data = $this->api->get("me");
 
-		$this->user->profile->identifier = (property_exists($data, 'id')) ? $data->id : "";
-		$this->user->profile->firstName = (property_exists($data, 'first_name')) ? $data->first_name : "";
-		$this->user->profile->lastName = (property_exists($data, 'last_name')) ? $data->last_name : "";
-		$this->user->profile->displayName = (property_exists($data, 'name')) ? trim($data->name) : "";
-		$this->user->profile->gender = (property_exists($data, 'gender')) ? $data->gender : "";
+        if (!isset($data->id)) {
+            throw new Exception("User profile request failed! {$this->providerId} returned an invalid response: " . Logger::dumpData( $data ), 6);
+        }
 
-		//wl.basic
-		$this->user->profile->profileURL = (property_exists($data, 'link')) ? $data->link : "";
+        $this->user->profile->identifier = (property_exists($data, 'id')) ? $data->id : "";
+        $this->user->profile->firstName = (property_exists($data, 'first_name')) ? $data->first_name : "";
+        $this->user->profile->lastName = (property_exists($data, 'last_name')) ? $data->last_name : "";
+        $this->user->profile->displayName = (property_exists($data, 'name')) ? trim($data->name) : "";
+        $this->user->profile->gender = (property_exists($data, 'gender')) ? $data->gender : "";
 
-		//wl.emails
-		$this->user->profile->email = (property_exists($data, 'emails')) ? $data->emails->account : "";
-		$this->user->profile->emailVerified = (property_exists($data, 'emails')) ? $data->emails->account : "";
+        //wl.basic
+        $this->user->profile->profileURL = (property_exists($data, 'link')) ? $data->link : "";
 
-		//wl.birthday
-		$this->user->profile->birthDay = (property_exists($data, 'birth_day')) ? $data->birth_day : "";
-		$this->user->profile->birthMonth = (property_exists($data, 'birth_month')) ? $data->birth_month : "";
-		$this->user->profile->birthYear = (property_exists($data, 'birth_year')) ? $data->birth_year : "";
+        //wl.emails
+        $this->user->profile->email = (property_exists($data, 'emails')) ? $data->emails->account : "";
+        $this->user->profile->emailVerified = (property_exists($data, 'emails')) ? $data->emails->account : "";
 
-		return $this->user->profile;
-	}
+        //wl.birthday
+        $this->user->profile->birthDay = (property_exists($data, 'birth_day')) ? $data->birth_day : "";
+        $this->user->profile->birthMonth = (property_exists($data, 'birth_month')) ? $data->birth_month : "";
+        $this->user->profile->birthYear = (property_exists($data, 'birth_year')) ? $data->birth_year : "";
 
-	/**
-	 * Windows Live api does not support retrieval of email addresses (only hashes :/)
-	 * {@inheritdoc}
-	 */
-	function getUserContacts() {
-		$response = $this->api->get('me/contacts');
+        return $this->user->profile;
+    }
 
-		if ($this->api->http_code != 200) {
-			throw new Exception('User contacts request failed! ' . $this->providerId . ' returned an error: ' . $this->errorMessageByStatus($this->api->http_code));
-		}
+    /**
+     * Windows Live api does not support retrieval of email addresses (only hashes :/)
+     * {@inheritdoc}
+     */
+    function getUserContacts() {
+        $response = $this->api->get('me/contacts');
 
-		if (!isset($response->data) || ( isset($response->errcode) && $response->errcode != 0 )) {
-			return array();
-		}
+        if ($this->api->http_code != 200) {
+            throw new Exception('User contacts request failed! ' . $this->providerId . ' returned an error: ' . $this->errorMessageByStatus($this->api->http_code));
+        }
 
-		$contacts = array();
+        if (!isset($response->data) || ( isset($response->errcode) && $response->errcode != 0 )) {
+            return array();
+        }
 
-		foreach ($response->data as $item) {
-			$uc = new UserContact();
+        $contacts = array();
 
-			$uc->identifier = (property_exists($item, 'id')) ? $item->id : "";
-			$uc->displayName = (property_exists($item, 'name')) ? $item->name : "";
-			$uc->email = (property_exists($item, 'emails')) ? $item->emails->preferred : "";
-			$contacts[] = $uc;
-		}
+        foreach ($response->data as $item) {
+            $uc = new UserContact();
 
-		return $contacts;
-	}
+            $uc->identifier = (property_exists($item, 'id')) ? $item->id : "";
+            $uc->displayName = (property_exists($item, 'name')) ? $item->name : "";
+            $uc->email = (property_exists($item, 'emails')) ? $item->emails->preferred : "";
+            $contacts[] = $uc;
+        }
+
+        return $contacts;
+    }
 
 }
