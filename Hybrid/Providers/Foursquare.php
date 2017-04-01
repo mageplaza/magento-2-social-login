@@ -6,7 +6,13 @@
  * (c) 2009-2015, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
 
-namespace Mageplaza\SocialLogin\Hybrid;
+namespace Mageplaza\SocialLogin\Hybrid\Providers;
+
+use Mageplaza\SocialLogin\Hybrid\Exception;
+use Mageplaza\SocialLogin\Hybrid\LinkedInException;
+use Mageplaza\SocialLogin\Hybrid\Logger;
+use Mageplaza\SocialLogin\Hybrid\ProviderModelOAuth2;
+use Mageplaza\SocialLogin\Hybrid\UserContact;
 
 /**
  * Foursquare provider adapter based on OAuth2 protocol

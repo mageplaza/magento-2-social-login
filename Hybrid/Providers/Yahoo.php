@@ -6,12 +6,18 @@
  * (c) 2009-2012, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
 
-namespace Mageplaza\SocialLogin\Hybrid;
+namespace Mageplaza\SocialLogin\Hybrid\Providers;
+
+use Mageplaza\SocialLogin\Hybrid\Exception;
+use Mageplaza\SocialLogin\Hybrid\Logger;
+use Mageplaza\SocialLogin\Hybrid\ProviderModelOAuth1;
+use Mageplaza\SocialLogin\Hybrid\UserActivity;
+use Mageplaza\SocialLogin\Hybrid\UserContact;
 
 /**
  * Yahoo OAuth Class
- * 
- * @package             HybridAuth providers package 
+ *
+ * @package             HybridAuth providers package
  * @author              Lukasz Koprowski <azram19@gmail.com>
  * @version             0.2
  * @license             BSD License

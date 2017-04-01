@@ -6,7 +6,16 @@
  * (c) 2009-2015, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
 
-namespace Mageplaza\SocialLogin\Hybrid;
+namespace Mageplaza\SocialLogin\Hybrid\Providers;
+
+use Mageplaza\SocialLogin\Hybrid\Auth;
+use Mageplaza\SocialLogin\Hybrid\Exception;
+use Mageplaza\SocialLogin\Hybrid\LinkedInException;
+use Mageplaza\SocialLogin\Hybrid\Logger;
+use Mageplaza\SocialLogin\Hybrid\ProviderModel;
+use Mageplaza\SocialLogin\Hybrid\SourceLinkedIn;
+use Mageplaza\SocialLogin\Hybrid\UserActivity;
+use Mageplaza\SocialLogin\Hybrid\UserContact;
 
 /**
  * LinkedIn provider adapter based on OAuth1 protocol
@@ -17,268 +26,281 @@ namespace Mageplaza\SocialLogin\Hybrid;
  */
 class LinkedIn extends ProviderModel {
 
-	/**
-	 * Provider API Wrapper
-	 * @var LinkedIn
-	 */
-	public $api;
+    /**
+     * Provider API Wrapper
+     * @var LinkedIn
+     */
+    public $api;
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function initialize() {
-		if (!$this->config["keys"]["id"] || !$this->config["keys"]["secret"]) {
-			throw new Exception("Your application key and secret are required in order to connect to {$this->providerId}.", 4);
-		}
+    /**
+     * {@inheritdoc}
+     */
+    function initialize() {
+        if (!$this->config["keys"]["key"] || !$this->config["keys"]["secret"]) {
+            throw new Exception("Your application key and secret are required in order to connect to {$this->providerId}.", 4);
+        }
 
-		if (empty($this->config['fields'])) {
-			$this->config['fields'] = [
-				'id',
-				'first-name',
-				'last-name',
-				'public-profile-url',
-				'picture-url',
-				'email-address',
-				'date-of-birth',
-				'phone-numbers',
-				'summary',
-			];
-		}
+        if (empty($this->config['fields'])) {
+            $this->config['fields'] = array(
+                'id',
+                'first-name',
+                'last-name',
+                'public-profile-url',
+                'picture-url',
+                'email-address',
+                'date-of-birth',
+                'phone-numbers',
+                'summary',
+                'positions'
+            );
+        }
 
-		if (!class_exists('OAuthConsumer', false)) {
-			require_once Auth::$config["path_libraries"] . "OAuth/OAuth.php";
-		}
-		require_once Auth::$config["path_libraries"] . "LinkedIn/LinkedIn.php";
+        if (!class_exists('OAuthConsumer', false)) {
+            require_once Auth::$config["path_libraries"] . "OAuth/OAuth.php";
+        }
+        require_once Auth::$config["path_libraries"] . "LinkedIn/LinkedIn.php";
 
-		$this->api = new SourceLinkedIn(array('appKey' => $this->config["keys"]["id"], 'appSecret' => $this->config["keys"]["secret"], 'callbackUrl' => $this->endpoint));
+        $this->api = new SourceLinkedIn(array('appKey' => $this->config["keys"]["key"], 'appSecret' => $this->config["keys"]["secret"], 'callbackUrl' => $this->endpoint));
 
-		if ($this->token("access_token_linkedin")) {
-			$this->api->setTokenAccess($this->token("access_token_linkedin"));
-		}
-	}
+        if ($this->token("access_token_linkedin")) {
+            $this->api->setTokenAccess($this->token("access_token_linkedin"));
+        }
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function loginBegin() {
-		// send a request for a LinkedIn access token
-		$response = $this->api->retrieveTokenRequest();
+    /**
+     * {@inheritdoc}
+     */
+    function loginBegin() {
+        // send a request for a LinkedIn access token
+        $response = $this->api->retrieveTokenRequest();
 
-		if (isset($response['success']) && $response['success'] === true) {
-			$this->token("oauth_token", $response['linkedin']['oauth_token']);
-			$this->token("oauth_token_secret", $response['linkedin']['oauth_token_secret']);
+        if (isset($response['success']) && $response['success'] === true) {
+            $this->token("oauth_token", $response['linkedin']['oauth_token']);
+            $this->token("oauth_token_secret", $response['linkedin']['oauth_token_secret']);
 
-			# redirect user to LinkedIn authorisation web page
-			Auth::redirect(SourceLinkedIn::_URL_AUTH . $response['linkedin']['oauth_token']);
-		} else {
-			throw new Exception("Authentication failed! {$this->providerId} returned an invalid Token in response: " . Logger::dumpData( $response ), 5);
-		}
-	}
+            # redirect user to LinkedIn authorisation web page
+            Auth::redirect(SourceLinkedIn::_URL_AUTH . $response['linkedin']['oauth_token']);
+        } else {
+            throw new Exception("Authentication failed! {$this->providerId} returned an invalid Token in response: " . Logger::dumpData( $response ), 5);
+        }
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function loginFinish() {
+    /**
+     * {@inheritdoc}
+     */
+    function loginFinish() {
         // in case we get oauth_problem=user_refused
         if (isset($_REQUEST['oauth_problem']) && $_REQUEST['oauth_problem'] == "user_refused") {
             throw new Exception("Authentication failed! The user denied your request.", 5);
         }
 
-		$oauth_token = isset($_REQUEST['oauth_token']) ? $_REQUEST['oauth_token'] : null;
-		$oauth_verifier = isset($_REQUEST['oauth_verifier']) ? $_REQUEST['oauth_verifier'] : null;
+        $oauth_token = isset($_REQUEST['oauth_token']) ? $_REQUEST['oauth_token'] : null;
+        $oauth_verifier = isset($_REQUEST['oauth_verifier']) ? $_REQUEST['oauth_verifier'] : null;
 
-		if (!$oauth_token || !$oauth_verifier) {
-			throw new Exception("Authentication failed! {$this->providerId} returned an invalid Token.", 5);
-		}
+        if (!$oauth_token || !$oauth_verifier) {
+            throw new Exception("Authentication failed! {$this->providerId} returned an invalid Token.", 5);
+        }
 
-		$response = $this->api->retrieveTokenAccess($oauth_token, $this->token("oauth_token_secret"), $oauth_verifier);
+        $response = $this->api->retrieveTokenAccess($oauth_token, $this->token("oauth_token_secret"), $oauth_verifier);
 
-		if (isset($response['success']) && $response['success'] === true) {
-			$this->deleteToken("oauth_token");
-			$this->deleteToken("oauth_token_secret");
+        if (isset($response['success']) && $response['success'] === true) {
+            $this->deleteToken("oauth_token");
+            $this->deleteToken("oauth_token_secret");
 
-			$this->token("access_token_linkedin", $response['linkedin']);
-			$this->token("access_token", $response['linkedin']['oauth_token']);
-			$this->token("access_token_secret", $response['linkedin']['oauth_token_secret']);
+            $this->token("access_token_linkedin", $response['linkedin']);
+            $this->token("access_token", $response['linkedin']['oauth_token']);
+            $this->token("access_token_secret", $response['linkedin']['oauth_token_secret']);
 
-			// set user as logged in
-			$this->setUserConnected();
-		} else {
-			throw new Exception("Authentication failed! {$this->providerId} returned an invalid Token in response: " . Logger::dumpData( $response ), 5);
-		}
-	}
+            // set user as logged in
+            $this->setUserConnected();
+        } else {
+            throw new Exception("Authentication failed! {$this->providerId} returned an invalid Token in response: " . Logger::dumpData( $response ), 5);
+        }
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function getUserProfile() {
-		try {
-			// http://developer.linkedin.com/docs/DOC-1061
-			$response = $this->api->profile('~:('. implode(',', $this->config['fields']) .')');
-		} catch (LinkedInException $e) {
-			throw new Exception("User profile request failed! {$this->providerId} returned an error: {$e->getMessage()}", 6, $e);
-		}
+    /**
+     * {@inheritdoc}
+     */
+    function getUserProfile() {
+        try {
+            // https://developer.linkedin.com/docs/fields
+            $response = $this->api->profile('~:('. implode(',', $this->config['fields']) .')');
+        } catch (LinkedInException $e) {
+            throw new Exception("User profile request failed! {$this->providerId} returned an error: {$e->getMessage()}", 6, $e);
+        }
 
-		if (isset($response['success']) && $response['success'] === true) {
-			$data = @ new \SimpleXMLElement($response['linkedin']);
+        if (isset($response['success']) && $response['success'] === true) {
+            $data = @new \SimpleXMLElement($response['linkedin']);
 
-			if (!is_object($data)) {
-				throw new Exception("User profile request failed! {$this->providerId} returned an invalid xml data: " . Logger::dumpData( $data ), 6);
-			}
+            if (!is_object($data)) {
+                throw new Exception("User profile request failed! {$this->providerId} returned an invalid xml data: " . Logger::dumpData( $data ), 6);
+            }
 
-			$this->user->profile->identifier = (string) $data->{'id'};
-			$this->user->profile->firstName = (string) $data->{'first-name'};
-			$this->user->profile->lastName = (string) $data->{'last-name'};
-			$this->user->profile->displayName = trim($this->user->profile->firstName . " " . $this->user->profile->lastName);
+            $this->user->profile->identifier = (string) $data->{'id'};
+            $this->user->profile->firstName = (string) $data->{'first-name'};
+            $this->user->profile->lastName = (string) $data->{'last-name'};
+            $this->user->profile->displayName = trim($this->user->profile->firstName . " " . $this->user->profile->lastName);
 
-			$this->user->profile->email = (string) $data->{'email-address'};
-			$this->user->profile->emailVerified = (string) $data->{'email-address'};
+            $this->user->profile->email = (string) $data->{'email-address'};
+            $this->user->profile->emailVerified = (string) $data->{'email-address'};
 
-			if (isset($data->{'picture-url'})) {
-				$this->user->profile->photoURL = (string) $data->{'picture-url'};
+            if ($data->{'positions'}) {
+                $this->user->profile->job_title = (string) $data->{'positions'}->{'position'}->{'title'};
+                $this->user->profile->organization_name = (string) $data->{'positions'}->{'position'}->{'company'}->{'name'};
+            }
 
-			} elseif (isset($data->{'picture-urls'})) {
-				// picture-urls::(original)
-				$this->user->profile->photoURL = (string) $data->{'picture-urls'}->{'picture-url'};
+            if (isset($data->{'picture-url'})) {
+                $this->user->profile->photoURL = (string) $data->{'picture-url'};
 
-			} else {
-				$this->user->profile->photoURL = "";
-			}
+            } elseif (isset($data->{'picture-urls'})) {
+                // picture-urls::(original)
+                $this->user->profile->photoURL = (string) $data->{'picture-urls'}->{'picture-url'};
 
-			$this->user->profile->profileURL = (string) $data->{'public-profile-url'};
-			$this->user->profile->description = (string) $data->{'summary'};
+            } else {
+                $this->user->profile->photoURL = "";
+            }
 
-			if ($data->{'phone-numbers'} && $data->{'phone-numbers'}->{'phone-number'}) {
-				$this->user->profile->phone = (string) $data->{'phone-numbers'}->{'phone-number'}->{'phone-number'};
-			} else {
-				$this->user->profile->phone = null;
-			}
+            $this->user->profile->profileURL = (string) $data->{'public-profile-url'};
+            $this->user->profile->description = (string) $data->{'summary'};
 
-			if ($data->{'date-of-birth'}) {
-				$this->user->profile->birthDay = (string) $data->{'date-of-birth'}->day;
-				$this->user->profile->birthMonth = (string) $data->{'date-of-birth'}->month;
-				$this->user->profile->birthYear = (string) $data->{'date-of-birth'}->year;
-			}
+            if ($data->{'phone-numbers'} && $data->{'phone-numbers'}->{'phone-number'}) {
+                $this->user->profile->phone = (string) $data->{'phone-numbers'}->{'phone-number'}->{'phone-number'};
+            } else {
+                $this->user->profile->phone = null;
+            }
 
-			return $this->user->profile;
-		} else {
-			throw new Exception("User profile request failed! {$this->providerId} returned an invalid response: " . Logger::dumpData( $response ), 6);
-		}
-	}
+            if ($data->{'date-of-birth'}) {
+                $this->user->profile->birthDay = (string) $data->{'date-of-birth'}->day;
+                $this->user->profile->birthMonth = (string) $data->{'date-of-birth'}->month;
+                $this->user->profile->birthYear = (string) $data->{'date-of-birth'}->year;
+            }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function getUserContacts() {
-		try {
-			$response = $this->api->profile('~/connections:(id,first-name,last-name,picture-url,public-profile-url,summary)');
-		} catch (LinkedInException $e) {
-			throw new Exception("User contacts request failed! {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
-		}
+            if ($data->{'location'}) {
+                $this->user->profile->city = (string) $data->{'location'}->name;
+                if ($data->{'location'}->{'country'}) {
+                    $this->user->profile->country = (string) $data->{'location'}->{'country'}->code;
+                }
+            }
 
-		if (!$response || !$response['success']) {
-			return array();
-		}
+            return $this->user->profile;
+        } else {
+            throw new Exception("User profile request failed! {$this->providerId} returned an invalid response: " . Logger::dumpData( $response ), 6);
+        }
+    }
 
-		$connections = new \SimpleXMLElement($response['linkedin']);
+    /**
+     * {@inheritdoc}
+     */
+    function getUserContacts() {
+        try {
+            $response = $this->api->profile('~/connections:(id,first-name,last-name,picture-url,public-profile-url,summary)');
+        } catch (LinkedInException $e) {
+            throw new Exception("User contacts request failed! {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
+        }
 
-		$contacts = array();
+        if (!$response || !$response['success']) {
+            return array();
+        }
 
-		foreach ($connections->person as $connection) {
-			$uc = new UserContact();
+        $connections = new \SimpleXMLElement($response['linkedin']);
 
-			$uc->identifier = (string) $connection->id;
-			$uc->displayName = (string) $connection->{'last-name'} . " " . $connection->{'first-name'};
-			$uc->profileURL = (string) $connection->{'public-profile-url'};
-			$uc->photoURL = (string) $connection->{'picture-url'};
-			$uc->description = (string) $connection->{'summary'};
+        $contacts = array();
 
-			$contacts[] = $uc;
-		}
+        foreach ($connections->person as $connection) {
+            $uc = new UserContact();
 
-		return $contacts;
-	}
+            $uc->identifier = (string) $connection->id;
+            $uc->displayName = (string) $connection->{'last-name'} . " " . $connection->{'first-name'};
+            $uc->profileURL = (string) $connection->{'public-profile-url'};
+            $uc->photoURL = (string) $connection->{'picture-url'};
+            $uc->description = (string) $connection->{'summary'};
 
-	/**
-	 * {@inheritdoc}
-	 */
-	function setUserStatus($status) {
-		$parameters = array();
-		$private = true; // share with your connections only
+            $contacts[] = $uc;
+        }
 
-		if (is_array($status)) {
-			if (isset($status[0]) && !empty($status[0]))
-				$parameters["title"] = $status[0]; // post title
-			if (isset($status[1]) && !empty($status[1]))
-				$parameters["comment"] = $status[1]; // post comment
-			if (isset($status[2]) && !empty($status[2]))
-				$parameters["submitted-url"] = $status[2]; // post url
-			if (isset($status[3]) && !empty($status[3]))
-				$parameters["submitted-image-url"] = $status[3]; // post picture url
-			if (isset($status[4]) && !empty($status[4]))
-				$private = $status[4]; // true or false
-		}
-		else {
-			$parameters["comment"] = $status;
-		}
+        return $contacts;
+    }
 
-		try {
-			$response = $this->api->share('new', $parameters, $private);
-		} catch (LinkedInException $e) {
-			throw new Exception("Update user status update failed!  {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
-		}
+    /**
+     * {@inheritdoc}
+     */
+    function setUserStatus($status) {
+        $parameters = array();
+        $private = true; // share with your connections only
 
-		if (!$response || !$response['success']) {
-			throw new Exception("Update user status update failed! {$this->providerId} returned an error in response: " . Logger::dumpData( $response ));
-		}
+        if (is_array($status)) {
+            if (isset($status[0]) && !empty($status[0]))
+                $parameters["title"] = $status[0]; // post title
+            if (isset($status[1]) && !empty($status[1]))
+                $parameters["comment"] = $status[1]; // post comment
+            if (isset($status[2]) && !empty($status[2]))
+                $parameters["submitted-url"] = $status[2]; // post url
+            if (isset($status[3]) && !empty($status[3]))
+                $parameters["submitted-image-url"] = $status[3]; // post picture url
+            if (isset($status[4]) && !empty($status[4]))
+                $private = $status[4]; // true or false
+        }
+        else {
+            $parameters["comment"] = $status;
+        }
 
-		return $response;
-	}
+        try {
+            $response = $this->api->share('new', $parameters, $private);
+        } catch (LinkedInException $e) {
+            throw new Exception("Update user status update failed!  {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
+        }
 
-	/**
-	 * load the user latest activity
-	 *    - timeline : all the stream
-	 *    - me       : the user activity only
-	 * {@inheritdoc}
-	 */
-	function getUserActivity($stream) {
-		try {
-			if ($stream == "me") {
-				$response = $this->api->updates('?type=SHAR&scope=self&count=25');
-			} else {
-				$response = $this->api->updates('?type=SHAR&count=25');
-			}
-		} catch (LinkedInException $e) {
-			throw new Exception("User activity stream request failed! {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
-		}
+        if (!$response || !$response['success']) {
+            throw new Exception("Update user status update failed! {$this->providerId} returned an error in response: " . Logger::dumpData( $response ));
+        }
 
-		if (!$response || !$response['success']) {
-			return array();
-		}
+        return $response;
+    }
 
-		$updates = new \SimpleXMLElement($response['linkedin']);
+    /**
+     * load the user latest activity
+     *    - timeline : all the stream
+     *    - me       : the user activity only
+     * {@inheritdoc}
+     */
+    function getUserActivity($stream) {
+        try {
+            if ($stream == "me") {
+                $response = $this->api->updates('?type=SHAR&scope=self&count=25');
+            } else {
+                $response = $this->api->updates('?type=SHAR&count=25');
+            }
+        } catch (LinkedInException $e) {
+            throw new Exception("User activity stream request failed! {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
+        }
 
-		$activities = array();
+        if (!$response || !$response['success']) {
+            return array();
+        }
 
-		foreach ($updates->update as $update) {
-			$person = $update->{'update-content'}->person;
-			$share = $update->{'update-content'}->person->{'current-share'};
+        $updates = new \SimpleXMLElement($response['linkedin']);
 
-			$ua = new UserActivity();
+        $activities = array();
 
-			$ua->id = (string) $update->id;
-			$ua->date = (string) $update->timestamp;
-			$ua->text = (string) $share->{'comment'};
+        foreach ($updates->update as $update) {
+            $person = $update->{'update-content'}->person;
+            $share = $update->{'update-content'}->person->{'current-share'};
 
-			$ua->user->identifier = (string) $person->id;
-			$ua->user->displayName = (string) $person->{'first-name'} . ' ' . $person->{'last-name'};
-			$ua->user->profileURL = (string) $person->{'site-standard-profile-request'}->url;
-			$ua->user->photoURL = null;
+            $ua = new UserActivity();
 
-			$activities[] = $ua;
-		}
+            $ua->id = (string) $update->id;
+            $ua->date = (string) $update->timestamp;
+            $ua->text = (string) $share->{'comment'};
 
-		return $activities;
-	}
+            $ua->user->identifier = (string) $person->id;
+            $ua->user->displayName = (string) $person->{'first-name'} . ' ' . $person->{'last-name'};
+            $ua->user->profileURL = (string) $person->{'site-standard-profile-request'}->url;
+            $ua->user->photoURL = null;
+
+            $activities[] = $ua;
+        }
+
+        return $activities;
+    }
 
 }
