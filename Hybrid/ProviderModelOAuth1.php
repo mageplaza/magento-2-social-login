@@ -74,7 +74,7 @@ class ProviderModelOAuth1 extends ProviderModel {
      */
     function initialize() {
         // 1 - check application credentials
-        if (!$this->config["keys"]["key"] || !$this->config["keys"]["secret"]) {
+        if (!$this->config["keys"]["id"] || !$this->config["keys"]["secret"]) {
             throw new Exception("Your application key and secret are required in order to connect to {$this->providerId}.", 4);
         }
 
@@ -87,20 +87,20 @@ class ProviderModelOAuth1 extends ProviderModel {
         // 3.1 - setup access_token if any stored
         if ($this->token("access_token")) {
             $this->api = new OAuth1Client(
-                $this->config["keys"]["key"], $this->config["keys"]["secret"], $this->token("access_token"), $this->token("access_token_secret")
+                $this->config["keys"]["id"], $this->config["keys"]["secret"], $this->token("access_token"), $this->token("access_token_secret")
             );
         }
 
         // 3.2 - setup request_token if any stored, in order to exchange with an access token
         elseif ($this->token("request_token")) {
             $this->api = new OAuth1Client(
-                $this->config["keys"]["key"], $this->config["keys"]["secret"], $this->token("request_token"), $this->token("request_token_secret")
+                $this->config["keys"]["id"], $this->config["keys"]["secret"], $this->token("request_token"), $this->token("request_token_secret")
             );
         }
 
         // 3.3 - instanciate OAuth client with client credentials
         else {
-            $this->api = new OAuth1Client($this->config["keys"]["key"], $this->config["keys"]["secret"]);
+            $this->api = new OAuth1Client($this->config["keys"]["id"], $this->config["keys"]["secret"]);
         }
 
         // Set curl proxy if exist
