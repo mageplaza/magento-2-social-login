@@ -19,3 +19,5 @@
     'Mageplaza_SocialLogin',
     __DIR__
 );
+
+
