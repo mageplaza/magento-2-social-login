@@ -15,7 +15,7 @@ use Mageplaza\SocialLogin\Hybrid\UserActivity;
 use Mageplaza\SocialLogin\Hybrid\UserContact;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
-
+require BP . '/app/code/Mageplaza/SocialLogin/Hybrid/thirdparty/Facebook/autoload.php';
 /**
  * Facebook provider adapter based on OAuth2 protocol
  *
