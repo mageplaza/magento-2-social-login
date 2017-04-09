@@ -183,6 +183,7 @@ abstract class AbstractSocial extends Action
 				}
 				window.close();
 			</script>";
+		die;
 	}
 
 	/**
