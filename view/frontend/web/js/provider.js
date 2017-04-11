@@ -43,7 +43,7 @@ define(['jquery'], function ($) {
             this.outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth;
             this.outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22);
             this.width = w ? w : 500;
-            this.height = h ? h : 270;
+            this.height = h ? h : 420;
             this.left = l ? l : parseInt(this.screenX + ((this.outerWidth - this.width) / 2), 10);
             this.top = t ? t : parseInt(this.screenY + ((this.outerHeight - this.height) / 2.5), 10);
 

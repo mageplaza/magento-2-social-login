@@ -285,32 +285,30 @@
                     </depends>
                 </field>
             </group>
-            <!--<group id="live" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">-->
-                <!--<label>Live</label>-->
-                <!--<field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">-->
-                    <!--<label>Enable</label>-->
-                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-                    <!--<comment><![CDATA[Create app <a href="https://account.live.com/developers/applications/create" target="_bank">here</a>]]></comment>-->
-                <!--</field>-->
-                <!--<field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">-->
-                    <!--<label>Application ID</label>-->
-                <!--</field>-->
-                <!--<field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">-->
-                    <!--<label>Application Secret</label>-->
-                <!--</field>-->
-                <!--<field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">-->
-                    <!--<frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Live</frontend_model>-->
-                    <!--<label>Callback Url</label>-->
-                <!--</field>-->
-            <!--</group>-->
-            <group id="openid" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>OpenID</label>
+            <group id="github" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Github</label>
                 <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Create app <a href="https://github.com/settings/applications/new" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="identifier" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Identifier</label>
+                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client Secret</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Github</frontend_model>
+                    <label>Callback Url</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>

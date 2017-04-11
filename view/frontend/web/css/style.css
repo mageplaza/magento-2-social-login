@@ -38,6 +38,7 @@
 .actions-toolbar button {border-radius: 0;}
 .social-btn button {height: 33px; border: none;}
 .social-btn button span span {margin-left: 25px; color: #ffffff;}
+.social-login-customer-authentication {width: 100%}
 .social-login-authentication-channel .actions-toolbar.social-btn > .primary .action {width: 100%; margin: 0; min-width: 170px; text-align: left; border-radius: 5px;}
 .social-login-authentication-channel .actions-toolbar.social-btn > .primary .action:hover{opacity: 0.9;}
 .social-btn-actions-toolbar{display: inline-block !important;}

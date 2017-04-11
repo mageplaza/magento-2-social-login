@@ -22,6 +22,7 @@ namespace Mageplaza\SocialLogin\Controller;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
@@ -44,12 +45,12 @@ class AbstractSocial extends Action
 	protected $storeManager;
 
 	/**
-	 * @type \Mageplaza\SocialLogin\Controller\AbstractSocial|mixed
+	 * @type \Mageplaza\SocialLogin\Helper\Social
 	 */
 	protected $apiHelper;
 
 	/**
-	 * @type \Mageplaza\SocialLogin\Controller\AbstractSocial|mixed
+	 * @type \Mageplaza\SocialLogin\Model\Social
 	 */
 	protected $apiObject;
 
@@ -59,6 +60,11 @@ class AbstractSocial extends Action
 	 * @type string
 	 */
 	protected $socialType;
+
+	/**
+	 * @var AccountRedirect
+	 */
+	private $accountRedirect;
 
 	/**
 	 * @type
@@ -76,20 +82,24 @@ class AbstractSocial extends Action
 	 * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
 	 * @param \Mageplaza\SocialLogin\Model\Social $apiObject
 	 * @param \Magento\Customer\Model\Session $customerSession
+	 * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
 	 */
 	public function __construct(
 		Context $context,
 		StoreManagerInterface $storeManager,
 		SocialHelper $apiHelper,
 		Social $apiObject,
-		Session $customerSession
+		Session $customerSession,
+		AccountRedirect $accountRedirect
 	)
 	{
 		parent::__construct($context);
-		$this->storeManager = $storeManager;
-		$this->apiHelper    = $apiHelper;
-		$this->apiObject    = $apiObject;
-		$this->session      = $customerSession;
+		$this->storeManager    = $storeManager;
+		$this->apiHelper       = $apiHelper;
+		$this->apiObject       = $apiObject;
+		$this->session         = $customerSession;
+		$this->accountRedirect = $accountRedirect;
+		$this->urlBuilder      = $context->getUrl();
 
 		$this->apiHelper->correctXmlPath($this->socialType);
 	}
@@ -106,7 +116,7 @@ class AbstractSocial extends Action
 
 		$customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $this->socialType);
 		if (!$customer->getId()) {
-			$name = explode(' ', $userProfile->displayName);
+			$name = explode(' ', $userProfile->displayName ?: __('New User'));
 			$user = array_merge([
 				'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($this->socialType) . '.com',
 				'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
@@ -251,25 +261,12 @@ class AbstractSocial extends Action
 	 */
 	protected function _loginPostRedirect()
 	{
-		$store = $this->storeManager->getStore();
+		$url = $this->urlBuilder->getUrl('customer/account');
 
-		$redirectUrl = $this->apiHelper->getConfigValue(('general/select_redirect_page'), $store->getId());
-		switch ($redirectUrl) {
-			case 1:
-				$url = $store->getUrl('checkout/cart');
-				break;
-			case 2:
-				$url = $store->getUrl();
-				break;
-			case 3:
-				$url = $this->session->getCurrentPage();
-				break;
-			case 4:
-				$url = $this->apiHelper->getConfigValue(('general/custom_page'), $store->getId());
-				break;
-			default:
-				$url = $store->getUrl('customer/account');
-				break;
+		$requestedRedirect = $this->accountRedirect->getRedirectCookie();
+		if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {
+			$url = $this->_redirect->success($requestedRedirect);
+			$this->accountRedirect->clearRedirectCookie();
 		}
 
 		return $url;

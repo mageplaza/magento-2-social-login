@@ -18,15 +18,15 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-namespace Mageplaza\SocialLogin\Controller\Login;
+namespace Mageplaza\SocialLogin\Block\System\Redirect;
 
-use Mageplaza\SocialLogin\Controller\AbstractSocial;
+use Mageplaza\SocialLogin\Block\System\Redirect;
 
 /**
- * Class Live
- * @package Mageplaza\SocialLogin\Controller\Login
+ * Class Foursquare
+ * @package Mageplaza\SocialLogin\Block\System\Redirect
  */
-class Live extends AbstractSocial
+class Github extends Redirect
 {
-	protected $socialType = 'Live';
+	protected $socialType = 'Github';
 }

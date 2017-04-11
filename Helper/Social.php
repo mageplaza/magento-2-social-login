@@ -29,9 +29,9 @@ use Mageplaza\SocialLogin\Helper\Data as HelperData;
 class Social extends HelperData
 {
 	const XML_PATH = [
-		'api_enabled'       => 'sociallogin/{social_type}/is_enabled',
-		'api_app_id'        => 'sociallogin/{social_type}/app_id',
-		'api_app_secret'    => 'sociallogin/{social_type}/app_secret'
+		'api_enabled'    => 'sociallogin/{social_type}/is_enabled',
+		'api_app_id'     => 'sociallogin/{social_type}/app_id',
+		'api_app_secret' => 'sociallogin/{social_type}/app_secret'
 	];
 
 	/**
@@ -122,11 +122,26 @@ class Social extends HelperData
 	 */
 	public function getBaseAuthUrl($type = null)
 	{
-		$type = $type ?: $this->socialType;
+		$scope = $this->getScopeUrl();
+		$type  = $type ?: $this->socialType;
 		if (strtolower($type) == 'live') {
-			return $this->_getUrl('sociallogin/social_callback/live', array('_nosid' => true));
+			return $this->_getUrl('sociallogin/social_callback/live', array('_nosid' => true, '_scope' => $scope));
 		}
 
-		return $this->_getUrl('sociallogin/social/callback', array('_nosid' => true));
+		return $this->_getUrl('sociallogin/social/callback', array('_nosid' => true, '_scope' => $scope));
+	}
+
+	/**
+	 * @return int
+	 */
+	protected function getScopeUrl()
+	{
+		$scope = $this->_request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?: $this->storeManager->getStore()->getId();
+
+		if ($website = $this->_request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE)) {
+			$scope = $this->storeManager->getWebsite($website)->getDefaultStore()->getId();
+		}
+
+		return $scope;
 	}
 }

@@ -37,9 +37,9 @@ class Social extends Template
 		'linkedin'   => 'LinkedIn',
 		'yahoo'      => 'Yahoo',
 		'foursquare' => 'Foursquare',
-		'openid'     => 'OpenID',
 		'vkontakte'  => 'Vkontakte',
-		'instagram'  => 'Instagram'
+		'instagram'  => 'Instagram',
+		'github'     => 'Github',
 	];
 
 	/**
