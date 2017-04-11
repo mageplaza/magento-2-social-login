@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Mageplaza
  *
@@ -19,11 +18,15 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_SocialLogin" setup_version="1.0.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-        </sequence>
-    </module>
-</config>
+namespace Mageplaza\SocialLogin\Block\System\Redirect;
+
+use Mageplaza\SocialLogin\Block\System\Redirect;
+
+/**
+ * Class Instagram
+ * @package Mageplaza\SocialLogin\Block\System\Redirect
+ */
+class Instagram extends Redirect
+{
+	protected $socialType = 'Instagram';
+}

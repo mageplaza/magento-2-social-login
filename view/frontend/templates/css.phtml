@@ -1,0 +1,48 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php
+$helper = $block->helper();
+$color  = $helper->getStyleManagement();
+$css    = $helper->getCustomCss();
+?>
+<style>
+    #social-login-popup .social-login-title {
+		background-color: <?php echo $color ?>
+	}
+
+	#social-login-popup .social-login #bnt-social-login-authentication {
+		background-color: <?php echo $color ?>;
+		border: <?php echo $color ?>
+	}
+
+	#social-login-popup .forgot .primary button {
+		background-color: <?php echo $color ?>;
+		border: <?php echo $color ?>
+	}
+
+	#social-login-popup .create .primary button {
+		background-color: <?php echo $color ?>;
+		border: <?php echo $color ?>
+	}
+
+	<?php echo $css ?>
+</style>

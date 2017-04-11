@@ -20,10 +20,9 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_SocialLogin" setup_version="1.0.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
+    <action name="sociallogin/popup/create">
+        <section name="checkout-data"/>
+        <section name="cart"/>
+    </action>
 </config>

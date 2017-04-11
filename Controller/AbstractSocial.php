@@ -1,4 +1,23 @@
 <?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
 namespace Mageplaza\SocialLogin\Controller;
 
 use Magento\Framework\App\Action\Action;
@@ -12,7 +31,7 @@ use Magento\Customer\Model\Session;
  * Class AbstractSocial
  * @package Mageplaza\SocialLogin\Controller
  */
-abstract class AbstractSocial extends Action
+class AbstractSocial extends Action
 {
 	/**
 	 * @type \Magento\Customer\Model\Session
@@ -42,21 +61,20 @@ abstract class AbstractSocial extends Action
 	protected $socialType;
 
 	/**
-	 * Redirect Url flag
-	 *
-	 * @type null
+	 * @type
 	 */
-	protected $redirectEdit = false;
-
 	private $cookieMetadataManager;
+
+	/**
+	 * @type
+	 */
 	private $cookieMetadataFactory;
 
 	/**
-	 * Constructor
-	 *
 	 * @param \Magento\Framework\App\Action\Context $context
 	 * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-	 * @param \Mageplaza\SocialLogin\Helper\Data $apiHelper
+	 * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
+	 * @param \Mageplaza\SocialLogin\Model\Social $apiObject
 	 * @param \Magento\Customer\Model\Session $customerSession
 	 */
 	public function __construct(
@@ -77,6 +95,42 @@ abstract class AbstractSocial extends Action
 	}
 
 	/**
+	 * @return \Mageplaza\SocialLogin\Controller\AbstractSocial
+	 */
+	public function execute()
+	{
+		$userProfile = $this->apiObject->getUserProfile($this->socialType);
+		if (!$userProfile->identifier) {
+			return $this->emailRedirect($this->socialType);
+		}
+
+		$customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $this->socialType);
+		if (!$customer->getId()) {
+			$name = explode(' ', $userProfile->displayName);
+			$user = array_merge([
+				'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($this->socialType) . '.com',
+				'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+				'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+				'identifier' => $userProfile->identifier,
+				'type'       => $this->socialType
+			], $this->getUserData($userProfile));
+
+			$customer = $this->createCustomer($user);
+		}
+
+		return $this->_appendJs($customer);
+	}
+
+	/**
+	 * @param $profile
+	 * @return array
+	 */
+	protected function getUserData($profile)
+	{
+		return [];
+	}
+
+	/**
 	 * Get Store object
 	 *
 	 * @return \Magento\Store\Api\Data\StoreInterface
@@ -87,52 +141,18 @@ abstract class AbstractSocial extends Action
 	}
 
 	/**
-	 * Get social data
-	 *
-	 * @return mixed
-	 */
-	public function getUserProfile()
-	{
-		$auth  = $this->apiObject->getAuth($this->socialType);
-		$value = $auth->authenticate($this->socialType);
-
-		return $value->getUserProfile();
-	}
-
-	/**
 	 * Redirect to login page if social data is not contain email address
 	 *
 	 * @param $apiLabel
 	 * @return $this
 	 */
-	public function emailRedirect($apiLabel)
+	public function emailRedirect($apiLabel, $needTranslate = true)
 	{
-		$this->messageManager->addErrorMessage(__('Email is Null, Please enter email in your %1 profile', $apiLabel));
+		$message = $needTranslate ? __('Email is Null, Please enter email in your %1 profile', $apiLabel) : $apiLabel;
+		$this->messageManager->addErrorMessage($message);
 		$this->_redirect('customer/account/login');
 
 		return $this;
-	}
-
-	/**
-	 * Get customer if it already exist
-	 *
-	 * @param $identifier
-	 * @return null
-	 */
-	public function checkCustomer($identifier)
-	{
-		$customer = $this->apiHelper->getCustomerBySocialId($identifier, $this->socialType);
-		if ($customer) {
-			if ($customer->getConfirmation()) {
-				try {
-					$customer->setConfirmation(null);
-					$customer->save();
-				} catch (\Exception $e) {
-				}
-			}
-		}
-
-		return $customer;
 	}
 
 	/**
@@ -143,15 +163,20 @@ abstract class AbstractSocial extends Action
 	 */
 	public function createCustomer($user)
 	{
-		$customer = $this->apiHelper->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
-		if (!$customer || !$customer->getId()) {
-			$customer = $this->apiHelper->createCustomerMultiWebsite($user, $this->getStore()->getWebsiteId(), $this->getStore()->getId());
-			if ($this->apiHelper->sendPassword()) {
-				$customer->sendPasswordReminderEmail();
+		$customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
+		if (!$customer->getId()) {
+			try {
+				$customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
+				if ($this->apiHelper->canSendPassword()) {
+					$customer->sendPasswordReminderEmail();
+				}
+			} catch (\Exception $e) {
+				$this->emailRedirect($e->getMessage(), false);
+
+				return;
 			}
 		}
-		$this->apiHelper->setAuthorCustomer($user['identifier'], $customer->getId(), $this->socialType, $this->apiHelper->sendPassword());
-		$this->redirectEdit = true;
+		$this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $this->socialType);
 
 		return $customer;
 	}
@@ -198,6 +223,7 @@ abstract class AbstractSocial extends Action
 				\Magento\Framework\Stdlib\Cookie\PhpCookieManager::class
 			);
 		}
+
 		return $this->cookieMetadataManager;
 	}
 
@@ -214,6 +240,7 @@ abstract class AbstractSocial extends Action
 				\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class
 			);
 		}
+
 		return $this->cookieMetadataFactory;
 	}
 
@@ -225,9 +252,6 @@ abstract class AbstractSocial extends Action
 	protected function _loginPostRedirect()
 	{
 		$store = $this->storeManager->getStore();
-		if ($this->redirectEdit) {
-			return $store->getUrl('customer/account/edit');
-		}
 
 		$redirectUrl = $this->apiHelper->getConfigValue(('general/select_redirect_page'), $store->getId());
 		switch ($redirectUrl) {

@@ -1,25 +1,35 @@
-<?php $availableSocials = $this->getAvailableSocials(); ?>
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php $availableSocials = $block->getAvailableSocials(); ?>
 <?php if (sizeof($availableSocials)): ?>
-<div class="block social-login-authentication-channel">
+<div class="block social-login-authentication-channel account-social-login">
     <div class="block-content">
         <?php foreach ($availableSocials as $key => $social): ?>
 			<div class="actions-toolbar social-btn social-btn-actions-toolbar <?= $key ?>-login">
-                <div class="primary">
-                    <button class="action btn_<?= $key ?>_login" id="account_btn_<?= $key ?>_login" type="button">
-                        <span>
-                            <span><?php echo __('%1 Sign In', $social->getLabel()) ?></span>
-                        </span>
-                    </button>
-                </div>
+                <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>" data-mage-init='{"socialProvider": {"url": "<?php echo $social->getLoginUrl()?>", "label": "<?php echo __('Login By %1', $social->getLabel())?>"}}'>
+                    <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
+                    <?php echo __('Sign in with %1', $social->getLabel()) ?>
+                </a>
             </div>
-			<script>
-                require(['jquery', 'Mageplaza_SocialLogin/js/sociallogin'], function ($, SocialLoginPopup) {
-					$('#account_btn_<?= $key ?>_login').click(function () {
-						var popup = new SocialLoginPopup();
-						popup.openPopup('<?php echo $social->getLoginUrl()?>', '<?php echo __('Login By %1', $social->getLabel())?>');
-					});
-				});
-            </script>
 		<?php endforeach; ?>
     </div>
 </div>

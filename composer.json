@@ -2,10 +2,11 @@
   "name": "mageplaza/magento-2-social-login",
   "description": "Magento 2 Social Login Extension",
   "require": {
-    "mageplaza/core-m2": "^1.3"
+    "mageplaza/core-m2": "^1.3|dev-master",
+    "hybridauth/hybridauth": "*"
   },
   "type": "magento2-module",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
