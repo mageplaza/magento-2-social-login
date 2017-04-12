@@ -77,6 +77,11 @@ class AbstractSocial extends Action
 	private $cookieMetadataFactory;
 
 	/**
+	 * @var \Magento\Framework\Controller\Result\RawFactory
+	 */
+	protected $resultRawFactory;
+
+	/**
 	 * @param \Magento\Framework\App\Action\Context $context
 	 * @param \Magento\Store\Model\StoreManagerInterface $storeManager
 	 * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
@@ -90,16 +95,18 @@ class AbstractSocial extends Action
 		SocialHelper $apiHelper,
 		Social $apiObject,
 		Session $customerSession,
-		AccountRedirect $accountRedirect
+		AccountRedirect $accountRedirect,
+		\Magento\Framework\Controller\Result\RawFactory $resultRawFactory
 	)
 	{
 		parent::__construct($context);
-		$this->storeManager    = $storeManager;
-		$this->apiHelper       = $apiHelper;
-		$this->apiObject       = $apiObject;
-		$this->session         = $customerSession;
-		$this->accountRedirect = $accountRedirect;
-		$this->urlBuilder      = $context->getUrl();
+		$this->storeManager     = $storeManager;
+		$this->apiHelper        = $apiHelper;
+		$this->apiObject        = $apiObject;
+		$this->session          = $customerSession;
+		$this->accountRedirect  = $accountRedirect;
+		$this->urlBuilder       = $context->getUrl();
+		$this->resultRawFactory = $resultRawFactory;
 
 		$this->apiHelper->correctXmlPath($this->socialType);
 	}
@@ -183,7 +190,7 @@ class AbstractSocial extends Action
 			} catch (\Exception $e) {
 				$this->emailRedirect($e->getMessage(), false);
 
-				return;
+				return false;
 			}
 		}
 		$this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $this->socialType);
@@ -210,14 +217,10 @@ class AbstractSocial extends Action
 			}
 		}
 
-		echo "<script type=\"text/javascript\">
-				try{
-					window.opener.location.href=\"" . $this->_loginPostRedirect() . "\";
-				} catch(e){
-					window.opener.location.reload(true);
-				}
-				window.close();
-			</script>";
+		/** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
+		$resultRaw = $this->resultRawFactory->create();
+
+		return $resultRaw->setContents(sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
 	}
 
 	/**
@@ -263,10 +266,14 @@ class AbstractSocial extends Action
 	{
 		$url = $this->urlBuilder->getUrl('customer/account');
 
-		$requestedRedirect = $this->accountRedirect->getRedirectCookie();
-		if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {
-			$url = $this->_redirect->success($requestedRedirect);
-			$this->accountRedirect->clearRedirectCookie();
+		if ($this->_request->getParam('authen') == 'popup') {
+			$url = $this->urlBuilder->getUrl('checkout');
+		} else {
+			$requestedRedirect = $this->accountRedirect->getRedirectCookie();
+			if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {
+				$url = $this->_redirect->success($requestedRedirect);
+				$this->accountRedirect->clearRedirectCookie();
+			}
 		}
 
 		return $url;

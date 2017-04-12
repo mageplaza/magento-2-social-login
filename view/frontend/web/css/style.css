@@ -34,6 +34,11 @@
 #social-login-popup .mfp-close {color: #ffffff;}
 #social-login-popup .message.error > *:first-child:before{top: 50% !important;}
 #social-login-popup .message.success > *:first-child:before{top: 50% !important;}
+/* Authentication Popup */
+.social-login-authentication-popup {width: 100% !important;}
+.social-login-authentication-popup .block-content {display: block !important;}
+.social-login-authentication-popup .block-content .actions-toolbar {display: inline-block !important;}
+.social-login-authentication-popup .block-content .actions-toolbar .btn-social {height: 20px !important; padding-left: 19px !important;}
 /*Button Style*/
 .actions-toolbar button {border-radius: 0;}
 .social-btn button {height: 33px; border: none;}

@@ -73,10 +73,10 @@ class Social extends Template
 		foreach (self::SOCIALS_LIST as $socialKey => $socialLabel) {
 			$helper = $this->socialHelper->correctXmlPath($socialKey);
 			if ($helper->isEnabled()) {
-				$availabelSocials[$socialKey] = new \Magento\Framework\DataObject([
+				$availabelSocials[$socialKey] = [
 					'label'     => $socialLabel,
 					'login_url' => $this->getLoginUrl($socialKey),
-				]);
+				];
 			}
 		}
 
@@ -100,12 +100,43 @@ class Social extends Template
 		return $class;
 	}
 
+	public function getSocialButtonsConfig()
+	{
+		$availableButtons = $this->getAvailableSocials();
+		foreach ($availableButtons as $key => &$button) {
+			$button['url']     = $this->getLoginUrl($key, ['authen' => 'popup']);
+			$button['key']     = $key;
+			$button['btn_key'] = $this->getBtnKey($key);
+		}
+
+		return $availableButtons;
+	}
+
+	/**
+	 * @param null $position
+	 * @return bool
+	 */
+	public function canShow($position = null)
+	{
+		$displayConfig = $this->socialHelper->getGeneralConfig('social_display');
+		$displayConfig = explode(',', $displayConfig);
+
+		if (!$position) {
+			$position = ($this->getRequest()->getFullActionName() == 'customer_account_login') ?
+				\Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_LOGIN :
+				\Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_CREATE;
+		}
+
+		return in_array($position, $displayConfig);
+	}
+
 	/**
 	 * @param $socialKey
+	 * @param array $params
 	 * @return string
 	 */
-	public function getLoginUrl($socialKey)
+	public function getLoginUrl($socialKey, $params = [])
 	{
-		return $this->getUrl('sociallogin/login/' . $socialKey);
+		return $this->getUrl('sociallogin/login/' . $socialKey, $params);
 	}
 }

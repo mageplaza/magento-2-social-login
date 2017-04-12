@@ -37,6 +37,10 @@
                     <label>Send Password To Customer</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="social_display" translate="label comment" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Social Login Buttons on</label>
+                    <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Position</source_model>
+                </field>
                 <field id="popup_login" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Popup Login</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
