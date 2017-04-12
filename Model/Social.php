@@ -59,7 +59,7 @@ class Social extends AbstractModel
 		'LinkedIn'  => ["fields" => ['id', 'first-name', 'last-name', 'email-address']],
 		'Vkontakte' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Vkontakte']],
 		'Instagram' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Instagram']],
-		'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Github']]
+		'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\GitHub']]
 	];
 
 	/**
