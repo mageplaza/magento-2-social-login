@@ -30,18 +30,6 @@ use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
  */
 class Social extends Template
 {
-	const SOCIALS_LIST = [
-		'facebook'   => 'Facebook',
-		'google'     => 'Google',
-		'twitter'    => 'Twitter',
-		'linkedin'   => 'LinkedIn',
-		'yahoo'      => 'Yahoo',
-		'foursquare' => 'Foursquare',
-		'vkontakte'  => 'Vkontakte',
-		'instagram'  => 'Instagram',
-		'github'     => 'Github',
-	];
-
 	/**
 	 * @type \Mageplaza\SocialLogin\Helper\Social
 	 */
@@ -70,9 +58,9 @@ class Social extends Template
 	{
 		$availabelSocials = [];
 
-		foreach (self::SOCIALS_LIST as $socialKey => $socialLabel) {
-			$helper = $this->socialHelper->correctXmlPath($socialKey);
-			if ($helper->isEnabled()) {
+		foreach ($this->socialHelper->getSocialTypes() as $socialKey => $socialLabel) {
+			$this->socialHelper->setType($socialKey);
+			if ($this->socialHelper->isEnabled()) {
 				$availabelSocials[$socialKey] = [
 					'label'     => $socialLabel,
 					'login_url' => $this->getLoginUrl($socialKey),
@@ -137,6 +125,8 @@ class Social extends Template
 	 */
 	public function getLoginUrl($socialKey, $params = [])
 	{
-		return $this->getUrl('sociallogin/login/' . $socialKey, $params);
+		$params['type'] = $socialKey;
+
+		return $this->getUrl('sociallogin/social/login', $params);
 	}
 }

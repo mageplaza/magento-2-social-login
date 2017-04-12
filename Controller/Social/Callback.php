@@ -20,23 +20,12 @@
  */
 namespace Mageplaza\SocialLogin\Controller\Social;
 
-use Mageplaza\SocialLogin\Model\Social;
-use Magento\Framework\App\Action\Context;
-
 /**
  * Class Callback
  * @package Mageplaza\SocialLogin\Controller\Social
  */
 class Callback extends \Magento\Framework\App\Action\Action
 {
-	protected $social;
-
-	public function __construct(Context $context, Social $social)
-	{
-		parent::__construct($context);
-		$this->social = $social;
-	}
-
 	public function execute()
 	{
 		\Hybrid_Endpoint::process();

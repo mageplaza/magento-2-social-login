@@ -29,17 +29,12 @@ use Magento\Backend\Block\Template\Context;
  * Class Redirect
  * @package Mageplaza\SocialLogin\Block\System
  */
-class Redirect extends FormField
+class RedirectUrl extends FormField
 {
 	/**
 	 * @type \Mageplaza\SocialLogin\Helper\Social
 	 */
 	protected $socialHelper;
-
-	/**
-	 * @type string
-	 */
-	protected $socialType = '';
 
 	/**
 	 * @param \Magento\Backend\Block\Template\Context $context
@@ -61,9 +56,9 @@ class Redirect extends FormField
 	 */
 	protected function _getElementHtml(AbstractElement $element)
 	{
-		$html_id     = $element->getHtmlId();
-		$redirectUrl = $this->socialHelper->getAuthUrl($this->socialType);
-		$html        = '<input style="opacity:1;" readonly id="' . $html_id . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
+		$elementId   = explode('_', $element->getHtmlId());
+		$redirectUrl = $this->socialHelper->getAuthUrl($elementId[1]);
+		$html        = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
 
 		return $html;
 	}

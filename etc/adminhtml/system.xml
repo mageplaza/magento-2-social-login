@@ -93,7 +93,7 @@
                     </depends>
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Facebook</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Valid OAuth redirect URIs</label>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -122,7 +122,36 @@
                     </depends>
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Google</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
+                    <label>REDIRECT URIS</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="amazon" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Amazon</label>
+                <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Create app <a href="https://sellercentral.amazon.com/gp/homepage.html" target="_bank">here</a>]]></comment>
+                </field>
+                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client Secret</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>REDIRECT URIS</label>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -151,7 +180,7 @@
                     </depends>
                 </field>
                 <field id="redirect_url" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Twitter</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Callback URL</label>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -180,7 +209,7 @@
                     </depends>
                 </field>
                 <field id="redirect_url" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\LinkedIn</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Redirect URL</label>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -231,7 +260,7 @@
                     </depends>
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Foursquare</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Callback Url</label>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -260,7 +289,7 @@
                     </depends>
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Instagram</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>REDIRECT URIS</label>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -311,7 +340,7 @@
                     </depends>
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\Redirect\Github</frontend_model>
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Callback Url</label>
                     <validate>required-entry</validate>
                     <depends>

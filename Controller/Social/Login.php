@@ -18,7 +18,7 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-namespace Mageplaza\SocialLogin\Controller;
+namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -32,7 +32,7 @@ use Magento\Customer\Model\Session;
  * Class AbstractSocial
  * @package Mageplaza\SocialLogin\Controller
  */
-class AbstractSocial extends Action
+class Login extends Action
 {
 	/**
 	 * @type \Magento\Customer\Model\Session
@@ -53,13 +53,6 @@ class AbstractSocial extends Action
 	 * @type \Mageplaza\SocialLogin\Model\Social
 	 */
 	protected $apiObject;
-
-	/**
-	 * Type of social network
-	 *
-	 * @type string
-	 */
-	protected $socialType;
 
 	/**
 	 * @var AccountRedirect
@@ -107,8 +100,6 @@ class AbstractSocial extends Action
 		$this->accountRedirect  = $accountRedirect;
 		$this->urlBuilder       = $context->getUrl();
 		$this->resultRawFactory = $resultRawFactory;
-
-		$this->apiHelper->correctXmlPath($this->socialType);
 	}
 
 	/**
@@ -116,23 +107,30 @@ class AbstractSocial extends Action
 	 */
 	public function execute()
 	{
-		$userProfile = $this->apiObject->getUserProfile($this->socialType);
-		if (!$userProfile->identifier) {
-			return $this->emailRedirect($this->socialType);
+		$type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
+		if (!$type) {
+			$this->_forward('noroute');
+
+			return;
 		}
 
-		$customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $this->socialType);
+		$userProfile = $this->apiObject->getUserProfile($type);
+		if (!$userProfile->identifier) {
+			return $this->emailRedirect($type);
+		}
+
+		$customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
 		if (!$customer->getId()) {
 			$name = explode(' ', $userProfile->displayName ?: __('New User'));
 			$user = array_merge([
-				'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($this->socialType) . '.com',
+				'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
 				'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
 				'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
 				'identifier' => $userProfile->identifier,
-				'type'       => $this->socialType
+				'type'       => $type
 			], $this->getUserData($userProfile));
 
-			$customer = $this->createCustomer($user);
+			$customer = $this->createCustomer($user, $type);
 		}
 
 		return $this->_appendJs($customer);
@@ -178,7 +176,7 @@ class AbstractSocial extends Action
 	 * @param $user
 	 * @return bool|\Magento\Customer\Model\Customer|mixed
 	 */
-	public function createCustomer($user)
+	public function createCustomer($user, $type)
 	{
 		$customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
 		if (!$customer->getId()) {
@@ -193,7 +191,7 @@ class AbstractSocial extends Action
 				return false;
 			}
 		}
-		$this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $this->socialType);
+		$this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
 
 		return $customer;
 	}

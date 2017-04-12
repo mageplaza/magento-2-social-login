@@ -51,18 +51,6 @@ class Social extends AbstractModel
 	protected $apiName;
 
 	/**
-	 * @type array
-	 */
-	protected $apiData = [
-		'Facebook'  => ["trustForwarded" => false, 'scope' => 'email, user_about_me'],
-		'Twitter'   => ["includeEmail" => true],
-		'LinkedIn'  => ["fields" => ['id', 'first-name', 'last-name', 'email-address']],
-		'Vkontakte' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Vkontakte']],
-		'Instagram' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Instagram']],
-		'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\GitHub']]
-	];
-
-	/**
 	 * @param \Magento\Framework\Model\Context $context
 	 * @param \Magento\Framework\Registry $registry
 	 * @param \Magento\Customer\Model\CustomerFactory $customerFactory
@@ -183,32 +171,22 @@ class Social extends AbstractModel
 	}
 
 	/**
-	 * @param $name
-	 */
-	protected function setApiName($name)
-	{
-		$this->apiName = $name;
-		$this->apiHelper->correctXmlPath($name);
-	}
-
-	/**
 	 * @param $apiName
 	 * @return mixed
 	 */
 	public function getUserProfile($apiName)
 	{
-		$this->setApiName($apiName);
 		$config = [
 			"base_url"   => $this->apiHelper->getBaseAuthUrl(),
 			"providers"  => [
-				$apiName => $this->getProviderData()
+				$apiName => $this->getProviderData($apiName)
 			],
 			"debug_mode" => false
 		];
 
 		try {
 			$auth    = new \Hybrid_Auth($config);
-			$adapter = $auth->authenticate($apiName, $this->getAdditionalParams());
+			$adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
 
 			return $adapter->getUserProfile();
 		} catch (\Exception $e) {
@@ -220,7 +198,7 @@ class Social extends AbstractModel
 	/**
 	 * @return array
 	 */
-	public function getProviderData()
+	public function getProviderData($apiName)
 	{
 		$data = [
 			"enabled" => $this->apiHelper->isEnabled(),
@@ -231,22 +209,6 @@ class Social extends AbstractModel
 			]
 		];
 
-		if (isset($this->apiData[$this->apiName])) {
-			$data = array_merge($data, $this->apiData[$this->apiName]);
-		}
-
-		return $data;
-	}
-
-	/**
-	 * @return array|null
-	 */
-	protected function getAdditionalParams()
-	{
-		if ($this->apiName == 'OpenID') {
-			return ["openid_identifier" => $this->apiHelper->getOpenIdIdentifier()];
-		}
-
-		return null;
+		return array_merge($data, $this->apiHelper->getSocialConfig($apiName));
 	}
 }

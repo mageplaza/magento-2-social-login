@@ -28,34 +28,75 @@ use Mageplaza\SocialLogin\Helper\Data as HelperData;
  */
 class Social extends HelperData
 {
-	const XML_PATH = [
-		'api_enabled'    => 'sociallogin/{social_type}/is_enabled',
-		'api_app_id'     => 'sociallogin/{social_type}/app_id',
-		'api_app_secret' => 'sociallogin/{social_type}/app_secret'
-	];
+	/**
+	 * @type
+	 */
+	protected $_type;
 
 	/**
-	 * @type string
+	 * @param null $type
+	 * @return null
 	 */
-	protected $socialType = '';
-
-	/**
-	 * @type array
-	 */
-	protected $xmlPath = [];
-
-	/**
-	 * @param $socialType
-	 * @return $this
-	 */
-	public function correctXmlPath($socialType)
+	public function setType($type)
 	{
-		$this->socialType = strtolower($socialType);
-		foreach (self::XML_PATH as $key => $value) {
-			$this->xmlPath[$key] = str_replace('{social_type}', $this->socialType, $value);
+		$listTypes = $this->getSocialTypes();
+		if (!$type || !array_key_exists($type, $listTypes)) {
+			return null;
 		}
 
-		return $this;
+		$this->_type = $type;
+
+		return $listTypes[$type];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSocialTypes()
+	{
+		return [
+			'facebook'   => 'Facebook',
+			'google'     => 'Google',
+			'twitter'    => 'Twitter',
+			'amazon'     => 'Amazon',
+			'linkedin'   => 'LinkedIn',
+			'yahoo'      => 'Yahoo',
+			'foursquare' => 'Foursquare',
+			'vkontakte'  => 'Vkontakte',
+			'instagram'  => 'Instagram',
+			'github'     => 'Github'
+		];
+	}
+
+	/**
+	 * @param $type
+	 * @return array
+	 */
+	public function getSocialConfig($type)
+	{
+		$apiData = [
+			'Facebook'  => ["trustForwarded" => false, 'scope' => 'email, user_about_me'],
+			'Twitter'   => ["includeEmail" => true],
+			'LinkedIn'  => ["fields" => ['id', 'first-name', 'last-name', 'email-address']],
+			'Vkontakte' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Vkontakte']],
+			'Instagram' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Instagram']],
+			'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\GitHub']],
+			'Amazon'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Amazon']]
+		];
+
+		if ($type && array_key_exists($type, $apiData)) {
+			return $apiData[$type];
+		}
+
+		return [];
+	}
+
+	/**
+	 * @return array|null
+	 */
+	public function getAuthenticateParams($type)
+	{
+		return null;
 	}
 
 	/**
@@ -64,7 +105,7 @@ class Social extends HelperData
 	 */
 	public function isEnabled($storeId = null)
 	{
-		return $this->getConfigValue($this->xmlPath['api_enabled'], $storeId);
+		return $this->getConfigValue("sociallogin/{$this->_type}/is_enabled", $storeId);
 	}
 
 	/**
@@ -73,7 +114,7 @@ class Social extends HelperData
 	 */
 	public function getAppId($storeId = null)
 	{
-		return $this->getConfigValue($this->xmlPath['api_app_id'], $storeId);
+		return $this->getConfigValue("sociallogin/{$this->_type}/app_id", $storeId);
 	}
 
 	/**
@@ -82,16 +123,7 @@ class Social extends HelperData
 	 */
 	public function getAppSecret($storeId = null)
 	{
-		return $this->getConfigValue($this->xmlPath['api_app_secret'], $storeId);
-	}
-
-	/**
-	 * @param null $storeId
-	 * @return mixed
-	 */
-	public function getOpenIdIdentifier($storeId = null)
-	{
-		return $this->getConfigValue('sociallogin/openid/identifier', $storeId);
+		return $this->getConfigValue("sociallogin/{$this->_type}/app_secret", $storeId);
 	}
 
 	/**
@@ -100,8 +132,9 @@ class Social extends HelperData
 	 */
 	public function getAuthUrl($type)
 	{
-		$authUrl = $this->getBaseAuthUrl($type);
+		$authUrl = $this->getBaseAuthUrl();
 
+		$type = $this->setType($type);
 		switch ($type) {
 			case 'Facebook':
 				$param = 'hauth_done=' . $type;
@@ -117,18 +150,11 @@ class Social extends HelperData
 	}
 
 	/**
-	 * @param null $type
 	 * @return string
 	 */
-	public function getBaseAuthUrl($type = null)
+	public function getBaseAuthUrl()
 	{
-		$scope = $this->getScopeUrl();
-		$type  = $type ?: $this->socialType;
-		if (strtolower($type) == 'live') {
-			return $this->_getUrl('sociallogin/social_callback/live', array('_nosid' => true, '_scope' => $scope));
-		}
-
-		return $this->_getUrl('sociallogin/social/callback', array('_nosid' => true, '_scope' => $scope));
+		return $this->_getUrl('sociallogin/social/callback', array('_nosid' => true, '_scope' => $this->getScopeUrl()));
 	}
 
 	/**
