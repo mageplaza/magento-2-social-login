@@ -33,6 +33,12 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
+Run compile if your store in Product mode:
+
+```
+php bin/magento setup:di:compile
+```
+
 ## FAQ
 
 Q: When I click on Login link, the popup does't work
