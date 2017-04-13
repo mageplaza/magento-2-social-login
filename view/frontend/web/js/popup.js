@@ -94,7 +94,7 @@ define([
                     var el = $(this),
                         href = el.attr('href');
 
-                    if (href.search('customer/account/login') != -1 || href.search('customer/account/create') != -1) {
+                    if (typeof href !== 'undefined' && (href.search('customer/account/login') != -1 || href.search('customer/account/create') != -1)) {
                         el.addClass('social-login');
                         el.attr('href', self.options.popup);
                         el.attr('data-effect', self.options.popupEffect);
