@@ -48,15 +48,6 @@ class Data extends CoreHelper
 	 * @param null $storeId
 	 * @return mixed
 	 */
-	public function getBrianValue($storeId = null)
-	{
-		return $this->getConfigValue('sociallogin', $storeId);
-	}
-
-	/**
-	 * @param null $storeId
-	 * @return mixed
-	 */
 	public function isCaptchaEnabled($storeId = null)
 	{
 		return $this->getConfigValue(self::XML_PATH_CAPTCHA_ENABLE, $storeId);
