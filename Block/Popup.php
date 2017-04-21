@@ -18,12 +18,13 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Block;
 
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
-use Magento\Customer\Model\Session as CustomerSession;
 
 /**
  * Class Popup
@@ -66,52 +67,6 @@ class Popup extends Template
 	}
 
 	/**
-	 * get is secure url
-	 *
-	 * @return mixed
-	 */
-	public function isSecure()
-	{
-		return $this->helperData->isSecure();
-	}
-
-	/**
-	 * get Social Login Form Url
-	 *
-	 * @return string
-	 */
-	public function getFormLoginUrl()
-	{
-		return $this->getUrl('customer/ajax/login', ['_secure' => $this->isSecure()]);
-	}
-
-	/**
-	 *  get Social Login Form Create Url
-	 *
-	 * @return string
-	 */
-	public function getCreateFormUrl()
-	{
-		return $this->getUrl('sociallogin/popup/create', ['_secure' => $this->isSecure()]);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getForgotFormUrl()
-	{
-		return $this->getUrl('sociallogin/popup/forgot', ['_secure' => $this->isSecure()]);
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getPopupEffect()
-	{
-		return $this->helperData->getPopupEffect();
-	}
-
-	/**
 	 * Is enable popup
 	 *
 	 * @return bool
@@ -129,6 +84,7 @@ class Popup extends Template
 	public function getFormParams()
 	{
 		$params = [
+			'headerLink'    => $this->getHeaderLink(),
 			'popupEffect'   => $this->getPopupEffect(),
 			'formLoginUrl'  => $this->getFormLoginUrl(),
 			'forgotFormUrl' => $this->getForgotFormUrl(),
@@ -136,6 +92,59 @@ class Popup extends Template
 		];
 
 		return json_encode($params);
+	}
+
+	public function getHeaderLink()
+	{
+		$links = $this->helperData->getGeneralConfig('link_trigger');
+
+		return $links ?: '.header .links, .section-item-content .header.links';
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getPopupEffect()
+	{
+		return $this->helperData->getPopupEffect();
+	}
+
+	/**
+	 * get Social Login Form Url
+	 *
+	 * @return string
+	 */
+	public function getFormLoginUrl()
+	{
+		return $this->getUrl('customer/ajax/login', ['_secure' => $this->isSecure()]);
+	}
+
+	/**
+	 * get is secure url
+	 *
+	 * @return mixed
+	 */
+	public function isSecure()
+	{
+		return $this->helperData->isSecure();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getForgotFormUrl()
+	{
+		return $this->getUrl('sociallogin/popup/forgot', ['_secure' => $this->isSecure()]);
+	}
+
+	/**
+	 *  get Social Login Form Create Url
+	 *
+	 * @return string
+	 */
+	public function getCreateFormUrl()
+	{
+		return $this->getUrl('sociallogin/popup/create', ['_secure' => $this->isSecure()]);
 	}
 
 	/**
@@ -152,6 +161,7 @@ class Popup extends Template
 	public function getCustomCss()
 	{
 		$storeId = $this->storeManager->getStore()->getId(); //add
+
 		return $this->helperData->getCustomCss($storeId);
 	}
 }

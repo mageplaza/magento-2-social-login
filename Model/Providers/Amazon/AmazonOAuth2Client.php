@@ -4,6 +4,7 @@
 * http://hybridauth.sourceforge.net | http://github.com/hybridauth/hybridauth
 * (c) 2009-2015, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
 */
+namespace Mageplaza\SocialLogin\Model\Providers\Amazon;
 
 /**
  * A service client for the Amazon ID OAuth 2 flow.
@@ -21,7 +22,7 @@
  * @link http://stackoverflow.com/questions/5224790/curl-post-format-for-curlopt-postfields
  *
  */
-class AmazonOAuth2Client extends OAuth2Client {
+class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OAuth2Client {
 
 	public function authenticate( $code ) {
 
@@ -38,7 +39,7 @@ class AmazonOAuth2Client extends OAuth2Client {
 		$response = $this->parseRequestResult( $response );
 
 		if ( ! $response || ! isset( $response->access_token ) ){
-			throw new Exception( "The Authorization Service has return: " . $response->error );
+			throw new \Exception( "The Authorization Service has return: " . $response->error );
 		}
 
 		if( isset( $response->access_token  ) ) $this->access_token            = $response->access_token;
@@ -55,8 +56,8 @@ class AmazonOAuth2Client extends OAuth2Client {
 
 	private function request( $url, $params=false, $type="GET" )
 	{
-		Hybrid_Logger::info( "Enter OAuth2Client::request( $url )" );
-		Hybrid_Logger::debug( "OAuth2Client::request(). dump request params: ", serialize( $params ) );
+		\Hybrid_Logger::info( "Enter OAuth2Client::request( $url )" );
+		\Hybrid_Logger::debug( "OAuth2Client::request(). dump request params: ", serialize( $params ) );
 
 		if( $type == "GET" ){
 			$url = $url . ( strpos( $url, '?' ) ? '&' : '?' ) . http_build_query($params, '', '&');
@@ -96,10 +97,10 @@ class AmazonOAuth2Client extends OAuth2Client {
 		}
 		$response = curl_exec($ch);
 		if( $response === false ) {
-				Hybrid_Logger::error( "OAuth2Client::request(). curl_exec error: ", curl_error($ch) );
+				\Hybrid_Logger::error( "OAuth2Client::request(). curl_exec error: ", curl_error($ch) );
 		}
-		Hybrid_Logger::debug( "OAuth2Client::request(). dump request info: ", serialize( curl_getinfo($ch) ) );
-		Hybrid_Logger::debug( "OAuth2Client::request(). dump request result: ", serialize( $response ) );
+		\Hybrid_Logger::debug( "OAuth2Client::request(). dump request info: ", serialize( curl_getinfo($ch) ) );
+		\Hybrid_Logger::debug( "OAuth2Client::request(). dump request result: ", serialize( $response ) );
 
 		$this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$this->http_info = array_merge($this->http_info, curl_getinfo($ch));
@@ -115,7 +116,7 @@ class AmazonOAuth2Client extends OAuth2Client {
 
 		parse_str( $result, $output );
 
-		$result = new StdClass();
+		$result = new \StdClass();
 
 		foreach( $output as $k => $v )
 			$result->$k = $v;
