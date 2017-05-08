@@ -39,7 +39,7 @@ class Amazon extends \Hybrid_Provider_Model_OAuth2 {
 		}
 
 		// create a new OAuth2 client instance
-		$this->api = \Magento\Framework\App\ObjectManager::getInstance()->create('Mageplaza\SocialLogin\Model\Providers\Amazon', ['client_id' => $this->config['keys']['id'], 'client_secret' => $this->config['keys']['secret'], 'redirect_uri' => $this->endpoint, 'compressed' => $this->compressed]);
+		$this->api = \Magento\Framework\App\ObjectManager::getInstance()->create('Mageplaza\SocialLogin\Model\Providers\Amazon\AmazonOAuth2Client', ['client_id' => $this->config['keys']['id'], 'client_secret' => $this->config['keys']['secret'], 'redirect_uri' => $this->endpoint, 'compressed' => $this->compressed]);
 
 		$this->api->api_base_url  = 'https://api.amazon.com';
 		$this->api->authorize_url = 'https://www.amazon.com/ap/oa';
