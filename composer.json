@@ -6,7 +6,7 @@
     "hybridauth/hybridauth": "2.9.1"
   },
   "type": "magento2-module",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
