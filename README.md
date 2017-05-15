@@ -13,7 +13,7 @@ Magento 2 Social Login extension is designed for quick login to your Magento sto
 - Download from our Live site: https://www.mageplaza.com/magento-2-social-login-extension/
 - Installation guide: https://docs.mageplaza.com/kb/installation.html
 - User Guide: https://docs.mageplaza.com/social-login-m2/index.html
-- Contribute on Github: http://mageplaza.github.io/Magento-2-Social-Login-Extension/
+- Contribute on Github: https://github.com/mageplaza/magento-2-social-login/
 - Get Support: https://github.com/mageplaza/magento-2-social-login/issues
 
 ## How to install
