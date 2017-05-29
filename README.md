@@ -53,6 +53,10 @@ Q: Can I install it by myself?
 
 A: Yes, you absolutely can! You can install it like installing any extensions to website, follow our Installation Guide http://docs.mageplaza.com/kb/installation.html. User guide: https://docs.mageplaza.com/social-login-m2/index.html
 
+Q: I got this message `Erro: invalid_scope`
+
+A: Read this https://github.com/mageplaza/magento-2-social-login/issues/42
+
 
 ### Get [Mageplaza Social Login](https://www.mageplaza.com/magento-2-social-login-extension/) or https://www.mageplaza.com/
 
