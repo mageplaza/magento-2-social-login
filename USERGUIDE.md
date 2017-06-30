@@ -1,3 +1,5 @@
+## Documentation
+
 - Installation guide: https://docs.mageplaza.com/kb/installation.html
 - User Guide: https://docs.mageplaza.com/social-login-m2/index.html
 - Download from our Live site: https://www.mageplaza.com/magento-2-social-login-extension/
@@ -6,7 +8,7 @@
 
 
 
-# FAQ
+## FAQ
 
 Q: When I click on Login link, the popup does't work
 A: You can read https://github.com/mageplaza/magento-2-social-login/issues/39
