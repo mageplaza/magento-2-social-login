@@ -20,7 +20,12 @@
       "Twitter Login",
       "Yahoo Login",
       "FourSquare Login",
-      "Amazon Login"
+      "Amazon Login",
+      "Login",
+      "mageplaza",
+      "google",
+      "facebook",
+      "twitter"
  
   ],
   "authors": [
