@@ -8,6 +8,22 @@
   "type": "magento2-module",
   "version": "2.3.5",
   "license": "Mageplaza License",
+  "keywords": [
+    {
+      "magento 2",
+      "social login",
+      "magento 2 social login",
+      "facebook login",
+      "Google Login",
+      "Instagram Login",
+      "LinkedIn Login",
+      "Microsoft Live Login",
+      "Twitter Login",
+      "Yahoo Login",
+      "FourSquare Login",
+      "Amazon Login"
+    }
+  ],
   "authors": [
     {
       "name": "Mageplaza",
