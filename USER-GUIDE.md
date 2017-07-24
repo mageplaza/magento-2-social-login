@@ -25,3 +25,6 @@ A: Read this https://github.com/mageplaza/magento-2-social-login/issues/42
 
 #### Q: I got error: `Mageplaza_Core has been already defined`
 A: Read solution: https://github.com/mageplaza/module-core/issues/3
+
+#### Q: My site is down
+A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.html
