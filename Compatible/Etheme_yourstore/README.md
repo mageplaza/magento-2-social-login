@@ -1,4 +1,8 @@
-# How to use
+# Mageplaza Social Login is compatible with YourStore theme
+
+[Mageplaza Social Login](https://www.mageplaza.com/magento-2-social-login-extension/) now is fully compatible with [Etheme_yourstore](https://themeforest.net/item/yourstore-premium-multipurpose-magento-theme/17782705) 
+
+## How to use
 
 1. Copy the app folder to your Magento root folder.
 2. Run flush Cache https://www.mageplaza.com/kb/how-flush-enable-disable-cache.html
