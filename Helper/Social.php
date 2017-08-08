@@ -170,4 +170,11 @@ class Social extends HelperData
 
 		return $scope;
 	}
+    /**
+     * Get current theme id
+     * @return mixed
+     */
+    public function getCurrentThemeId(){
+        return $this->getConfigValue(\Magento\Framework\View\DesignInterface::XML_PATH_THEME_ID);
+    }
 }

@@ -23,6 +23,8 @@ namespace Mageplaza\SocialLogin\Block;
 use Mageplaza\SocialLogin\Helper\Data as DataHelper;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
+use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 
 /**
  * Class Css
@@ -30,11 +32,18 @@ use Magento\Framework\View\Element\Template\Context;
  */
 class Css extends Template
 {
+    /**
+     * @type \Mageplaza\SocialLogin\Helper\Social
+     */
+    protected $socialHelper;
 	/**
 	 * @type \Mageplaza\SocialLogin\Helper\Data
 	 */
 	protected $_helper;
-
+    /**
+     * @var ThemeProviderInterface
+     */
+    protected $_themeProviderInterface;
 	/**
 	 * @param \Magento\Framework\View\Element\Template\Context $context
 	 * @param \Mageplaza\SocialLogin\Helper\Data $helper
@@ -43,11 +52,15 @@ class Css extends Template
 	public function __construct(
 		Context $context,
 		DataHelper $helper,
+        ThemeProviderInterface $themeProviderInterface,
+        SocialHelper $socialHelper,
 		array $data = []
 	)
 	{
 		parent::__construct($context, $data);
 
+        $this->_themeProviderInterface  = $themeProviderInterface;
+        $this->socialHelper = $socialHelper;
 		$this->_helper = $helper;
 	}
 
@@ -78,4 +91,10 @@ class Css extends Template
 	{
 		return $this->_helper;
 	}
+    /**
+     * @return string
+     */
+    public function getCurrentTheme(){
+        return $this->_themeProviderInterface->getThemeById($this->socialHelper->getCurrentThemeId())->getCode();
+    }
 }

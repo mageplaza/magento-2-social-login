@@ -45,4 +45,10 @@ $css    = $helper->getCustomCss();
 	}
 
 	<?php echo $css ?>
+    /* Compatible ETheme_YOURstore*/
+    /* ETheme_YOURstore  */
+    <?php if($block->getCurrentTheme() == "Etheme/yourstore"){ ?>
+    div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login {max-width: 900px !important;margin: 0 auto !important;}
+    div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login .block-content { text-align: center; }
+    <?php }?>
 </style>
