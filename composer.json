@@ -6,7 +6,7 @@
     "hybridauth/hybridauth": "^2.9.1"
   },
   "type": "magento2-module",
-  "version": "2.3.5",
+  "version": "2.3.7",
   "license": "Mageplaza License",
   "keywords": [
       "magento 2",
