@@ -54,18 +54,16 @@ class Social extends HelperData
 	 */
 	public function getSocialTypes()
 	{
-		return [
-			'facebook'   => 'Facebook',
-			'google'     => 'Google',
-			'twitter'    => 'Twitter',
-			'amazon'     => 'Amazon',
-			'linkedin'   => 'LinkedIn',
-			'yahoo'      => 'Yahoo',
-			'foursquare' => 'Foursquare',
-			'vkontakte'  => 'Vkontakte',
-			'instagram'  => 'Instagram',
-			'github'     => 'Github'
-		];
+	    $socialTypes = $this->_getSocialTypes();
+        uksort($socialTypes, function ($a, $b) {
+            $sortA = $this->getConfigValue("sociallogin/{$a}/sort_order") ?: 0;
+            $sortB = $this->getConfigValue("sociallogin/{$b}/sort_order") ?: 0;
+            if ($sortA == $sortB) {
+                return 0;
+            }
+            return ($sortA < $sortB) ? -1 : 1;
+        });
+        return $socialTypes;
 	}
 
 	/**
@@ -176,5 +174,24 @@ class Social extends HelperData
      */
     public function getCurrentThemeId(){
         return $this->getConfigValue(\Magento\Framework\View\DesignInterface::XML_PATH_THEME_ID);
+    }
+
+    /**
+     * @return array
+     */
+    public function _getSocialTypes()
+    {
+        return [
+            'facebook'   => 'Facebook',
+            'google'     => 'Google',
+            'twitter'    => 'Twitter',
+            'amazon'     => 'Amazon',
+            'linkedin'   => 'LinkedIn',
+            'yahoo'      => 'Yahoo',
+            'foursquare' => 'Foursquare',
+            'vkontakte'  => 'Vkontakte',
+            'instagram'  => 'Instagram',
+            'github'     => 'Github'
+        ];
     }
 }

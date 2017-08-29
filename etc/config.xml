@@ -32,6 +32,36 @@
                 <popup_effect>mfp-move-from-top</popup_effect>
                 <style_management>#3399cc</style_management>
             </general>
+            <facebook>
+                <sort_order>100</sort_order>
+            </facebook>
+            <google>
+                <sort_order>200</sort_order>
+            </google>
+            <amazon>
+                <sort_order>300</sort_order>
+            </amazon>
+            <twitter>
+                <sort_order>400</sort_order>
+            </twitter>
+            <linkedin>
+                <sort_order>500</sort_order>
+            </linkedin>
+            <yahoo>
+                <sort_order>600</sort_order>
+            </yahoo>
+            <foursquare>
+                <sort_order>700</sort_order>
+            </foursquare>
+            <instagram>
+                <sort_order>800</sort_order>
+            </instagram>
+            <vkontakte>
+                <sort_order>900</sort_order>
+            </vkontakte>
+            <github>
+                <sort_order>1000</sort_order>
+            </github>
         </sociallogin>
     </default>
 </config>

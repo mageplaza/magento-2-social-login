@@ -32,7 +32,7 @@
                 <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[This extension is fully compatible with <a href="https://goo.gl/C6kwiJ" target="_blank">One Step Checkout</a>. 
+                    <comment><![CDATA[This extension is fully compatible with <a href="https://goo.gl/C6kwiJ" target="_blank">One Step Checkout</a>.
                     <br> Increase 25% conversion rate with <a href="https://goo.gl/6chU3c" target="_blank">Layered Navigation</a>]]></comment>
                 </field>
                 <field id="send_password" translate="label comment" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -108,6 +108,12 @@
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="google" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Google</label>
@@ -133,6 +139,12 @@
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>REDIRECT URIS</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -166,6 +178,12 @@
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="twitter" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Twitter</label>
@@ -191,6 +209,12 @@
                 <field id="redirect_url" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Callback URL</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -224,6 +248,12 @@
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="yahoo" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Yahoo</label>
@@ -242,6 +272,12 @@
                 <field id="app_secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -275,6 +311,12 @@
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="instagram" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Instagram</label>
@@ -304,6 +346,12 @@
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="vkontakte" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Vkontakte</label>
@@ -322,6 +370,12 @@
                 <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secure Key</label>
                     <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -352,6 +406,12 @@
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Callback Url</label>
                     <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
