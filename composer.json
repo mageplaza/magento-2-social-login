@@ -3,13 +3,30 @@
   "description": "Magento 2 Social Login Extension",
   "require": {
     "mageplaza/module-core": "*",
-    "hybridauth/hybridauth": "2.9.1"
+    "hybridauth/hybridauth": "^2.9.1"
   },
   "type": "magento2-module",
-  "version": "2.3.5",
-  "license": [
-    "OSL-3.0",
-    "AFL-3.0"
+  "version": "2.3.7",
+  "license": "Mageplaza License",
+  "keywords": [
+      "magento 2",
+      "social login",
+      "magento 2 social login",
+      "facebook login",
+      "Google Login",
+      "Instagram Login",
+      "LinkedIn Login",
+      "Microsoft Live Login",
+      "Twitter Login",
+      "Yahoo Login",
+      "FourSquare Login",
+      "Amazon Login",
+      "Login",
+      "mageplaza",
+      "google",
+      "facebook",
+      "twitter"
+ 
   ],
   "authors": [
     {
