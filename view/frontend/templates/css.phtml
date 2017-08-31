@@ -43,11 +43,10 @@ $css    = $helper->getCustomCss();
 		background-color: <?php echo $color ?>;
 		border: <?php echo $color ?>
 	}
-
+    .block.social-login-authentication-channel.account-social-login .block-content { text-align: center; }
 	<?php echo $css ?>
     /* Compatible ETheme_YOURstore*/
     /* ETheme_YOURstore  */
-    <?php if($block->getCurrentTheme() == "Etheme/yourstore"){ ?>
     div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login {max-width: 900px !important;margin: 0 auto !important;}
     div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login .block-content { text-align: center; }
     @media (max-width: 1024px){
@@ -55,5 +54,4 @@ $css    = $helper->getCustomCss();
             padding: 0px 15px;
         }
     }
-    <?php }?>
 </style>

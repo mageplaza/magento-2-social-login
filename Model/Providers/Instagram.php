@@ -10,12 +10,12 @@ namespace Mageplaza\SocialLogin\Model\Providers;
 * Hybrid_Providers_Instagram (By Sebastian Lasse - https://github.com/sebilasse)
 */
 class Instagram extends \Hybrid_Provider_Model_OAuth2
-{ 
-	// default permissions   
-	public $scope = "basic"; 
+{
+	// default permissions
+	public $scope = "basic";
 
 	/**
-	* IDp wrappers initializer 
+	* IDp wrappers initializer
 	*/
 	function initialize()
 	{
@@ -26,25 +26,45 @@ class Instagram extends \Hybrid_Provider_Model_OAuth2
 		$this->api->authorize_url = "https://api.instagram.com/oauth/authorize/";
 		$this->api->token_url     = "https://api.instagram.com/oauth/access_token";
 	}
-
+    /**
+     * security: Enforce signed requests
+     */
+    function generate_sig($endpoint, $params, $secret) {
+        $sig = $endpoint;
+        ksort($params);
+        foreach ($params as $key => $val) {
+            $sig .= "|$key=$val";
+        }
+        return hash_hmac('sha256', $sig, $secret, false);
+    }
 	/**
 	* load the user profile from the IDp api client
 	*/
-	function getUserProfile(){ 
-		$data = $this->api->api("users/self/" ); 
+	function getUserProfile(){
+        $endpoint = '/users/self';
+        $params = array(
+            'access_token' => $this->api->access_token,
+        );
+        $sig = $this->generate_sig($endpoint, $params, $this->api->client_secret);
+        $params = array(
+            "sig"     => $sig
+        );
+        $urlEncodedParams = http_build_query($params, '', '&');
 
+        $url = "users/self/". (strpos("users/self/" , '?' ) ? '&' : '?' ) . $urlEncodedParams;
+		$data = $this->api->api($url);
 		if ( $data->meta->code != 200 ){
 			throw new \Exception( "User profile request failed! {$this->providerId} returned an invalid response.", 6 );
 		}
 
-		$this->user->profile->identifier  = $data->data->id; 
-		$this->user->profile->displayName = $data->data->full_name ? $data->data->full_name : $data->data->username; 
+		$this->user->profile->identifier  = $data->data->id;
+		$this->user->profile->displayName = $data->data->full_name ? $data->data->full_name : $data->data->username;
 		$this->user->profile->description = $data->data->bio;
 		$this->user->profile->photoURL    = $data->data->profile_picture;
 
-		$this->user->profile->webSiteURL  = $data->data->website; 
-		
-		$this->user->profile->username    = $data->data->username;	
+		$this->user->profile->webSiteURL  = $data->data->website;
+
+		$this->user->profile->username    = $data->data->username;
 
 		return $this->user->profile;
 	}
