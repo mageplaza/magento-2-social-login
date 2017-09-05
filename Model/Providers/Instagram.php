@@ -29,7 +29,7 @@ class Instagram extends \Hybrid_Provider_Model_OAuth2
     /**
      * security: Enforce signed requests
      */
-    function generate_sig($endpoint, $params, $secret) {
+    function generateSig($endpoint, $params, $secret) {
         $sig = $endpoint;
         ksort($params);
         foreach ($params as $key => $val) {
@@ -45,7 +45,7 @@ class Instagram extends \Hybrid_Provider_Model_OAuth2
         $params = array(
             'access_token' => $this->api->access_token,
         );
-        $sig = $this->generate_sig($endpoint, $params, $this->api->client_secret);
+        $sig = $this->generateSig($endpoint, $params, $this->api->client_secret);
         $params = array(
             "sig"     => $sig
         );

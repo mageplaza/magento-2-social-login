@@ -140,13 +140,23 @@ class Social extends HelperData
 			case 'Live':
 				$param = null;
 				break;
+            case 'Yahoo':
+                return $this->getDomainUrl();
+                break;
 			default:
 				$param = 'hauth.done=' . $type;
 		}
 
 		return $authUrl . ($param ? (strpos($authUrl, '?') ? '&' : '?') . $param : '');
 	}
-
+    /**
+     * @return string
+     */
+    public function getDomainUrl(){
+        $url = $this->getBaseAuthUrl();
+        $parse = parse_url($url);
+        return $parse['host'];
+    }
 	/**
 	 * @return string
 	 */
