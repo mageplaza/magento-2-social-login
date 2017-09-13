@@ -27,6 +27,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
 use Magento\Customer\Model\Session;
+use Magento\Customer\Api\AccountManagementInterface;
 
 /**
  * Class AbstractSocial
@@ -38,7 +39,10 @@ class Login extends Action
 	 * @type \Magento\Customer\Model\Session
 	 */
 	protected $session;
-
+    /**
+     * @type \Magento\Customer\Api\AccountManagementInterface
+     */
+    protected $accountManager;
 	/**
 	 * @type \Magento\Store\Model\StoreManagerInterface
 	 */
@@ -85,6 +89,7 @@ class Login extends Action
 	public function __construct(
 		Context $context,
 		StoreManagerInterface $storeManager,
+        AccountManagementInterface $accountManager,
 		SocialHelper $apiHelper,
 		Social $apiObject,
 		Session $customerSession,
@@ -94,6 +99,7 @@ class Login extends Action
 	{
 		parent::__construct($context);
 		$this->storeManager     = $storeManager;
+        $this->accountManager   = $accountManager;
 		$this->apiHelper        = $apiHelper;
 		$this->apiObject        = $apiObject;
 		$this->session          = $customerSession;
@@ -183,7 +189,14 @@ class Login extends Action
 			try {
 				$customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
 				if ($this->apiHelper->canSendPassword()) {
-					$customer->sendPasswordReminderEmail();
+					//$customer->sendPasswordReminderEmail();
+                    /**
+                     * Magento\Customer\Api\AccountManagementInterface
+                     */
+                    $this->accountManager->initiatePasswordReset(
+                        $user['email'],
+                        \Magento\Customer\Model\AccountManagement::EMAIL_RESET
+                    );
 				}
 			} catch (\Exception $e) {
 				$this->emailRedirect($e->getMessage(), false);
