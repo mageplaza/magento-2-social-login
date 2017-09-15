@@ -23,15 +23,16 @@ namespace Mageplaza\SocialLogin\Block\Form;
 
 /**
  * Class Login
+ *
  * @package Mageplaza\SocialLogin\Block\Form
  */
 class Login extends \Magento\Customer\Block\Form\Login
 {
-	/**
-	 * @return $this
-	 */
-	protected function _prepareLayout()
-	{
-		return $this;
-	}
+    /**
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        return $this;
+    }
 }

@@ -24,6 +24,7 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
  * Class Collection
+ *
  * @package Mageplaza\SocialLogin\Model\ResourceModel\Social
  */
 class Collection extends AbstractCollection

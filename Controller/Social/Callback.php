@@ -22,12 +22,13 @@ namespace Mageplaza\SocialLogin\Controller\Social;
 
 /**
  * Class Callback
+ *
  * @package Mageplaza\SocialLogin\Controller\Social
  */
 class Callback extends \Magento\Framework\App\Action\Action
 {
-	public function execute()
-	{
-		\Hybrid_Endpoint::process();
-	}
+    public function execute()
+    {
+        \Hybrid_Endpoint::process();
+    }
 }

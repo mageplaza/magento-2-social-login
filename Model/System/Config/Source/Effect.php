@@ -22,6 +22,7 @@ namespace Mageplaza\SocialLogin\Model\System\Config\Source;
 
 /**
  * Class Effect
+ *
  * @package Mageplaza\SocialLogin\Model\System\Config\Source
  */
 class Effect implements \Magento\Framework\Option\ArrayInterface

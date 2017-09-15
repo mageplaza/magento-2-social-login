@@ -28,6 +28,7 @@ use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 
 /**
  * Class Css
+ *
  * @package Mageplaza\SocialLogin\Block
  */
 class Css extends Template
@@ -36,65 +37,67 @@ class Css extends Template
      * @type \Mageplaza\SocialLogin\Helper\Social
      */
     protected $socialHelper;
-	/**
-	 * @type \Mageplaza\SocialLogin\Helper\Data
-	 */
-	protected $_helper;
+    /**
+     * @type \Mageplaza\SocialLogin\Helper\Data
+     */
+    protected $_helper;
     /**
      * @var ThemeProviderInterface
      */
     protected $_themeProviderInterface;
-	/**
-	 * @param \Magento\Framework\View\Element\Template\Context $context
-	 * @param \Mageplaza\SocialLogin\Helper\Data $helper
-	 * @param array $data
-	 */
-	public function __construct(
-		Context $context,
-		DataHelper $helper,
+
+    /**
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Mageplaza\SocialLogin\Helper\Data               $helper
+     * @param array                                            $data
+     */
+    public function __construct(
+        Context $context,
+        DataHelper $helper,
         ThemeProviderInterface $themeProviderInterface,
         SocialHelper $socialHelper,
-		array $data = []
-	)
-	{
-		parent::__construct($context, $data);
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
 
-        $this->_themeProviderInterface  = $themeProviderInterface;
-        $this->socialHelper = $socialHelper;
-		$this->_helper = $helper;
-	}
+        $this->_themeProviderInterface = $themeProviderInterface;
+        $this->socialHelper            = $socialHelper;
+        $this->_helper                 = $helper;
+    }
 
-	/**
-	 * @return $this
-	 */
-	protected function _prepareLayout()
-	{
-		if ($this->_helper->isEnabled()) {
-			if ($this->_helper->getGeneralConfig('popup_login')) {
-				$this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
-				$this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
-				$this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
-				$this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
-			} elseif (in_array($this->_request->getFullActionName(), ['customer_account_login', 'customer_account_create'])) {
-				$this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
-				$this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
-			}
-		}
+    /**
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        if ($this->_helper->isEnabled()) {
+            if ($this->_helper->getGeneralConfig('popup_login')) {
+                $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
+                $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
+                $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
+                $this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
+            } elseif (in_array($this->_request->getFullActionName(), ['customer_account_login', 'customer_account_create'])) {
+                $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
+                $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
+            }
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return \Mageplaza\SocialLogin\Helper\Data
-	 */
-	public function helper()
-	{
-		return $this->_helper;
-	}
+    /**
+     * @return \Mageplaza\SocialLogin\Helper\Data
+     */
+    public function helper()
+    {
+        return $this->_helper;
+    }
+
     /**
      * @return string
      */
-    public function getCurrentTheme(){
+    public function getCurrentTheme()
+    {
         return $this->_themeProviderInterface->getThemeById($this->socialHelper->getCurrentThemeId())->getCode();
     }
 }
