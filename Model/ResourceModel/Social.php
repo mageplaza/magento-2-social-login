@@ -24,15 +24,16 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
  * Class Social
+ *
  * @package Mageplaza\SocialLogin\Model\ResourceModel
  */
 class Social extends AbstractDb
 {
-	/**
-	 * Define main table
-	 */
-	protected function _construct()
-	{
-		$this->_init('mageplaza_social_customer', 'social_customer_id');
-	}
+    /**
+     * Define main table
+     */
+    protected function _construct()
+    {
+        $this->_init('mageplaza_social_customer', 'social_customer_id');
+    }
 }

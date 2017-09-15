@@ -26,107 +26,107 @@ use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 
 /**
  * Class Social
+ *
  * @package Mageplaza\SocialLogin\Block\Popup
  */
 class Social extends Template
 {
-	/**
-	 * @type \Mageplaza\SocialLogin\Helper\Social
-	 */
-	protected $socialHelper;
+    /**
+     * @type \Mageplaza\SocialLogin\Helper\Social
+     */
+    protected $socialHelper;
 
-	/**
-	 * @param \Magento\Framework\View\Element\Template\Context $context
-	 * @param \Mageplaza\SocialLogin\Helper\Social $socialHelper
-	 * @param array $data
-	 */
-	public function __construct(
-		Context $context,
-		SocialHelper $socialHelper,
-		array $data = []
-	)
-	{
-		$this->socialHelper = $socialHelper;
+    /**
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Mageplaza\SocialLogin\Helper\Social             $socialHelper
+     * @param array                                            $data
+     */
+    public function __construct(
+        Context $context,
+        SocialHelper $socialHelper,
+        array $data = []
+    ) {
+        $this->socialHelper = $socialHelper;
 
-		parent::__construct($context, $data);
-	}
+        parent::__construct($context, $data);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getAvailableSocials()
-	{
-		$availabelSocials = [];
+    /**
+     * @return array
+     */
+    public function getAvailableSocials()
+    {
+        $availabelSocials = [];
 
-		foreach ($this->socialHelper->getSocialTypes() as $socialKey => $socialLabel) {
-			$this->socialHelper->setType($socialKey);
-			if ($this->socialHelper->isEnabled()) {
-				$availabelSocials[$socialKey] = [
-					'label'     => $socialLabel,
-					'login_url' => $this->getLoginUrl($socialKey),
-				];
-			}
-		}
+        foreach ($this->socialHelper->getSocialTypes() as $socialKey => $socialLabel) {
+            $this->socialHelper->setType($socialKey);
+            if ($this->socialHelper->isEnabled()) {
+                $availabelSocials[$socialKey] = [
+                    'label'     => $socialLabel,
+                    'login_url' => $this->getLoginUrl($socialKey),
+                ];
+            }
+        }
 
-		return $availabelSocials;
-	}
+        return $availabelSocials;
+    }
 
-	/**
-	 * @param $key
-	 * @return string
-	 */
-	public function getBtnKey($key)
-	{
-		switch ($key) {
-			case 'vkontakte':
-				$class = 'vk';
-				break;
-			default:
-				$class = $key;
-		}
+    /**
+     * @param $key
+     * @return string
+     */
+    public function getBtnKey($key)
+    {
+        switch ($key) {
+            case 'vkontakte':
+                $class = 'vk';
+                break;
+            default:
+                $class = $key;
+        }
 
-		return $class;
-	}
+        return $class;
+    }
 
-	public function getSocialButtonsConfig()
-	{
-		$availableButtons = $this->getAvailableSocials();
-		foreach ($availableButtons as $key => &$button) {
-			$button['url']     = $this->getLoginUrl($key, ['authen' => 'popup']);
-			$button['key']     = $key;
-			$button['btn_key'] = $this->getBtnKey($key);
-		}
+    public function getSocialButtonsConfig()
+    {
+        $availableButtons = $this->getAvailableSocials();
+        foreach ($availableButtons as $key => &$button) {
+            $button['url']     = $this->getLoginUrl($key, ['authen' => 'popup']);
+            $button['key']     = $key;
+            $button['btn_key'] = $this->getBtnKey($key);
+        }
 
-		return $availableButtons;
-	}
+        return $availableButtons;
+    }
 
-	/**
-	 * @param null $position
-	 * @return bool
-	 */
-	public function canShow($position = null)
-	{
-		$displayConfig = $this->socialHelper->getGeneralConfig('social_display');
-		$displayConfig = explode(',', $displayConfig);
+    /**
+     * @param null $position
+     * @return bool
+     */
+    public function canShow($position = null)
+    {
+        $displayConfig = $this->socialHelper->getGeneralConfig('social_display');
+        $displayConfig = explode(',', $displayConfig);
 
-		if (!$position) {
-			$position = ($this->getRequest()->getFullActionName() == 'customer_account_login') ?
-				\Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_LOGIN :
-				\Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_CREATE;
-		}
+        if (!$position) {
+            $position = ($this->getRequest()->getFullActionName() == 'customer_account_login') ?
+                \Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_LOGIN :
+                \Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_CREATE;
+        }
 
-		return in_array($position, $displayConfig);
-	}
+        return in_array($position, $displayConfig);
+    }
 
-	/**
-	 * @param $socialKey
-	 * @param array $params
-	 * @return string
-	 */
-	public function getLoginUrl($socialKey, $params = [])
-	{
-		$params['type'] = $socialKey;
+    /**
+     * @param       $socialKey
+     * @param array $params
+     * @return string
+     */
+    public function getLoginUrl($socialKey, $params = [])
+    {
+        $params['type'] = $socialKey;
 
-		return $this->getUrl('sociallogin/social/login', $params);
-	}
+        return $this->getUrl('sociallogin/social/login', $params);
+    }
 }

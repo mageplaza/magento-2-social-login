@@ -23,15 +23,16 @@ namespace Mageplaza\SocialLogin\Block\Form;
 
 /**
  * Class Register
+ *
  * @package Mageplaza\SocialLogin\Block\Form
  */
 class Register extends \Magento\Customer\Block\Form\Register
 {
-	/**
-	 * @return $this
-	 */
-	protected function _prepareLayout()
-	{
-		return $this;
-	}
+    /**
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        return $this;
+    }
 }

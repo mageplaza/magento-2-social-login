@@ -22,6 +22,7 @@ namespace Mageplaza\SocialLogin\Model\System\Config\Source;
 
 /**
  * Class Color
+ *
  * @package Mageplaza\SocialLogin\Model\System\Config\Source
  */
 class Color implements \Magento\Framework\Option\ArrayInterface
