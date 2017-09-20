@@ -37,11 +37,6 @@ Run compile if your store in Product mode:
 php bin/magento setup:di:compile
 ```
 
-### ✓ Install Package from Mageplaza
-
-- Download the latest version at [Mageplaza Social Login for Magento 2](https://www.mageplaza.com/magento-2-social-login-extension/)
--  [Installation guide](https://www.mageplaza.com/install-magento-2-extension/)
-
 
 
 ## 3. FAQs
