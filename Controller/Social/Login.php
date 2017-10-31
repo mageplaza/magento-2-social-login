@@ -282,7 +282,7 @@ class Login extends Action
         $checkoutUrl = $this->urlBuilder->getUrl('checkout');
 
         if (empty($userProfile->email)){
-            $this->messageManager->addErrorMessage('Please update your email address');
+            $this->messageManager->addNotice(__('Please update your email address'));
             return $editAccountUrl;
         }
 
