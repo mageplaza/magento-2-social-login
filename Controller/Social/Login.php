@@ -140,7 +140,7 @@ class Login extends Action
             $customer = $this->createCustomer($user, $type);
         }
 
-        return $this->_appendJs($customer);
+        return $this->_appendJs($customer, $userProfile);
     }
 
     /**
@@ -217,7 +217,7 @@ class Login extends Action
      * @param $customer
      * @return $this
      */
-    public function _appendJs($customer)
+    public function _appendJs($customer, $userProfile)
     {
         if ($customer && $customer->getId()) {
             $this->session->setCustomerAsLoggedIn($customer);
@@ -233,7 +233,7 @@ class Login extends Action
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
 
-        return $resultRaw->setContents(sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
+        return $resultRaw->setContents(sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect($userProfile)));
     }
 
     /**
@@ -275,18 +275,24 @@ class Login extends Action
      *
      * @return mixed
      */
-    protected function _loginPostRedirect()
+    protected function _loginPostRedirect($userProfile = null)
     {
         $url = $this->urlBuilder->getUrl('customer/account');
+        $editAccountUrl = $this->urlBuilder->getUrl('customer/account/edit');
+        $checkoutUrl = $this->urlBuilder->getUrl('checkout');
+
+        if (empty($userProfile->email)){
+            $this->messageManager->addErrorMessage('Please update your email address');
+            return $editAccountUrl;
+        }
 
         if ($this->_request->getParam('authen') == 'popup') {
-            $url = $this->urlBuilder->getUrl('checkout');
-        } else {
-            $requestedRedirect = $this->accountRedirect->getRedirectCookie();
-            if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {
-                $url = $this->_redirect->success($requestedRedirect);
-                $this->accountRedirect->clearRedirectCookie();
-            }
+            return $checkoutUrl;
+        }
+        $requestedRedirect = $this->accountRedirect->getRedirectCookie();
+        if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {
+            $url = $this->_redirect->success($requestedRedirect);
+            $this->accountRedirect->clearRedirectCookie();
         }
 
         return $url;
