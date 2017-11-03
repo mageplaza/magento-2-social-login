@@ -21,8 +21,9 @@
 define([
     'jquery',
     'Magento_Customer/js/customer-data',
+    'mage/translate',
     'mageplaza/core/jquery/popup'
-], function ($, customerData) {
+], function ($, customerData, $t) {
     $.widget('mageplaza.socialpopup', {
         options: {
             /*General*/
@@ -219,7 +220,7 @@ define([
                 }
             }).fail(function () {
                 self.removeLoading(self.loginFormContent);
-                self.addMsg(self.loginFormContent, 'Could not authenticate. Please try again later', options.errorMsgClass);
+                self.addMsg(self.loginFormContent, $t('Could not authenticate. Please try again later'), options.errorMsgClass);
             });
         },
 
