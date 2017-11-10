@@ -23,7 +23,7 @@
 
 ### ✓ Install ready-to-paste package
 
-- Download the latest version at [Mageplaza Blog for Magento 2](https://www.mageplaza.com/magento-2-blog-extension/)
+- Download the latest version at [Mageplaza Social Login for Magento 2](https://www.mageplaza.com/magento-2-social-login-extension/)
 -  [Installation guide](https://www.mageplaza.com/install-magento-2-extension/)
 
 
