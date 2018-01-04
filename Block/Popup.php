@@ -88,7 +88,9 @@ class Popup extends Template
             'popupEffect'   => $this->getPopupEffect(),
             'formLoginUrl'  => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
-            'createFormUrl' => $this->getCreateFormUrl()
+            'createFormUrl' => $this->getCreateFormUrl(),
+            'googleClientKey' => $this->getGoogleClientKey(),
+            'isGoogleCaptcha' => $this->isGoogleCaptcha()
         ];
 
         return json_encode($params);
@@ -108,7 +110,24 @@ class Popup extends Template
     {
         return $this->helperData->getPopupEffect();
     }
-
+    /**
+     * Get google client key
+     *
+     * @return string
+     */
+    public function getGoogleClientKey()
+    {
+        return $this->helperData->getGoogleClientKey();
+    }
+    /**
+     * Is Google Captcha
+     *
+     * @return string
+     */
+    public function isGoogleCaptcha()
+    {
+        return $this->helperData->isGoogleCaptcha();
+    }
     /**
      * get Social Login Form Url
      *

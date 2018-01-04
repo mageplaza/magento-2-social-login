@@ -59,7 +59,10 @@ define([
             /*Captcha*/
             loginCaptchaImg: '.authentication .captcha-img',
             createCaptchaImg: '.create .captcha-img',
-            forgotCaptchaImg: '.forgot .captcha-img'
+            forgotCaptchaImg: '.forgot .captcha-img',
+            /*Google Captcha*/
+            googleClientKey: '',
+            isGoogleCaptcha: 0
         },
 
         _create: function () {
@@ -67,7 +70,18 @@ define([
             this.initLink();
             this.initObserve();
         },
-
+        _init: function() {
+            var self = this;
+            if(parseInt(this.options.isGoogleCaptcha) === 1){
+                var onSubmit = function (token) {
+                    self.processCreate();
+                };
+                grecaptcha.render('button-create-social', {
+                    'sitekey': this.options.googleClientKey,
+                    'callback': onSubmit
+                });
+            }
+        },
         initObject: function () {
             this.loginForm = $(this.options.loginForm);
             this.createForm = $(this.options.createForm);
@@ -131,7 +145,9 @@ define([
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
             $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
 
-            $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
+            if(parseInt(this.options.isGoogleCaptcha) === 0){
+                $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
+            }
             $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
 
             $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
@@ -256,6 +272,9 @@ define([
 
         processCreate: function () {
             if (!this.createForm.valid()) {
+                if(parseInt(this.options.isGoogleCaptcha) === 1){
+                    grecaptcha.reset();
+                }
                 return;
             }
 
