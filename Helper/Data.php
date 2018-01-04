@@ -29,6 +29,8 @@ use Mageplaza\Core\Helper\AbstractData as CoreHelper;
  */
 class Data extends CoreHelper
 {
+    const CONFIG_MODULE_PATH = 'sociallogin';
+
     const XML_PATH_GENERAL_ENABLED = 'sociallogin/general/is_enabled';
     const XML_PATH_GENERAL = 'sociallogin/general/';
     const XML_PATH_GENERAL_POPUP_LEFT = 'sociallogin/general/left';
