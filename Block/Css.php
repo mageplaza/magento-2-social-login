@@ -34,6 +34,10 @@ use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 class Css extends Template
 {
     /**
+     * @var string
+     */
+    protected $_template='css.phtml';
+    /**
      * @type \Mageplaza\SocialLogin\Helper\Social
      */
     protected $socialHelper;

@@ -23,11 +23,7 @@
 $helper = $block->helper();
 $color  = $helper->getStyleManagement();
 $css    = $helper->getCustomCss();
-$captcha = $helper->isGoogleCaptcha();
 ?>
-<?php if(isset($captcha) && $captcha == 1){ ?>
-    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-<?php }?>
 <style>
     #social-login-popup .social-login-title {
 		background-color: <?php echo $color ?>

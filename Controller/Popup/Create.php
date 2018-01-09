@@ -163,22 +163,6 @@ class Create extends CreatePost
             'message' => array()
         );
 
-        if($this->socialHelper->isGoogleCaptcha()){
-            $recaptcha = $this->getRequest()->getParam('g-recaptcha-response');
-            try {
-                $response = $this->verifyResponse($recaptcha);
-                if(isset($response['success']) and $response['success'] != true) {
-                    $result['message'] = __('An Error Occured and Error code is :').$response['error-codes'];
-                    return $resultJson->setData($result);
-                }
-            } catch (\Exception $e) {
-                $result['message'] = __('Captcha error. Please try again.');
-                return $resultJson->setData($result);
-            }
-
-        }
-
-
         $formId       = 'user_create';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
         if ($captchaModel->isRequired()) {
@@ -280,7 +264,7 @@ class Create extends CreatePost
      * @deprecated
      * @return \Magento\Framework\Stdlib\Cookie\PhpCookieManager
      */
-    private function getCookieManager()
+    protected function getCookieManager()
     {
         if (!$this->cookieMetadataManager) {
             $this->cookieMetadataManager = \Magento\Framework\App\ObjectManager::getInstance()->get(
@@ -297,7 +281,7 @@ class Create extends CreatePost
      * @deprecated
      * @return \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
      */
-    private function getCookieMetadataFactory()
+    protected function getCookieMetadataFactory()
     {
         if (!$this->cookieMetadataFactory) {
             $this->cookieMetadataFactory = \Magento\Framework\App\ObjectManager::getInstance()->get(
@@ -319,63 +303,6 @@ class Create extends CreatePost
     protected function checkPasswordConfirmation($password, $confirmation)
     {
         return $password == $confirmation;
-    }
-    /**
-     * get reCAPTCHA server response
-     *
-     * @param string
-     * @return array
-     * @throws InputException
-     */
-    public function verifyResponse($recaptcha){
-        $remoteIp = $this->getIpAddress();
-        if (empty($recaptcha)) {
-            return array(
-                'success' => false,
-                'error-codes' => 'missing-input',
-            );
-        }
-
-        $getResponse = $this->getHTTP(
-            array(
-                'secret' => $this->socialHelper->getGoogleSecretKey(),
-                'remoteip' => $remoteIp,
-                'response' => $recaptcha,
-            )
-        );
-        // get reCAPTCHA server response
-        $responses = json_decode($getResponse, true);
-        if (isset($responses['success']) and $responses['success'] == true) {
-            $status = true;
-        } else {
-            $status = false;
-            $error = (isset($responses['error-codes'])) ? $responses['error-codes'] : 'invalid-input-response';
-        }
-        return array(
-            'success' => $status,
-            'error-codes' => (isset($error)) ? $error : null,
-        );
-    }
-
-    /**
-     * get IpAdress
-     * @return string
-     */
-    private function getIpAddress(){
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
-    }
-    private function getHTTP($data){
-        $url = 'https://www.google.com/recaptcha/api/siteverify?'.http_build_query($data);
-        $response = file_get_contents($url);
-
-        return $response;
     }
 
 }

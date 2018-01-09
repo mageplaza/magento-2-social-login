@@ -34,6 +34,10 @@ use Mageplaza\SocialLogin\Helper\Data as HelperData;
 class Popup extends Template
 {
     /**
+     * @var string
+     */
+    protected $_template = 'popup.phtml';
+    /**
      * @type \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
@@ -50,19 +54,20 @@ class Popup extends Template
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Data               $helperData
-     * @param \Magento\Customer\Model\Session                  $customerSession
-     * @param array                                            $data
+     * @param \Mageplaza\SocialLogin\Helper\Data $helperData
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param array $data
      */
     public function __construct(
         Context $context,
         HelperData $helperData,
         CustomerSession $customerSession,
         array $data = []
-    ) {
-        $this->helperData      = $helperData;
+    )
+    {
+        $this->helperData = $helperData;
         $this->customerSession = $customerSession;
-        $this->storeManager    = $context->getStoreManager();
+        $this->storeManager = $context->getStoreManager();
         parent::__construct($context, $data);
     }
 
@@ -84,13 +89,11 @@ class Popup extends Template
     public function getFormParams()
     {
         $params = [
-            'headerLink'    => $this->getHeaderLink(),
-            'popupEffect'   => $this->getPopupEffect(),
-            'formLoginUrl'  => $this->getFormLoginUrl(),
+            'headerLink' => $this->getHeaderLink(),
+            'popupEffect' => $this->getPopupEffect(),
+            'formLoginUrl' => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
-            'createFormUrl' => $this->getCreateFormUrl(),
-            'googleClientKey' => $this->getGoogleClientKey(),
-            'isGoogleCaptcha' => $this->isGoogleCaptcha()
+            'createFormUrl' => $this->getCreateFormUrl()
         ];
 
         return json_encode($params);
@@ -110,24 +113,7 @@ class Popup extends Template
     {
         return $this->helperData->getPopupEffect();
     }
-    /**
-     * Get google client key
-     *
-     * @return string
-     */
-    public function getGoogleClientKey()
-    {
-        return $this->helperData->getGoogleClientKey();
-    }
-    /**
-     * Is Google Captcha
-     *
-     * @return string
-     */
-    public function isGoogleCaptcha()
-    {
-        return $this->helperData->isGoogleCaptcha();
-    }
+
     /**
      * get Social Login Form Url
      *

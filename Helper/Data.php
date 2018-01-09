@@ -29,6 +29,8 @@ use Mageplaza\Core\Helper\AbstractData as CoreHelper;
  */
 class Data extends CoreHelper
 {
+    const CONFIG_MODULE_PATH = 'sociallogin';
+
     const XML_PATH_GENERAL_ENABLED = 'sociallogin/general/is_enabled';
     const XML_PATH_GENERAL = 'sociallogin/general/';
     const XML_PATH_GENERAL_POPUP_LEFT = 'sociallogin/general/left';
@@ -134,36 +136,5 @@ class Data extends CoreHelper
         $isSecure = $this->getConfigValue(self::XML_PATH_SECURE_IN_FRONTEND);
 
         return $isSecure;
-    }
-    /**
-     * @param null $storeId
-     * @return mixed
-     */
-    public function isGoogleCaptcha($storeId = null)
-    {
-        return $this->getGeneralConfig('google_captcha', $storeId);
-    }
-
-    /**
-     * @param null $storeId
-     * @return string
-     */
-    public function getGoogleClientKey($storeId = null)
-    {
-        if($this->isGoogleCaptcha()){
-            return $this->getGeneralConfig('google_client_key', $storeId);
-        }
-        return null;
-    }
-    /**
-     * @param null $storeId
-     * @return string
-     */
-    public function getGoogleSecretKey($storeId = null)
-    {
-        if($this->isGoogleCaptcha()){
-            return $this->getGeneralConfig('google_secret_key', $storeId);
-        }
-        return null;
     }
 }
