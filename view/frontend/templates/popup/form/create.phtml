@@ -35,7 +35,7 @@
                     <div class="field required">
                         <label for="email_address" class="label"><span><?php echo __('Email') ?></span></label>
                         <div class="control">
-                            <input type="email" name="email" id="email_address"
+                            <input type="email" name="email" id="email_address_create"
                                    value="<?php echo $block->escapeHtml($block->getFormData()->getEmail()) ?>"
                                    title="<?php echo __('Email') ?>" class="input-text"
                                    data-validate="{required:true, 'validate-email':true}"/>
@@ -187,7 +187,7 @@
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
-                        <button type="button" class="action create primary"
+                        <button type="button" id="button-create-social" class="action create primary"
                                 title="<?php echo __('Create an Account') ?>">
                             <span><?php echo __('Create an Account') ?></span></button>
                     </div>
