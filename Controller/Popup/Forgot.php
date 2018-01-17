@@ -18,17 +18,20 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Controller\Popup;
 
+use Magento\Captcha\Helper\Data as CaptchaData;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\AccountManagement;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Escaper;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
-use Magento\Framework\Controller\Result\JsonFactory;
+use Mageplaza\SocialLogin\Helper\Data;
 
 /**
  * Class Forgot
@@ -64,13 +67,13 @@ class Forgot extends Action
     protected $socialHelper;
 
     /**
-     * @param \Magento\Framework\App\Action\Context            $context
-     * @param \Magento\Customer\Model\Session                  $customerSession
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Api\AccountManagementInterface $customerAccountManagement
-     * @param \Magento\Framework\Escaper                       $escaper
+     * @param \Magento\Framework\Escaper $escaper
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
-     * @param \Magento\Captcha\Helper\Data                     $captchaHelper
-     * @param \Mageplaza\SocialLogin\Helper\Data               $socialHelper
+     * @param \Magento\Captcha\Helper\Data $captchaHelper
+     * @param \Mageplaza\SocialLogin\Helper\Data $socialHelper
      */
     public function __construct(
         Context $context,
@@ -78,9 +81,10 @@ class Forgot extends Action
         AccountManagementInterface $customerAccountManagement,
         Escaper $escaper,
         JsonFactory $resultJsonFactory,
-        \Magento\Captcha\Helper\Data $captchaHelper,
-        \Mageplaza\SocialLogin\Helper\Data $socialHelper
-    ) {
+        CaptchaData $captchaHelper,
+        Data $socialHelper
+    )
+    {
         $this->session                   = $customerSession;
         $this->customerAccountManagement = $customerAccountManagement;
         $this->escaper                   = $escaper;

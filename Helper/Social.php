@@ -18,8 +18,10 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Helper;
 
+use Magento\Store\Model\ScopeInterface;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
 
 /**
@@ -182,23 +184,13 @@ class Social extends HelperData
      */
     protected function getScopeUrl()
     {
-        $scope = $this->_request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?: $this->storeManager->getStore()->getId();
+        $scope = $this->_request->getParam(ScopeInterface::SCOPE_STORE) ?: $this->storeManager->getStore()->getId();
 
-        if ($website = $this->_request->getParam(\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE)) {
+        if ($website = $this->_request->getParam(ScopeInterface::SCOPE_WEBSITE)) {
             $scope = $this->storeManager->getWebsite($website)->getDefaultStore()->getId();
         }
 
         return $scope;
-    }
-
-    /**
-     * Get current theme id
-     *
-     * @return mixed
-     */
-    public function getCurrentThemeId()
-    {
-        return $this->getConfigValue(\Magento\Framework\View\DesignInterface::XML_PATH_THEME_ID);
     }
 
     /**

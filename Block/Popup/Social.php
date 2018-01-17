@@ -18,11 +18,13 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Block\Popup;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
+use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 
 /**
  * Class Social
@@ -38,14 +40,15 @@ class Social extends Template
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Social             $socialHelper
-     * @param array                                            $data
+     * @param \Mageplaza\SocialLogin\Helper\Social $socialHelper
+     * @param array $data
      */
     public function __construct(
         Context $context,
         SocialHelper $socialHelper,
         array $data = []
-    ) {
+    )
+    {
         $this->socialHelper = $socialHelper;
 
         parent::__construct($context, $data);
@@ -88,6 +91,9 @@ class Social extends Template
         return $class;
     }
 
+    /**
+     * @return array
+     */
     public function getSocialButtonsConfig()
     {
         $availableButtons = $this->getAvailableSocials();
@@ -106,13 +112,13 @@ class Social extends Template
      */
     public function canShow($position = null)
     {
-        $displayConfig = $this->socialHelper->getGeneralConfig('social_display');
+        $displayConfig = $this->socialHelper->getConfigGeneral('social_display');
         $displayConfig = explode(',', $displayConfig);
 
         if (!$position) {
             $position = ($this->getRequest()->getFullActionName() == 'customer_account_login') ?
-                \Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_LOGIN :
-                \Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_CREATE;
+                Position::PAGE_LOGIN :
+                Position::PAGE_CREATE;
         }
 
         return in_array($position, $displayConfig);

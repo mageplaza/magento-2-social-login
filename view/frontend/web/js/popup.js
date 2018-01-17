@@ -94,12 +94,12 @@ define([
                     var el = $(this),
                         href = el.attr('href');
 
-                    if (typeof href !== 'undefined' && (href.search('customer/account/login') != -1 || href.search('customer/account/create') != -1)) {
+                    if (typeof href !== 'undefined' && (href.search('customer/account/login') !== -1 || href.search('customer/account/create') !== -1)) {
                         el.addClass('social-login');
                         el.attr('href', self.options.popup);
                         el.attr('data-effect', self.options.popupEffect);
                         el.on('click', function (event) {
-                            if (href.search('customer/account/create') != -1) {
+                            if (href.search('customer/account/create') !== -1) {
                                 self.showCreate();
                             } else {
                                 self.showLogin();
@@ -138,19 +138,19 @@ define([
 
             this.loginForm.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
-                if (code == 13) {
+                if (code === 13) {
                     self.processLogin();
                 }
             });
             this.createForm.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
-                if (code == 13) {
+                if (code === 13) {
                     self.processCreate();
                 }
             });
             this.forgotForm.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
-                if (code == 13) {
+                if (code === 13) {
                     self.processForgot();
                 }
             });

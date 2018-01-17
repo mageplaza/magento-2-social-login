@@ -18,31 +18,37 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Controller\Popup;
 
-use Magento\Customer\Controller\Account\CreatePost;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
-use Magento\Framework\Api\DataObjectHelper;
-use Magento\Framework\App\Action\Context;
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Captcha\Helper\Data as CaptchaData;
 use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Customer\Helper\Address;
-use Magento\Framework\UrlFactory;
-use Magento\Customer\Model\Metadata\FormFactory;
-use Magento\Newsletter\Model\SubscriberFactory;
-use Magento\Customer\Api\Data\RegionInterfaceFactory;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
-use Magento\Customer\Model\Url as CustomerUrl;
-use Magento\Customer\Model\Registration;
-use Magento\Framework\Escaper;
+use Magento\Customer\Api\Data\RegionInterfaceFactory;
+use Magento\Customer\Controller\Account\CreatePost;
+use Magento\Customer\Helper\Address;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\CustomerExtractor;
-use Magento\Framework\Exception\StateException;
-use Magento\Framework\Exception\InputException;
+use Magento\Customer\Model\Metadata\FormFactory;
+use Magento\Customer\Model\Registration;
+use Magento\Customer\Model\Session;
+use Magento\Customer\Model\Url as CustomerUrl;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Escaper;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\StateException;
+use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
+use Magento\Framework\UrlFactory;
+use Magento\Newsletter\Model\SubscriberFactory;
+use Magento\Store\Model\StoreManagerInterface;
+use Mageplaza\SocialLogin\Helper\Data;
 
 /**
  * Class Create
@@ -77,27 +83,27 @@ class Create extends CreatePost
     private $cookieMetadataFactory;
 
     /**
-     * @param \Magento\Framework\App\Action\Context               $context
-     * @param \Magento\Customer\Model\Session                     $customerSession
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface  $scopeConfig
-     * @param \Magento\Store\Model\StoreManagerInterface          $storeManager
-     * @param \Magento\Customer\Api\AccountManagementInterface    $accountManagement
-     * @param \Magento\Customer\Helper\Address                    $addressHelper
-     * @param \Magento\Framework\UrlFactory                       $urlFactory
-     * @param \Magento\Customer\Model\Metadata\FormFactory        $formFactory
-     * @param \Magento\Newsletter\Model\SubscriberFactory         $subscriberFactory
-     * @param \Magento\Customer\Api\Data\RegionInterfaceFactory   $regionDataFactory
-     * @param \Magento\Customer\Api\Data\AddressInterfaceFactory  $addressDataFactory
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Customer\Api\AccountManagementInterface $accountManagement
+     * @param \Magento\Customer\Helper\Address $addressHelper
+     * @param \Magento\Framework\UrlFactory $urlFactory
+     * @param \Magento\Customer\Model\Metadata\FormFactory $formFactory
+     * @param \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory
+     * @param \Magento\Customer\Api\Data\RegionInterfaceFactory $regionDataFactory
+     * @param \Magento\Customer\Api\Data\AddressInterfaceFactory $addressDataFactory
      * @param \Magento\Customer\Api\Data\CustomerInterfaceFactory $customerDataFactory
-     * @param \Magento\Customer\Model\Url                         $customerUrl
-     * @param \Magento\Customer\Model\Registration                $registration
-     * @param \Magento\Framework\Escaper                          $escaper
-     * @param \Magento\Customer\Model\CustomerExtractor           $customerExtractor
-     * @param \Magento\Framework\Api\DataObjectHelper             $dataObjectHelper
-     * @param \Magento\Customer\Model\Account\Redirect            $accountRedirect
-     * @param \Magento\Framework\Controller\Result\JsonFactory    $resultJsonFactory
-     * @param \Magento\Captcha\Helper\Data                        $captchaHelper
-     * @param \Mageplaza\SocialLogin\Helper\Data                  $socialHelper
+     * @param \Magento\Customer\Model\Url $customerUrl
+     * @param \Magento\Customer\Model\Registration $registration
+     * @param \Magento\Framework\Escaper $escaper
+     * @param \Magento\Customer\Model\CustomerExtractor $customerExtractor
+     * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
+     * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
+     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+     * @param \Magento\Captcha\Helper\Data $captchaHelper
+     * @param \Mageplaza\SocialLogin\Helper\Data $socialHelper
      */
     public function __construct(
         Context $context,
@@ -119,9 +125,10 @@ class Create extends CreatePost
         DataObjectHelper $dataObjectHelper,
         AccountRedirect $accountRedirect,
         JsonFactory $resultJsonFactory,
-        \Magento\Captcha\Helper\Data $captchaHelper,
-        \Mageplaza\SocialLogin\Helper\Data $socialHelper
-    ) {
+        CaptchaData $captchaHelper,
+        Data $socialHelper
+    )
+    {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->captchaHelper     = $captchaHelper;
         $this->socialHelper      = $socialHelper;
@@ -267,8 +274,8 @@ class Create extends CreatePost
     protected function getCookieManager()
     {
         if (!$this->cookieMetadataManager) {
-            $this->cookieMetadataManager = \Magento\Framework\App\ObjectManager::getInstance()->get(
-                \Magento\Framework\Stdlib\Cookie\PhpCookieManager::class
+            $this->cookieMetadataManager = ObjectManager::getInstance()->get(
+                PhpCookieManager::class
             );
         }
 
@@ -284,8 +291,8 @@ class Create extends CreatePost
     protected function getCookieMetadataFactory()
     {
         if (!$this->cookieMetadataFactory) {
-            $this->cookieMetadataFactory = \Magento\Framework\App\ObjectManager::getInstance()->get(
-                \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class
+            $this->cookieMetadataFactory = ObjectManager::getInstance()->get(
+                CookieMetadataFactory::class
             );
         }
 

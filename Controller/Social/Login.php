@@ -18,16 +18,22 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Controller\Social;
 
+use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\AccountManagement;
+use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Controller\Result\RawFactory;
+use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Customer\Api\AccountManagementInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
-use Magento\Customer\Model\Session;
 
 /**
  * Class AbstractSocial
@@ -45,6 +51,7 @@ class Login extends Action
      * @type \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
+
     /**
      * @type \Magento\Customer\Api\AccountManagementInterface
      */
@@ -81,12 +88,15 @@ class Login extends Action
     protected $resultRawFactory;
 
     /**
-     * @param \Magento\Framework\App\Action\Context      $context
+     * Login constructor.
+     * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Mageplaza\SocialLogin\Helper\Social       $apiHelper
-     * @param \Mageplaza\SocialLogin\Model\Social        $apiObject
-     * @param \Magento\Customer\Model\Session            $customerSession
-     * @param \Magento\Customer\Model\Account\Redirect   $accountRedirect
+     * @param \Magento\Customer\Api\AccountManagementInterface $accountManager
+     * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
+     * @param \Mageplaza\SocialLogin\Model\Social $apiObject
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
+     * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
      */
     public function __construct(
         Context $context,
@@ -96,21 +106,22 @@ class Login extends Action
         Social $apiObject,
         Session $customerSession,
         AccountRedirect $accountRedirect,
-        \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
-    ) {
+        RawFactory $resultRawFactory
+    )
+    {
         parent::__construct($context);
+
         $this->storeManager     = $storeManager;
         $this->accountManager   = $accountManager;
         $this->apiHelper        = $apiHelper;
         $this->apiObject        = $apiObject;
         $this->session          = $customerSession;
         $this->accountRedirect  = $accountRedirect;
-        $this->urlBuilder       = $context->getUrl();
         $this->resultRawFactory = $resultRawFactory;
     }
 
     /**
-     * @return \Mageplaza\SocialLogin\Controller\AbstractSocial
+     * @return \Magento\Framework\Controller\Result\Raw|\Mageplaza\SocialLogin\Controller\Social\Login|void
      */
     public function execute()
     {
@@ -197,7 +208,7 @@ class Login extends Action
                      */
                     $this->accountManager->initiatePasswordReset(
                         $user['email'],
-                        \Magento\Customer\Model\AccountManagement::EMAIL_RESET
+                        AccountManagement::EMAIL_RESET
                     );
                 }
             } catch (\Exception $e) {
@@ -215,7 +226,7 @@ class Login extends Action
      * Return javascript to redirect when login success
      *
      * @param $customer
-     * @return $this
+     * @return \Magento\Framework\Controller\Result\Raw
      */
     public function _appendJs($customer)
     {
@@ -245,8 +256,8 @@ class Login extends Action
     private function getCookieManager()
     {
         if (!$this->cookieMetadataManager) {
-            $this->cookieMetadataManager = \Magento\Framework\App\ObjectManager::getInstance()->get(
-                \Magento\Framework\Stdlib\Cookie\PhpCookieManager::class
+            $this->cookieMetadataManager = ObjectManager::getInstance()->get(
+                PhpCookieManager::class
             );
         }
 
@@ -262,8 +273,8 @@ class Login extends Action
     private function getCookieMetadataFactory()
     {
         if (!$this->cookieMetadataFactory) {
-            $this->cookieMetadataFactory = \Magento\Framework\App\ObjectManager::getInstance()->get(
-                \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class
+            $this->cookieMetadataFactory = ObjectManager::getInstance()->get(
+                CookieMetadataFactory::class
             );
         }
 
@@ -277,10 +288,10 @@ class Login extends Action
      */
     protected function _loginPostRedirect()
     {
-        $url = $this->urlBuilder->getUrl('customer/account');
+        $url = $this->_url->getUrl('customer/account');
 
         if ($this->_request->getParam('authen') == 'popup') {
-            $url = $this->urlBuilder->getUrl('checkout');
+            $url = $this->_url->getUrl('checkout');
         } else {
             $requestedRedirect = $this->accountRedirect->getRedirectCookie();
             if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {

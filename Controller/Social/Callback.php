@@ -18,15 +18,21 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Controller\Social;
+
+use Magento\Framework\App\Action\Action;
 
 /**
  * Class Callback
  *
  * @package Mageplaza\SocialLogin\Controller\Social
  */
-class Callback extends \Magento\Framework\App\Action\Action
+class Callback extends Action
 {
+    /**
+     * @inheritdoc
+     */
     public function execute()
     {
         \Hybrid_Endpoint::process();

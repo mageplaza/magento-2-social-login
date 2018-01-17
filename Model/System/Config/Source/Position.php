@@ -18,14 +18,17 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Model\System\Config\Source;
+
+use Magento\Framework\Option\ArrayInterface;
 
 /**
  * Class Position
  *
  * @package Mageplaza\SocialLogin\Model\System\Config\Source
  */
-class Position implements \Magento\Framework\Option\ArrayInterface
+class Position implements ArrayInterface
 {
     const PAGE_LOGIN = 1;
     const PAGE_CREATE = 2;

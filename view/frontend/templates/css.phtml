@@ -18,40 +18,47 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
+/** @var \Mageplaza\SocialLogin\Block\Css $block */
 ?>
 <?php
+/** @var \Mageplaza\SocialLogin\Helper\Data $helper */
 $helper = $block->helper();
 $color  = $helper->getStyleManagement();
-$css    = $helper->getCustomCss();
 ?>
 <style>
     #social-login-popup .social-login-title {
-		background-color: <?php echo $color ?>
-	}
+        background-color: <?php echo $color ?>
+    }
 
-	#social-login-popup .social-login #bnt-social-login-authentication {
-		background-color: <?php echo $color ?>;
-		border: <?php echo $color ?>
-	}
+    #social-login-popup .social-login #bnt-social-login-authentication,
+    #social-login-popup .forgot .primary button,
+    #social-login-popup .create .primary button {
+        background-color: <?php echo $color ?>;
+        border: <?php echo $color ?>
+    }
 
-	#social-login-popup .forgot .primary button {
-		background-color: <?php echo $color ?>;
-		border: <?php echo $color ?>
-	}
+    .block.social-login-authentication-channel.account-social-login .block-content {
+        text-align: center;
+    }
 
-	#social-login-popup .create .primary button {
-		background-color: <?php echo $color ?>;
-		border: <?php echo $color ?>
-	}
-    .block.social-login-authentication-channel.account-social-login .block-content { text-align: center; }
-	<?php echo $css ?>
+    <?php echo $helper->getCustomCss() ?>
+
     /* Compatible ETheme_YOURstore*/
-    /* ETheme_YOURstore  */
-    div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login {max-width: 900px !important;margin: 0 auto !important;}
-    div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login .block-content { text-align: center; }
-    @media (max-width: 1024px){
+    div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login {
+        max-width: 900px !important;
+        margin: 0 auto !important;
+    }
+
+    div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login .block-content {
+        text-align: center;
+    }
+
+    @media (max-width: 1024px) {
         div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login .block-content {
-            padding: 0px 15px;
+            padding: 0 15px;
         }
     }
 </style>
+
+<?php echo $block->getChildHtml() ?>

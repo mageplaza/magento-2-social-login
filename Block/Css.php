@@ -18,13 +18,12 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Block;
 
-use Mageplaza\SocialLogin\Helper\Data as DataHelper;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
-use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
+use Mageplaza\SocialLogin\Helper\Data as DataHelper;
 
 /**
  * Class Css
@@ -34,39 +33,25 @@ use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 class Css extends Template
 {
     /**
-     * @var string
-     */
-    protected $_template='css.phtml';
-    /**
-     * @type \Mageplaza\SocialLogin\Helper\Social
-     */
-    protected $socialHelper;
-    /**
      * @type \Mageplaza\SocialLogin\Helper\Data
      */
     protected $_helper;
-    /**
-     * @var ThemeProviderInterface
-     */
-    protected $_themeProviderInterface;
 
     /**
+     * Css constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Data               $helper
-     * @param array                                            $data
+     * @param \Mageplaza\SocialLogin\Helper\Data $helper
+     * @param array $data
      */
     public function __construct(
         Context $context,
         DataHelper $helper,
-        ThemeProviderInterface $themeProviderInterface,
-        SocialHelper $socialHelper,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($context, $data);
 
-        $this->_themeProviderInterface = $themeProviderInterface;
-        $this->socialHelper            = $socialHelper;
-        $this->_helper                 = $helper;
+        $this->_helper = $helper;
     }
 
     /**
@@ -75,7 +60,7 @@ class Css extends Template
     protected function _prepareLayout()
     {
         if ($this->_helper->isEnabled()) {
-            if ($this->_helper->getGeneralConfig('popup_login')) {
+            if ($this->_helper->getConfigGeneral('popup_login')) {
                 $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
@@ -95,13 +80,5 @@ class Css extends Template
     public function helper()
     {
         return $this->_helper;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrentTheme()
-    {
-        return $this->_themeProviderInterface->getThemeById($this->socialHelper->getCurrentThemeId())->getCode();
     }
 }

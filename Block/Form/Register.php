@@ -28,9 +28,6 @@ namespace Mageplaza\SocialLogin\Block\Form;
  */
 class Register extends \Magento\Customer\Block\Form\Register
 {
-	
-	protected $_template='Mageplaza_SocialLogin::popup/form/create.phtml';
-	
     /**
      * @return $this
      */

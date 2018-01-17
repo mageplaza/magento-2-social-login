@@ -18,12 +18,13 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Block\System;
 
-use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Config\Block\System\Config\Form\Field as FormField;
-use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Magento\Backend\Block\Template\Context;
+use Magento\Config\Block\System\Config\Form\Field as FormField;
+use Magento\Framework\Data\Form\Element\AbstractElement;
+use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 
 /**
  * Class Redirect
@@ -38,14 +39,17 @@ class RedirectUrl extends FormField
     protected $socialHelper;
 
     /**
+     * RedirectUrl constructor.
      * @param \Magento\Backend\Block\Template\Context $context
-     * @param array                                   $data
+     * @param \Mageplaza\SocialLogin\Helper\Social $socialHelper
+     * @param array $data
      */
     public function __construct(
         Context $context,
         SocialHelper $socialHelper,
         array $data = []
-    ) {
+    )
+    {
         $this->socialHelper = $socialHelper;
         parent::__construct($context, $data);
     }

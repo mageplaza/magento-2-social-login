@@ -34,15 +34,6 @@ use Mageplaza\SocialLogin\Helper\Data as HelperData;
 class Popup extends Template
 {
     /**
-     * @var string
-     */
-    protected $_template = 'popup.phtml';
-    /**
-     * @type \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * @type \Mageplaza\SocialLogin\Helper\Data
      */
     protected $helperData;
@@ -67,7 +58,7 @@ class Popup extends Template
     {
         $this->helperData = $helperData;
         $this->customerSession = $customerSession;
-        $this->storeManager = $context->getStoreManager();
+
         parent::__construct($context, $data);
     }
 
@@ -78,7 +69,7 @@ class Popup extends Template
      */
     public function isEnabled()
     {
-        return $this->helperData->isEnabled() && !$this->customerSession->isLoggedIn() && $this->helperData->getGeneralConfig('popup_login');
+        return $this->helperData->isEnabled() && !$this->customerSession->isLoggedIn() && $this->helperData->getConfigGeneral('popup_login');
     }
 
     /**
@@ -99,9 +90,12 @@ class Popup extends Template
         return json_encode($params);
     }
 
+    /**
+     * @return string
+     */
     public function getHeaderLink()
     {
-        $links = $this->helperData->getGeneralConfig('link_trigger');
+        $links = $this->helperData->getConfigGeneral('link_trigger');
 
         return $links ?: '.header .links, .section-item-content .header.links';
     }
@@ -125,16 +119,6 @@ class Popup extends Template
     }
 
     /**
-     * get is secure url
-     *
-     * @return mixed
-     */
-    public function isSecure()
-    {
-        return $this->helperData->isSecure();
-    }
-
-    /**
      * @return string
      */
     public function getForgotFormUrl()
@@ -153,20 +137,12 @@ class Popup extends Template
     }
 
     /**
+     * get is secure url
+     *
      * @return mixed
      */
-    public function getStyleColor()
+    public function isSecure()
     {
-        return $this->helperData->getStyleManagement();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomCss()
-    {
-        $storeId = $this->storeManager->getStore()->getId(); //add
-
-        return $this->helperData->getCustomCss($storeId);
+        return $this->helperData->isSecure();
     }
 }

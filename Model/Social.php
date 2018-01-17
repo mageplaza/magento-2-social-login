@@ -18,10 +18,15 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Model;
 
-use Magento\Framework\Model\AbstractModel;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -52,25 +57,26 @@ class Social extends AbstractModel
     protected $apiName;
 
     /**
-     * @param \Magento\Framework\Model\Context                             $context
-     * @param \Magento\Framework\Registry                                  $registry
-     * @param \Magento\Customer\Model\CustomerFactory                      $customerFactory
-     * @param \Magento\Store\Model\StoreManagerInterface                   $storeManager
-     * @param \Mageplaza\SocialLogin\Helper\Social                         $apiHelper
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
-     * @param array                                                        $data
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
      */
     public function __construct(
-        \Magento\Framework\Model\Context $context,
-        \Magento\Framework\Registry $registry,
+        Context $context,
+        Registry $registry,
         CustomerFactory $customerFactory,
         StoreManagerInterface $storeManager,
         \Mageplaza\SocialLogin\Helper\Social $apiHelper,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->customerFactory = $customerFactory;

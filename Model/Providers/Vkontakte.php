@@ -4,7 +4,11 @@
 * http://hybridauth.sourceforge.net | https://github.com/hybridauth/hybridauth
 *  (c) 2009-2015 HybridAuth authors | hybridauth.sourceforge.net/licenses.html
 */
+
 namespace Mageplaza\SocialLogin\Model\Providers;
+
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Request\Http;
 
 /**
  * Hybrid_Providers_Vkontakte provider adapter based on OAuth2 protocol
@@ -59,9 +63,7 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
 
     function loginFinish()
     {
-
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $request       = $objectManager->create('\Magento\Framework\App\Request\Http');
+        $request = ObjectManager::getInstance()->get(Http::class);
 
         $error = $request->getParam('error') ? $request->getParam('error') : "";
 
@@ -156,7 +158,7 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
 
     /**
      * @param object $response
-     * @param bool   $withAdditionalRequests True to get some full fields like 'city' or 'country'
+     * @param bool $withAdditionalRequests True to get some full fields like 'city' or 'country'
      *                                       (requires additional responses to vk api!)
      *
      * @return \Hybrid_User_Contact

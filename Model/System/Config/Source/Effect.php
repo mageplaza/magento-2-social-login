@@ -18,14 +18,17 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Model\System\Config\Source;
+
+use Magento\Framework\Option\ArrayInterface;
 
 /**
  * Class Effect
  *
  * @package Mageplaza\SocialLogin\Model\System\Config\Source
  */
-class Effect implements \Magento\Framework\Option\ArrayInterface
+class Effect implements ArrayInterface
 {
     /**
      * Options getter

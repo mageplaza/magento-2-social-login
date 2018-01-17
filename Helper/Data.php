@@ -18,8 +18,10 @@
  * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Helper;
 
+use Magento\Framework\App\RequestInterface;
 use Mageplaza\Core\Helper\AbstractData as CoreHelper;
 
 /**
@@ -31,29 +33,13 @@ class Data extends CoreHelper
 {
     const CONFIG_MODULE_PATH = 'sociallogin';
 
-    const XML_PATH_GENERAL_ENABLED = 'sociallogin/general/is_enabled';
-    const XML_PATH_GENERAL = 'sociallogin/general/';
-    const XML_PATH_GENERAL_POPUP_LEFT = 'sociallogin/general/left';
-    const XML_PATH_GENERAL_STYLE_MANAGEMENT = 'sociallogin/general/style_management';
-    const XML_PATH_CAPTCHA_ENABLE = 'sociallogin/captcha/is_enabled';
-    const XML_PATH_SECURE_IN_FRONTEND = 'web/secure/use_in_frontend';
-
-    /**
-     * @param null $storeId
-     * @return mixed
-     */
-    public function isEnabled($storeId = null)
-    {
-        return $this->getConfigValue(self::XML_PATH_GENERAL_ENABLED, $storeId);
-    }
-
     /**
      * @param null $storeId
      * @return mixed
      */
     public function isCaptchaEnabled($storeId = null)
     {
-        return $this->getConfigValue(self::XML_PATH_CAPTCHA_ENABLE, $storeId);
+        return $this->getConfigValue(static::CONFIG_MODULE_PATH . '/captcha/is_enabled', $storeId);
     }
 
     /**
@@ -61,21 +47,11 @@ class Data extends CoreHelper
      * @param                                         $formId
      * @return string
      */
-    public function captchaResolve(\Magento\Framework\App\RequestInterface $request, $formId)
+    public function captchaResolve(RequestInterface $request, $formId)
     {
         $captchaParams = $request->getPost(\Magento\Captcha\Helper\Data::INPUT_NAME_FIELD_VALUE);
 
         return isset($captchaParams[$formId]) ? $captchaParams[$formId] : '';
-    }
-
-    /**
-     * @param      $code
-     * @param null $storeId
-     * @return mixed
-     */
-    public function getGeneralConfig($code, $storeId = null)
-    {
-        return $this->getConfigValue(self::XML_PATH_GENERAL . $code, $storeId);
     }
 
     /**
@@ -84,7 +60,7 @@ class Data extends CoreHelper
      */
     public function canSendPassword($storeId = null)
     {
-        return $this->getGeneralConfig('send_password', $storeId);
+        return $this->getConfigGeneral('send_password', $storeId);
     }
 
     /**
@@ -93,7 +69,7 @@ class Data extends CoreHelper
      */
     public function getPopupEffect($storeId = null)
     {
-        return $this->getGeneralConfig('popup_effect', $storeId);
+        return $this->getConfigGeneral('popup_effect', $storeId);
     }
 
     /**
@@ -102,7 +78,7 @@ class Data extends CoreHelper
      */
     public function getStyleManagement($storeId = null)
     {
-        $style = $this->getGeneralConfig('style_management', $storeId);
+        $style = $this->getConfigGeneral('style_management', $storeId);
         if ($style == 'custom') {
             return $this->getCustomColor($storeId);
         }
@@ -116,7 +92,7 @@ class Data extends CoreHelper
      */
     public function getCustomColor($storeId = null)
     {
-        return $this->getGeneralConfig('custom_color', $storeId);
+        return $this->getConfigGeneral('custom_color', $storeId);
     }
 
     /**
@@ -125,7 +101,7 @@ class Data extends CoreHelper
      */
     public function getCustomCss($storeId = null)
     {
-        return $this->getGeneralConfig('custom_css', $storeId);
+        return $this->getConfigGeneral('custom_css', $storeId);
     }
 
     /**
@@ -133,7 +109,7 @@ class Data extends CoreHelper
      */
     public function isSecure()
     {
-        $isSecure = $this->getConfigValue(self::XML_PATH_SECURE_IN_FRONTEND);
+        $isSecure = $this->getConfigValue('web/secure/use_in_frontend');
 
         return $isSecure;
     }
