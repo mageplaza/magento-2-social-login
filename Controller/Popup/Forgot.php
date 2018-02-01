@@ -105,17 +105,17 @@ class Forgot extends Action
             'success' => false,
             'message' => array()
         );
-
-        $formId       = 'user_forgotpassword';
-        $captchaModel = $this->captchaHelper->getCaptcha($formId);
-        if ($captchaModel->isRequired()) {
-            if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
+        try {
+            $captcha = $this->socialHelper->checkCaptcha($this->captchaHelper, $this->getRequest(), 'user_forgotpassword');
+            if (!$captcha) {
                 $result['message'] = __('Incorrect CAPTCHA.');
 
                 return $resultJson->setData($result);
             }
-            $captchaModel->generate();
-            $result['imgSrc'] = $captchaModel->getImgSrc();
+        } catch (\Exception $e) {
+            $result['message'][] = __('Error CAPTCHA.');
+
+            return $resultJson->setData($result);
         }
 
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */

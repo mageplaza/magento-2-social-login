@@ -162,17 +162,17 @@ class Create extends CreatePost
             'success' => false,
             'message' => array()
         );
-
-        $formId       = 'user_create';
-        $captchaModel = $this->captchaHelper->getCaptcha($formId);
-        if ($captchaModel->isRequired()) {
-            if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
+        try {
+            $captcha = $this->socialHelper->checkCaptcha($this->captchaHelper, $this->getRequest(), 'user_create');
+            if (!$captcha) {
                 $result['message'] = __('Incorrect CAPTCHA.');
 
                 return $resultJson->setData($result);
             }
-            $captchaModel->generate();
-            $result['imgSrc'] = $captchaModel->getImgSrc();
+        } catch (\Exception $e) {
+            $result['message'][] = __('Error CAPTCHA.');
+
+            return $resultJson->setData($result);
         }
 
         if ($this->session->isLoggedIn() || !$this->registration->isAllowed()) {

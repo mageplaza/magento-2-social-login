@@ -187,7 +187,7 @@ define([
             formDataArray.forEach(function (entry) {
                 loginData[entry.name] = entry.value;
             });
-
+            loginData['type_captcha'] = 'login';
             this.appendLoading(this.loginFormContent);
             this.removeMsg(this.loginFormContent, options.errorMsgClass);
 
