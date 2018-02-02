@@ -65,7 +65,10 @@ class Forgot extends Action
      * @type \Mageplaza\SocialLogin\Helper\Data
      */
     protected $socialHelper;
-
+    /**
+     * @var
+     */
+    public $flagCaptcha = false;
     /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
@@ -96,6 +99,22 @@ class Forgot extends Action
     }
 
     /**
+     * @return bool
+     */
+    public function checkCaptcha()
+    {
+        $formId = 'user_forgotpassword';
+        $captchaModel = $this->captchaHelper->getCaptcha($formId);
+        if ($captchaModel->isRequired()) {
+            if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
+                return false;
+            }
+            $captchaModel->generate();
+            $result['imgSrc'] = $captchaModel->getImgSrc();
+        }
+        return true;
+    }
+    /**
      * Forgot customer password action
      *
      * @return \Magento\Framework\Controller\Result\Redirect
@@ -109,17 +128,12 @@ class Forgot extends Action
             'success' => false,
             'message' => array()
         );
-        try {
-            $captcha = $this->socialHelper->checkCaptcha($this->captchaHelper, $this->getRequest(), 'user_forgotpassword');
-            if (!$captcha) {
+        $captchaValidate = $this->flagCaptcha;
+        if(!$captchaValidate){
+            if(!$this->checkCaptcha()){
                 $result['message'] = __('Incorrect CAPTCHA.');
-
                 return $resultJson->setData($result);
             }
-        } catch (\Exception $e) {
-            $result['message'][] = __('Error CAPTCHA.');
-
-            return $resultJson->setData($result);
         }
 
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */

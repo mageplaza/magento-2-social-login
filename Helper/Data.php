@@ -114,42 +114,4 @@ class Data extends CoreHelper
 
         return $isSecure;
     }
-
-    public function isSocialLoginProEnable()
-    {
-        return $this->isModuleOutputEnabled('Mageplaza_SocialLoginPro');
-    }
-
-    public function checkCaptcha(
-        \Magento\Captcha\Helper\Data $captchaHelper,
-        \Magento\Framework\App\RequestInterface $request,
-        $formId
-    ) {
-        if ($this->isSocialLoginProEnable()) {
-            $enabled = $this->getGeneralConfig('captcha/enabled', $storeId = null);
-            if ($enabled == Captcha::TYPE_DEFAULT) {
-               return $this->checkCaptchaDefault($captchaHelper, $request, $formId);
-            }else{
-                return true;
-            }
-        }
-        return $this->checkCaptchaDefault($captchaHelper, $request, $formId);
-    }
-
-    public function checkCaptchaDefault(
-        \Magento\Captcha\Helper\Data $captchaHelper,
-        \Magento\Framework\App\RequestInterface $request,
-        $formId
-    ) {
-        $captchaModel = $captchaHelper->getCaptcha($formId);
-        if ($captchaModel->isRequired()) {
-            if (!$captchaModel->isCorrect($this->captchaResolve($request, $formId))) {
-                return false;
-            }
-            $captchaModel->generate();
-            $result['imgSrc']  = $captchaModel->getImgSrc();
-            return true;
-        }
-        return true;
-    }
 }

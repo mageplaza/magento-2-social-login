@@ -81,6 +81,10 @@ class Create extends CreatePost
      * @type
      */
     private $cookieMetadataFactory;
+    /**
+     * @var
+     */
+    public $flagCaptcha = false;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -156,6 +160,22 @@ class Create extends CreatePost
     }
 
     /**
+     * @return bool
+     */
+    public function checkCaptcha()
+    {
+        $formId = 'user_create';
+        $captchaModel = $this->captchaHelper->getCaptcha($formId);
+        if ($captchaModel->isRequired()) {
+            if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
+                return false;
+            }
+            $captchaModel->generate();
+            $result['imgSrc'] = $captchaModel->getImgSrc();
+        }
+        return true;
+    }
+    /**
      * Create customer account action
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -169,17 +189,13 @@ class Create extends CreatePost
             'success' => false,
             'message' => array()
         );
-        try {
-            $captcha = $this->socialHelper->checkCaptcha($this->captchaHelper, $this->getRequest(), 'user_create');
-            if (!$captcha) {
-                $result['message'] = __('Incorrect CAPTCHA.');
 
+        $captchaValidate = $this->flagCaptcha;
+        if(!$captchaValidate){
+            if(!$this->checkCaptcha()){
+                $result['message'] = __('Incorrect CAPTCHA.');
                 return $resultJson->setData($result);
             }
-        } catch (\Exception $e) {
-            $result['message'][] = __('Error CAPTCHA.');
-
-            return $resultJson->setData($result);
         }
 
         if ($this->session->isLoggedIn() || !$this->registration->isAllowed()) {
