@@ -187,11 +187,10 @@ define([
             formDataArray.forEach(function (entry) {
                 loginData[entry.name] = entry.value;
             });
-            loginData['type_captcha'] = 'login';
             this.appendLoading(this.loginFormContent);
             this.removeMsg(this.loginFormContent, options.errorMsgClass);
 
-            $.ajax({
+            return $.ajax({
                 url: options.formLoginUrl,
                 type: 'POST',
                 data: JSON.stringify(loginData)
@@ -236,7 +235,7 @@ define([
             this.removeMsg(this.forgotFormContent, options.errorMsgClass);
             this.removeMsg(this.forgotFormContent, options.successMsgClass);
 
-            $.ajax({
+            return $.ajax({
                 url: options.forgotFormUrl,
                 type: 'POST',
                 data: parameters
@@ -265,7 +264,7 @@ define([
             this.appendLoading(this.createFormContent);
             this.removeMsg(this.createFormContent, options.errorMsgClass);
 
-            $.ajax({
+            return $.ajax({
                 url: options.createFormUrl,
                 type: 'POST',
                 data: parameters
