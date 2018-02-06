@@ -58,7 +58,8 @@ define([
             /*Captcha*/
             loginCaptchaImg: '.authentication .captcha-img',
             createCaptchaImg: '.create .captcha-img',
-            forgotCaptchaImg: '.forgot .captcha-img'
+            forgotCaptchaImg: '.forgot .captcha-img',
+            checkCaptchaInvisible: true
         },
 
         _create: function () {
@@ -126,14 +127,14 @@ define([
         initObserve: function () {
             var self = this;
 
-            $(this.options.loginBtn).on('click', this.processLogin.bind(this));
+            if(this.options.checkCaptchaInvisible){
+                $(this.options.loginBtn).on('click', this.processLogin.bind(this));
+                $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
+                $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
+            }
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
             $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
-
-            $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
             $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
-
-            $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
             $(this.options.forgotBackBtn).on('click', this.showLogin.bind(this));
 
             this.loginForm.find('input').keypress(function (event) {
