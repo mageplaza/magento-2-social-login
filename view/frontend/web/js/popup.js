@@ -126,15 +126,28 @@ define([
         initObserve: function () {
             var self = this;
 
-            if(typeof this.options.captchaInvisibleForLogin !== 'undefined' && this.options.captchaInvisibleForLogin){
+            if (typeof this.options.captchaInvisibleForLogin !== 'undefined') {
+                if (this.options.captchaInvisibleForLogin) {
+                    $(this.options.loginBtn).on('click', this.processLogin.bind(this));
+                }
+            } else {
                 $(this.options.loginBtn).on('click', this.processLogin.bind(this));
             }
-            if(typeof this.options.captchaInvisibleForCreate !== 'undefined' && this.options.captchaInvisibleForCreate){
+            if (typeof this.options.captchaInvisibleForCreate !== 'undefined') {
+                if (this.options.captchaInvisibleForCreate) {
+                    $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
+                }
+            } else {
                 $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
             }
-            if(typeof this.options.captchaInvisibleForForgot !== 'undefined' && this.options.captchaInvisibleForForgot){
+            if (typeof this.options.captchaInvisibleForForgot !== 'undefined') {
+                if (this.options.captchaInvisibleForForgot) {
+                    $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
+                }
+            } else {
                 $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
             }
+
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
             $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
             $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
@@ -273,7 +286,7 @@ define([
                 type: 'POST',
                 data: parameters
             }).done(function (response) {
-                if(response.redirect){
+                if (response.redirect) {
                     window.location.href = response.redirect;
                 } else if (response.success) {
                     customerData.invalidate(['customer']);
