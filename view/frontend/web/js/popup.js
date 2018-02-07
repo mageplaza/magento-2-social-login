@@ -58,8 +58,7 @@ define([
             /*Captcha*/
             loginCaptchaImg: '.authentication .captcha-img',
             createCaptchaImg: '.create .captcha-img',
-            forgotCaptchaImg: '.forgot .captcha-img',
-            checkCaptchaInvisible: true
+            forgotCaptchaImg: '.forgot .captcha-img'
         },
 
         _create: function () {
@@ -127,9 +126,13 @@ define([
         initObserve: function () {
             var self = this;
 
-            if(this.options.checkCaptchaInvisible){
+            if(typeof this.options.captchaInvisibleForLogin !== 'undefined' && this.options.captchaInvisibleForLogin){
                 $(this.options.loginBtn).on('click', this.processLogin.bind(this));
+            }
+            if(typeof this.options.captchaInvisibleForCreate !== 'undefined' && this.options.captchaInvisibleForCreate){
                 $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
+            }
+            if(typeof this.options.captchaInvisibleForForgot !== 'undefined' && this.options.captchaInvisibleForForgot){
                 $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
             }
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
