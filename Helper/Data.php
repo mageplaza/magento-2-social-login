@@ -143,17 +143,22 @@ class Data extends CoreHelper
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $captchaType = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\RecaptchaType');
             $type = $this->getConfigGeneral('captcha/recaptcha_type', $storeId);
-            if($type == $captchaType::TYPE_INVISIBLE){
-                $forms = explode(',', $this->getConfigGeneral('captcha/recaptcha_forms', $storeId));
-                foreach ($forms as $key => $value){
-                    if($value == 'user_login'){
-                        $result['user_login'] = true;
-                    }
-                    if($value == 'user_create'){
-                        $result['user_create'] = true;
-                    }
-                    if($value == 'user_forgotpassword'){
-                        $result['user_forgotpassword'] = true;
+
+            $captcha = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\Captcha');
+            $enabled = $this->getConfigGeneral('captcha/enabled', $storeId);
+            if ($enabled == $captcha::TYPE_RECAPTCHA) {
+                if($type == $captchaType::TYPE_INVISIBLE){
+                    $forms = explode(',', $this->getConfigGeneral('captcha/recaptcha_forms', $storeId));
+                    foreach ($forms as $key => $value){
+                        if($value == 'user_login'){
+                            $result['user_login'] = true;
+                        }
+                        if($value == 'user_create'){
+                            $result['user_create'] = true;
+                        }
+                        if($value == 'user_forgotpassword'){
+                            $result['user_forgotpassword'] = true;
+                        }
                     }
                 }
             }
