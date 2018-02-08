@@ -216,7 +216,7 @@ class Login extends Action
 
                 return false;
             }
-        }else {
+        } else {
             $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
         }
 

@@ -81,6 +81,7 @@ class Create extends CreatePost
      * @type
      */
     private $cookieMetadataFactory;
+
     /**
      * @var
      */
@@ -190,8 +191,7 @@ class Create extends CreatePost
             'message' => array()
         );
 
-        $captchaValidate = $this->flagCaptcha;
-        if(!$captchaValidate){
+        if(!$this->socialHelper->isGoogleCaptcha()){
             if(!$this->checkCaptcha()){
                 $result['message'] = __('Incorrect CAPTCHA.');
                 return $resultJson->setData($result);

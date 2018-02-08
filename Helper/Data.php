@@ -23,7 +23,6 @@ namespace Mageplaza\SocialLogin\Helper;
 
 use Magento\Framework\App\RequestInterface;
 use Mageplaza\Core\Helper\AbstractData as CoreHelper;
-use Mageplaza\SocialLoginPro\Model\Config\Source\Captcha;
 
 /**
  * Class Data
@@ -113,5 +112,52 @@ class Data extends CoreHelper
         $isSecure = $this->getConfigValue('web/secure/use_in_frontend');
 
         return $isSecure;
+    }
+    /**
+     * @return bool
+     */
+    public function isEnableSocialLoginPro()
+    {
+        return $this->isModuleOutputEnabled('Mageplaza_SocialLoginPro');
+    }
+    /**
+     * @return bool
+     */
+    public function isGoogleCaptcha($storeId = null){
+        if($this->isEnableSocialLoginPro()){
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $captcha = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\Captcha');
+            $enabled = $this->getConfigGeneral('captcha/enabled', $storeId);
+            if ($enabled == $captcha::TYPE_RECAPTCHA) {
+                return true;
+            } elseif ($enabled == $captcha::TYPE_NO){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+    public function isInvisibleCaptcha($storeId = null){
+        $result = [];
+        if($this->isEnableSocialLoginPro()){
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $captchaType = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\RecaptchaType');
+            $type = $this->getConfigGeneral('captcha/recaptcha_type', $storeId);
+            if($type == $captchaType::TYPE_INVISIBLE){
+                $forms = explode(',', $this->getConfigGeneral('captcha/recaptcha_forms', $storeId));
+                foreach ($forms as $key => $value){
+                    if($value == 'user_login'){
+                        $result['user_login'] = true;
+                    }
+                    if($value == 'user_create'){
+                        $result['user_create'] = true;
+                    }
+                    if($value == 'user_forgotpassword'){
+                        $result['user_forgotpassword'] = true;
+                    }
+                }
+            }
+        }
+        return array_keys($result);
     }
 }

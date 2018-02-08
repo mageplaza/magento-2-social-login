@@ -128,8 +128,8 @@ class Forgot extends Action
             'success' => false,
             'message' => array()
         );
-        $captchaValidate = $this->flagCaptcha;
-        if(!$captchaValidate){
+
+        if(!$this->socialHelper->isGoogleCaptcha()){
             if(!$this->checkCaptcha()){
                 $result['message'] = __('Incorrect CAPTCHA.');
                 return $resultJson->setData($result);

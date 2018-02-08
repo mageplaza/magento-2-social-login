@@ -58,7 +58,9 @@ define([
             /*Captcha*/
             loginCaptchaImg: '.authentication .captcha-img',
             createCaptchaImg: '.create .captcha-img',
-            forgotCaptchaImg: '.forgot .captcha-img'
+            forgotCaptchaImg: '.forgot .captcha-img',
+            /*SocialLoginPro*/
+            isInvisibleCaptcha: []
         },
 
         _create: function () {
@@ -125,29 +127,22 @@ define([
 
         initObserve: function () {
             var self = this;
-
-            if (typeof this.options.captchaInvisibleForLogin !== 'undefined') {
-                if (this.options.captchaInvisibleForLogin) {
+            if((this.options.isInvisibleCaptcha).length !== 0){
+                var array = this.options.isInvisibleCaptcha;
+                if(array.indexOf("user_login") == -1){
                     $(this.options.loginBtn).on('click', this.processLogin.bind(this));
                 }
-            } else {
-                $(this.options.loginBtn).on('click', this.processLogin.bind(this));
-            }
-            if (typeof this.options.captchaInvisibleForCreate !== 'undefined') {
-                if (this.options.captchaInvisibleForCreate) {
+                if(array.indexOf("user_create") == -1){
                     $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
                 }
-            } else {
-                $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
-            }
-            if (typeof this.options.captchaInvisibleForForgot !== 'undefined') {
-                if (this.options.captchaInvisibleForForgot) {
+                if(array.indexOf("user_forgotpassword") == -1){
                     $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
                 }
-            } else {
+            }else{
+                $(this.options.loginBtn).on('click', this.processLogin.bind(this));
+                $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
                 $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
             }
-
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
             $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
             $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
