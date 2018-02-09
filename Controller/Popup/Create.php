@@ -193,11 +193,9 @@ class Create extends CreatePost
             'message' => array()
         );
 
-        if (!$this->socialHelper->isGoogleCaptcha()) {
-            if (!$this->checkCaptcha()) {
-                $result['message'] = __('Incorrect CAPTCHA.');
-                return $resultJson->setData($result);
-            }
+        if (!$this->checkCaptcha()) {
+            $result['message'] = __('Incorrect CAPTCHA.');
+            return $resultJson->setData($result);
         }
 
         if ($this->session->isLoggedIn() || !$this->registration->isAllowed()) {

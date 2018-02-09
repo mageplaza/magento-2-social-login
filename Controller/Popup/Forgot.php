@@ -132,11 +132,9 @@ class Forgot extends Action
             'message' => array()
         );
 
-        if (!$this->socialHelper->isGoogleCaptcha()) {
-            if (!$this->checkCaptcha()) {
-                $result['message'] = __('Incorrect CAPTCHA.');
-                return $resultJson->setData($result);
-            }
+        if (!$this->checkCaptcha()) {
+            $result['message'] = __('Incorrect CAPTCHA.');
+            return $resultJson->setData($result);
         }
 
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
