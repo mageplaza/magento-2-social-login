@@ -84,15 +84,12 @@ class Popup extends Template
             'popupEffect' => $this->getPopupEffect(),
             'formLoginUrl' => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
-            'createFormUrl' => $this->getCreateFormUrl(),
-            'isInvisibleCaptcha' => $this->isInvisibleCaptcha()
+            'createFormUrl' => $this->getCreateFormUrl()
         ];
 
         return json_encode($params);
     }
-    public function isInvisibleCaptcha(){
-        return $this->helperData->isInvisibleCaptcha();
-    }
+
     /**
      * @return string
      */

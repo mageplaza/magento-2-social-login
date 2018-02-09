@@ -58,9 +58,7 @@ define([
             /*Captcha*/
             loginCaptchaImg: '.authentication .captcha-img',
             createCaptchaImg: '.create .captcha-img',
-            forgotCaptchaImg: '.forgot .captcha-img',
-            /*SocialLoginPro*/
-            isInvisibleCaptcha: []
+            forgotCaptchaImg: '.forgot .captcha-img'
         },
 
         _create: function () {
@@ -123,29 +121,32 @@ define([
                     midClick: true
                 });
             }
+
+            this.options.createFormUrl = this.correctUrlProtocol(this.options.createFormUrl);
+            this.options.formLoginUrl = this.correctUrlProtocol(this.options.formLoginUrl);
+            this.options.forgotFormUrl = this.correctUrlProtocol(this.options.forgotFormUrl);
+        },
+
+        correctUrlProtocol: function (url) {
+            var protocol = window.location.protocol;
+            if (!url.includes(protocol)) {
+                url = url.replace(/http:|https:/gi, protocol);
+            }
+
+            return url;
         },
 
         initObserve: function () {
             var self = this;
-            if((this.options.isInvisibleCaptcha).length !== 0){
-                var array = this.options.isInvisibleCaptcha;
-                if(array.indexOf("user_login") == -1){
-                    $(this.options.loginBtn).on('click', this.processLogin.bind(this));
-                }
-                if(array.indexOf("user_create") == -1){
-                    $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
-                }
-                if(array.indexOf("user_forgotpassword") == -1){
-                    $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
-                }
-            }else{
-                $(this.options.loginBtn).on('click', this.processLogin.bind(this));
-                $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
-                $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
-            }
+
+            $(this.options.loginBtn).on('click', this.processLogin.bind(this));
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
             $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
+
+            $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
             $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
+
+            $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
             $(this.options.forgotBackBtn).on('click', this.showLogin.bind(this));
 
             this.loginForm.find('input').keypress(function (event) {
@@ -198,9 +199,12 @@ define([
 
             formDataArray.forEach(function (entry) {
                 loginData[entry.name] = entry.value;
+                if (entry.name.includes('user_login')) {
+                    loginData['captcha_string'] = entry.value;
+                    loginData['captcha_form_id'] = 'user_login';
+                }
             });
-            loginData['captcha_form_id'] = 'user_login';
-            loginData['captcha_string'] = loginData['captcha[user_login]'];
+
             this.appendLoading(this.loginFormContent);
             this.removeMsg(this.loginFormContent, options.errorMsgClass);
 
@@ -219,6 +223,10 @@ define([
                             window.location.reload();
                         }
                     } else {
+                        var captchaReload = $('#social-form-login .captcha-reload');
+                        if(captchaReload.length){
+                            captchaReload.trigger('click');
+                        }
                         self.addMsg(self.loginFormContent, response.message, options.errorMsgClass);
                     }
                 } else {

@@ -113,6 +113,7 @@ class Data extends CoreHelper
 
         return $isSecure;
     }
+
     /**
      * @return bool
      */
@@ -120,26 +121,30 @@ class Data extends CoreHelper
     {
         return $this->isModuleOutputEnabled('Mageplaza_SocialLoginPro');
     }
+
     /**
      * @return bool
      */
-    public function isGoogleCaptcha($storeId = null){
-        if($this->isEnableSocialLoginPro()){
+    public function isGoogleCaptcha($storeId = null)
+    {
+        if ($this->isEnableSocialLoginPro()) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $captcha = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\Captcha');
             $enabled = $this->getConfigGeneral('captcha/enabled', $storeId);
             if ($enabled == $captcha::TYPE_RECAPTCHA) {
                 return true;
-            } elseif ($enabled == $captcha::TYPE_NO){
+            } elseif ($enabled == $captcha::TYPE_NO) {
                 return true;
             }
             return false;
         }
         return false;
     }
-    public function isInvisibleCaptcha($storeId = null){
+
+    public function isInvisibleCaptcha($storeId = null)
+    {
         $result = [];
-        if($this->isEnableSocialLoginPro()){
+        if ($this->isEnableSocialLoginPro()) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $captchaType = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\RecaptchaType');
             $type = $this->getConfigGeneral('captcha/recaptcha_type', $storeId);
@@ -147,16 +152,16 @@ class Data extends CoreHelper
             $captcha = $objectManager->create('Mageplaza\SocialLoginPro\Model\Config\Source\Captcha');
             $enabled = $this->getConfigGeneral('captcha/enabled', $storeId);
             if ($enabled == $captcha::TYPE_RECAPTCHA) {
-                if($type == $captchaType::TYPE_INVISIBLE){
+                if ($type == $captchaType::TYPE_INVISIBLE) {
                     $forms = explode(',', $this->getConfigGeneral('captcha/recaptcha_forms', $storeId));
-                    foreach ($forms as $key => $value){
-                        if($value == 'user_login'){
+                    foreach ($forms as $key => $value) {
+                        if ($value == 'user_login') {
                             $result['user_login'] = true;
                         }
-                        if($value == 'user_create'){
+                        if ($value == 'user_create') {
                             $result['user_create'] = true;
                         }
-                        if($value == 'user_forgotpassword'){
+                        if ($value == 'user_forgotpassword') {
                             $result['user_forgotpassword'] = true;
                         }
                     }
