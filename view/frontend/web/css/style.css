@@ -18,6 +18,7 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 .white-popup {position: relative; background: #FFF; padding: 0; width: auto; max-width: 600px; margin: 0 auto; }
+#social-login-popup {overflow: hidden}
 #social-login-popup .block-container {width: 100%; display: inline-block; }
 #social-login-popup .social-login-title {padding: 10px 10px; background-color: #3399cc; }
 #social-login-popup .block-container .block {padding: 20px 25px; margin: 0; }

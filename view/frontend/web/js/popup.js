@@ -137,30 +137,44 @@ define([
         },
 
         initObserve: function () {
+            this.initLoginObserve();
+            this.initCreateObserve();
+            this.initForgotObserve();
+
+            $(this.options.createBtn).on('click', this.showCreate.bind(this));
+            $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
+            $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
+            $(this.options.forgotBackBtn).on('click', this.showLogin.bind(this));
+        },
+
+        initLoginObserve: function(){
             var self = this;
 
             $(this.options.loginBtn).on('click', this.processLogin.bind(this));
-            $(this.options.createBtn).on('click', this.showCreate.bind(this));
-            $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
-
-            $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
-            $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
-
-            $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
-            $(this.options.forgotBackBtn).on('click', this.showLogin.bind(this));
-
             this.loginForm.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
                 if (code === 13) {
                     self.processLogin();
                 }
             });
+        },
+
+        initCreateObserve: function(){
+            var self = this;
+
+            $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
             this.createForm.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
                 if (code === 13) {
                     self.processCreate();
                 }
             });
+        },
+
+        initForgotObserve: function(){
+            var self = this;
+
+            $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
             this.forgotForm.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
                 if (code === 13) {
