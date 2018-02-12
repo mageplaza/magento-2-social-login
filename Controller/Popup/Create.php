@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -81,11 +81,6 @@ class Create extends CreatePost
      * @type
      */
     private $cookieMetadataFactory;
-
-    /**
-     * @var
-     */
-    public $flagCaptcha = false;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context

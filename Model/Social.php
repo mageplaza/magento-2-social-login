@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -113,8 +113,10 @@ class Social extends AbstractModel
     }
 
     /**
-     * @param string $email
-     * @return bool|\Magento\Customer\Model\Customer
+     * @param $email
+     * @param null $websiteId
+     * @return \Magento\Customer\Model\Customer
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getCustomerByEmail($email, $websiteId = null)
     {
@@ -161,6 +163,7 @@ class Social extends AbstractModel
      * @param $customerId
      * @param $type
      * @return $this
+     * @throws \Exception
      */
     public function setAuthorCustomer($identifier, $customerId, $type)
     {
@@ -179,6 +182,7 @@ class Social extends AbstractModel
     /**
      * @param $apiName
      * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getUserProfile($apiName)
     {

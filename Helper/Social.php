@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -136,7 +136,8 @@ class Social extends HelperData
 
     /**
      * @param $type
-     * @return string
+     * @return mixed|string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getAuthUrl($type)
     {
@@ -161,7 +162,8 @@ class Social extends HelperData
     }
 
     /**
-     * @return string
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getDomainUrl()
     {
@@ -173,6 +175,7 @@ class Social extends HelperData
 
     /**
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getBaseAuthUrl()
     {
@@ -181,6 +184,7 @@ class Social extends HelperData
 
     /**
      * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function getScopeUrl()
     {

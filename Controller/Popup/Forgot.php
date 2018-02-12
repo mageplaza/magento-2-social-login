@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) 2016 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -40,10 +40,14 @@ use Mageplaza\SocialLogin\Helper\Data;
  */
 class Forgot extends Action
 {
-    /** @var AccountManagementInterface */
+    /**
+     * @var AccountManagementInterface 
+     */
     protected $customerAccountManagement;
 
-    /** @var Escaper */
+    /**
+     * @var Escaper 
+     */
     protected $escaper;
 
     /**
@@ -65,11 +69,6 @@ class Forgot extends Action
      * @type \Mageplaza\SocialLogin\Helper\Data
      */
     protected $socialHelper;
-
-    /**
-     * @var
-     */
-    public $flagCaptcha = false;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
