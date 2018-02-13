@@ -21,8 +21,15 @@
 
 namespace Mageplaza\SocialLogin\Model;
 
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\EmailNotificationInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\State\InputMismatchException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -45,6 +52,13 @@ class Social extends AbstractModel
      * @type \Magento\Customer\Model\CustomerFactory
      */
     protected $customerFactory;
+
+    protected $customerDataFactory;
+
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $customerRepository;
 
     /**
      * @type \Mageplaza\SocialLogin\Helper\Social
@@ -70,6 +84,8 @@ class Social extends AbstractModel
         Context $context,
         Registry $registry,
         CustomerFactory $customerFactory,
+        \Magento\Customer\Api\Data\CustomerInterfaceFactory $customerDataFactory,
+        CustomerRepositoryInterface $customerRepository,
         StoreManagerInterface $storeManager,
         \Mageplaza\SocialLogin\Helper\Social $apiHelper,
         AbstractResource $resource = null,
@@ -80,8 +96,10 @@ class Social extends AbstractModel
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->customerFactory = $customerFactory;
-        $this->storeManager    = $storeManager;
-        $this->apiHelper       = $apiHelper;
+        $this->customerRepository = $customerRepository;
+        $this->customerDataFactory = $customerDataFactory;
+        $this->storeManager = $storeManager;
+        $this->apiHelper = $apiHelper;
     }
 
     /**
@@ -137,25 +155,48 @@ class Social extends AbstractModel
      */
     public function createCustomerSocial($data, $store)
     {
-        $customer = $this->customerFactory->create();
+        /** @var CustomerInterface $customer */
+        $customer = $this->customerDataFactory->create();
         $customer->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
             ->setEmail($data['email'])
-            ->setStore($store);
+            ->setStoreId($store->getId())
+            ->setWebsiteId($store->getWebsiteId())
+            ->setCreatedIn($store->getName());
 
         try {
-            $customer->save();
-
-            $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
-
-            return $customer;
-        } catch (\Exception $e) {
-            if ($customer->getId()) {
-                $customer->delete();
+            // If customer exists existing hash will be used by Repository
+            $customer = $this->customerRepository->save($customer);
+            if ($this->apiHelper->canSendPassword($store)) {
+                $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
             }
 
+            $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
+        } catch (AlreadyExistsException $e) {
+            throw new InputMismatchException(
+                __('A customer with the same email already exists in an associated website.')
+            );
+        } catch (\Exception $e) {
+            if ($customer->getId()) {
+                $this->customerRepository->deleteById($customer->getId());
+            }
             throw $e;
         }
+
+        /** @var Customer $customer */
+        $customer = $this->customerFactory->create()->load($customer->getId());
+
+        return $customer;
+    }
+
+    /**
+     * Get email notification
+     *
+     * @return EmailNotificationInterface
+     */
+    private function getEmailNotification()
+    {
+        return ObjectManager::getInstance()->get(EmailNotificationInterface::class);
     }
 
     /**
@@ -168,9 +209,9 @@ class Social extends AbstractModel
     public function setAuthorCustomer($identifier, $customerId, $type)
     {
         $this->setData([
-            'social_id'              => $identifier,
-            'customer_id'            => $customerId,
-            'type'                   => $type,
+            'social_id' => $identifier,
+            'customer_id' => $customerId,
+            'type' => $type,
             'is_send_password_email' => $this->apiHelper->canSendPassword()
         ])
             ->setId(null)
@@ -187,15 +228,15 @@ class Social extends AbstractModel
     public function getUserProfile($apiName)
     {
         $config = [
-            "base_url"   => $this->apiHelper->getBaseAuthUrl(),
-            "providers"  => [
+            "base_url" => $this->apiHelper->getBaseAuthUrl(),
+            "providers" => [
                 $apiName => $this->getProviderData($apiName)
             ],
             "debug_mode" => false
         ];
 
         try {
-            $auth    = new \Hybrid_Auth($config);
+            $auth = new \Hybrid_Auth($config);
             $adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
 
             return $adapter->getUserProfile();
@@ -212,9 +253,9 @@ class Social extends AbstractModel
     {
         $data = [
             "enabled" => $this->apiHelper->isEnabled(),
-            "keys"    => [
-                'id'     => $this->apiHelper->getAppId(),
-                'key'    => $this->apiHelper->getAppId(),
+            "keys" => [
+                'id' => $this->apiHelper->getAppId(),
+                'key' => $this->apiHelper->getAppId(),
                 'secret' => $this->apiHelper->getAppSecret()
             ]
         ];

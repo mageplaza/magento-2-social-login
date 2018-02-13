@@ -23,7 +23,6 @@ namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
-use Magento\Customer\Model\AccountManagement;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -111,17 +110,21 @@ class Login extends Action
     {
         parent::__construct($context);
 
-        $this->storeManager     = $storeManager;
-        $this->accountManager   = $accountManager;
-        $this->apiHelper        = $apiHelper;
-        $this->apiObject        = $apiObject;
-        $this->session          = $customerSession;
-        $this->accountRedirect  = $accountRedirect;
+        $this->storeManager = $storeManager;
+        $this->accountManager = $accountManager;
+        $this->apiHelper = $apiHelper;
+        $this->apiObject = $apiObject;
+        $this->session = $customerSession;
+        $this->accountRedirect = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Raw|\Mageplaza\SocialLogin\Controller\Social\Login|void
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|Login|void
+     * @throws \Exception
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function execute()
     {
@@ -141,11 +144,11 @@ class Login extends Action
         if (!$customer->getId()) {
             $name = explode(' ', $userProfile->displayName ?: __('New User'));
             $user = array_merge([
-                'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
-                'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
-                'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+                'email' => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+                'firstname' => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+                'lastname' => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
                 'identifier' => $userProfile->identifier,
-                'type'       => $type
+                'type' => $type
             ], $this->getUserData($userProfile));
 
             $customer = $this->createCustomer($user, $type);
@@ -192,7 +195,10 @@ class Login extends Action
      * Create customer from social data
      *
      * @param $user
+     * @param $type
      * @return bool|\Magento\Customer\Model\Customer|mixed
+     * @throws \Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function createCustomer($user, $type)
     {
@@ -200,23 +206,12 @@ class Login extends Action
         if (!$customer->getId()) {
             try {
                 $customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
-                if ($this->apiHelper->canSendPassword()) {
-
-                    //$customer->sendPasswordReminderEmail();
-                    /**
-                     * Magento\Customer\Api\AccountManagementInterface
-                     */
-                    $this->accountManager->initiatePasswordReset(
-                        $user['email'],
-                        AccountManagement::EMAIL_RESET
-                    );
-                }
             } catch (\Exception $e) {
                 $this->emailRedirect($e->getMessage(), false);
 
                 return false;
             }
-        }else {
+        } else {
             $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
         }
 
@@ -227,7 +222,9 @@ class Login extends Action
      * Return javascript to redirect when login success
      *
      * @param $customer
-     * @return \Magento\Framework\Controller\Result\Raw
+     * @return $this
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function _appendJs($customer)
     {
