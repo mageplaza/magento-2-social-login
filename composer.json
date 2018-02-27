@@ -6,7 +6,7 @@
     "hybridauth/hybridauth": "^2.9.6"
   },
   "type": "magento2-module",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "license": "proprietary",
   "authors": [
     {
