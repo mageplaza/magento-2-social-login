@@ -22,6 +22,8 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
     // default permissions
     public $scope = "email";
 
+    const VERSION = '3.0';
+
     // default user fields map
     public $fields = array(
         // Old that saved for backward-compability
@@ -111,8 +113,11 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
         $this->refreshToken();
 
         // Vkontakte requires user id, not just token for api access
-        $params['uid']    = \Hybrid_Auth::storage()->get("hauth_session.{$this->providerId}.user_id");
-        $params['fields'] = implode(',', $this->fields);
+        $params = [
+            'uid'    => \Hybrid_Auth::storage()->get("hauth_session.{$this->providerId}.user_id"),
+            'fields' => implode(',', $this->fields),
+            'v'      => self::VERSION,
+        ];
 
         // ask vkontakte api for user infos
         $response = $this->api->api('getProfiles', 'GET', $params);
@@ -138,9 +143,10 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
      */
     function getUserContacts()
     {
-        $params = array(
+        $params = [
             'fields' => implode(',', $this->fields),
-        );
+            'v'      => self::VERSION,
+        ];
 
         $response = $this->api->api('friends.get', 'GET', $params);
 
@@ -158,7 +164,7 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
 
     /**
      * @param object $response
-     * @param bool $withAdditionalRequests True to get some full fields like 'city' or 'country'
+     * @param bool   $withAdditionalRequests True to get some full fields like 'city' or 'country'
      *                                       (requires additional responses to vk api!)
      *
      * @return \Hybrid_User_Contact
@@ -208,7 +214,10 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
         }
 
         if (!empty($user->city) && $withAdditionalRequests) {
-            $params = array('city_ids' => $user->city);
+            $params = [
+                'city_ids' => $user->city,
+                'v'        => self::VERSION,
+            ];
             $cities = (array)$this->api->api('database.getCitiesById', 'GET', $params);
             $city   = reset($cities);
 
@@ -222,7 +231,10 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
         }
 
         if (!empty($user->country) && $withAdditionalRequests) {
-            $params    = array('country_ids' => $user->country);
+            $params    = [
+                'country_ids' => $user->country,
+                'v'           => self::VERSION,
+            ];
             $countries = (array)$this->api->api('database.getCountriesById', 'GET', $params);
             $country   = reset($countries);
 
@@ -238,3 +250,4 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
         return $user;
     }
 }
+

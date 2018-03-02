@@ -1,6 +1,7 @@
 ## 1. Documentation
 
-- User Guide: https://docs.mageplaza.com/social-login-m2/index.html
+- User Guide Standard Edition: https://docs.mageplaza.com/social-login-m2/index.html
+- User Guide Pro Edition: https://docs.mageplaza.com/social-login-pro/index.html
 - On Mageplaza: https://www.mageplaza.com/magento-2-social-login-extension/
 - Get Support: https://github.com/mageplaza/magento-2-social-login/issues
 - Contribute on Github: https://github.com/mageplaza/magento-2-social-login/
