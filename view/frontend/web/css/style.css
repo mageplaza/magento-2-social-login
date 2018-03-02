@@ -17,6 +17,8 @@
  * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 .white-popup {position: relative; background: #FFF; padding: 0; width: auto; max-width: 600px; margin: 0 auto; }
 #social-login-popup {overflow: hidden}
 #social-login-popup .block-container {width: 100%; display: inline-block; }
@@ -102,7 +104,7 @@
 .mfp-zoom-out.mfp-removing .mfp-with-anim {transform: scale(1.3); opacity: 0;}
 .mfp-zoom-out.mfp-removing.mfp-bg {opacity: 0;}
 
-.social-btn .btn-social{display: block; text-decoration: none; padding: 6px 12px; margin-bottom: 0; font-size: 14px; font-weight: normal; line-height: 1.42857143; vertical-align: middle; touch-action: manipulation; cursor: pointer; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px; padding-left: 44px;}
+.social-btn .btn-social{display: block; text-decoration: none; padding: 6px 12px; margin-bottom: 0; font-size: 14px; font-weight: normal; line-height: 1.42857143; vertical-align: middle; touch-action: manipulation; cursor: pointer; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px; padding-left: 44px;font-family: 'Roboto', sans-serif;}
 .btn-social{position:relative;padding-left:44px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .btn-social>:first-child{position:absolute;left:0;top:0;bottom:0;width:32px;line-height:34px;font-size:1.6em;text-align:center;border-right:1px solid rgba(0,0,0,0.2)}
 .btn-social.btn-lg{padding-left:61px}
@@ -179,7 +181,7 @@
 .btn-github:active,.btn-github.active,.open>.dropdown-toggle.btn-github{background-image:none}
 .btn-github.disabled:hover,.btn-github[disabled]:hover,fieldset[disabled] .btn-github:hover,.btn-github.disabled:focus,.btn-github[disabled]:focus,fieldset[disabled] .btn-github:focus,.btn-github.disabled.focus,.btn-github[disabled].focus,fieldset[disabled] .btn-github.focus{background-color:#444;border-color:rgba(0,0,0,0.2)}
 .btn-github .badge{color:#444;background-color:#fff}
-.btn-google{color:#fff;background-color:#dd4b39;border-color:rgba(0,0,0,0.2)}
+.btn-google{color:#fff;background-color:#dd4b39;border-color:rgba(0,0,0,0.2);}
 .btn-google:focus,.btn-google.focus{color:#fff;background-color:#c23321;border-color:rgba(0,0,0,0.2)}
 .btn-google:hover{color:#fff;background-color:#c23321;border-color:rgba(0,0,0,0.2)}
 .btn-google:active,.btn-google.active,.open>.dropdown-toggle.btn-google{color:#fff;background-color:#c23321;border-color:rgba(0,0,0,0.2)}
@@ -187,6 +189,8 @@
 .btn-google:active,.btn-google.active,.open>.dropdown-toggle.btn-google{background-image:none}
 .btn-google.disabled:hover,.btn-google[disabled]:hover,fieldset[disabled] .btn-google:hover,.btn-google.disabled:focus,.btn-google[disabled]:focus,fieldset[disabled] .btn-google:focus,.btn-google.disabled.focus,.btn-google[disabled].focus,fieldset[disabled] .btn-google.focus{background-color:#dd4b39;border-color:rgba(0,0,0,0.2)}
 .btn-google .badge{color:#dd4b39;background-color:#fff}
+.btn-google .fa-google{background: url("images/g-logo.png") no-repeat;}
+.btn-google .fa-google:before{content: ""}
 .btn-instagram{color:#fff;background-color:#3f729b;border-color:rgba(0,0,0,0.2)}
 .btn-instagram:focus,.btn-instagram.focus{color:#fff;background-color:#305777;border-color:rgba(0,0,0,0.2)}
 .btn-instagram:hover{color:#fff;background-color:#305777;border-color:rgba(0,0,0,0.2)}
