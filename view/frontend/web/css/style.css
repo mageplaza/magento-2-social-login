@@ -303,3 +303,6 @@
 .btn-amazon:active,.btn-amazon.active,.open>.dropdown-toggle.btn-amazon{background-image:none}
 .btn-amazon.disabled:hover,.btn-amazon[disabled]:hover,fieldset[disabled] .btn-amazon:hover,.btn-amazon.disabled:focus,.btn-amazon[disabled]:focus,fieldset[disabled] .btn-amazon:focus,.btn-amazon.disabled.focus,.btn-amazon[disabled].focus,fieldset[disabled] .btn-amazon.focus{background-color:#ff9900;border-color:rgba(0,0,0,0.2)}
 .btn-amazon .badge{color:#ff9900;background-color:#fff}
+.mfp-wrap {
+    overflow:scroll;
+}
