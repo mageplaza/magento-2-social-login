@@ -52,7 +52,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 ## 4. SWEET MAGEPLAZA EXTENSIONS TO BRING YOU MORE MONEY
 
-### [✓ One Step Checkout](https://www.mageplaza.com/magento-2-one-step-checkout-extension/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ One Step Checkout
 
 ☞ ↑30% INCREASE CONVERSION RATE 
 
@@ -60,7 +60,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 ☞ ↓80% REDUCE CHECKOUT TIME
 
-### [✓ Layered Navigation](https://www.mageplaza.com/magento-2-layered-navigation-extension/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Layered Navigation
 
 ☞ ↑84% USER'S FILTERING EXPERIENCE
 
@@ -68,7 +68,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 ☞ ↓67% SHOPPING TIME
 
-### [✓ Frequently Bought Together](https://www.mageplaza.com/magento-2-frequently-bought-together/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Frequently Bought Together
 
 ☞ Amazon Product Recommendation Solution
  
@@ -78,7 +78,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 
 
-### [✓ Gift Card](https://www.mageplaza.com/magento-2-gift-card-extension/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Gift Card
 
 ☞ Physical, virtual or combined gift cards
  
@@ -87,7 +87,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 ☞ Send cards via email, SMS, post office or messenger
 
 
-### [✓ Who Bought This Also Bought](https://www.mageplaza.com/magento-2-who-bought-this-also-bought/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Who Bought This Also Bought
 
 ☞ Display on Product Page, Category Page, Shopping Cart page
 
@@ -96,7 +96,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 ☞ Flexible layout and design.
 
 
-### [✓ Social Login](https://www.mageplaza.com/magento-2-social-login-extension/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Social Login
 
 ☞ Increase signup rate up-to 30%
 
@@ -108,7 +108,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 
 
-### [✓ Shop By Brand](https://www.mageplaza.com/magento-2-shop-by-brand/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Shop By Brand
 
 ☞ Fully Compatible with Layered Navigation
 
@@ -119,7 +119,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 
 
-### [✓ Affiliate](https://www.mageplaza.com/magento-2-affiliate-extension/?utm_source=github.com&utm_medium=link&utm_campaign=related-extension)
+### ✓ Affiliate
 
 ☞ Multiple Affiliate Campaigns
 
