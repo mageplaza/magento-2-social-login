@@ -78,7 +78,7 @@ class Social extends HelperData
     public function getSocialConfig($type)
     {
         $apiData = [
-            'Facebook'  => ["trustForwarded" => false, 'scope' => 'email, user_about_me'],
+            'Facebook'  => ["trustForwarded" => false, 'scope' => 'email, public_profile'],
             'Twitter'   => ["includeEmail" => true],
             'LinkedIn'  => ["fields" => ['id', 'first-name', 'last-name', 'email-address']],
             'Vkontakte' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Vkontakte']],
