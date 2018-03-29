@@ -28,6 +28,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\RawFactory;
+use Magento\Framework\DataObject;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Store\Model\StoreManagerInterface;
@@ -298,6 +299,12 @@ class Login extends Action
             }
         }
 
+        $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
+        $this->_eventManager->dispatch('social_manager_dispatch', [
+            'object' => $object,
+            'request' => $this->_request
+        ]);
+        $url = $object->getUrl();
         return $url;
     }
 }
