@@ -143,6 +143,6 @@ class Popup extends Template
      */
     public function isSecure()
     {
-        return $this->helperData->isSecure();
+        return $this->helperData->isSecure()? true : false;
     }
 }
