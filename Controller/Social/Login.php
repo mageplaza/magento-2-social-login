@@ -157,7 +157,7 @@ class Login extends Action
             return $this->emailRedirect($type);
         }
         // Check email does not exist
-        $userProfile->email = null;
+        //$userProfile->email = null;
         if(empty($userProfile->email) || !isset($userProfile->email)){
             $this->session->setUserProfile($userProfile);
             /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
