@@ -1,0 +1,49 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<div class="social-login block-container fake-email" style="display:none">
+    <div class="social-login-title">
+        <h2 class="forgot-pass-title"><?php echo __('Email does not exist') ?></h2>
+    </div>
+    <div class="block col-mp mp-12">
+        <div class="block-content">
+            <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
+                <fieldset class="fieldset" data-hasrequired="<?php echo __('* Required Fields') ?>">
+                    <div class="field note"><?php echo __('Please enter your email address below to create account.'); ?></div>
+                    <div class="field email required">
+                        <label for="email_address" class="label"><span><?php echo __('Email') ?></span></label>
+                        <div class="control">
+                            <input type="email" name="realEmail" alt="email" id="real_email_address" class="input-text"
+                                   value="<?php echo $block->escapeHtml($block->getEmailValue()) ?>"
+                                   data-validate="{required:true, 'validate-email':true}"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="button" id="bnt-social-login-fake-email" class="action send primary"><span><?php echo __('Submit') ?></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

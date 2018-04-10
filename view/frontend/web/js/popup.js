@@ -42,6 +42,14 @@ define([
             forgotBtn: '#social-form-login .action.remind',
             createBtn: '#social-form-login .action.create',
             formLoginUrl: '',
+            /*Email*/
+            emailFormContainer: '.social-login.fake-email',
+            fakeEmailSendBtn: '#social-form-fake-email .action.send',
+            fakeEmailType: '',
+            fakeEmailFrom: '#social-form-fake-email',
+            fakeEmailFormContent: '.social-login.fake-email .block-content',
+            fakeEmailFormUrl: '',
+            fakeEmailCancelBtn: '#social-form-fake-email .action.cancel',
             /*Forgot*/
             forgotFormContainer: '.social-login.forgot',
             forgotFormContent: '.social-login.forgot .block-content',
@@ -63,9 +71,14 @@ define([
         },
 
         _create: function () {
+            var self = this;
             this.initObject();
             this.initLink();
             this.initObserve();
+            window.fakeEmailCallback = function (type) {
+                self.options.fakeEmailType = type;
+                self.showEmail();
+            };
         },
 
         initObject: function () {
@@ -84,6 +97,10 @@ define([
             this.loginCaptchaImg = $(this.options.loginCaptchaImg);
             this.createCaptchaImg = $(this.options.createCaptchaImg);
             this.forgotCaptchaImg = $(this.options.forgotCaptchaImg);
+
+            this.emailFormContainer = $(this.options.emailFormContainer);
+            this.fakeEmailFrom = $(this.options.fakeEmailFrom);
+            this.fakeEmailFormContent = $(this.options.fakeEmailFormContent);
         },
 
         initLink: function () {
@@ -141,6 +158,7 @@ define([
             this.initLoginObserve();
             this.initCreateObserve();
             this.initForgotObserve();
+            this.initEmailObserve();
 
             $(this.options.createBtn).on('click', this.showCreate.bind(this));
             $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
@@ -184,22 +202,44 @@ define([
             });
         },
 
+        initEmailObserve: function(){
+            var self = this;
+
+            $(this.options.fakeEmailSendBtn).on('click', this.processEmail.bind(this));
+            this.forgotForm.find('input').keypress(function (event) {
+                var code = event.keyCode || event.which;
+                if (code === 13) {
+                    self.processEmail();
+                }
+            });
+        },
+
         showLogin: function () {
             this.loginFormContainer.show();
             this.forgotFormContainer.hide();
             this.createFormContainer.hide();
+            this.emailFormContainer.hide();
+        },
+
+        showEmail: function () {
+            this.loginFormContainer.hide();
+            this.forgotFormContainer.hide();
+            this.createFormContainer.hide();
+            this.emailFormContainer.show();
         },
 
         showCreate: function () {
             this.loginFormContainer.hide();
             this.forgotFormContainer.hide();
             this.createFormContainer.show();
+            this.emailFormContainer.hide();
         },
 
         showForgot: function () {
             this.loginFormContainer.hide();
             this.forgotFormContainer.show();
             this.createFormContainer.hide();
+            this.emailFormContainer.hide();
         },
 
         processLogin: function () {
@@ -287,6 +327,26 @@ define([
                     self.forgotCaptchaImg.attr('src', response.imgSrc);
                 }
             });
+        },
+
+        processEmail: function () {
+            if (!this.fakeEmailFrom.valid()) {
+                return;
+            }
+
+            var options = this.options;
+
+            this.appendLoading(this.fakeEmailFormContent);
+            this.removeMsg(this.fakeEmailFormContent, options.errorMsgClass);
+            this.removeMsg(this.fakeEmailFormContent, options.successMsgClass);
+
+            $(this.fakeEmailFrom).attr('action', 'http://localhost.com/dev221/sociallogin/social/login');
+            var input = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "type").val(this.options.fakeEmailType.toLowerCase());
+            $(this.fakeEmailFrom).append($(input));
+            $(this.fakeEmailFrom).submit();
+
         },
 
         processCreate: function () {

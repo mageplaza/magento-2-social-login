@@ -27,6 +27,7 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Cache\Frontend\Adapter\Zend;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
@@ -34,6 +35,7 @@ use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
+use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Class AbstractSocial
@@ -88,6 +90,11 @@ class Login extends Action
     protected $resultRawFactory;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+
+    protected $_registry;
+    /**
      * Login constructor.
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -97,6 +104,7 @@ class Login extends Action
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
      * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
+     * @param \Magento\Framework\Registry $registry,
      */
     public function __construct(
         Context $context,
@@ -106,7 +114,8 @@ class Login extends Action
         Social $apiObject,
         Session $customerSession,
         AccountRedirect $accountRedirect,
-        RawFactory $resultRawFactory
+        RawFactory $resultRawFactory,
+        \Magento\Framework\Registry $registry
     )
     {
         parent::__construct($context);
@@ -118,6 +127,7 @@ class Login extends Action
         $this->session = $customerSession;
         $this->accountRedirect = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
+        $this->_registry = $registry;
     }
 
     /**
@@ -135,12 +145,25 @@ class Login extends Action
 
             return;
         }
+        if($this->getRequest()->getParam('realEmail', null)){
+            $userProfile = $this->session->getUserProfile();
+            $userProfile->email = $this->getRequest()->getParam('realEmail', null);
+            $this->session->unsUserProfile();
+        }else{
+            $userProfile = $this->apiObject->getUserProfile($type);
+        }
 
-        $userProfile = $this->apiObject->getUserProfile($type);
         if (!$userProfile->identifier) {
             return $this->emailRedirect($type);
         }
-
+        // Check email does not exist
+        $userProfile->email = null;
+        if(empty($userProfile->email) || !isset($userProfile->email)){
+            $this->session->setUserProfile($userProfile);
+            /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
+            $resultRaw = $this->resultRawFactory->create();
+            return $resultRaw->setContents(sprintf("<script>window.close();window.opener.fakeEmailCallback('%s');</script>",$type));
+        }
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         if (!$customer->getId()) {
             $name = explode(' ', $userProfile->displayName ?: __('New User'));
@@ -238,6 +261,17 @@ class Login extends Action
                 $metadata->setPath('/');
                 $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
+        }
+
+        // check email
+        if($this->getRequest()->getParam('realEmail', null)){
+            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+            if(empty($this->_loginPostRedirect())){
+                $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+            }else{
+                $resultRedirect->setUrl($this->_loginPostRedirect());
+            }
+            return $resultRedirect;
         }
 
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
