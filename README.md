@@ -21,6 +21,16 @@
 
 ## 2. How to install
 
+
+## ✓ Install via composer (recommend)
+Run the following command in Magento 2 root folder:
+
+```
+composer require mageplaza/magento-2-social-login
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy
+```
+
 ### ✓ Install ready-to-paste package
 
 - Download the latest version at [Mageplaza Social Login for Magento 2](https://www.mageplaza.com/magento-2-social-login-extension/)
