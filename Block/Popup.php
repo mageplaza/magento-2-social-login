@@ -84,7 +84,8 @@ class Popup extends Template
             'popupEffect' => $this->getPopupEffect(),
             'formLoginUrl' => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
-            'createFormUrl' => $this->getCreateFormUrl()
+            'createFormUrl' => $this->getCreateFormUrl(),
+            'fakeEmailUrl'  => $this->getFakeEmailUrl()
         ];
 
         return json_encode($params);
@@ -116,6 +117,13 @@ class Popup extends Template
     public function getFormLoginUrl()
     {
         return $this->getUrl('customer/ajax/login', ['_secure' => $this->isSecure()]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFakeEmailUrl(){
+        return $this->getUrl('sociallogin/social/login', ['_secure' => $this->isSecure()]);
     }
 
     /**

@@ -48,7 +48,7 @@ define([
             fakeEmailType: '',
             fakeEmailFrom: '#social-form-fake-email',
             fakeEmailFormContent: '.social-login.fake-email .block-content',
-            fakeEmailFormUrl: '',
+            fakeEmailUrl: '',
             fakeEmailCancelBtn: '#social-form-fake-email .action.cancel',
             /*Forgot*/
             forgotFormContainer: '.social-login.forgot',
@@ -143,6 +143,7 @@ define([
             this.options.createFormUrl = this.correctUrlProtocol(this.options.createFormUrl);
             this.options.formLoginUrl = this.correctUrlProtocol(this.options.formLoginUrl);
             this.options.forgotFormUrl = this.correctUrlProtocol(this.options.forgotFormUrl);
+            this.options.fakeEmailUrl = this.correctUrlProtocol(this.options.fakeEmailUrl);
         },
 
         correctUrlProtocol: function (url) {
@@ -340,7 +341,7 @@ define([
             this.removeMsg(this.fakeEmailFormContent, options.errorMsgClass);
             this.removeMsg(this.fakeEmailFormContent, options.successMsgClass);
 
-            $(this.fakeEmailFrom).attr('action', 'http://localhost.com/dev221/sociallogin/social/login');
+            $(this.fakeEmailFrom).attr('action', this.options.fakeEmailUrl);
             var input = $("<input>")
                 .attr("type", "hidden")
                 .attr("name", "type").val(this.options.fakeEmailType.toLowerCase());
