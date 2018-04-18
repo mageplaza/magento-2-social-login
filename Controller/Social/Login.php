@@ -156,16 +156,17 @@ class Login extends Action
         if (!$userProfile->identifier) {
             return $this->emailRedirect($type);
         }
-        // Check email does not exist
-        //$userProfile->email = null;
-        if(empty($userProfile->email) || !isset($userProfile->email)){
-            $this->session->setUserProfile($userProfile);
-            /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
-            $resultRaw = $this->resultRawFactory->create();
-            return $resultRaw->setContents(sprintf("<script>window.close();window.opener.fakeEmailCallback('%s');</script>",$type));
-        }
+
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         if (!$customer->getId()) {
+            // Check email does not exist
+            //$userProfile->email = null;
+            if(empty($userProfile->email) || !isset($userProfile->email)){
+                $this->session->setUserProfile($userProfile);
+                /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
+                $resultRaw = $this->resultRawFactory->create();
+                return $resultRaw->setContents(sprintf("<script>window.close();window.opener.fakeEmailCallback('%s');</script>",$type));
+            }
             $name = explode(' ', $userProfile->displayName ?: __('New User'));
             $user = array_merge([
                 'email' => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
