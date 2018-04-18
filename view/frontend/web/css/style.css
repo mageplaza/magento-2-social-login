@@ -39,7 +39,7 @@
 #social-login-popup .message.success > *:first-child:before{top: 50%;}
 /* Authentication Popup */
 .social-login-authentication-popup {width: 100%;}
-.social-login-authentication-popup .block-content {display: block;}
+.social-login-authentication-popup .block-content {display: block !important;}
 .social-login-authentication-popup .block-content .actions-toolbar {display: inline-block;}
 .social-login-authentication-popup .block-content .actions-toolbar .btn-social {height: 20px; padding-left: 19px;}
 /*Button Style*/
