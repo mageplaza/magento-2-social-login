@@ -167,6 +167,13 @@ class Social extends AbstractModel
         try {
             // If customer exists existing hash will be used by Repository
             $customer = $this->customerRepository->save($customer);
+
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $mathRandom = $objectManager->get('Magento\Framework\Math\Random');
+            $newPasswordToken = $mathRandom->getUniqueHash();
+            $accountManagement = $objectManager->get('Magento\Customer\Api\AccountManagementInterface');
+            $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
+
             if ($this->apiHelper->canSendPassword($store)) {
                 $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
             }
