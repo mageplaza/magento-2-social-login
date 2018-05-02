@@ -154,7 +154,6 @@ class Login extends Action
 
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         if (!$customer->getId()) {
-            $userProfile->email = null;
             if($this->apiHelper->requireRealEmail()){
                 // Check email does not exist
                 if (empty($userProfile->email) || !isset($userProfile->email)) {
