@@ -94,6 +94,7 @@ class Login extends Action
      */
 
     protected $_registry;
+
     /**
      * Login constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -104,7 +105,7 @@ class Login extends Action
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
      * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
-     * @param \Magento\Framework\Registry $registry,
+     * @param \Magento\Framework\Registry $registry ,
      */
     public function __construct(
         Context $context,
@@ -120,14 +121,14 @@ class Login extends Action
     {
         parent::__construct($context);
 
-        $this->storeManager = $storeManager;
-        $this->accountManager = $accountManager;
-        $this->apiHelper = $apiHelper;
-        $this->apiObject = $apiObject;
-        $this->session = $customerSession;
-        $this->accountRedirect = $accountRedirect;
+        $this->storeManager     = $storeManager;
+        $this->accountManager   = $accountManager;
+        $this->apiHelper        = $apiHelper;
+        $this->apiObject        = $apiObject;
+        $this->session          = $customerSession;
+        $this->accountRedirect  = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
-        $this->_registry = $registry;
+        $this->_registry        = $registry;
     }
 
     /**
@@ -145,13 +146,7 @@ class Login extends Action
 
             return;
         }
-        if($this->getRequest()->getParam('realEmail', null)){
-            $userProfile = $this->session->getUserProfile();
-            $userProfile->email = $this->getRequest()->getParam('realEmail', null);
-            $this->session->unsUserProfile();
-        }else{
-            $userProfile = $this->apiObject->getUserProfile($type);
-        }
+        $userProfile = $this->apiObject->getUserProfile($type);
 
         if (!$userProfile->identifier) {
             return $this->emailRedirect($type);
@@ -159,27 +154,35 @@ class Login extends Action
 
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         if (!$customer->getId()) {
-            // Check email does not exist
-            //$userProfile->email = null;
-            if(empty($userProfile->email) || !isset($userProfile->email)){
-                $this->session->setUserProfile($userProfile);
-                /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
-                $resultRaw = $this->resultRawFactory->create();
-                return $resultRaw->setContents(sprintf("<script>window.close();window.opener.fakeEmailCallback('%s');</script>",$type));
-            }
-            $name = explode(' ', $userProfile->displayName ?: __('New User'));
-            $user = array_merge([
-                'email' => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
-                'firstname' => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
-                'lastname' => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
-                'identifier' => $userProfile->identifier,
-                'type' => $type
-            ], $this->getUserData($userProfile));
+            $userProfile->email = null;
+            if($this->apiHelper->requireRealEmail()){
+                // Check email does not exist
+                if (empty($userProfile->email) || !isset($userProfile->email)) {
+                    $this->session->setUserProfile($userProfile);
+                    /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
+                    $resultRaw = $this->resultRawFactory->create();
 
-            $customer = $this->createCustomer($user, $type);
+                    return $resultRaw->setContents(sprintf("<script>window.close();window.opener.fakeEmailCallback('%s');</script>", $type));
+                }
+            }
+            $customer = $this->createCustomerProcess($userProfile, $type);
         }
 
         return $this->_appendJs($customer);
+    }
+
+    public function createCustomerProcess($userProfile, $type)
+    {
+        $name = explode(' ', $userProfile->displayName ?: __('New User'));
+        $user = array_merge([
+            'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+            'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+            'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+            'identifier' => $userProfile->identifier,
+            'type'       => $type
+        ], $this->getUserData($userProfile));
+
+        return $this->createCustomer($user, $type);
     }
 
     /**
@@ -253,6 +256,15 @@ class Login extends Action
      */
     public function _appendJs($customer)
     {
+        $this->refresh($customer);
+        /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
+        $resultRaw = $this->resultRawFactory->create();
+
+        return $resultRaw->setContents(sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
+    }
+
+    public function refresh($customer)
+    {
         if ($customer && $customer->getId()) {
             $this->session->setCustomerAsLoggedIn($customer);
             $this->session->regenerateId();
@@ -263,22 +275,6 @@ class Login extends Action
                 $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
         }
-
-        // check email
-        if($this->getRequest()->getParam('realEmail', null)){
-            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-            if(empty($this->_loginPostRedirect())){
-                $resultRedirect->setUrl($this->_redirect->getRefererUrl());
-            }else{
-                $resultRedirect->setUrl($this->_loginPostRedirect());
-            }
-            return $resultRedirect;
-        }
-
-        /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
-        $resultRaw = $this->resultRawFactory->create();
-
-        return $resultRaw->setContents(sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
     }
 
     /**
@@ -336,10 +332,11 @@ class Login extends Action
 
         $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
         $this->_eventManager->dispatch('social_manager_dispatch', [
-            'object' => $object,
+            'object'  => $object,
             'request' => $this->_request
         ]);
         $url = $object->getUrl();
+
         return $url;
     }
 }

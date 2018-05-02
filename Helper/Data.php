@@ -105,6 +105,14 @@ class Data extends CoreHelper
     }
 
     /**
+     * @param null $storeId
+     * @return mixed
+     */
+    public function requireRealEmail($storeId = null){
+        return $this->getConfigGeneral('fake_email_require', $storeId);
+    }
+
+    /**
      * @return mixed
      */
     public function isSecure()

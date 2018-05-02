@@ -123,7 +123,7 @@ class Popup extends Template
      * @return string
      */
     public function getFakeEmailUrl(){
-        return $this->getUrl('sociallogin/social/login', ['_secure' => $this->isSecure()]);
+        return $this->getUrl('sociallogin/social/email', ['_secure' => $this->isSecure()]);
     }
 
     /**

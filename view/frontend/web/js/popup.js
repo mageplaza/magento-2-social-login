@@ -334,20 +334,36 @@ define([
             if (!this.fakeEmailFrom.valid()) {
                 return;
             }
+            var input = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "type").val(this.options.fakeEmailType.toLowerCase());
+            $(this.fakeEmailFrom).append($(input));
 
-            var options = this.options;
+            var self = this;
+            var options = this.options,
+                parameters = this.fakeEmailFrom.serialize();
 
             this.appendLoading(this.fakeEmailFormContent);
             this.removeMsg(this.fakeEmailFormContent, options.errorMsgClass);
             this.removeMsg(this.fakeEmailFormContent, options.successMsgClass);
 
-            $(this.fakeEmailFrom).attr('action', this.options.fakeEmailUrl);
-            var input = $("<input>")
-                .attr("type", "hidden")
-                .attr("name", "type").val(this.options.fakeEmailType.toLowerCase());
-            $(this.fakeEmailFrom).append($(input));
-            $(this.fakeEmailFrom).submit();
-
+            return $.ajax({
+                url: options.fakeEmailUrl,
+                type: 'POST',
+                data: parameters
+            }).done(function (response) {
+                self.removeLoading(self.fakeEmailFormContent);
+                if (response.success) {
+                    self.addMsg(self.fakeEmailFrom, response.message, options.successMsgClass);
+                    if (response.url == '' || response.url == null) {
+                        window.location.reload(true);
+                    } else {
+                        window.location.href = response.url;
+                    }
+                } else {
+                    self.addMsg(self.fakeEmailFrom, response.message, options.errorMsgClass);
+                }
+            });
         },
 
         processCreate: function () {

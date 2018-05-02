@@ -54,6 +54,11 @@
                         <field id="popup_login">1</field>
                     </depends>
                 </field>
+                <field id="fake_email_require" translate="label comment" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Require Real Email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[ Entering email address is required to social networks which don't provide real E-mail. ]]></comment>
+                </field>
                 <field id="popup_effect" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Popup Effect</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Effect</source_model>
