@@ -29,6 +29,9 @@ define(
     function ($, ko, Component, socialProvider) {
         'use strict';
 
+        /**
+         * @type {{init: ko.bindingHandlers.socialButton.init}}
+         */
         ko.bindingHandlers.socialButton = {
             init: function (element, valueAccessor, allBindings) {
                 var config = {
@@ -46,6 +49,9 @@ define(
             },
             buttonLists: window.socialAuthenticationPopup,
 
+            /**
+             * @returns {Array}
+             */
             socials: function () {
                 var socials = [];
 
@@ -56,6 +62,9 @@ define(
                 return socials;
             },
 
+            /**
+             * @returns {boolean}
+             */
             isActive: function () {
                 return (typeof this.buttonLists !== 'undefined');
             }

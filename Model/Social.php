@@ -23,6 +23,7 @@ namespace Mageplaza\SocialLogin\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\EmailNotificationInterface;
@@ -53,6 +54,9 @@ class Social extends AbstractModel
      */
     protected $customerFactory;
 
+    /**
+     * @var CustomerInterfaceFactory
+     */
     protected $customerDataFactory;
 
     /**
@@ -71,20 +75,23 @@ class Social extends AbstractModel
     protected $apiName;
 
     /**
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * Social constructor.
+     * @param Context $context
+     * @param Registry $registry
+     * @param CustomerFactory $customerFactory
+     * @param CustomerInterfaceFactory $customerDataFactory
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param StoreManagerInterface $storeManager
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
      * @param array $data
      */
     public function __construct(
         Context $context,
         Registry $registry,
         CustomerFactory $customerFactory,
-        \Magento\Customer\Api\Data\CustomerInterfaceFactory $customerDataFactory,
+        CustomerInterfaceFactory $customerDataFactory,
         CustomerRepositoryInterface $customerRepository,
         StoreManagerInterface $storeManager,
         \Mageplaza\SocialLogin\Helper\Social $apiHelper,
@@ -95,11 +102,11 @@ class Social extends AbstractModel
     {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
-        $this->customerFactory = $customerFactory;
-        $this->customerRepository = $customerRepository;
+        $this->customerFactory     = $customerFactory;
+        $this->customerRepository  = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
-        $this->storeManager = $storeManager;
-        $this->apiHelper = $apiHelper;
+        $this->storeManager        = $storeManager;
+        $this->apiHelper           = $apiHelper;
     }
 
     /**
@@ -168,9 +175,9 @@ class Social extends AbstractModel
             // If customer exists existing hash will be used by Repository
             $customer = $this->customerRepository->save($customer);
 
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $mathRandom = $objectManager->get('Magento\Framework\Math\Random');
-            $newPasswordToken = $mathRandom->getUniqueHash();
+            $objectManager     = \Magento\Framework\App\ObjectManager::getInstance();
+            $mathRandom        = $objectManager->get('Magento\Framework\Math\Random');
+            $newPasswordToken  = $mathRandom->getUniqueHash();
             $accountManagement = $objectManager->get('Magento\Customer\Api\AccountManagementInterface');
             $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
 
@@ -216,9 +223,9 @@ class Social extends AbstractModel
     public function setAuthorCustomer($identifier, $customerId, $type)
     {
         $this->setData([
-            'social_id' => $identifier,
-            'customer_id' => $customerId,
-            'type' => $type,
+            'social_id'              => $identifier,
+            'customer_id'            => $customerId,
+            'type'                   => $type,
             'is_send_password_email' => $this->apiHelper->canSendPassword()
         ])
             ->setId(null)
@@ -235,15 +242,15 @@ class Social extends AbstractModel
     public function getUserProfile($apiName)
     {
         $config = [
-            "base_url" => $this->apiHelper->getBaseAuthUrl(),
-            "providers" => [
+            "base_url"   => $this->apiHelper->getBaseAuthUrl(),
+            "providers"  => [
                 $apiName => $this->getProviderData($apiName)
             ],
             "debug_mode" => false
         ];
 
         try {
-            $auth = new \Hybrid_Auth($config);
+            $auth    = new \Hybrid_Auth($config);
             $adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
 
             return $adapter->getUserProfile();
@@ -260,9 +267,9 @@ class Social extends AbstractModel
     {
         $data = [
             "enabled" => $this->apiHelper->isEnabled(),
-            "keys" => [
-                'id' => $this->apiHelper->getAppId(),
-                'key' => $this->apiHelper->getAppId(),
+            "keys"    => [
+                'id'     => $this->apiHelper->getAppId(),
+                'key'    => $this->apiHelper->getAppId(),
                 'secret' => $this->apiHelper->getAppSecret()
             ]
         ];

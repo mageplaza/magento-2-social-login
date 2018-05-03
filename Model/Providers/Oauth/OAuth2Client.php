@@ -4,6 +4,7 @@
  * http://hybridauth.sourceforge.net | http://github.com/hybridauth/hybridauth
  * (c) 2009-2015, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
+
 namespace Mageplaza\SocialLogin\Model\Providers\Oauth;
 
 // A service client for the OAuth 2 flow.
@@ -11,35 +12,55 @@ namespace Mageplaza\SocialLogin\Model\Providers\Oauth;
 class OAuth2Client
 {
     public $api_base_url = "";
+
     public $authorize_url = "";
+
     public $token_url = "";
+
     public $token_info_url = "";
 
     public $client_id = "";
+
     public $client_secret = "";
+
     public $redirect_uri = "";
+
     public $access_token = "";
+
     public $refresh_token = "";
 
     public $access_token_expires_in = "";
+
     public $access_token_expires_at = "";
 
     //--
 
     public $sign_token_name = "access_token";
+
     public $curl_time_out = 30;
+
     public $curl_connect_time_out = 30;
+
     public $curl_ssl_verifypeer = false;
+
     public $curl_ssl_verifyhost = false;
-    public $curl_header = array();
+
+    public $curl_header = [];
+
     public $curl_useragent = "OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/";
+
     public $curl_authenticate_method = "POST";
+
     public $curl_proxy = null;
+
     public $curl_compressed = false;
+
     //--
 
     public $http_code = "";
+
     public $http_info = "";
+
     protected $response = null;
 
     //--
@@ -52,30 +73,32 @@ class OAuth2Client
         $this->curl_compressed = $compressed;
     }
 
-    public function authorizeUrl($extras = array())
+    public function authorizeUrl($extras = [])
     {
-        $params = array(
+        $params = [
             "client_id"     => $this->client_id,
             "redirect_uri"  => $this->redirect_uri,
             "response_type" => "code"
-        );
+        ];
 
-        if (count($extras))
-            foreach ($extras as $k => $v)
+        if (count($extras)) {
+            foreach ($extras as $k => $v) {
                 $params[$k] = $v;
+            }
+        }
 
         return $this->authorize_url . "?" . http_build_query($params, '', '&');
     }
 
     public function authenticate($code)
     {
-        $params = array(
+        $params = [
             "client_id"     => $this->client_id,
             "client_secret" => $this->client_secret,
             "grant_type"    => "authorization_code",
             "redirect_uri"  => $this->redirect_uri,
             "code"          => $code
-        );
+        ];
 
         $response = $this->request($this->token_url, $params, $this->curl_authenticate_method);
 
@@ -85,9 +108,15 @@ class OAuth2Client
             throw new \Exception("The Authorization Service has return: " . $response->error);
         }
 
-        if (isset($response->access_token)) $this->access_token = $response->access_token;
-        if (isset($response->refresh_token)) $this->refresh_token = $response->refresh_token;
-        if (isset($response->expires_in)) $this->access_token_expires_in = $response->expires_in;
+        if (isset($response->access_token)) {
+            $this->access_token = $response->access_token;
+        }
+        if (isset($response->refresh_token)) {
+            $this->refresh_token = $response->refresh_token;
+        }
+        if (isset($response->expires_in)) {
+            $this->access_token_expires_in = $response->expires_in;
+        }
 
         // calculate when the access token expire
         if (isset($response->expires_in)) {
@@ -127,7 +156,7 @@ class OAuth2Client
     /**
      * Format and sign an oauth for provider api
      */
-    public function api($url, $method = "GET", $parameters = array(), $decode_json = true)
+    public function api($url, $method = "GET", $parameters = [], $decode_json = true)
     {
         if (strrpos($url, 'http://') !== 0 && strrpos($url, 'https://') !== 0) {
             $url = $this->api_base_url . $url;
@@ -171,7 +200,7 @@ class OAuth2Client
     /**
      * GET wrapper for provider apis request
      */
-    function get($url, $parameters = array(), $decode_json = true)
+    function get($url, $parameters = [], $decode_json = true)
     {
         return $this->api($url, 'GET', $parameters, $decode_json);
     }
@@ -179,7 +208,7 @@ class OAuth2Client
     /**
      * POST wrapper for provider apis request
      */
-    function post($url, $parameters = array(), $decode_json = true)
+    function post($url, $parameters = [], $decode_json = true)
     {
         return $this->api($url, 'POST', $parameters, $decode_json);
     }
@@ -194,13 +223,13 @@ class OAuth2Client
         return $this->parseRequestResult($response);
     }
 
-    public function refreshToken($parameters = array())
+    public function refreshToken($parameters = [])
     {
-        $params = array(
+        $params = [
             "client_id"     => $this->client_id,
             "client_secret" => $this->client_secret,
             "grant_type"    => "refresh_token"
-        );
+        ];
 
         foreach ($parameters as $k => $v) {
             $params[$k] = $v;
@@ -224,7 +253,7 @@ class OAuth2Client
             $url = $url . (strpos($url, '?') ? '&' : '?') . $urlEncodedParams;
         }
 
-        $this->http_info = array();
+        $this->http_info = [];
         $ch              = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -250,14 +279,18 @@ class OAuth2Client
             // Using URL encoded params here instead of a more convenient array
             // cURL will set a wrong HTTP Content-Type header if using an array (cf. http://www.php.net/manual/en/function.curl-setopt.php, Notes section for "CURLOPT_POSTFIELDS")
             // OAuth requires application/x-www-form-urlencoded Content-Type (cf. https://tools.ietf.org/html/rfc6749#section-2.3.1)
-            if ($params) curl_setopt($ch, CURLOPT_POSTFIELDS, $urlEncodedParams);
+            if ($params) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $urlEncodedParams);
+            }
         }
         if ($type == "DELETE") {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         }
         if ($type == "PATCH") {
             curl_setopt($ch, CURLOPT_POST, 1);
-            if ($params) curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            if ($params) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            }
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
         }
         $response = curl_exec($ch);
@@ -277,14 +310,17 @@ class OAuth2Client
 
     private function parseRequestResult($result)
     {
-        if (json_decode($result)) return json_decode($result);
+        if (json_decode($result)) {
+            return json_decode($result);
+        }
 
         parse_str($result, $output);
 
         $result = new \StdClass();
 
-        foreach ($output as $k => $v)
+        foreach ($output as $k => $v) {
             $result->$k = $v;
+        }
 
         return $result;
     }
@@ -292,7 +328,7 @@ class OAuth2Client
     /**
      * DELETE wrapper for provider apis request
      */
-    function delete($url, $parameters = array())
+    function delete($url, $parameters = [])
     {
         return $this->api($url, 'DELETE', $parameters);
     }
@@ -300,7 +336,7 @@ class OAuth2Client
     /**
      * PATCH wrapper for provider apis request
      */
-    function patch($url, $parameters = array())
+    function patch($url, $parameters = [])
     {
         return $this->api($url, 'PATCH', $parameters);
     }

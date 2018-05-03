@@ -24,6 +24,10 @@ define([
 ], function ($, customerData) {
     'use strict';
 
+    /**
+     * @param url
+     * @param windowObj
+     */
     window.socialCallback = function (url, windowObj) {
         customerData.invalidate(['customer']);
         customerData.reload(['customer'], true);

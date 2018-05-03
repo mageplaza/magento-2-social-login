@@ -27,15 +27,14 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Cache\Frontend\Adapter\Zend;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
-use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Class AbstractSocial
@@ -90,7 +89,7 @@ class Login extends Action
     protected $resultRawFactory;
 
     /**
-     * @var \Magento\Framework\Registry
+     * @var Registry
      */
 
     protected $_registry;
@@ -105,7 +104,7 @@ class Login extends Action
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
      * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
-     * @param \Magento\Framework\Registry $registry ,
+     * @param Registry $registry ,
      */
     public function __construct(
         Context $context,
@@ -116,7 +115,7 @@ class Login extends Action
         Session $customerSession,
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
-        \Magento\Framework\Registry $registry
+        Registry $registry
     )
     {
         parent::__construct($context);
@@ -154,7 +153,7 @@ class Login extends Action
 
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         if (!$customer->getId()) {
-            if($this->apiHelper->requireRealEmail()){
+            if ($this->apiHelper->requireRealEmail()) {
                 // Check email does not exist
                 if (empty($userProfile->email) || !isset($userProfile->email)) {
                     $this->session->setUserProfile($userProfile);
@@ -170,6 +169,13 @@ class Login extends Action
         return $this->_appendJs($customer);
     }
 
+    /**
+     * @param $userProfile
+     * @param $type
+     * @return bool|\Magento\Customer\Model\Customer|mixed
+     * @throws \Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function createCustomerProcess($userProfile, $type)
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
@@ -262,6 +268,11 @@ class Login extends Action
         return $resultRaw->setContents(sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
     }
 
+    /**
+     * @param $customer
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     */
     public function refresh($customer)
     {
         if ($customer && $customer->getId()) {

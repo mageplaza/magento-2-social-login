@@ -57,6 +57,7 @@ class RedirectUrl extends FormField
     /**
      * @param AbstractElement $element
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function _getElementHtml(AbstractElement $element)
     {

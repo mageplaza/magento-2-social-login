@@ -56,7 +56,7 @@ class Popup extends Template
         array $data = []
     )
     {
-        $this->helperData = $helperData;
+        $this->helperData      = $helperData;
         $this->customerSession = $customerSession;
 
         parent::__construct($context, $data);
@@ -80,9 +80,9 @@ class Popup extends Template
     public function getFormParams()
     {
         $params = [
-            'headerLink' => $this->getHeaderLink(),
-            'popupEffect' => $this->getPopupEffect(),
-            'formLoginUrl' => $this->getFormLoginUrl(),
+            'headerLink'    => $this->getHeaderLink(),
+            'popupEffect'   => $this->getPopupEffect(),
+            'formLoginUrl'  => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
             'createFormUrl' => $this->getCreateFormUrl(),
             'fakeEmailUrl'  => $this->getFakeEmailUrl()
@@ -122,7 +122,8 @@ class Popup extends Template
     /**
      * @return string
      */
-    public function getFakeEmailUrl(){
+    public function getFakeEmailUrl()
+    {
         return $this->getUrl('sociallogin/social/email', ['_secure' => $this->isSecure()]);
     }
 
@@ -151,6 +152,6 @@ class Popup extends Template
      */
     public function isSecure()
     {
-        return $this->helperData->isSecure()? true : false;
+        return $this->helperData->isSecure() ? true : false;
     }
 }

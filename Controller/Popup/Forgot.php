@@ -41,12 +41,12 @@ use Mageplaza\SocialLogin\Helper\Data;
 class Forgot extends Action
 {
     /**
-     * @var AccountManagementInterface 
+     * @var AccountManagementInterface
      */
     protected $customerAccountManagement;
 
     /**
-     * @var Escaper 
+     * @var Escaper
      */
     protected $escaper;
 
@@ -89,12 +89,12 @@ class Forgot extends Action
         Data $socialHelper
     )
     {
-        $this->session = $customerSession;
+        $this->session                   = $customerSession;
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->escaper = $escaper;
-        $this->resultJsonFactory = $resultJsonFactory;
-        $this->captchaHelper = $captchaHelper;
-        $this->socialHelper = $socialHelper;
+        $this->escaper                   = $escaper;
+        $this->resultJsonFactory         = $resultJsonFactory;
+        $this->captchaHelper             = $captchaHelper;
+        $this->socialHelper              = $socialHelper;
 
         parent::__construct($context);
     }
@@ -104,7 +104,7 @@ class Forgot extends Action
      */
     public function checkCaptcha()
     {
-        $formId = 'user_forgotpassword';
+        $formId       = 'user_forgotpassword';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
         if ($captchaModel->isRequired()) {
             if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
@@ -126,13 +126,14 @@ class Forgot extends Action
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
 
-        $result = array(
+        $result = [
             'success' => false,
-            'message' => array()
-        );
+            'message' => []
+        ];
 
         if (!$this->checkCaptcha()) {
             $result['message'] = __('Incorrect CAPTCHA.');
+
             return $resultJson->setData($result);
         }
 
@@ -149,17 +150,17 @@ class Forgot extends Action
                     $email,
                     AccountManagement::EMAIL_RESET
                 );
-                $result['success'] = true;
+                $result['success']   = true;
                 $result['message'][] = __('If there is an account associated with %1 you will receive an email with a link to reset your password.', $this->escaper->escapeHtml($email));
             } catch (NoSuchEntityException $e) {
-                $result['success'] = true;
+                $result['success']   = true;
                 $result['message'][] = __('If there is an account associated with %1 you will receive an email with a link to reset your password.', $this->escaper->escapeHtml($email));
                 // Do nothing, we don't want anyone to use this action to determine which email accounts are registered.
             } catch (SecurityViolationException $exception) {
-                $result['error'] = true;
+                $result['error']     = true;
                 $result['message'][] = $exception->getMessage();
             } catch (\Exception $exception) {
-                $result['error'] = true;
+                $result['error']     = true;
                 $result['message'][] = __('We\'re unable to send the password reset email.');
             }
         }

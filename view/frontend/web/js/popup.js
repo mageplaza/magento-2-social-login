@@ -24,6 +24,8 @@ define([
     'mage/translate',
     'mageplaza/core/jquery/popup'
 ], function ($, customerData, $t) {
+    'use strict';
+
     $.widget('mageplaza.socialpopup', {
         options: {
             /*General*/
@@ -70,6 +72,9 @@ define([
             forgotCaptchaImg: '.forgot .captcha-img'
         },
 
+        /**
+         * @private
+         */
         _create: function () {
             var self = this;
             this.initObject();
@@ -81,6 +86,9 @@ define([
             };
         },
 
+        /**
+         * Init object will be used
+         */
         initObject: function () {
             this.loginForm = $(this.options.loginForm);
             this.createForm = $(this.options.createForm);
@@ -103,6 +111,9 @@ define([
             this.fakeEmailFormContent = $(this.options.fakeEmailFormContent);
         },
 
+        /**
+         * Init links login
+         */
         initLink: function () {
             var self = this,
                 headerLink = $(this.options.headerLink);
@@ -146,6 +157,11 @@ define([
             this.options.fakeEmailUrl = this.correctUrlProtocol(this.options.fakeEmailUrl);
         },
 
+        /**
+         * Correct url protocol to match with current protocol
+         * @param url
+         * @returns {*}
+         */
         correctUrlProtocol: function (url) {
             var protocol = window.location.protocol;
             if (!url.includes(protocol)) {
@@ -155,6 +171,9 @@ define([
             return url;
         },
 
+        /**
+         * Init button click
+         */
         initObserve: function () {
             this.initLoginObserve();
             this.initCreateObserve();
@@ -167,7 +186,10 @@ define([
             $(this.options.forgotBackBtn).on('click', this.showLogin.bind(this));
         },
 
-        initLoginObserve: function(){
+        /**
+         * Login process
+         */
+        initLoginObserve: function () {
             var self = this;
 
             $(this.options.loginBtn).on('click', this.processLogin.bind(this));
@@ -179,7 +201,10 @@ define([
             });
         },
 
-        initCreateObserve: function(){
+        /**
+         * Create process
+         */
+        initCreateObserve: function () {
             var self = this;
 
             $(this.options.createAccBtn).on('click', this.processCreate.bind(this));
@@ -191,7 +216,10 @@ define([
             });
         },
 
-        initForgotObserve: function(){
+        /**
+         * Forgot process
+         */
+        initForgotObserve: function () {
             var self = this;
 
             $(this.options.forgotSendBtn).on('click', this.processForgot.bind(this));
@@ -203,7 +231,10 @@ define([
             });
         },
 
-        initEmailObserve: function(){
+        /**
+         * Email process
+         */
+        initEmailObserve: function () {
             var self = this;
 
             $(this.options.fakeEmailSendBtn).on('click', this.processEmail.bind(this));
@@ -215,6 +246,9 @@ define([
             });
         },
 
+        /**
+         * Show Login page
+         */
         showLogin: function () {
             this.loginFormContainer.show();
             this.forgotFormContainer.hide();
@@ -222,6 +256,9 @@ define([
             this.emailFormContainer.hide();
         },
 
+        /**
+         * Show email page
+         */
         showEmail: function () {
             this.loginFormContainer.hide();
             this.forgotFormContainer.hide();
@@ -229,6 +266,9 @@ define([
             this.emailFormContainer.show();
         },
 
+        /**
+         * Show create page
+         */
         showCreate: function () {
             this.loginFormContainer.hide();
             this.forgotFormContainer.hide();
@@ -236,6 +276,9 @@ define([
             this.emailFormContainer.hide();
         },
 
+        /**
+         * Show forgot password page
+         */
         showForgot: function () {
             this.loginFormContainer.hide();
             this.forgotFormContainer.show();
@@ -243,6 +286,9 @@ define([
             this.emailFormContainer.hide();
         },
 
+        /**
+         * Process login
+         */
         processLogin: function () {
             if (!this.loginForm.valid()) {
                 return;
@@ -280,7 +326,7 @@ define([
                         }
                     } else {
                         var captchaReload = $('#social-form-login .captcha-reload');
-                        if(captchaReload.length){
+                        if (captchaReload.length) {
                             captchaReload.trigger('click');
                         }
                         self.addMsg(self.loginFormContent, response.message, options.errorMsgClass);
@@ -300,6 +346,9 @@ define([
             });
         },
 
+        /**
+         * Process forgot
+         */
         processForgot: function () {
             if (!this.forgotForm.valid()) {
                 return;
@@ -330,6 +379,9 @@ define([
             });
         },
 
+        /**
+         * Process email
+         */
         processEmail: function () {
             if (!this.fakeEmailFrom.valid()) {
                 return;
@@ -366,6 +418,9 @@ define([
             });
         },
 
+        /**
+         * Process create account
+         */
         processCreate: function () {
             if (!this.createForm.valid()) {
                 return;
@@ -405,16 +460,27 @@ define([
             });
         },
 
+        /**
+         * @param block
+         */
         appendLoading: function (block) {
             block.css('position', 'relative');
             block.prepend($("<div></div>", {"class": this.options.loadingClass}))
         },
 
+        /**
+         * @param block
+         */
         removeLoading: function (block) {
             block.css('position', '');
             block.find("." + this.options.loadingClass).remove();
         },
 
+        /**
+         * @param block
+         * @param message
+         * @param messageClass
+         */
         addMsg: function (block, message, messageClass) {
             if (typeof(message) === 'object' && message.length > 0) {
                 message.forEach(function (msg) {
@@ -425,10 +491,20 @@ define([
             }
         },
 
+        /**
+         * @param block
+         * @param messageClass
+         */
         removeMsg: function (block, messageClass) {
             block.find('.' + messageClass.replace(/ /g, '.')).remove();
         },
 
+        /**
+         * @param block
+         * @param message
+         * @param messageClass
+         * @private
+         */
         _appendMessage: function (block, message, messageClass) {
             var currentMessage = null;
             var messageSection = block.find("." + messageClass.replace(/ /g, '.'));

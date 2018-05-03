@@ -23,21 +23,22 @@ namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\RawFactory;
+use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
-use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Customer\Model\Customer;
 
 /**
  * Class AbstractSocial
  *
  * @package Mageplaza\SocialLogin\Controller
  */
-class Email extends \Mageplaza\SocialLogin\Controller\Social\Login
+class Email extends Login
 {
     /**
      * @type \Magento\Customer\Model\Session
@@ -75,7 +76,7 @@ class Email extends \Mageplaza\SocialLogin\Controller\Social\Login
     protected $resultJsonFactory;
 
     /**
-     * @var \Magento\Framework\Registry
+     * @var Registry
      */
 
     protected $_registry;
@@ -86,16 +87,18 @@ class Email extends \Mageplaza\SocialLogin\Controller\Social\Login
     protected $customerModel;
 
     /**
-     * Login constructor.
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Customer\Api\AccountManagementInterface $accountManager
-     * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
-     * @param \Mageplaza\SocialLogin\Model\Social $apiObject
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Customer\Model\Account\Redirect $accountRedirect
-     * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
-     * @param \Magento\Framework\Registry $registry ,
+     * Email constructor.
+     * @param Context $context
+     * @param StoreManagerInterface $storeManager
+     * @param AccountManagementInterface $accountManager
+     * @param SocialHelper $apiHelper
+     * @param Social $apiObject
+     * @param Session $customerSession
+     * @param AccountRedirect $accountRedirect
+     * @param RawFactory $resultRawFactory
+     * @param JsonFactory $resultJsonFactory
+     * @param Customer $customerModel
+     * @param Registry $registry
      */
     public function __construct(
         Context $context,
@@ -108,13 +111,13 @@ class Email extends \Mageplaza\SocialLogin\Controller\Social\Login
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
         Customer $customerModel,
-        \Magento\Framework\Registry $registry
+        Registry $registry
     )
     {
         parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory, $registry);
+
         $this->resultJsonFactory = $resultJsonFactory;
         $this->customerModel     = $customerModel;
-
     }
 
     /**
@@ -127,11 +130,11 @@ class Email extends \Mageplaza\SocialLogin\Controller\Social\Login
 
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
 
-        $result = array(
+        $result = [
             'success' => false,
-            'message' => array(),
-            'url' => ''
-        );
+            'message' => [],
+            'url'     => ''
+        ];
         if (!$type) {
             $this->_forward('noroute');
 
@@ -161,7 +164,7 @@ class Email extends \Mageplaza\SocialLogin\Controller\Social\Login
 
         $result['success'] = true;
         $result['message'] = __('Success!');
-        $result['url'] = $this->_loginPostRedirect();
+        $result['url']     = $this->_loginPostRedirect();
 
         return $resultJson->setData($result);
     }

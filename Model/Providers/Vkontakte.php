@@ -25,7 +25,7 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
     const VERSION = '3.0';
 
     // default user fields map
-    public $fields = array(
+    public $fields = [
         // Old that saved for backward-compability
         'identifier'  => 'uid',
         'firstName'   => 'first_name',
@@ -45,10 +45,11 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
         'home_phone'  => 'home_phone',
         'city'        => 'city',        // Will be converted in getUserByResponse()
         'country'     => 'country',     // Will be converted in getUserByResponse()
-    );
+    ];
 
     /**
      * IDp wrappers initializer
+     * @throws \Exception
      */
     function initialize()
     {
@@ -63,6 +64,9 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     function loginFinish()
     {
         $request = ObjectManager::getInstance()->get(Http::class);
@@ -105,10 +109,11 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
 
     /**
      * load the user profile from the IDp api client
+     * @return \Hybrid_User_Profile
+     * @throws \Exception
      */
     function getUserProfile()
     {
-
         // refresh tokens if needed
         $this->refreshToken();
 
@@ -139,32 +144,8 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
     }
 
     /**
-     * load the user contacts
-     */
-    function getUserContacts()
-    {
-        $params = [
-            'fields' => implode(',', $this->fields),
-            'v'      => self::VERSION,
-        ];
-
-        $response = $this->api->api('friends.get', 'GET', $params);
-
-        if (empty($response) || empty($response->response)) {
-            return array();
-        }
-
-        $contacts = array();
-        foreach ($response->response as $item) {
-            $contacts[] = $this->getUserByResponse($item);
-        }
-
-        return $contacts;
-    }
-
-    /**
      * @param object $response
-     * @param bool   $withAdditionalRequests True to get some full fields like 'city' or 'country'
+     * @param bool $withAdditionalRequests True to get some full fields like 'city' or 'country'
      *                                       (requires additional responses to vk api!)
      *
      * @return \Hybrid_User_Contact
@@ -186,11 +167,9 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
                 case 1:
                     $user->gender = 'female';
                     break;
-
                 case 2:
                     $user->gender = 'male';
                     break;
-
                 default:
                     $user->gender = null;
                     break;
@@ -205,7 +184,6 @@ class Vkontakte extends \Hybrid_Provider_Model_OAuth2
                     $user->birthMonth = (int)$birthday[1];
                     $user->birthYear  = (int)$birthday[2];
                     break;
-
                 case 2:
                     $user->birthDay   = (int)$birthday[0];
                     $user->birthMonth = (int)$birthday[1];

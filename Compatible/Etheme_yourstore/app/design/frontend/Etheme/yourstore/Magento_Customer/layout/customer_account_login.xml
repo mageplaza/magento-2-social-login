@@ -18,7 +18,7 @@
                         <container name="form.additional.info.social.login" as="form_additional_info_social_login"/>
                     </block>
                 </container>
-                <container name="customer.separator" htmlTag="div" htmlClass="divider divider--md visible-sm visible-xs" />
+                <container name="customer.separator" htmlTag="div" htmlClass="divider divider--md visible-sm visible-xs"/>
                 <container name="customer.new.wrapper" htmlTag="div" htmlClass="col-sm-12 col-md-6 col-lg-6 col-xl-4">
                     <block class="Magento\Customer\Block\Form\Login\Info" name="customer.new" template="newcustomer.phtml"/>
 
@@ -38,7 +38,7 @@
 
         <!--Compatible with Mageplaza_SocialLogin-->
         <referenceContainer name="form.additional.info.social.login">
-            <block class="Mageplaza\SocialLogin\Block\Popup\Social" after="customer.new" ifconfig="sociallogin/general/enabled" name="social-login-popup-authentication-social-login" template="Mageplaza_SocialLogin::form/social.phtml" />
+            <block class="Mageplaza\SocialLogin\Block\Popup\Social" after="customer.new" ifconfig="sociallogin/general/enabled" name="social-login-popup-authentication-social-login" template="Mageplaza_SocialLogin::form/social.phtml"/>
         </referenceContainer>
         <!--End: Compatible with Mageplaza_SocialLogin-->
     </body>

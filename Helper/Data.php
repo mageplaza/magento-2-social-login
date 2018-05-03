@@ -34,15 +34,6 @@ class Data extends CoreHelper
     const CONFIG_MODULE_PATH = 'sociallogin';
 
     /**
-     * @param null $storeId
-     * @return mixed
-     */
-    public function isCaptchaEnabled($storeId = null)
-    {
-        return $this->getConfigValue(static::CONFIG_MODULE_PATH . '/captcha/is_enabled', $storeId);
-    }
-
-    /**
      * @param \Magento\Framework\App\RequestInterface $request
      * @param                                         $formId
      * @return string
@@ -108,7 +99,8 @@ class Data extends CoreHelper
      * @param null $storeId
      * @return mixed
      */
-    public function requireRealEmail($storeId = null){
+    public function requireRealEmail($storeId = null)
+    {
         return $this->getConfigGeneral('fake_email_require', $storeId);
     }
 

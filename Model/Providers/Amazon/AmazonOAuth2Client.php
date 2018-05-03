@@ -4,6 +4,7 @@
  * http://hybridauth.sourceforge.net | http://github.com/hybridauth/hybridauth
  * (c) 2009-2015, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
  */
+
 namespace Mageplaza\SocialLogin\Model\Providers\Amazon;
 
 /**
@@ -24,17 +25,20 @@ namespace Mageplaza\SocialLogin\Model\Providers\Amazon;
  */
 class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OAuth2Client
 {
-
+    /**
+     * @param $code
+     * @return mixed|\StdClass
+     * @throws \Exception
+     */
     public function authenticate($code)
     {
-
-        $params = array(
+        $params = [
             "client_id"     => $this->client_id,
             "client_secret" => $this->client_secret,
             "grant_type"    => 'authorization_code',
             "redirect_uri"  => $this->redirect_uri,
             "code"          => $code,
-        );
+        ];
 
         $response = $this->request($this->token_url, http_build_query($params), $this->curl_authenticate_method);
 
@@ -44,9 +48,15 @@ class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OA
             throw new \Exception("The Authorization Service has return: " . $response->error);
         }
 
-        if (isset($response->access_token)) $this->access_token = $response->access_token;
-        if (isset($response->refresh_token)) $this->refresh_token = $response->refresh_token;
-        if (isset($response->expires_in)) $this->access_token_expires_in = $response->expires_in;
+        if (isset($response->access_token)) {
+            $this->access_token = $response->access_token;
+        }
+        if (isset($response->refresh_token)) {
+            $this->refresh_token = $response->refresh_token;
+        }
+        if (isset($response->expires_in)) {
+            $this->access_token_expires_in = $response->expires_in;
+        }
 
         // calculate when the access token expire
         if (isset($response->expires_in)) {
@@ -56,6 +66,12 @@ class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OA
         return $response;
     }
 
+    /**
+     * @param $url
+     * @param bool $params
+     * @param string $type
+     * @return mixed
+     */
     private function request($url, $params = false, $type = "GET")
     {
         \Hybrid_Logger::info("Enter OAuth2Client::request( $url )");
@@ -65,7 +81,7 @@ class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OA
             $url = $url . (strpos($url, '?') ? '&' : '?') . http_build_query($params, '', '&');
         }
 
-        $this->http_info = array();
+        $this->http_info = [];
         $ch              = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -87,14 +103,18 @@ class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OA
 
         if ($type == "POST") {
             curl_setopt($ch, CURLOPT_POST, 1);
-            if ($params) curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            if ($params) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            }
         }
         if ($type == "DELETE") {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         }
         if ($type == "PATCH") {
             curl_setopt($ch, CURLOPT_POST, 1);
-            if ($params) curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            if ($params) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            }
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
         }
         $response = curl_exec($ch);
@@ -112,16 +132,23 @@ class AmazonOAuth2Client extends \Mageplaza\SocialLogin\Model\Providers\Oauth\OA
         return $response;
     }
 
+    /**
+     * @param $result
+     * @return mixed|\StdClass
+     */
     private function parseRequestResult($result)
     {
-        if (json_decode($result)) return json_decode($result);
+        if (json_decode($result)) {
+            return json_decode($result);
+        }
 
         parse_str($result, $output);
 
         $result = new \StdClass();
 
-        foreach ($output as $k => $v)
+        foreach ($output as $k => $v) {
             $result->$k = $v;
+        }
 
         return $result;
     }

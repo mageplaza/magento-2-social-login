@@ -4,6 +4,7 @@
 * http://hybridauth.sourceforge.net | https://github.com/hybridauth/hybridauth
 *  (c) 2009-2011 HybridAuth authors | hybridauth.sourceforge.net/licenses.html
 */
+
 namespace Mageplaza\SocialLogin\Model\Providers;
 
 /**
@@ -17,6 +18,7 @@ class GitHub extends \Hybrid_Provider_Model_OAuth2
 
     /**
      * IDp wrappers initializer
+     * @throws \Exception
      */
     function initialize()
     {
@@ -30,11 +32,12 @@ class GitHub extends \Hybrid_Provider_Model_OAuth2
 
     /**
      * load the user profile from the IDp api client
+     * @return \Hybrid_User_Profile
+     * @throws \Exception
      */
     function getUserProfile()
     {
         $data = $this->api->api("user");
-
         if (!isset($data->id)) {
             throw new \Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }
@@ -68,9 +71,7 @@ class GitHub extends \Hybrid_Provider_Model_OAuth2
                             $this->user->profile->email = $email->email;
 
                             // record whether the email address is verified
-                            if (property_exists($email, 'verified')
-                                && true === $email->verified
-                            ) {
+                            if (property_exists($email, 'verified') && true === $email->verified) {
                                 $this->user->profile->emailVerified = $email->email;
                             }
 
@@ -84,47 +85,5 @@ class GitHub extends \Hybrid_Provider_Model_OAuth2
         }
 
         return $this->user->profile;
-    }
-
-    /**
-     *
-     */
-    function getUserContacts()
-    {
-        // refresh tokens if needed
-        $this->refreshToken();
-
-        //
-        $response = array();
-        $contacts = array();
-        try {
-            $response = $this->api->api("user/followers");
-        } catch (\Exception $e) {
-            throw new \Exception("User contacts request failed! {$this->providerId} returned an error: $e");
-        }
-        //
-        if (isset($response)) {
-            foreach ($response as $contact) {
-                try {
-                    $contactInfo = $this->api->api("users/" . $contact->login);
-                } catch (\Exception $e) {
-                    throw new \Exception("Contact info request failed for user {$contact->login}! {$this->providerId} returned an error: $e");
-                }
-                //
-                $uc = new \Hybrid_User_Contact();
-                //
-                $uc->identifier  = $contact->id;
-                $uc->profileURL  = @$contact->html_url;
-                $uc->webSiteURL  = @$contact->blog;
-                $uc->photoURL    = @$contact->avatar_url;
-                $uc->displayName = (isset($contactInfo->name) ? ($contactInfo->name) : ($contact->login));
-                //$uc->description	= ;
-                $uc->email = @$contactInfo->email;
-                //
-                $contacts[] = $uc;
-            }
-        }
-
-        return $contacts;
     }
 }

@@ -46,7 +46,8 @@
                             <input type="checkbox" class="checkbox" name="is_subscribed"
                                    title="<?php echo __('Sign Up for Newsletter') ?>" value="1"
                                    id="is_subscribed"<?php if ($block->getFormData()->getIsSubscribed()): ?> checked="checked"<?php endif; ?> />
-                            <label for="is_subscribed" class="label"><span><?php echo __('Sign Up for Newsletter') ?></span></label>
+                            <label for="is_subscribed"
+                                   class="label"><span><?php echo __('Sign Up for Newsletter') ?></span></label>
                         </div>
                         <?php echo $block->getChildHtml('customer.form.register.newsletter') ?>
                     <?php endif ?>
@@ -65,7 +66,8 @@
                 </fieldset>
                 <?php if ($block->getShowAddressFields()): ?>
                     <fieldset class="fieldset address">
-                        <legend class="legend"><span><?php echo __('Address Information') ?></span></legend><br>
+                        <legend class="legend"><span><?php echo __('Address Information') ?></span></legend>
+                        <br>
                         <input type="hidden" name="create_address" value="1"/>
                         <div class="field company">
                             <label for="company" class="label"><span><?php echo __('Company') ?></span></label>
@@ -98,7 +100,8 @@
                                     <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
                                     <?php for ($_i = 2, $_n = $this->helper('Magento\Customer\Helper\Address')->getStreetLines(); $_i <= $_n; $_i++): ?>
                                         <div class="field additional">
-                                            <label class="label" for="street_<?php echo $_i ?>"><span><?php echo __('Address') ?></span></label>
+                                            <label class="label"
+                                                   for="street_<?php echo $_i ?>"><span><?php echo __('Address') ?></span></label>
                                             <div class="control">
                                                 <input type="text" name="street[]"
                                                        value="<?php echo $block->escapeHtml($block->getFormData()->getStreetLine($_i - 1)) ?>"
@@ -124,7 +127,8 @@
                         <div class="field region required">
                             <label for="region_id" class="label"><span><?php echo __('State/Province') ?></span></label>
                             <div class="control">
-                                <select id="region_id" name="region_id" title="<?php echo __('State/Province') ?>" class="validate-select" style="display:none;">
+                                <select id="region_id" name="region_id" title="<?php echo __('State/Province') ?>"
+                                        class="validate-select" style="display:none;">
                                     <option value=""><?php echo __('Please select a region, state or province.') ?></option>
                                 </select>
                                 <input type="text" id="region" name="region"
@@ -236,6 +240,7 @@
                             }
                         }
                     }
+                
                 </script>
             <?php endif; ?>
         </div>

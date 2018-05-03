@@ -130,8 +130,8 @@ class Create extends CreatePost
     )
     {
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->captchaHelper = $captchaHelper;
-        $this->socialHelper = $socialHelper;
+        $this->captchaHelper     = $captchaHelper;
+        $this->socialHelper      = $socialHelper;
 
         parent::__construct(
             $context,
@@ -160,7 +160,7 @@ class Create extends CreatePost
      */
     public function checkCaptcha()
     {
-        $formId = 'user_create';
+        $formId       = 'user_create';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
         if ($captchaModel->isRequired()) {
             if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
@@ -183,13 +183,14 @@ class Create extends CreatePost
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
 
-        $result = array(
+        $result = [
             'success' => false,
-            'message' => array()
-        );
+            'message' => []
+        ];
 
         if (!$this->checkCaptcha()) {
             $result['message'] = __('Incorrect CAPTCHA.');
+
             return $resultJson->setData($result);
         }
 
@@ -208,13 +209,13 @@ class Create extends CreatePost
         $this->session->regenerateId();
 
         try {
-            $address = $this->extractAddress();
+            $address   = $this->extractAddress();
             $addresses = $address === null ? [] : [$address];
 
             $customer = $this->customerExtractor->extract('customer_account_create', $this->_request);
             $customer->setAddresses($addresses);
 
-            $password = $this->getRequest()->getParam('password');
+            $password     = $this->getRequest()->getParam('password');
             $confirmation = $this->getRequest()->getParam('password_confirmation');
             if (!$this->checkPasswordConfirmation($password, $confirmation)) {
                 $result['message'][] = __('Please make sure your passwords match.');
@@ -243,7 +244,7 @@ class Create extends CreatePost
                         )
                     );
                 } else {
-                    $result['success'] = true;
+                    $result['success']   = true;
                     $result['message'][] = __('Create an account successfully. Please wait...');
                     $this->session->setCustomerDataAsLoggedIn($customer);
                 }

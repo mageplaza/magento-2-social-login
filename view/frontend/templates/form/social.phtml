@@ -18,9 +18,10 @@
  * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-?>
-<?php $availableSocials = $block->getAvailableSocials(); ?>
-<?php if ($block->canShow() && sizeof($availableSocials)): ?>
+
+$availableSocials = $block->getAvailableSocials();
+if ($block->canShow() && sizeof($availableSocials)):
+    ?>
     <div class="block social-login-authentication-channel account-social-login">
         <div class="block-content">
             <?php foreach ($availableSocials as $key => $social): ?>

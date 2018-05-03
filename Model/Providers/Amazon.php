@@ -4,6 +4,7 @@
 * http://hybridauth.sourceforge.net | https://github.com/hybridauth/hybridauth
 *  (c) 2009-2015 HybridAuth authors | hybridauth.sourceforge.net/licenses.html
 */
+
 namespace Mageplaza\SocialLogin\Model\Providers;
 
 use Magento\Framework\App\ObjectManager;
@@ -24,16 +25,15 @@ use Mageplaza\SocialLogin\Model\Providers\Amazon\AmazonOAuth2Client;
  */
 class Amazon extends \Hybrid_Provider_Model_OAuth2
 {
-
     // default permissions
     public $scope = 'profile postal_code';
 
     /**
      * IDp wrappers initializer
+     * @throws \Exception
      */
     function initialize()
     {
-
         if (!$this->config['keys']['id'] || !$this->config['keys']['secret']) {
             throw new \Exception("Your application id and secret are required in order to connect to {$this->providerId}.", 4);
         }
@@ -45,16 +45,16 @@ class Amazon extends \Hybrid_Provider_Model_OAuth2
 
         // create a new OAuth2 client instance
         $this->api = ObjectManager::getInstance()->create(AmazonOAuth2Client::class, [
-            'client_id' => $this->config['keys']['id'],
+            'client_id'     => $this->config['keys']['id'],
             'client_secret' => $this->config['keys']['secret'],
-            'redirect_uri' => $this->endpoint, 'compressed' => $this->compressed
+            'redirect_uri'  => $this->endpoint, 'compressed' => $this->compressed
         ]);
 
         $this->api->api_base_url  = 'https://api.amazon.com';
         $this->api->authorize_url = 'https://www.amazon.com/ap/oa';
         $this->api->token_url     = 'https://api.amazon.com/auth/o2/token';
 
-        $this->api->curl_header = array('Content-Type: application/x-www-form-urlencoded');
+        $this->api->curl_header = ['Content-Type: application/x-www-form-urlencoded'];
 
         // If we have an access token, set it
         if ($this->token('access_token')) {
@@ -72,12 +72,12 @@ class Amazon extends \Hybrid_Provider_Model_OAuth2
 
     /**
      * load the user profile from the IDp api client
+     * @return \Hybrid_User_Profile
+     * @throws \Exception
      */
     function getUserProfile()
     {
-
         $data = $this->api->get('/user/profile');
-
         if (!isset($data->user_id)) {
             throw new \Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }

@@ -45,7 +45,7 @@ class Color implements ArrayInterface
                 'label' => $label
             ];
         }
-        
+
         return $options;
     }
 

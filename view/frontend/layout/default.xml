@@ -29,13 +29,13 @@
             <block class="Magento\Framework\View\Element\Js\Components" name="captcha_page_head_components" ifconfig="sociallogin/general/enabled" template="Magento_Captcha::js/components.phtml"/>
         </referenceBlock>
 
-       <!-- Fix Porto Popup login -->
+        <!-- Fix Porto Popup login -->
         <referenceBlock name="header_customer_form_login" remove="true"/>
         <referenceContainer name="content">
             <block class="Mageplaza\SocialLogin\Block\Popup" name="social-login-popup" as="popup.modal" template="popup.phtml">
                 <block class="Magento\Framework\View\Element\Template" name="social-login-popup-email" cacheable="false" before="-" as="popup.email" template="Mageplaza_SocialLogin::popup/form/email.phtml"/>
                 <block class="Mageplaza\SocialLogin\Block\Form\Login" name="social-login-popup-authentication" as="popup.authentication" template="popup/form/authentication.phtml">
-                    <block class="Mageplaza\SocialLogin\Block\Popup\Social" name="social-login-popup-authentication-social" as="popup.authentication.social" template="popup/form/authentication/social.phtml" />
+                    <block class="Mageplaza\SocialLogin\Block\Popup\Social" name="social-login-popup-authentication-social" as="popup.authentication.social" template="popup/form/authentication/social.phtml"/>
                     <block class="Magento\Captcha\Block\Captcha" name="social-login-captcha" as="login.captcha" after="-">
                         <action method="setFormId">
                             <argument name="formId" xsi:type="string">user_login</argument>
