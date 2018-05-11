@@ -120,7 +120,8 @@ class Social extends AbstractModel
     /**
      * @param $identify
      * @param $type
-     * @return mixed
+     * @return Customer
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getCustomerBySocial($identify, $type)
     {
@@ -192,6 +193,7 @@ class Social extends AbstractModel
             );
         } catch (\Exception $e) {
             if ($customer->getId()) {
+                $this->_registry->register('isSecureArea', true, true);
                 $this->customerRepository->deleteById($customer->getId());
             }
             throw $e;

@@ -23,12 +23,11 @@ namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
-use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\RawFactory;
-use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
@@ -38,53 +37,17 @@ use Mageplaza\SocialLogin\Model\Social;
  *
  * @package Mageplaza\SocialLogin\Controller
  */
-class Email extends Login
+class Email extends AbstractSocial
 {
-    /**
-     * @type \Magento\Customer\Model\Session
-     */
-    protected $session;
-
-    /**
-     * @type \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
-     * @type \Magento\Customer\Api\AccountManagementInterface
-     */
-    protected $accountManager;
-
-    /**
-     * @type \Mageplaza\SocialLogin\Helper\Social
-     */
-    protected $apiHelper;
-
-    /**
-     * @type \Mageplaza\SocialLogin\Model\Social
-     */
-    protected $apiObject;
-
-    /**
-     * @var \Magento\Framework\Controller\Result\RawFactory
-     */
-    protected $resultRawFactory;
-
     /**
      * @type \Magento\Framework\Controller\Result\JsonFactory
      */
     protected $resultJsonFactory;
 
     /**
-     * @var Registry
+     * @var Customer
      */
-
-    protected $_registry;
-
-    /**
-     * @var
-     */
-    protected $customerModel;
+    protected $customerFactory;
 
     /**
      * Email constructor.
@@ -97,8 +60,7 @@ class Email extends Login
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
      * @param JsonFactory $resultJsonFactory
-     * @param Customer $customerModel
-     * @param Registry $registry
+     * @param CustomerFactory $customerFactory
      */
     public function __construct(
         Context $context,
@@ -110,18 +72,20 @@ class Email extends Login
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
-        Customer $customerModel,
-        Registry $registry
+        CustomerFactory $customerFactory
     )
     {
-        parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory, $registry);
-
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->customerModel     = $customerModel;
+        $this->customerFactory   = $customerFactory;
+
+        parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory);
     }
 
     /**
-     * @return $this|array|void
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface|void
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function execute()
     {
@@ -129,35 +93,32 @@ class Email extends Login
         $resultJson = $this->resultJsonFactory->create();
 
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
-
-        $result = [
-            'success' => false,
-            'message' => [],
-            'url'     => ''
-        ];
         if (!$type) {
             $this->_forward('noroute');
 
             return;
         }
+
+        $result = ['success' => false];
+
         $realEmail = $this->getRequest()->getParam('realEmail', null);
         if (!$realEmail) {
             $result['message'] = __('Email is Null');
 
             return $resultJson->setData($result);
         }
-        $userProfile        = $this->session->getUserProfile();
-        $userProfile->email = $realEmail;
 
-        /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
-        $storeId = (int)$this->getRequest()->getParam('store', 0);
-        $store   = $this->storeManager->getStore($storeId);
-        $this->customerModel->setWebsiteId($store->getWebsiteId());
-        if ($this->customerModel->loadByEmail($userProfile->email)->getId()) {
+        $customer = $this->customerFactory->create()
+            ->setWebsiteId($this->getStore()->getWebsiteId())
+            ->loadByEmail($realEmail);
+        if ($customer->getId()) {
             $result['message'] = __('Email already exists');
 
             return $resultJson->setData($result);
         }
+
+        $userProfile        = $this->session->getUserProfile();
+        $userProfile->email = $realEmail;
 
         $customer = $this->createCustomerProcess($userProfile, $type);
         $this->refresh($customer);

@@ -221,7 +221,7 @@
                         <?php else: ?>
                         ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
                         <?php endif ?>
-                    });//.find('input:text').attr('autocomplete', 'off');
+                    });
                 });
             </script>
             <?php if ($block->getShowAddressFields()): ?>
@@ -240,8 +240,6 @@
                             }
                         }
                     }
-                
-
                 </script>
             <?php endif; ?>
         </div>

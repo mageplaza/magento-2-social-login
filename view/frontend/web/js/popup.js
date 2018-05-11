@@ -238,7 +238,7 @@ define([
             var self = this;
 
             $(this.options.fakeEmailSendBtn).on('click', this.processEmail.bind(this));
-            this.forgotForm.find('input').keypress(function (event) {
+            this.fakeEmailFrom.find('input').keypress(function (event) {
                 var code = event.keyCode || event.which;
                 if (code === 13) {
                     self.processEmail();

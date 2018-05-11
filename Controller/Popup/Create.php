@@ -156,6 +156,8 @@ class Create extends CreatePost
     }
 
     /**
+     * Check default captcha
+     *
      * @return bool
      */
     public function checkCaptcha()
