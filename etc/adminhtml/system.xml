@@ -16,7 +16,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) 2018 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
@@ -49,7 +49,8 @@
                 </field>
                 <field id="link_trigger" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Popup Links Selector</label>
-                    <comment>Comma-separated. Compatible: Etheme_YourStore[ .dropdown-menu.dropdown-menu--xs-full ]</comment>
+                    <comment>Comma-separated.</comment>
+                    <!--Compatible: Etheme_YourStore[ .dropdown-menu.dropdown-menu&#45;&#45;xs-full ]-->
                     <depends>
                         <field id="popup_login">1</field>
                     </depends>
