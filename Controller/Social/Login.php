@@ -41,9 +41,16 @@ class Login extends AbstractSocial
 
             return;
         }
-        $userProfile = $this->apiObject->getUserProfile($type);
-        if (!$userProfile->identifier) {
-            return $this->emailRedirect($type);
+
+        try {
+            $userProfile = $this->apiObject->getUserProfile($type);
+            if (!$userProfile->identifier) {
+                return $this->emailRedirect($type);
+            }
+        } catch (\Exception $e) {
+            $this->setBodyResponse($e->getMessage());
+
+            return;
         }
 
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
@@ -58,5 +65,35 @@ class Login extends AbstractSocial
         $this->refresh($customer);
 
         return $this->_appendJs();
+    }
+
+    /**
+     * @param $message
+     */
+    protected function setBodyResponse($message)
+    {
+        $content = '<html><head></head><body>';
+        $content .= '<div class="message message-error">' . __("Ooophs, we got an error: %1", $message) . '</div>';
+        $content .= <<<Style
+<style type="text/css">
+    .message{
+        background: #fffbbb;
+        border: none;
+        border-radius: 0;
+        color: #333333;
+        font-size: 1.4rem;
+        margin: 0 0 10px;
+        padding: 1.8rem 4rem 1.8rem 1.8rem;
+        position: relative;
+        text-shadow: none;
+    }
+    .message-error{
+        background:#ffcccc;
+    }
+</style>
+Style;
+        $content .= '</body></html>';
+
+        $this->getResponse()->setBody($content);
     }
 }

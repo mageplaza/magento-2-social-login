@@ -251,15 +251,10 @@ class Social extends AbstractModel
             "debug_mode" => false
         ];
 
-        try {
-            $auth    = new \Hybrid_Auth($config);
-            $adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
+        $auth    = new \Hybrid_Auth($config);
+        $adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
 
-            return $adapter->getUserProfile();
-        } catch (\Exception $e) {
-            echo __("Ooophs, we got an error: %1", $e->getMessage());
-            exit();
-        }
+        return $adapter->getUserProfile();
     }
 
     /**
