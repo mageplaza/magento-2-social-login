@@ -106,12 +106,8 @@ class Forgot extends Action
     {
         $formId       = 'user_forgotpassword';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
-        if ($captchaModel->isRequired()) {
-            if (!$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
-                return false;
-            }
-            $captchaModel->generate();
-            $result['imgSrc'] = $captchaModel->getImgSrc();
+        if ($captchaModel->isRequired() && !$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
+            return false;
         }
 
         return true;
