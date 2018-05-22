@@ -341,17 +341,18 @@ define([
                 type: 'POST',
                 data: JSON.stringify(loginData)
             }).done(function (response) {
+                response.success = !response.errors;
                 self.addMsg(self.loginFormContent, response);
-                if (response.errors) {
-                    self.reloadCaptcha('login');
-                    self.removeLoading(self.loginFormContent);
-                } else {
+                if (response.success) {
                     customerData.invalidate(['customer']);
                     if (response.redirectUrl) {
                         window.location.href = response.redirectUrl;
                     } else {
                         window.location.reload();
                     }
+                } else {
+                    self.reloadCaptcha('login');
+                    self.removeLoading(self.loginFormContent);
                 }
             }).fail(function () {
                 self.reloadCaptcha('login');
