@@ -28,13 +28,19 @@ namespace Mageplaza\SocialLogin\Controller\Social;
 class Login extends AbstractSocial
 {
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface|Login|void
+     * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface|void
+     * @throws \Exception
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function execute()
     {
+        if($this->session->isLoggedIn()){
+            $this->_redirect('customer/account');
+            return;
+        }
+
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
         if (!$type) {
             $this->_forward('noroute');
