@@ -36,7 +36,10 @@ class Login extends AbstractSocial
      */
     public function execute()
     {
-        $this->customerIsLoggedIn();
+        if ($this->checkCustomerLogin() && $this->session->isLoggedIn()) {
+            $this->_redirect('customer/account');
+            return;
+        }
 
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
         if (!$type) {
@@ -71,14 +74,11 @@ class Login extends AbstractSocial
     }
 
     /**
-     * null
+     * @return bool
      */
-    public function customerIsLoggedIn()
+    public function checkCustomerLogin()
     {
-        if($this->session->isLoggedIn()){
-            $this->_redirect('customer/account');
-        }
-        return;
+        return true;
     }
 
     /**
