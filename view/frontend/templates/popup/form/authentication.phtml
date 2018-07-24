@@ -32,10 +32,11 @@
             <form class="form-customer-login" id="social-form-login" data-mage-init='{"validation":{}}'>
                 <?php echo $block->getBlockHtml('formkey'); ?>
                 <fieldset class="fieldset login" data-hasrequired="<?php echo __('* Required Fields') ?>">
+                    <?php echo $block->getChildHtml('form_before_login_fields'); ?>
                     <div class="field email required">
-                        <label class="label" for="email"><span><?php echo __('Email') ?></span></label>
+                        <label class="label" for="social_login_email"><span><?php echo __('Email') ?></span></label>
                         <div class="control">
-                            <input name="username" id="email" type="email" class="input-text"
+                            <input name="username" id="social_login_email" type="email" class="input-text"
                                    value="<?php echo $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php endif; ?>
                                    title="<?php echo __('Email') ?>"
                                    data-validate="{required:true, 'validate-email':true}">
@@ -44,7 +45,7 @@
                     <div class="field password required">
                         <label for="pass" class="label"><span><?php echo __('Password') ?></span></label>
                         <div class="control">
-                            <input name="password" id="pass" type="password"
+                            <input name="password" id="social_login_pass" type="password"
                                    class="input-text"<?php if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php endif; ?>
                                    title="<?php echo __('Password') ?>"
                                    data-validate="{required:true, 'validate-password':true}">
