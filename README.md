@@ -13,11 +13,15 @@
 
 ## 1. Documentation
 
-- Download from our Live site: https://www.mageplaza.com/magento-2-social-login-extension/
-- Installation guide: https://www.mageplaza.com/install-magento-2-extension/
-- User Guide: https://docs.mageplaza.com/social-login-m2/index.html
-- Contribute on Github: https://github.com/mageplaza/magento-2-social-login/
-- Get Support: https://github.com/mageplaza/magento-2-social-login/issues
+- [Installation guide](https://www.mageplaza.com/install-magento-2-extension/)
+- [User Guide](https://docs.mageplaza.com/social-login-m2/index.html)
+- [Download from our Live site](https://www.mageplaza.com/magento-2-social-login-extension/)
+- [Get Free Support](https://github.com/mageplaza/magento-2-social-login/issues)
+- Get premium support from Mageplaza: [Purchase Support package](https://www.mageplaza.com/magento-2-extension-support-package/)
+- [Contribute on Github](https://github.com/mageplaza/magento-2-social-login/)
+- [Releases](https://github.com/mageplaza/magento-2-social-login/releases)
+- [License](https://www.mageplaza.com/LICENSE.txt)
+
 
 ## 2. How to install
 
