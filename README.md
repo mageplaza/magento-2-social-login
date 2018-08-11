@@ -64,87 +64,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 
 
-## 4. SWEET MAGEPLAZA EXTENSIONS TO BRING YOU MORE MONEY
-
-### ✓ One Step Checkout
-
-☞ ↑30% INCREASE CONVERSION RATE 
-
-☞ ↓66% DECREASE ABANDONMENT CART
-
-☞ ↓80% REDUCE CHECKOUT TIME
-
-### ✓ Layered Navigation
-
-☞ ↑84% USER'S FILTERING EXPERIENCE
-
-☞ ↑25% CONVERSION RATE
-
-☞ ↓67% SHOPPING TIME
-
-### ✓ Frequently Bought Together
-
-☞ Amazon Product Recommendation Solution
- 
-☞ AJAX loading for better performance
-
-☞ Support Custom Options and all product types
-
-
-
-### ✓ Gift Card
-
-☞ Physical, virtual or combined gift cards
- 
-☞ Different gift card values from prices
-
-☞ Send cards via email, SMS, post office or messenger
-
-
-### ✓ Who Bought This Also Bought
-
-☞ Display on Product Page, Category Page, Shopping Cart page
-
-☞ AJAX loading for better performance.
-
-☞ Flexible layout and design.
-
-
-### ✓ Social Login
-
-☞ Increase signup rate up-to 30%
-
-☞ Supports 11 Types: Facebook, Google Plus, Twitter, Linkedin, Instagram, Yahoo, Github, Foursquare, VK, Live, Amazon
-
-☞ Easy custom design fit with your store design
-
-☞ [Social Login on Github](https://github.com/mageplaza/magento-2-social-login)
-
-
-
-### ✓ Shop By Brand
-
-☞ Fully Compatible with Layered Navigation
-
-☞ Instant Search brands
-
-☞ Import brands
-
-
-
-
-### ✓ Affiliate
-
-☞ Multiple Affiliate Campaigns
-
-☞ Smart Referral Links
-
-☞ Affiliate Report
-
-
-
-
-## 5. User guide
+## 4. User guide
 
 
 Customers are not patient enough to fill a lot of required information while those are available in social account as Facebook, LinkedIn, Instagram,.... [Magento 2 Social Login extension by Mageplaza](https://www.mageplaza.com/magento-2-social-login-extension/), your customers only need to click on the social button and all necessary information is completed automatically.That is the main reason why Magento Social Login extension is considered as the great solution for that convenience.
@@ -296,7 +216,7 @@ The login box will display as popup checkbox after clicking on Instagram Sign In
 
 
 
-## CHANGELOG 
+## 5. CHANGELOG 
 
 ### Social Login v2.3.7
 Released on  2017-08-09
