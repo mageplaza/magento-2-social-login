@@ -184,6 +184,28 @@
                     </div>
                     <?php echo $block->getChildHtml('form_additional_info'); ?>
                     <?php echo $block->getChildHtml('create.captcha'); ?>
+
+                    <?php if($block->isGdprProEnabled()): ?>
+                        <?php
+                        /** @var \Mageplaza\GdprPro\Helper\Data $helper */
+                        $helper = $this->helper(\Mageplaza\GdprPro\Helper\Data::class);
+                        ?>
+                        <?php if ($helper->getEnableTermAndCondition()): ?>
+                            <div class="field register-tac-container">
+                                <label for="tac-content" class="label"><span><?php echo $block->escapeHtml(__('Terms and Conditions')) ?></span></label>
+                                <div class="control">
+                          <span class="tac-content" id="tac-content">
+                              <?php echo $helper->getTermAndConditionContent(); ?>
+                          </span>
+                                </div>
+                            </div>
+                            <div class="field choice checkbox-tac required">
+                                <input type="checkbox" name="agree_gdpr_tac" title="<?php echo $helper->getTitleCheckboxTAC() ?>" value="1" id="agree_gdpr_tac" class="checkbox" data-validate="{required:true}">
+                                <label for="agree_gdpr_tac" class="label"><span><?php echo $helper->getTitleCheckboxTAC() ?></span></label>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">

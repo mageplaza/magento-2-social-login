@@ -20,7 +20,6 @@
  */
 
 namespace Mageplaza\SocialLogin\Block\Form;
-
 /**
  * Class Register
  *
@@ -34,5 +33,9 @@ class Register extends \Magento\Customer\Block\Form\Register
     protected function _prepareLayout()
     {
         return $this;
+    }
+
+    public function isGdprProEnabled() {
+        return $this->_moduleManager->isEnabled('Mageplaza_GdprPro');
     }
 }
