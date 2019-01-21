@@ -134,6 +134,8 @@ define([
                 headerLink.magnificPopup({
                     delegate: 'a.social-login',
                     removalDelay: 500,
+                    tClose: $t('Close (Esc)'),
+                    tLoading: $t('Loading...'),
                     callbacks: {
                         beforeOpen: function () {
                             this.st.mainClass = this.st.el.attr('data-effect');
