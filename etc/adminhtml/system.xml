@@ -91,7 +91,7 @@
                 <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[Create app <a href="https://developers.facebook.com/apps" target="_bank">here</a>]]></comment>
+                    <comment><![CDATA[<a href="http://docs.mageplaza.com/social-login-m2/how-to-configure-facebook-api.html" target="_blank">How to configure Facebook Login</a>. Create app <a href="https://developers.facebook.com/apps" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Facebook App Id</label>
@@ -126,7 +126,7 @@
                 <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[Create app <a href="https://code.google.com/apis/console/" target="_bank">here</a>]]></comment>
+                    <comment><![CDATA[<a href="http://docs.mageplaza.com/social-login-m2/how-to-configure-google-api.html" target="_blank">How to configure Google Login</a>. Create app <a href="https://console.developers.google.com/" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
