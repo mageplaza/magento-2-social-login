@@ -166,6 +166,12 @@ abstract class AbstractSocial extends Action
         if (!$customer->getId()) {
             try {
                 $customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
+
+                $this->_eventManager->dispatch(
+                    'customer_register_success',
+                    ['account_controller' => $this, 'customer' => $customer]
+                );
+
             } catch (\Exception $e) {
                 $this->emailRedirect($e->getMessage(), false);
 
