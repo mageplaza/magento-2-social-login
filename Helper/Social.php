@@ -87,7 +87,7 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Instagram']],
             'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\GitHub']],
             'Amazon'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Amazon']],
-            'Google'    => ['scope' => 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/plus.profile.emails.read']
+            'Google'    => ['scope' => 'profile email']
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
