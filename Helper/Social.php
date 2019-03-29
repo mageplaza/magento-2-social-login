@@ -38,6 +38,7 @@ class Social extends HelperData
 
     /**
      * @param null $type
+     *
      * @return null
      */
     public function setType($type)
@@ -73,6 +74,7 @@ class Social extends HelperData
 
     /**
      * @param $type
+     *
      * @return array
      */
     public function getSocialConfig($type)
@@ -105,6 +107,7 @@ class Social extends HelperData
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function isEnabled($storeId = null)
@@ -114,6 +117,7 @@ class Social extends HelperData
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getAppId($storeId = null)
@@ -125,6 +129,7 @@ class Social extends HelperData
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getAppSecret($storeId = null)
@@ -136,6 +141,7 @@ class Social extends HelperData
 
     /**
      * @param $type
+     *
      * @return mixed|string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -149,13 +155,16 @@ class Social extends HelperData
                 $param = 'hauth_done=' . $type;
                 break;
             case 'Live':
-                $param = null;
+                $param = 'live.php';
                 break;
             case 'Yahoo':
                 return $this->getDomainUrl();
                 break;
             default:
                 $param = 'hauth.done=' . $type;
+        }
+        if ($type == 'Live') {
+            return $authUrl . $param;
         }
 
         return $authUrl . ($param ? (strpos($authUrl, '?') ? '&' : '?') . $param : '');
@@ -220,7 +229,8 @@ class Social extends HelperData
             'foursquare' => 'Foursquare',
             'vkontakte'  => 'Vkontakte',
             'instagram'  => 'Instagram',
-            'github'     => 'Github'
+            'github'     => 'Github',
+            'live'       => 'Live'
         ];
     }
 }

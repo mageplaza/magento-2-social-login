@@ -33,6 +33,12 @@ class Callback extends AbstractSocial
      */
     public function execute()
     {
+        $param = $this->getRequest()->getParams();
+
+        if (isset($param['live.php'])) {
+            $_REQUEST['hauth_done'] = 'Live';
+        }
+
         if ($this->checkRequest('hauth_start', false) && (
                 $this->checkRequest('error_reason', 'user_denied')
                 && $this->checkRequest('error', 'access_denied')
@@ -49,6 +55,7 @@ class Callback extends AbstractSocial
     /**
      * @param $key
      * @param null $value
+     *
      * @return bool|mixed
      */
     public function checkRequest($key, $value = null)

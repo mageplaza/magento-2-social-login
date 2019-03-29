@@ -1503,3 +1503,55 @@
 .mfp-wrap {
     overflow: scroll;
 }
+
+.btn-live {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-live:focus, .btn-live.focus {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-live:hover {
+    color: #fff;
+    background-color: #30548e;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-live:active, .btn-live.active, .open > .dropdown-toggle.btn-live {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-live:active:hover, .btn-live.active:hover, .open > .dropdown-toggle.btn-live:hover, .btn-live:active:focus, .btn-live.active:focus, .open > .dropdown-toggle.btn-live:focus, .btn-live:active.focus, .btn-live.active.focus, .open > .dropdown-toggle.btn-live.focus {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-live:active, .btn-live.active, .open > .dropdown-toggle.btn-live {
+    background-image: none
+}
+
+.btn-live.disabled:hover, .btn-live[disabled]:hover, fieldset[disabled] .btn-live:hover, .btn-live.disabled:focus, .btn-live[disabled]:focus, fieldset[disabled] .btn-live:focus, .btn-live.disabled.focus, .btn-live[disabled].focus, fieldset[disabled] .btn-live.focus {
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-live .badge {
+    color: #0370c4;
+    background-color: #fff
+}
+
+.btn-live .fa-live {
+    background: url("images/live-logo.png") no-repeat center;
+}
+
+.btn-live .fa-live:before {
+    content: ""
+}
