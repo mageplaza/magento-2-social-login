@@ -15,12 +15,14 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Model;
 
+use Exception;
+use Hybrid_Auth;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
@@ -30,6 +32,7 @@ use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\State\InputMismatchException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
@@ -45,12 +48,12 @@ use Magento\Store\Model\StoreManagerInterface;
 class Social extends AbstractModel
 {
     /**
-     * @type \Magento\Store\Model\StoreManagerInterface
+     * @type StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * @type \Magento\Customer\Model\CustomerFactory
+     * @type CustomerFactory
      */
     protected $customerFactory;
 
@@ -98,15 +101,14 @@ class Social extends AbstractModel
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
-        $this->customerFactory     = $customerFactory;
-        $this->customerRepository  = $customerRepository;
+        $this->customerFactory = $customerFactory;
+        $this->customerRepository = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
-        $this->storeManager        = $storeManager;
-        $this->apiHelper           = $apiHelper;
+        $this->storeManager = $storeManager;
+        $this->apiHelper = $apiHelper;
     }
 
     /**
@@ -121,7 +123,7 @@ class Social extends AbstractModel
      * @param $identify
      * @param $type
      * @return Customer
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getCustomerBySocial($identify, $type)
     {
@@ -141,12 +143,12 @@ class Social extends AbstractModel
     /**
      * @param $email
      * @param null $websiteId
-     * @return \Magento\Customer\Model\Customer
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return Customer
+     * @throws LocalizedException
      */
     public function getCustomerByEmail($email, $websiteId = null)
     {
-        /** @var \Magento\Customer\Model\Customer $customer */
+        /** @var Customer $customer */
         $customer = $this->customerFactory->create();
 
         $customer->setWebsiteId($websiteId ?: $this->storeManager->getWebsite()->getId());
@@ -159,7 +161,7 @@ class Social extends AbstractModel
      * @param $data
      * @param $store
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function createCustomerSocial($data, $store)
     {
@@ -176,9 +178,9 @@ class Social extends AbstractModel
             // If customer exists existing hash will be used by Repository
             $customer = $this->customerRepository->save($customer);
 
-            $objectManager     = \Magento\Framework\App\ObjectManager::getInstance();
-            $mathRandom        = $objectManager->get('Magento\Framework\Math\Random');
-            $newPasswordToken  = $mathRandom->getUniqueHash();
+            $objectManager = ObjectManager::getInstance();
+            $mathRandom = $objectManager->get('Magento\Framework\Math\Random');
+            $newPasswordToken = $mathRandom->getUniqueHash();
             $accountManagement = $objectManager->get('Magento\Customer\Api\AccountManagementInterface');
             $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
 
@@ -191,7 +193,7 @@ class Social extends AbstractModel
             throw new InputMismatchException(
                 __('A customer with the same email already exists in an associated website.')
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($customer->getId()) {
                 $this->_registry->register('isSecureArea', true, true);
                 $this->customerRepository->deleteById($customer->getId());
@@ -220,7 +222,7 @@ class Social extends AbstractModel
      * @param $customerId
      * @param $type
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function setAuthorCustomer($identifier, $customerId, $type)
     {
@@ -239,7 +241,7 @@ class Social extends AbstractModel
     /**
      * @param $apiName
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getUserProfile($apiName)
     {
@@ -251,7 +253,7 @@ class Social extends AbstractModel
             "debug_mode" => false
         ];
 
-        $auth    = new \Hybrid_Auth($config);
+        $auth = new Hybrid_Auth($config);
         $adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
 
         return $adapter->getUserProfile();

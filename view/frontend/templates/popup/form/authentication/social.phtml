@@ -15,23 +15,26 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
+use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
+
 ?>
 <?php $availableSocials = $block->getAvailableSocials(); ?>
-<?php if ($block->canShow(\Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_POPUP) && sizeof($availableSocials)): ?>
+<?php if ($block->canShow(Position::PAGE_POPUP) && sizeof($availableSocials)) : ?>
     <div class="block social-login-authentication-channel col-mp mp-5">
         <div class="block-title">
-            <?php echo __('Or Sign In With') ?>
+            <?= __('Or Sign In With') ?>
         </div>
         <div class="block-content">
-            <?php foreach ($availableSocials as $key => $social): ?>
+            <?php foreach ($availableSocials as $key => $social) : ?>
                 <div class="actions-toolbar social-btn <?= $key ?>-login">
                     <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
-                       data-mage-init='{"socialProvider": {"url": "<?php echo $social['login_url'] ?>", "label": "<?php echo __('Login By %1', $social['label']) ?>"}}'>
+                       data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'>
                         <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
-                        <?php echo __('Sign in with %1', $social['label']) ?>
+                        <?= __('Sign in with %1', $social['label']) ?>
                     </a>
                 </div>
             <?php endforeach; ?>
@@ -50,8 +53,8 @@
  */
 ?>
 <?php $authenConfig = $block->getSocialButtonsConfig(); ?>
-<?php if ($block->canShow(\Mageplaza\SocialLogin\Model\System\Config\Source\Position::PAGE_AUTHEN) && sizeof($availableSocials)): ?>
+<?php if ($block->canShow(Position::PAGE_AUTHEN) && sizeof($availableSocials)) : ?>
     <script>
-        window.socialAuthenticationPopup = <?php /* @escapeNotVerified */ echo \Zend_Json::encode($authenConfig); ?>;
+        window.socialAuthenticationPopup = <?= Zend_Json::encode($authenConfig); ?>;
     </script>
 <?php endif; ?>

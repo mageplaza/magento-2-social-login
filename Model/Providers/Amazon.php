@@ -7,6 +7,10 @@
 
 namespace Mageplaza\SocialLogin\Model\Providers;
 
+use Exception;
+use Hybrid_Auth;
+use Hybrid_Provider_Model_OAuth2;
+use Hybrid_User_Profile;
 use Magento\Framework\App\ObjectManager;
 use Mageplaza\SocialLogin\Model\Providers\Amazon\AmazonOAuth2Client;
 
@@ -23,19 +27,19 @@ use Mageplaza\SocialLogin\Model\Providers\Amazon\AmazonOAuth2Client;
  *
  * @property OAuth2Client $api
  */
-class Amazon extends \Hybrid_Provider_Model_OAuth2
+class Amazon extends Hybrid_Provider_Model_OAuth2
 {
     // default permissions
     public $scope = 'profile postal_code';
 
     /**
      * IDp wrappers initializer
-     * @throws \Exception
+     * @throws Exception
      */
     function initialize()
     {
         if (!$this->config['keys']['id'] || !$this->config['keys']['secret']) {
-            throw new \Exception("Your application id and secret are required in order to connect to {$this->providerId}.", 4);
+            throw new Exception("Your application id and secret are required in order to connect to {$this->providerId}.", 4);
         }
 
         // override requested scope
@@ -50,42 +54,42 @@ class Amazon extends \Hybrid_Provider_Model_OAuth2
             'redirect_uri'  => $this->endpoint, 'compressed' => $this->compressed
         ]);
 
-        $this->api->api_base_url  = 'https://api.amazon.com';
+        $this->api->api_base_url = 'https://api.amazon.com';
         $this->api->authorize_url = 'https://www.amazon.com/ap/oa';
-        $this->api->token_url     = 'https://api.amazon.com/auth/o2/token';
+        $this->api->token_url = 'https://api.amazon.com/auth/o2/token';
 
         $this->api->curl_header = ['Content-Type: application/x-www-form-urlencoded'];
 
         // If we have an access token, set it
         if ($this->token('access_token')) {
-            $this->api->access_token            = $this->token('access_token');
-            $this->api->refresh_token           = $this->token('refresh_token');
+            $this->api->access_token = $this->token('access_token');
+            $this->api->refresh_token = $this->token('refresh_token');
             $this->api->access_token_expires_in = $this->token('expires_in');
             $this->api->access_token_expires_at = $this->token('expires_at');
         }
 
         // Set curl proxy if exists
-        if (isset(\Hybrid_Auth::$config['proxy'])) {
-            $this->api->curl_proxy = \Hybrid_Auth::$config['proxy'];
+        if (isset(Hybrid_Auth::$config['proxy'])) {
+            $this->api->curl_proxy = Hybrid_Auth::$config['proxy'];
         }
     }
 
     /**
      * load the user profile from the IDp api client
-     * @return \Hybrid_User_Profile
-     * @throws \Exception
+     * @return Hybrid_User_Profile
+     * @throws Exception
      */
     function getUserProfile()
     {
         $data = $this->api->get('/user/profile');
         if (!isset($data->user_id)) {
-            throw new \Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
+            throw new Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }
 
-        $this->user->profile->identifier  = @ $data->user_id;
-        $this->user->profile->email       = @ $data->email;
-        $this->user->profile->displayName = @ $data->name;
-        $this->user->profile->zip         = @ $data->postal_code;
+        $this->user->profile->identifier = $data->user_id;
+        $this->user->profile->email = $data->email;
+        $this->user->profile->displayName = $data->name;
+        $this->user->profile->zip = $data->postal_code;
 
         return $this->user->profile;
     }

@@ -15,11 +15,19 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
+
+use Exception;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Raw;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 
 /**
  * Class Login
@@ -28,16 +36,17 @@ namespace Mageplaza\SocialLogin\Controller\Social;
 class Login extends AbstractSocial
 {
     /**
-     * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface|void
-     * @throws \Exception
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return $this|ResponseInterface|Raw|ResultInterface|void
+     * @throws Exception
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws FailureToSendException
      */
     public function execute()
     {
         if ($this->checkCustomerLogin() && $this->session->isLoggedIn()) {
             $this->_redirect('customer/account');
+
             return;
         }
 
@@ -53,7 +62,7 @@ class Login extends AbstractSocial
             if (!$userProfile->identifier) {
                 return $this->emailRedirect($type);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->setBodyResponse($e->getMessage());
 
             return;

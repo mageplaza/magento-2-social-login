@@ -15,21 +15,21 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 $availableSocials = $block->getAvailableSocials();
-if ($block->canShow() && sizeof($availableSocials)):
+if ($block->canShow() && sizeof($availableSocials)) :
     ?>
     <div class="block social-login-authentication-channel account-social-login">
         <div class="block-content">
-            <?php foreach ($availableSocials as $key => $social): ?>
+            <?php foreach ($availableSocials as $key => $social) : ?>
                 <div class="actions-toolbar social-btn social-btn-actions-toolbar <?= $key ?>-login">
                     <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
-                       data-mage-init='{"socialProvider": {"url": "<?php echo $social['login_url'] ?>", "label": "<?php echo __('Login By %1', $social['label']) ?>"}}'>
+                       data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'>
                         <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
-                        <?php echo __('Sign in with %1', $social['label']) ?>
+                        <?= __('Sign in with %1', $social['label']) ?>
                     </a>
                 </div>
             <?php endforeach; ?>

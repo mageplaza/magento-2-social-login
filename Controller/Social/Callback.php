@@ -15,11 +15,13 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
+
+use Hybrid_Endpoint;
 
 /**
  * Class Callback
@@ -33,6 +35,12 @@ class Callback extends AbstractSocial
      */
     public function execute()
     {
+        $param = $this->getRequest()->getParams();
+
+        if (isset($param['live.php'])) {
+            $_REQUEST['hauth_done'] = 'Live';
+        }
+
         if ($this->checkRequest('hauth_start', false) && (
                 $this->checkRequest('error_reason', 'user_denied')
                 && $this->checkRequest('error', 'access_denied')
@@ -43,12 +51,13 @@ class Callback extends AbstractSocial
             return $this->_appendJs(sprintf("<script>window.close();</script>"));
         }
 
-        \Hybrid_Endpoint::process();
+        Hybrid_Endpoint::process();
     }
 
     /**
      * @param $key
      * @param null $value
+     *
      * @return bool|mixed
      */
     public function checkRequest($key, $value = null)

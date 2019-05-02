@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -24,6 +24,7 @@ namespace Mageplaza\SocialLogin\Block\System;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field as FormField;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Exception\LocalizedException;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 
 /**
@@ -34,22 +35,21 @@ use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 class RedirectUrl extends FormField
 {
     /**
-     * @type \Mageplaza\SocialLogin\Helper\Social
+     * @type SocialHelper
      */
     protected $socialHelper;
 
     /**
      * RedirectUrl constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Social $socialHelper
+     * @param Context $context
+     * @param SocialHelper $socialHelper
      * @param array $data
      */
     public function __construct(
         Context $context,
         SocialHelper $socialHelper,
         array $data = []
-    )
-    {
+    ) {
         $this->socialHelper = $socialHelper;
         parent::__construct($context, $data);
     }
@@ -57,13 +57,13 @@ class RedirectUrl extends FormField
     /**
      * @param AbstractElement $element
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $elementId   = explode('_', $element->getHtmlId());
+        $elementId = explode('_', $element->getHtmlId());
         $redirectUrl = $this->socialHelper->getAuthUrl($elementId[1]);
-        $html        = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
+        $html = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
 
         return $html;
     }

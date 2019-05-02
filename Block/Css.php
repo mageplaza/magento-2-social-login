@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -33,22 +33,21 @@ use Mageplaza\SocialLogin\Helper\Data as DataHelper;
 class Css extends Template
 {
     /**
-     * @type \Mageplaza\SocialLogin\Helper\Data
+     * @type DataHelper
      */
     protected $_helper;
 
     /**
      * Css constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Data $helper
+     * @param Context $context
+     * @param DataHelper $helper
      * @param array $data
      */
     public function __construct(
         Context $context,
         DataHelper $helper,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->_helper = $helper;
@@ -65,7 +64,7 @@ class Css extends Template
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
-            } else if (in_array($this->_request->getFullActionName(), ['customer_account_login', 'customer_account_create'])) {
+            } elseif (in_array($this->_request->getFullActionName(), ['customer_account_login', 'customer_account_create'])) {
                 $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
             }
@@ -75,7 +74,7 @@ class Css extends Template
     }
 
     /**
-     * @return \Mageplaza\SocialLogin\Helper\Data
+     * @return DataHelper
      */
     public function helper()
     {

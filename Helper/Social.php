@@ -15,13 +15,15 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Helper;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
 
 /**
@@ -38,6 +40,7 @@ class Social extends HelperData
 
     /**
      * @param null $type
+     *
      * @return null
      */
     public function setType($type)
@@ -73,6 +76,7 @@ class Social extends HelperData
 
     /**
      * @param $type
+     *
      * @return array
      */
     public function getSocialConfig($type)
@@ -85,7 +89,7 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Instagram']],
             'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\GitHub']],
             'Amazon'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Amazon']],
-            'Google'    => ['scope' => 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/plus.profile.emails.read']
+            'Google'    => ['scope' => 'profile email']
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
@@ -105,6 +109,7 @@ class Social extends HelperData
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function isEnabled($storeId = null)
@@ -114,6 +119,7 @@ class Social extends HelperData
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getAppId($storeId = null)
@@ -125,6 +131,7 @@ class Social extends HelperData
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getAppSecret($storeId = null)
@@ -136,8 +143,9 @@ class Social extends HelperData
 
     /**
      * @param $type
+     *
      * @return mixed|string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getAuthUrl($type)
     {
@@ -149,7 +157,7 @@ class Social extends HelperData
                 $param = 'hauth_done=' . $type;
                 break;
             case 'Live':
-                $param = null;
+                $param = 'live.php';
                 break;
             case 'Yahoo':
                 return $this->getDomainUrl();
@@ -157,17 +165,20 @@ class Social extends HelperData
             default:
                 $param = 'hauth.done=' . $type;
         }
+        if ($type == 'Live') {
+            return $authUrl . $param;
+        }
 
         return $authUrl . ($param ? (strpos($authUrl, '?') ? '&' : '?') . $param : '');
     }
 
     /**
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getDomainUrl()
     {
-        $url   = $this->getBaseAuthUrl();
+        $url = $this->getBaseAuthUrl();
         $parse = parse_url($url);
 
         return $parse['host'];
@@ -175,12 +186,12 @@ class Social extends HelperData
 
     /**
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getBaseAuthUrl()
     {
         $storeId = $this->getScopeUrl();
-        /** @var \Magento\Store\Model\Store $store */
+        /** @var Store $store */
         $store = $this->storeManager->getStore($storeId);
 
         return $this->_getUrl('sociallogin/social/callback', [
@@ -192,7 +203,7 @@ class Social extends HelperData
 
     /**
      * @return int
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function getScopeUrl()
     {
@@ -220,7 +231,8 @@ class Social extends HelperData
             'foursquare' => 'Foursquare',
             'vkontakte'  => 'Vkontakte',
             'instagram'  => 'Instagram',
-            'github'     => 'Github'
+            'github'     => 'Github',
+            'live'       => 'Live'
         ];
     }
 }

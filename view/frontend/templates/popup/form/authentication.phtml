@@ -15,63 +15,66 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 ?>
 <div class="social-login block-container authentication">
     <div class="social-login-title">
-        <h2 class="login-title"><?php echo __('Sign In') ?></h2>
+        <h2 class="login-title"><?= __('Sign In') ?></h2>
     </div>
     <div class="block social-login-customer-authentication col-mp mp-12" id="social-login-authentication">
         <div class="block-title">
             <span id="block-customer-login-heading" role="heading"
-                  aria-level="2"><?php echo __('Registered Customers') ?></span>
+                  aria-level="2"><?= __('Registered Customers') ?></span>
         </div>
         <div class="block-content" aria-labelledby="block-customer-login-heading">
             <form class="form-customer-login" id="social-form-login" data-mage-init='{"validation":{}}'>
-                <?php echo $block->getBlockHtml('formkey'); ?>
-                <fieldset class="fieldset login" data-hasrequired="<?php echo __('* Required Fields') ?>">
-                    <?php echo $block->getChildHtml('form_before_login_fields'); ?>
+                <?= $block->getBlockHtml('formkey') ?>
+                <fieldset class="fieldset login" data-hasrequired="<?= __('* Required Fields') ?>">
+                    <?= $block->getChildHtml('form_before_login_fields') ?>
                     <div class="field email required">
-                        <label class="label" for="social_login_email"><span><?php echo __('Email') ?></span></label>
+                        <label class="label" for="social_login_email"><span><?= __('Email') ?></span></label>
                         <div class="control">
                             <input name="username" id="social_login_email" type="email" class="input-text"
-                                   value="<?php echo $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php endif; ?>
-                                   title="<?php echo __('Email') ?>"
+                                   value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()) :
+                                ?> autocomplete="off"<?php
+                            endif; ?>
+                                   title="<?= __('Email') ?>"
                                    data-validate="{required:true, 'validate-email':true}">
                         </div>
                     </div>
                     <div class="field password required">
-                        <label for="pass" class="label"><span><?php echo __('Password') ?></span></label>
+                        <label for="pass" class="label"><span><?= __('Password') ?></span></label>
                         <div class="control">
                             <input name="password" id="social_login_pass" type="password"
-                                   class="input-text"<?php if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php endif; ?>
-                                   title="<?php echo __('Password') ?>"
+                                   class="input-text"
+                                <?= $block->isAutocompleteDisabled() ? ' autocomplete="off"' : '' ?>
+                                   title="<?= __('Password') ?>"
                                    data-validate="{required:true, 'validate-password':true}">
                         </div>
                     </div>
-                    <?php echo $block->getChildHtml('form_additional_info'); ?>
-                    <?php echo $block->getChildHtml('login.captcha') ?>
+                    <?= $block->getChildHtml('form_additional_info'); ?>
+                    <?= $block->getChildHtml('login.captcha') ?>
                     <div class="actions-toolbar">
                         <div class="primary">
                             <button type="button" class="action login primary" id="bnt-social-login-authentication">
-                                <span><?php echo __('Login') ?></span>
+                                <span><?= __('Login') ?></span>
                             </button>
                         </div>
                         <div class="secondary">
-                            <a class="action remind" href="#"><span><?php echo __('Forgot Your Password?') ?></span></a>
+                            <a class="action remind" href="#"><span><?= __('Forgot Your Password?') ?></span></a>
                         </div>
                     </div>
                     <div class="actions-toolbar">
                         <div class="primary">
-                            <a class="action create" href="#"><span><?php echo __('Create New Account?') ?></span></a>
+                            <a class="action create" href="#"><span><?= __('Create New Account?') ?></span></a>
                         </div>
                     </div>
                 </fieldset>
             </form>
         </div>
     </div>
-    <?php echo $block->getChildHtml('popup.authentication.social') ?>
+    <?= $block->getChildHtml('popup.authentication.social') ?>
 </div>
 
