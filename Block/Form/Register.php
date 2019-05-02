@@ -15,11 +15,12 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Block\Form;
+
 /**
  * Class Register
  *
@@ -35,7 +36,8 @@ class Register extends \Magento\Customer\Block\Form\Register
         return $this;
     }
 
-    public function isGdprProEnabled() {
+    public function isGdprProEnabled()
+    {
         return $this->_moduleManager->isEnabled('Mageplaza_GdprPro');
     }
 }

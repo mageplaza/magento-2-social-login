@@ -15,22 +15,29 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
 
+use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
@@ -43,27 +50,27 @@ use Mageplaza\SocialLogin\Model\Social;
 abstract class AbstractSocial extends Action
 {
     /**
-     * @type \Magento\Customer\Model\Session
+     * @type Session
      */
     protected $session;
 
     /**
-     * @type \Magento\Store\Model\StoreManagerInterface
+     * @type StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * @type \Magento\Customer\Api\AccountManagementInterface
+     * @type AccountManagementInterface
      */
     protected $accountManager;
 
     /**
-     * @type \Mageplaza\SocialLogin\Helper\Social
+     * @type SocialHelper
      */
     protected $apiHelper;
 
     /**
-     * @type \Mageplaza\SocialLogin\Model\Social
+     * @type Social
      */
     protected $apiObject;
 
@@ -83,7 +90,7 @@ abstract class AbstractSocial extends Action
     protected $cookieMetadataFactory;
 
     /**
-     * @var \Magento\Framework\Controller\Result\RawFactory
+     * @var RawFactory
      */
     protected $resultRawFactory;
 
@@ -107,23 +114,22 @@ abstract class AbstractSocial extends Action
         Session $customerSession,
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory
-    )
-    {
+    ) {
         parent::__construct($context);
 
-        $this->storeManager     = $storeManager;
-        $this->accountManager   = $accountManager;
-        $this->apiHelper        = $apiHelper;
-        $this->apiObject        = $apiObject;
-        $this->session          = $customerSession;
-        $this->accountRedirect  = $accountRedirect;
+        $this->storeManager = $storeManager;
+        $this->accountManager = $accountManager;
+        $this->apiHelper = $apiHelper;
+        $this->apiObject = $apiObject;
+        $this->session = $customerSession;
+        $this->accountRedirect = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
     }
 
     /**
      * Get Store object
      *
-     * @return \Magento\Store\Api\Data\StoreInterface
+     * @return StoreInterface
      */
     public function getStore()
     {
@@ -133,9 +139,9 @@ abstract class AbstractSocial extends Action
     /**
      * @param $userProfile
      * @param $type
-     * @return bool|\Magento\Customer\Model\Customer|mixed
-     * @throws \Exception
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return bool|Customer|mixed
+     * @throws Exception
+     * @throws LocalizedException
      */
     public function createCustomerProcess($userProfile, $type)
     {
@@ -156,9 +162,9 @@ abstract class AbstractSocial extends Action
      *
      * @param $user
      * @param $type
-     * @return bool|\Magento\Customer\Model\Customer|mixed
-     * @throws \Exception
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return bool|Customer|mixed
+     * @throws Exception
+     * @throws LocalizedException
      */
     public function createCustomer($user, $type)
     {
@@ -166,7 +172,7 @@ abstract class AbstractSocial extends Action
         if (!$customer->getId()) {
             try {
                 $customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->emailRedirect($e->getMessage(), false);
 
                 return false;
@@ -236,11 +242,11 @@ abstract class AbstractSocial extends Action
      * Return javascript to redirect when login success
      *
      * @param null $content
-     * @return \Magento\Framework\Controller\Result\Raw
+     * @return Raw
      */
     public function _appendJs($content = null)
     {
-        /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
+        /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
 
         return $resultRaw->setContents($content ?: sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
@@ -248,8 +254,8 @@ abstract class AbstractSocial extends Action
 
     /**
      * @param $customer
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws InputException
+     * @throws FailureToSendException
      */
     public function refresh($customer)
     {
@@ -268,8 +274,8 @@ abstract class AbstractSocial extends Action
     /**
      * Retrieve cookie manager
      *
+     * @return PhpCookieManager
      * @deprecated
-     * @return \Magento\Framework\Stdlib\Cookie\PhpCookieManager
      */
     private function getCookieManager()
     {
@@ -285,8 +291,8 @@ abstract class AbstractSocial extends Action
     /**
      * Retrieve cookie metadata factory
      *
+     * @return CookieMetadataFactory
      * @deprecated
-     * @return \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
      */
     private function getCookieMetadataFactory()
     {

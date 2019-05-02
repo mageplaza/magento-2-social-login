@@ -15,13 +15,15 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Helper;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
 
 /**
@@ -143,7 +145,7 @@ class Social extends HelperData
      * @param $type
      *
      * @return mixed|string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getAuthUrl($type)
     {
@@ -172,11 +174,11 @@ class Social extends HelperData
 
     /**
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getDomainUrl()
     {
-        $url   = $this->getBaseAuthUrl();
+        $url = $this->getBaseAuthUrl();
         $parse = parse_url($url);
 
         return $parse['host'];
@@ -184,12 +186,12 @@ class Social extends HelperData
 
     /**
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getBaseAuthUrl()
     {
         $storeId = $this->getScopeUrl();
-        /** @var \Magento\Store\Model\Store $store */
+        /** @var Store $store */
         $store = $this->storeManager->getStore($storeId);
 
         return $this->_getUrl('sociallogin/social/callback', [
@@ -201,7 +203,7 @@ class Social extends HelperData
 
     /**
      * @return int
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function getScopeUrl()
     {

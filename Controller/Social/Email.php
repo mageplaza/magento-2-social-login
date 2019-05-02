@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -26,8 +26,14 @@ use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\RawFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
@@ -40,7 +46,7 @@ use Mageplaza\SocialLogin\Model\Social;
 class Email extends AbstractSocial
 {
     /**
-     * @type \Magento\Framework\Controller\Result\JsonFactory
+     * @type JsonFactory
      */
     protected $resultJsonFactory;
 
@@ -73,23 +79,22 @@ class Email extends AbstractSocial
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
         CustomerFactory $customerFactory
-    )
-    {
+    ) {
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->customerFactory   = $customerFactory;
+        $this->customerFactory = $customerFactory;
 
         parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory);
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface|void
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return ResponseInterface|Json|ResultInterface|void
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws FailureToSendException
      */
     public function execute()
     {
-        /** @var \Magento\Framework\Controller\Result\Json $resultJson */
+        /** @var Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
 
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
@@ -117,7 +122,7 @@ class Email extends AbstractSocial
             return $resultJson->setData($result);
         }
 
-        $userProfile        = $this->session->getUserProfile();
+        $userProfile = $this->session->getUserProfile();
         $userProfile->email = $realEmail;
 
         $customer = $this->createCustomerProcess($userProfile, $type);
@@ -125,7 +130,7 @@ class Email extends AbstractSocial
 
         $result['success'] = true;
         $result['message'] = __('Success!');
-        $result['url']     = $this->_loginPostRedirect();
+        $result['url'] = $this->_loginPostRedirect();
 
         return $resultJson->setData($result);
     }

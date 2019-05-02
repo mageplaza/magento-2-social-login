@@ -15,11 +15,13 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
+
+use Hybrid_Endpoint;
 
 /**
  * Class Callback
@@ -49,7 +51,7 @@ class Callback extends AbstractSocial
             return $this->_appendJs(sprintf("<script>window.close();</script>"));
         }
 
-        \Hybrid_Endpoint::process();
+        Hybrid_Endpoint::process();
     }
 
     /**

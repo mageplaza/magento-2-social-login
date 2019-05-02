@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -34,19 +34,19 @@ use Mageplaza\SocialLogin\Helper\Data as HelperData;
 class Popup extends Template
 {
     /**
-     * @type \Mageplaza\SocialLogin\Helper\Data
+     * @type HelperData
      */
     protected $helperData;
 
     /**
-     * @type \Magento\Customer\Model\Session
+     * @type CustomerSession
      */
     protected $customerSession;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Data $helperData
-     * @param \Magento\Customer\Model\Session $customerSession
+     * @param Context $context
+     * @param HelperData $helperData
+     * @param CustomerSession $customerSession
      * @param array $data
      */
     public function __construct(
@@ -54,9 +54,8 @@ class Popup extends Template
         HelperData $helperData,
         CustomerSession $customerSession,
         array $data = []
-    )
-    {
-        $this->helperData      = $helperData;
+    ) {
+        $this->helperData = $helperData;
         $this->customerSession = $customerSession;
 
         parent::__construct($context, $data);
@@ -152,6 +151,6 @@ class Popup extends Template
      */
     public function isSecure()
     {
-        return (bool) $this->helperData->isSecure();
+        return (bool)$this->helperData->isSecure();
     }
 }

@@ -15,37 +15,37 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 ?>
 <div class="social-login block-container forgot" style="display:none">
     <div class="social-login-title">
-        <h2 class="forgot-pass-title"><?php echo __('Forgot Password') ?></h2>
+        <h2 class="forgot-pass-title"><?= __('Forgot Password') ?></h2>
     </div>
     <div class="block col-mp mp-12">
         <div class="block-content">
             <form class="form-password-forget" id="social-form-password-forget" data-mage-init='{"validation":{}}'>
-                <fieldset class="fieldset" data-hasrequired="<?php echo __('* Required Fields') ?>">
-                    <div class="field note"><?php echo __('Please enter your email address below to receive a password reset link.'); ?></div>
+                <fieldset class="fieldset" data-hasrequired="<?= __('* Required Fields') ?>">
+                    <div class="field note"><?= __('Please enter your email address below to receive a password reset link.'); ?></div>
                     <div class="field email required">
-                        <label for="email_address" class="label"><span><?php echo __('Email') ?></span></label>
+                        <label for="email_address" class="label"><span><?= __('Email') ?></span></label>
                         <div class="control">
                             <input type="email" name="email" alt="email" id="email_address_forgot" class="input-text"
-                                   value="<?php echo $block->escapeHtml($block->getEmailValue()) ?>"
+                                   value="<?= $block->escapeHtml($block->getEmailValue()) ?>"
                                    data-validate="{required:true, 'validate-email':true}"/>
                         </div>
                     </div>
-                    <?php echo $block->getChildHtml('form_additional_info'); ?>
-                    <?php echo $block->getChildHtml('forgot.captcha'); ?>
+                    <?= $block->getChildHtml('form_additional_info'); ?>
+                    <?= $block->getChildHtml('forgot.captcha'); ?>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
                         <button type="button" id="bnt-social-login-forgot" class="action send primary">
-                            <span><?php echo __('Submit') ?></span>
+                            <span><?= __('Submit') ?></span>
                         </button>
                         <div class="secondary">
-                            <a class="action back" href="#"><span><?php echo __('Go back') ?></span></a>
+                            <a class="action back" href="#"><span><?= __('Go back') ?></span></a>
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -30,9 +30,9 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class Position implements ArrayInterface
 {
-    const PAGE_LOGIN  = 1;
+    const PAGE_LOGIN = 1;
     const PAGE_CREATE = 2;
-    const PAGE_POPUP  = 3;
+    const PAGE_POPUP = 3;
     const PAGE_AUTHEN = 4;
 
     /**

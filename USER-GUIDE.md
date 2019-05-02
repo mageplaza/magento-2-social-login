@@ -5,7 +5,8 @@
 - On Mageplaza: https://www.mageplaza.com/magento-2-social-login-extension/
 - Get Support: https://github.com/mageplaza/magento-2-social-login/issues
 - Contribute on Github: https://github.com/mageplaza/magento-2-social-login/
-- Changelog: https://www.mageplaza.com/changelog/m2-social-login.txt
+- Changelog: https://www.mageplaza.com/releases/social-login
+- Report a security issue to security@mageplaza.com
 
 ## 2. How to install
 

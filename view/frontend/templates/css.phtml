@@ -15,34 +15,34 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-/** @var \Mageplaza\SocialLogin\Block\Css $block */
-?>
-<?php
+/** @var Css $block */
+
 /** @var \Mageplaza\SocialLogin\Helper\Data $helper */
 $helper = $block->helper();
-$color  = $helper->getStyleManagement();
-?>
+$color = $helper->getStyleManagement();
+
+use Mageplaza\SocialLogin\Block\Css; ?>
 <style>
     #social-login-popup .social-login-title {
-        background-color: <?php echo $color ?>
+        background-color: <?= $color ?>
     }
 
     #social-login-popup .social-login #bnt-social-login-authentication,
     #social-login-popup .forgot .primary button,
     #social-login-popup .create .primary button {
-        background-color: <?php echo $color ?>;
-        border: <?php echo $color ?>
+        background-color: <?= $color ?>;
+        border: <?= $color ?>
     }
 
     .block.social-login-authentication-channel.account-social-login .block-content {
         text-align: center;
     }
 
-    <?php echo $helper->getCustomCss() ?>
+    <?= $helper->getCustomCss() ?>
 
     /* Compatible ETheme_YOURstore*/
     div#centerColumn .column.main .block.social-login-authentication-channel.account-social-login {
@@ -61,4 +61,4 @@ $color  = $helper->getStyleManagement();
     }
 </style>
 
-<?php echo $block->getChildHtml() ?>
+<?= $block->getChildHtml() ?>

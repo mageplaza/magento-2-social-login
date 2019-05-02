@@ -14,7 +14,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -486,11 +486,11 @@ define([
             var message = response.message,
                 messageClass = response.success ? this.options.successMsgClass : this.options.errorMsgClass;
 
-            if (typeof(message) === 'object' && message.length > 0) {
+            if (typeof (message) === 'object' && message.length > 0) {
                 message.forEach(function (msg) {
                     this._appendMessage(block, msg, messageClass);
                 }.bind(this));
-            } else if (typeof(message) === 'string') {
+            } else if (typeof (message) === 'string') {
                 this._appendMessage(block, message, messageClass);
             }
         },

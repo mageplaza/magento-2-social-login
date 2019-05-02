@@ -15,7 +15,7 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
@@ -34,21 +34,20 @@ use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 class Social extends Template
 {
     /**
-     * @type \Mageplaza\SocialLogin\Helper\Social
+     * @type SocialHelper
      */
     protected $socialHelper;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mageplaza\SocialLogin\Helper\Social $socialHelper
+     * @param Context $context
+     * @param SocialHelper $socialHelper
      * @param array $data
      */
     public function __construct(
         Context $context,
         SocialHelper $socialHelper,
         array $data = []
-    )
-    {
+    ) {
         $this->socialHelper = $socialHelper;
 
         parent::__construct($context, $data);
@@ -98,8 +97,8 @@ class Social extends Template
     {
         $availableButtons = $this->getAvailableSocials();
         foreach ($availableButtons as $key => &$button) {
-            $button['url']     = $this->getLoginUrl($key, ['authen' => 'popup']);
-            $button['key']     = $key;
+            $button['url'] = $this->getLoginUrl($key, ['authen' => 'popup']);
+            $button['key'] = $key;
             $button['btn_key'] = $this->getBtnKey($key);
         }
 
