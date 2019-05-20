@@ -11,22 +11,22 @@
 [![Latest Stable Version](https://poser.pugx.org/mageplaza/magento-2-social-login/v/stable)](https://packagist.org/packages/mageplaza/magento-2-social-login)
 [![Total Downloads](https://poser.pugx.org/mageplaza/magento-2-social-login/downloads)](https://packagist.org/packages/mageplaza/magento-2-social-login)
 
-## 1. Documentation
+## 1. Mageplaza Social Login Documentation
 
 - [Installation guide](https://www.mageplaza.com/install-magento-2-extension/)
 - [User Guide](https://docs.mageplaza.com/social-login-m2/index.html)
 - [Download from our Live site](https://www.mageplaza.com/magento-2-social-login-extension/)
 - [Get Free Support](https://github.com/mageplaza/magento-2-social-login/issues)
 - Get premium support from Mageplaza: [Purchase Support package](https://www.mageplaza.com/magento-2-extension-support-package/)
-- [Contribute on Github](https://github.com/mageplaza/magento-2-social-login/)
+- [Mageplaza Sale Page](https://www.mageplaza.com/magento-2-social-login-extension/)
 - [Releases](https://github.com/mageplaza/magento-2-social-login/releases)
 - [License](https://www.mageplaza.com/LICENSE.txt)
 
 
-## 2. How to install
+## 2. How to install Magento 2 Social Login
 
 
-## ✓ Install via composer (recommend)
+## ✓ Install Social Login via composer (recommend)
 Run the following command in Magento 2 root folder:
 
 ```
@@ -37,18 +37,18 @@ php bin/magento setup:static-content:deploy
 
 ### ✓ Install ready-to-paste package
 
-- Download the latest version at [Mageplaza Social Login for Magento 2](https://www.mageplaza.com/magento-2-social-login-extension/)
+- Download the latest version at [Mageplaza.com](https://www.mageplaza.com/magento-2-social-login-extension/)
 -  [Installation guide](https://www.mageplaza.com/install-magento-2-extension/)
 
 
 
-## 3. FAQs
+## 3. Social Login FAQs
 
 #### Q: When I click on Login link, the popup does't work
 A: You can read https://github.com/mageplaza/magento-2-social-login/issues/39
 
 #### Q: I am using custom theme, it is compatible with our design?
-A: We have developed Social Login based on Magento coding standard and best practice test on Magento Community and Magento Enterpise site. So it is compatible with themes and custom designs. Ask Magento community on http://magento.stackexchange.com/ or https://github.com/mageplaza/magento-2-social-login/issues/
+A: We have developed Social Login based on Magento 2 coding standard and best practice test on Magento Community and Magento Enterpise site. So it is compatible with themes and custom designs. Ask Magento community on http://magento.stackexchange.com/ or https://github.com/mageplaza/magento-2-social-login/issues/
 
 #### Q: Can I install it by myself?
 A: Yes, you absolutely can! You can install it like installing any extensions to website, follow our Installation Guide http://docs.mageplaza.com/kb/installation.html. User guide: https://docs.mageplaza.com/social-login-m2/index.html
@@ -64,19 +64,19 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 
 
 
-## 4. User guide
+## 4. Social Login user guide
 
 
-Customers are not patient enough to fill a lot of required information while those are available in social account as Facebook, LinkedIn, Instagram,.... [Magento 2 Social Login extension by Mageplaza](https://www.mageplaza.com/magento-2-social-login-extension/), your customers only need to click on the social button and all necessary information is completed automatically.That is the main reason why Magento Social Login extension is considered as the great solution for that convenience.
+Customers are not patient enough to fill a lot of required information while those are available in social account as Facebook, LinkedIn, Instagram,.... [Mageplaza Social Login extension](https://www.mageplaza.com/magento-2-social-login-extension/), your customers only need to click on the social button and all necessary information is completed automatically.That is the main reason why **Magento 2 Social Login extension** is considered as the great solution for that convenience.
 
 Login to Magento Admin and do as the following:
 
-![social login](https://cdn.mageplaza.com/docs/social-settings.gif)
+![Magento 2 social login](https://cdn.mageplaza.com/docs/social-settings.gif)
 
 ### General Configuration
 
 
-#### Enable the module
+#### Enable Social Login
 
 
 Go to `Admin Panel > Social Login > Settings > General`
@@ -85,7 +85,7 @@ Go to `Admin Panel > Social Login > Settings > General`
 
 Select `Yes` option in order to allow customers to sign in quickly via social channels they are using.
 
-#### Setting popup effect
+#### Setting Social Login popup effect
 
 
 Go to `Admin Panel > Social Login > Settings > General`
@@ -94,124 +94,124 @@ Right after activating, all of available social buttons are shown on Sign In box
 
 Admin can choose one of nice effects as you need by block in Popup Effect field.
 
-![social popup effect](https://i.imgur.com/Bnv7qTn.png)
+![Magento 2 social login popup](https://i.imgur.com/Bnv7qTn.png)
 
 #### Custom color of checkbox
 
 
 Go to `Admin Panel > Social Login > Settings > General`
 
-Social Login by Mageplaza provides a Magento default color and **8** popular colors for your design, you can choose custom color which fit with your store design.
+**Mageplaza Social Login** provides a Magento 2 default color and **8** popular colors for your design, you can choose custom color which fit with your store design.
 
 ![social color](https://i.imgur.com/kZTaFjX.png)
 
-Especially, now we also support you 9th color that you can freely custom depends on needs of yourself. It is unlimited color to design the style of Sign In box
+Especially, now we also support you 9th color that you can freely custom depends on needs of yourself. It is unlimited color to design the style of **Sign In** box
 
 ![custom color social login](https://i.imgur.com/o1Ggu8F.png)
 
-#### Facebook Sign in
+#### Facebook Sign In
 
 
-##### How to configure Facebook
+##### How to configure Facebook Login
 
 
 Go to `Admin Panel > Social Login > Settings > Facebook`
 
-![config facebook login](https://i.imgur.com/wBtVqY9.png)
+![Magento 2 social login with facebook sign-in button](https://i.imgur.com/wBtVqY9.png)
 
-* Choose Yes or No to enable or disable Facebook Sign In button on the front-end with Facebook App ID and Facebook App Secret.
+* Choose `Yes` or `No` to `enable or disable` **Facebook Sign In button** on the front-end with Facebook App ID and Facebook App Secret.
 
 * If customers login via Facebook App, you can send email notification about their account’s password on your site or not, that depends on setting in Send Password to Customer field.
 
-##### Login using Facebook
+##### Login using Facebook account
 
 
-![login facebook](https://i.imgur.com/5zYCdnw.png)
+![Magento 2 Login using Facebook](https://i.imgur.com/5zYCdnw.png)
 
-The login box will display as popup checkbox after clicking on Facebook Sign In button.
+The login box will display as popup checkbox after clicking on **Facebook Sign In** button.
 
 #### Google Sign In
 
 
-##### How to configure Google
+##### How to configure Google Login
 
 
 Go to `Admin Panel > Social Login > Settings > Google`
 
-![google login](https://i.imgur.com/jB6A0t1.png)
+![Magento 2 social login with google sign-in button](https://i.imgur.com/jB6A0t1.png)
 
-* Choose Yes or No to enable or disable Google Sign In button on the front-end with Client ID and Client Secret.
+* Choose `Yes` or `No` to `enable or disable` **Google Sign In button** on the front-end with Client ID and Client Secret.
 
-* If customers login via Google, you can send email notification about their account’s password on your site or not, that depends on setting in Send Password to Customer field.
+* If customers login via Google, you can send email notification about their account’s password on your site or not, that depends on setting in **Send Password to Customer** field.
 
-#### Login using Google
+#### Login using Google account
 
 
-![Google login](https://i.imgur.com/htWnJ7p.png)
+![Magento 2 login using Google](https://i.imgur.com/htWnJ7p.png)
 
-The login box will display as popup checkbox after clicking on Google Sign In button.
+The login box will display as popup checkbox after clicking on **Google Sign In** button.
 
 #### Twitter Sign In
 
 
-##### How to configure Twitter
+##### How to configure Twitter Login
 
 
 Go to `Admin Panel > Social Login > Settings > Twitter`
 
-![twitter login](https://i.imgur.com/9SRcWbU.png)
+![Magento 2 social login with  twitter sign-in button](https://i.imgur.com/9SRcWbU.png)
 
-* Choose Yes or No to enable or disable Twitter Sign In button on the front-end with Consumer Key and Consumer Secret.
+* Choose `Yes` or `No` to enable or disable **Twitter Sign In button** on the front-end with Consumer Key and Consumer Secret.
 
 * If customers login via Twitter, you can send email notification about their account’s password on your site or not, that depends on setting in Send Password to Customer field.
 
-##### Login using Twitter
+##### Login using Twitter account
 
 
-![twitter social login](https://i.imgur.com/fYF1sRc.png)
+![Magento 2 Login using Twitter](https://i.imgur.com/fYF1sRc.png)
 
-The login box will display as popup checkbox after clicking on Twitter Sign In button.
+The login box will display as popup checkbox after clicking on **Twitter Sign In** button.
 
 #### LinkedIn Sign In
 
 
-##### How to configure LinkedIn
+##### How to configure LinkedIn Login
 
 
 Go to `Admin Panel > Social Login > Settings > LinkedIn`
 
-![linkedin login](https://i.imgur.com/SqCKAB7.png)
+![Magento 2 social login with  linkedin sign in button](https://i.imgur.com/SqCKAB7.png)
 
-* Choose Yes or No to enable or disable LikedIn Sign In button on the front-end with API Key and Client Key.
+* Choose `Yes` or `N`o to enable or disable **LikedIn Sign In button** on the front-end with API Key and Client Key.
 
-* If customers login via LinkedIn, you can send email notification about their account’s password on your site or not, that depends on setting in Send Password to Customer field.
+* If customers login via LinkedIn, you can send email notification about their account’s password on your site or not, that depends on setting in **Send Password to Customer** field.
 
-##### Login using LinkedIn
+##### Login using LinkedIn account
 
 
-![linkedin social login](https://i.imgur.com/IKERf5H.png)
+![Magento 2 Login using LinkedIn](https://i.imgur.com/IKERf5H.png)
 
-The login box will display as popup checkbox after clicking on LinkedIn Sign In button.
+The login box will display as popup checkbox after clicking on **LinkedIn Sign In** button.
 
 #### Instagram Sign In
 
 
-##### How to configure Instagram
+##### How to configure Instagram Login
 
 
 Go to `Admin Panel > Social Login > Settings > Instagram`
 
-![instagram](http://i.imgur.com/Pahpc6R.png)
+![Magento 2 social login with instagram sign in button](http://i.imgur.com/Pahpc6R.png)
 
 * Choose Yes or No to enable or disable Instagram Sign In button on the front-end with Client ID and Client Secret.
 
-* If customers login via Instagram, you can send email notification about their account’s password on your site or not, that depends on setting in Send Password to Customer field.
+* If customers **login via Instagram**, you can send email notification about their account’s password on your site or not, that depends on setting in **Send Password to Customer** field.
 
-##### Login using Instagram
+##### Login using Instagram account
 
-![instagram login](https://i.imgur.com/ha2CxQ0.png)
+![Magento 2 instagram login](https://i.imgur.com/ha2CxQ0.png)
 
-The login box will display as popup checkbox after clicking on Instagram Sign In button.
+The login box will display as popup checkbox after clicking on **Instagram Sign In** button.
 
 
 
@@ -318,7 +318,7 @@ Release notes:
 
 
 
-## Mageplaza extensions on Magento Marketplace, Github
+**Mageplaza extensions on Magento Marketplace, Github**
 
 
 ☞ [Magento 2 One Step Checkout extension](https://marketplace.magento.com/mageplaza-magento-2-one-step-checkout-extension.html)
@@ -327,22 +327,30 @@ Release notes:
 
 ☞ [Magento 2 Blog extension](https://marketplace.magento.com/mageplaza-magento-2-blog-extension.html)
 
-☞ [Magento 2 Layered Navigation extension](https://marketplace.magento.com/mageplaza-layered-navigation-m2.html)
+☞ [Magento 2 Layered Navigation extension](https://github.com/mageplaza/magento-2-ajax-layered-navigation)
 
-☞ [Magento One Step Checkout](https://github.com/magento-2/one-step-checkout)
+☞ [Magento 2 Blog module](https://github.com/mageplaza/magento-2-blog)
 
-☞ [Magento 2 Blog on Github](https://github.com/mageplaza/magento-2-blog)
+☞ [Magento 2 Social Login module](https://github.com/mageplaza/magento-2-social-login)
 
-☞ [Magento 2 Social Login on Github](https://github.com/mageplaza/magento-2-social-login)
+☞ [Magento 2 SEO Module](https://github.com/mageplaza/magento-2-seo)
 
-☞ [Magento 2 SEO on Github](https://github.com/mageplaza/magento-2-seo)
+☞ [Magento 2 SMTP Module](https://github.com/mageplaza/magento-2-smtp)
 
-☞ [Magento 2 SMTP on Github](https://github.com/mageplaza/magento-2-smtp)
+☞ [Magento 2 Product Slider Module](https://github.com/mageplaza/magento-2-product-slider)
 
-☞ [Magento 2 Product Slider on Github](https://github.com/mageplaza/magento-2-product-slider)
-
-☞ [Magento 2 Banner on Github](https://github.com/mageplaza/magento-2-banner-slider)
+☞ [Magento 2 Banner Module](https://github.com/mageplaza/magento-2-banner-slider)
 
 
-
+**People alse search:**
+- social login magento 2
+- magento 2 facebook login
+- mageplaza social login magento 2
+- magento 2 social login extension
+- magento 2 login with facebook
+- magento 2 social login extension free
+- magento 2 login popup extension free
+- magento 2 social login free
+- magento 2 social login free extension
+- mobile number login magento 2 extension free
 
