@@ -2,7 +2,7 @@
 
 **Magento 2 Social Login extension** is designed for quick login to your Magento store without procesing complex register steps. Let say goodbye the complicated registration process and ignore a lot of unnecessarily required fields. *Magento 2 Social Login extension* is simply and powerful tool to integrate your Magento customer account to Facebook, Google Plus, Twitter, LinkedIn, and Instagram channel. Logging in via the social medias is the great idea to enhance your customer’s satisfaction.
 
-### Highlight features for Social Login
+## Highlight features for Social Login
 
 - Quickly login step with five most common social channels
 - Easy to change the personal information after registering
