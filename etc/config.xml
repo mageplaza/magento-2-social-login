@@ -28,7 +28,7 @@
             </module>
             <general>
                 <enabled>1</enabled>
-                <link_trigger>.header .links, .section-item-content .header.links</link_trigger>
+                <link_trigger>.header.links, .section-item-content .header.links</link_trigger>
                 <send_password>0</send_password>
                 <social_display>1,2,3</social_display>
                 <popup_login>1</popup_login>
