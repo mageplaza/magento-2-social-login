@@ -39,6 +39,7 @@ class Css extends Template
 
     /**
      * Css constructor.
+     *
      * @param Context $context
      * @param DataHelper $helper
      * @param array $data
@@ -48,9 +49,9 @@ class Css extends Template
         DataHelper $helper,
         array $data = []
     ) {
-        parent::__construct($context, $data);
-
         $this->_helper = $helper;
+
+        parent::__construct($context, $data);
     }
 
     /**
@@ -64,7 +65,10 @@ class Css extends Template
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
-            } elseif (in_array($this->_request->getFullActionName(), ['customer_account_login', 'customer_account_create'])) {
+            } elseif (in_array(
+                $this->_request->getFullActionName(),
+                ['customer_account_login', 'customer_account_create']
+            )) {
                 $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
             }

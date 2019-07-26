@@ -68,7 +68,9 @@ class Popup extends Template
      */
     public function isEnabled()
     {
-        return $this->helperData->isEnabled() && !$this->customerSession->isLoggedIn() && $this->helperData->getConfigGeneral('popup_login');
+        return $this->helperData->isEnabled()
+               && !$this->customerSession->isLoggedIn()
+               && $this->helperData->getConfigGeneral('popup_login');
     }
 
     /**
@@ -151,6 +153,6 @@ class Popup extends Template
      */
     public function isSecure()
     {
-        return (bool)$this->helperData->isSecure();
+        return (bool) $this->helperData->isSecure();
     }
 }

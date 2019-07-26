@@ -75,6 +75,7 @@ class Social extends Template
 
     /**
      * @param $key
+     *
      * @return string
      */
     public function getBtnKey($key)
@@ -107,6 +108,7 @@ class Social extends Template
 
     /**
      * @param null $position
+     *
      * @return bool
      */
     public function canShow($position = null)
@@ -115,7 +117,7 @@ class Social extends Template
         $displayConfig = explode(',', $displayConfig);
 
         if (!$position) {
-            $position = ($this->getRequest()->getFullActionName() == 'customer_account_login') ?
+            $position = $this->getRequest()->getFullActionName() === 'customer_account_login' ?
                 Position::PAGE_LOGIN :
                 Position::PAGE_CREATE;
         }
@@ -126,6 +128,7 @@ class Social extends Template
     /**
      * @param       $socialKey
      * @param array $params
+     *
      * @return string
      */
     public function getLoginUrl($socialKey, $params = [])

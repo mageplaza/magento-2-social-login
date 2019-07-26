@@ -50,7 +50,7 @@ class Login extends AbstractSocial
             return;
         }
 
-        $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
+        $type = $this->apiHelper->setType($this->getRequest()->getParam('type'));
         if (!$type) {
             $this->_forward('noroute');
 
@@ -73,7 +73,10 @@ class Login extends AbstractSocial
             if (!$userProfile->email && $this->apiHelper->requireRealEmail()) {
                 $this->session->setUserProfile($userProfile);
 
-                return $this->_appendJs(sprintf("<script>window.close();window.opener.fakeEmailCallback('%s');</script>", $type));
+                return $this->_appendJs(sprintf(
+                    "<script>window.close();window.opener.fakeEmailCallback('%s');</script>",
+                    $type
+                ));
             }
             $customer = $this->createCustomerProcess($userProfile, $type);
         }
@@ -96,7 +99,7 @@ class Login extends AbstractSocial
     protected function setBodyResponse($message)
     {
         $content = '<html><head></head><body>';
-        $content .= '<div class="message message-error">' . __("Ooophs, we got an error: %1", $message) . '</div>';
+        $content .= '<div class="message message-error">' . __('Ooophs, we got an error: %1', $message) . '</div>';
         $content .= <<<Style
 <style type="text/css">
     .message{

@@ -15,23 +15,23 @@ use StdClass;
 
 class OAuth2Client
 {
-    public $api_base_url = "";
+    public $api_base_url            = "";
 
-    public $authorize_url = "";
+    public $authorize_url           = "";
 
-    public $token_url = "";
+    public $token_url               = "";
 
-    public $token_info_url = "";
+    public $token_info_url          = "";
 
-    public $client_id = "";
+    public $client_id               = "";
 
-    public $client_secret = "";
+    public $client_secret           = "";
 
-    public $redirect_uri = "";
+    public $redirect_uri            = "";
 
-    public $access_token = "";
+    public $access_token            = "";
 
-    public $refresh_token = "";
+    public $refresh_token           = "";
 
     public $access_token_expires_in = "";
 
@@ -39,25 +39,25 @@ class OAuth2Client
 
     //--
 
-    public $sign_token_name = "access_token";
+    public $sign_token_name          = "access_token";
 
-    public $curl_time_out = 30;
+    public $curl_time_out            = 30;
 
-    public $curl_connect_time_out = 30;
+    public $curl_connect_time_out    = 30;
 
-    public $curl_ssl_verifypeer = false;
+    public $curl_ssl_verifypeer      = false;
 
-    public $curl_ssl_verifyhost = false;
+    public $curl_ssl_verifyhost      = false;
 
-    public $curl_header = [];
+    public $curl_header              = [];
 
-    public $curl_useragent = "OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/";
+    public $curl_useragent           = "OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/";
 
     public $curl_authenticate_method = "POST";
 
-    public $curl_proxy = null;
+    public $curl_proxy               = null;
 
-    public $curl_compressed = false;
+    public $curl_compressed          = false;
 
     //--
 
@@ -65,7 +65,7 @@ class OAuth2Client
 
     public $http_info = "";
 
-    protected $response = null;
+    protected $response  = null;
 
     //--
 

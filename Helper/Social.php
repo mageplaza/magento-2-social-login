@@ -25,6 +25,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
+use Mageplaza\SocialLogin\Model\Providers\Amazon;
+use Mageplaza\SocialLogin\Model\Providers\GitHub;
+use Mageplaza\SocialLogin\Model\Providers\Instagram;
+use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
 
 /**
  * Class Social
@@ -64,7 +68,7 @@ class Social extends HelperData
         uksort($socialTypes, function ($a, $b) {
             $sortA = $this->getConfigValue("sociallogin/{$a}/sort_order") ?: 0;
             $sortB = $this->getConfigValue("sociallogin/{$b}/sort_order") ?: 0;
-            if ($sortA == $sortB) {
+            if ($sortA === $sortB) {
                 return 0;
             }
 
@@ -82,13 +86,13 @@ class Social extends HelperData
     public function getSocialConfig($type)
     {
         $apiData = [
-            'Facebook'  => ["trustForwarded" => false, 'scope' => 'email, public_profile'],
-            'Twitter'   => ["includeEmail" => true],
-            'LinkedIn'  => ["fields" => ['id', 'first-name', 'last-name', 'email-address']],
-            'Vkontakte' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Vkontakte']],
-            'Instagram' => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Instagram']],
-            'Github'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\GitHub']],
-            'Amazon'    => ['wrapper' => ['class' => '\Mageplaza\SocialLogin\Model\Providers\Amazon']],
+            'Facebook'  => ['trustForwarded' => false, 'scope' => 'email, public_profile'],
+            'Twitter'   => ['includeEmail' => true],
+            'LinkedIn'  => ['fields' => ['id', 'first-name', 'last-name', 'email-address']],
+            'Vkontakte' => ['wrapper' => ['class' => Vkontakte::class]],
+            'Instagram' => ['wrapper' => ['class' => Instagram::class]],
+            'Github'    => ['wrapper' => ['class' => GitHub::class]],
+            'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
             'Google'    => ['scope' => 'profile email']
         ];
 
@@ -161,11 +165,10 @@ class Social extends HelperData
                 break;
             case 'Yahoo':
                 return $this->getDomainUrl();
-                break;
             default:
                 $param = 'hauth.done=' . $type;
         }
-        if ($type == 'Live') {
+        if ($type === 'Live') {
             return $authUrl . $param;
         }
 

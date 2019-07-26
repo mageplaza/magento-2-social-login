@@ -34,6 +34,7 @@ use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
@@ -96,6 +97,7 @@ abstract class AbstractSocial extends Action
 
     /**
      * Login constructor.
+     *
      * @param Context $context
      * @param StoreManagerInterface $storeManager
      * @param AccountManagementInterface $accountManager
@@ -115,8 +117,6 @@ abstract class AbstractSocial extends Action
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory
     ) {
-        parent::__construct($context);
-
         $this->storeManager = $storeManager;
         $this->accountManager = $accountManager;
         $this->apiHelper = $apiHelper;
@@ -124,12 +124,15 @@ abstract class AbstractSocial extends Action
         $this->session = $customerSession;
         $this->accountRedirect = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
+
+        parent::__construct($context);
     }
 
     /**
      * Get Store object
      *
      * @return StoreInterface
+     * @throws NoSuchEntityException
      */
     public function getStore()
     {
@@ -139,6 +142,7 @@ abstract class AbstractSocial extends Action
     /**
      * @param $userProfile
      * @param $type
+     *
      * @return bool|Customer|mixed
      * @throws Exception
      * @throws LocalizedException
@@ -162,6 +166,7 @@ abstract class AbstractSocial extends Action
      *
      * @param $user
      * @param $type
+     *
      * @return bool|Customer|mixed
      * @throws Exception
      * @throws LocalizedException
@@ -169,7 +174,9 @@ abstract class AbstractSocial extends Action
     public function createCustomer($user, $type)
     {
         $customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
-        if (!$customer->getId()) {
+        if ($customer->getId()) {
+            $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
+        } else {
             try {
                 $customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
             } catch (Exception $e) {
@@ -177,8 +184,6 @@ abstract class AbstractSocial extends Action
 
                 return false;
             }
-        } else {
-            $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
         }
 
         return $customer;
@@ -186,6 +191,7 @@ abstract class AbstractSocial extends Action
 
     /**
      * @param $profile
+     *
      * @return array
      */
     protected function getUserData($profile)
@@ -198,6 +204,7 @@ abstract class AbstractSocial extends Action
      *
      * @param $apiLabel
      * @param bool $needTranslate
+     *
      * @return $this
      */
     public function emailRedirect($apiLabel, $needTranslate = true)
@@ -218,11 +225,11 @@ abstract class AbstractSocial extends Action
     {
         $url = $this->_url->getUrl('customer/account');
 
-        if ($this->_request->getParam('authen') == 'popup') {
+        if ($this->_request->getParam('authen') === 'popup') {
             $url = $this->_url->getUrl('checkout');
         } else {
             $requestedRedirect = $this->accountRedirect->getRedirectCookie();
-            if (!$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard') && $requestedRedirect) {
+            if ($requestedRedirect && !$this->apiHelper->getConfigValue('customer/startup/redirect_dashboard')) {
                 $url = $this->_redirect->success($requestedRedirect);
                 $this->accountRedirect->clearRedirectCookie();
             }
@@ -242,6 +249,7 @@ abstract class AbstractSocial extends Action
      * Return javascript to redirect when login success
      *
      * @param null $content
+     *
      * @return Raw
      */
     public function _appendJs($content = null)
@@ -249,11 +257,15 @@ abstract class AbstractSocial extends Action
         /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
 
-        return $resultRaw->setContents($content ?: sprintf("<script>window.opener.socialCallback('%s', window);</script>", $this->_loginPostRedirect()));
+        return $resultRaw->setContents($content ?: sprintf(
+            "<script>window.opener.socialCallback('%s', window);</script>",
+            $this->_loginPostRedirect()
+        ));
     }
 
     /**
      * @param $customer
+     *
      * @throws InputException
      * @throws FailureToSendException
      */

@@ -122,7 +122,7 @@
 }
 
 .social-login-authentication-popup .block-content .actions-toolbar .btn-social {
-    height: 20px;
+    /*height: 20px;*/
     padding-left: 19px;
 }
 
@@ -140,6 +140,10 @@
     margin-left: 25px;
     color: #ffffff;
 }
+.block-authentication .actions-toolbar{
+    margin-bottom: unset !important;
+}
+
 
 .social-login-authentication-channel .actions-toolbar.social-btn > .primary .action {
     width: 100%;
@@ -785,6 +789,114 @@
 
 .btn-foursquare .badge {
     color: #f94877;
+    background-color: #fff
+}
+
+.btn-disqus {
+    color: #fff;
+    background-color: #2E9FFF;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-disqus .fa-disqus {
+    background: url("images/disqus-logo.png") no-repeat;
+}
+
+.btn-disqus .fa-disqus {
+    content: ""
+}
+
+.btn-mailru {
+    color: #fff;
+    background-color: #005FF9;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-mailru:focus, .btn-mailru.focus {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-mailru:hover {
+    color: #fff;
+    background-color: #004ecc;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-mailru:active, .btn-mailru.active, .open > .dropdown-toggle.btn-live {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-mailru:active:hover, .btn-mailru.active:hover, .open > .dropdown-toggle.btn-mailru:hover, .btn-mailru:active:focus, .btn-mailru.active:focus, .open > .dropdown-toggle.btn-mailru:focus, .btn-mailru:active.focus, .btn-mailru.active.focus, .open > .dropdown-toggle.btn-mailru.focus {
+    color: #fff;
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-mailru:active, .btn-mailru.active, .open > .dropdown-toggle.btn-mailru {
+    background-image: none
+}
+
+.btn-mailru.disabled:hover, .btn-mailru[disabled]:hover, fieldset[disabled] .btn-mailru:hover, .btn-mailru.disabled:focus, .btn-mailru[disabled]:focus, fieldset[disabled] .btn-mailru:focus, .btn-mailru.disabled.focus, .btn-mailru[disabled].focus, fieldset[disabled] .btn-mailru.focus {
+    background-color: #0370c4;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-mailru .badge {
+    color: #0370c4;
+    background-color: #fff
+}
+.btn-mailru .fa-mailru {
+    background: url("images/mailru-logo.png") no-repeat;
+}
+.btn-mailru .fa-mailru {
+    content: ""
+}
+
+.btn-steam {
+    color: #fff;
+    background-color: #444;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-steam:focus, .btn-steam.focus {
+    color: #fff;
+    background-color: #2b2b2b;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-steam:hover {
+    color: #fff;
+    background-color: #2b2b2b;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-steam:active, .btn-steam.active, .open > .dropdown-toggle.btn-steam {
+    color: #fff;
+    background-color: #2b2b2b;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-steam:active:hover, .btn-steam.active:hover, .open > .dropdown-toggle.btn-steam:hover, .btn-steam:active:focus, .btn-steam.active:focus, .open > .dropdown-toggle.btn-steam:focus, .btn-steam:active.focus, .btn-steam.active.focus, .open > .dropdown-toggle.btn-steam.focus {
+    color: #fff;
+    background-color: #191919;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-steam:active, .btn-steam.active, .open > .dropdown-toggle.btn-steam {
+    background-image: none
+}
+
+.btn-steam.disabled:hover, .btn-steam[disabled]:hover, fieldset[disabled] .btn-steam:hover, .btn-steam.disabled:focus, .btn-steam[disabled]:focus, fieldset[disabled] .btn-steam:focus, .btn-steam.disabled.focus, .btn-steam[disabled].focus, fieldset[disabled] .btn-steam.focus {
+    background-color: #444;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-steam .badge {
+    color: #444;
     background-color: #fff
 }
 
@@ -1554,4 +1666,21 @@
 
 .btn-live .fa-live:before {
     content: ""
+}
+#bnt-social-login-authentication{
+    margin: 12px 80px;
+}
+.grecaptcha-badge{
+    visibility: unset !important;
+    position: unset !important;
+    height: 70px !important;
+}
+.actions-toolbar > .secondary:last-child{
+    float: left;
+}
+@media only screen and (min-width: 768px){
+    .popup-authentication .actions-toolbar {
+        margin-bottom: 0;
+        margin-top: unset !important;
+    }
 }
