@@ -39,7 +39,10 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
     function initialize()
     {
         if (!$this->config['keys']['id'] || !$this->config['keys']['secret']) {
-            throw new Exception("Your application id and secret are required in order to connect to {$this->providerId}.", 4);
+            throw new Exception(
+                "Your application id and secret are required in order to connect to {$this->providerId}.",
+                4
+            );
         }
 
         // override requested scope
@@ -51,7 +54,8 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
         $this->api = ObjectManager::getInstance()->create(AmazonOAuth2Client::class, [
             'client_id'     => $this->config['keys']['id'],
             'client_secret' => $this->config['keys']['secret'],
-            'redirect_uri'  => $this->endpoint, 'compressed' => $this->compressed
+            'redirect_uri'  => $this->endpoint,
+            'compressed'    => $this->compressed
         ]);
 
         $this->api->api_base_url = 'https://api.amazon.com';

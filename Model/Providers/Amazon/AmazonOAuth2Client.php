@@ -32,6 +32,7 @@ class AmazonOAuth2Client extends OAuth2Client
 {
     /**
      * @param $code
+     *
      * @return mixed|StdClass
      * @throws Exception
      */
@@ -50,7 +51,7 @@ class AmazonOAuth2Client extends OAuth2Client
         $response = $this->parseRequestResult($response);
 
         if (!$response || !isset($response->access_token)) {
-            throw new Exception("The Authorization Service has return: " . $response->error);
+            throw new Exception('The Authorization Service has return: ' . $response->error);
         }
 
         if (isset($response->access_token)) {
@@ -75,6 +76,7 @@ class AmazonOAuth2Client extends OAuth2Client
      * @param $url
      * @param bool $params
      * @param string $type
+     *
      * @return mixed
      */
     private function request($url, $params = false, $type = "GET")
@@ -139,6 +141,7 @@ class AmazonOAuth2Client extends OAuth2Client
 
     /**
      * @param $result
+     *
      * @return mixed|StdClass
      */
     private function parseRequestResult($result)

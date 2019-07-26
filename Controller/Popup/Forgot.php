@@ -112,11 +112,9 @@ class Forgot extends Action
     {
         $formId = 'user_forgotpassword';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
-        if ($captchaModel->isRequired() && !$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
-            return false;
-        }
+        $resolve = $this->socialHelper->captchaResolve($this->getRequest(), $formId);
 
-        return true;
+        return !($captchaModel->isRequired() && !$captchaModel->isCorrect($resolve));
     }
 
     /**
@@ -140,7 +138,7 @@ class Forgot extends Action
         }
 
         /** @var Redirect $resultRedirect */
-        $email = (string)$this->getRequest()->getPost('email');
+        $email = (string) $this->getRequest()->getPost('email');
         if ($email) {
             if (!Zend_Validate::is($email, 'EmailAddress')) {
                 $this->session->setForgottenEmail($email);
@@ -153,10 +151,16 @@ class Forgot extends Action
                     AccountManagement::EMAIL_RESET
                 );
                 $result['success'] = true;
-                $result['message'][] = __('If there is an account associated with %1 you will receive an email with a link to reset your password.', $this->escaper->escapeHtml($email));
+                $result['message'][] = __(
+                    'If there is an account associated with %1 you will receive an email with a link to reset your password.',
+                    $this->escaper->escapeHtml($email)
+                );
             } catch (NoSuchEntityException $e) {
                 $result['success'] = true;
-                $result['message'][] = __('If there is an account associated with %1 you will receive an email with a link to reset your password.', $this->escaper->escapeHtml($email));
+                $result['message'][] = __(
+                    'If there is an account associated with %1 you will receive an email with a link to reset your password.',
+                    $this->escaper->escapeHtml($email)
+                );
                 // Do nothing, we don't want anyone to use this action to determine which email accounts are registered.
             } catch (SecurityViolationException $exception) {
                 $result['error'] = true;

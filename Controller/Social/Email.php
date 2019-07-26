@@ -57,6 +57,7 @@ class Email extends AbstractSocial
 
     /**
      * Email constructor.
+     *
      * @param Context $context
      * @param StoreManagerInterface $storeManager
      * @param AccountManagementInterface $accountManager
@@ -83,7 +84,16 @@ class Email extends AbstractSocial
         $this->resultJsonFactory = $resultJsonFactory;
         $this->customerFactory = $customerFactory;
 
-        parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory);
+        parent::__construct(
+            $context,
+            $storeManager,
+            $accountManager,
+            $apiHelper,
+            $apiObject,
+            $customerSession,
+            $accountRedirect,
+            $resultRawFactory
+        );
     }
 
     /**

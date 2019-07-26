@@ -23,6 +23,7 @@ namespace Mageplaza\SocialLogin\Model;
 
 use Exception;
 use Hybrid_Auth;
+use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
@@ -34,6 +35,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\State\InputMismatchException;
+use Magento\Framework\Math\Random;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -79,6 +81,7 @@ class Social extends AbstractModel
 
     /**
      * Social constructor.
+     *
      * @param Context $context
      * @param Registry $registry
      * @param CustomerFactory $customerFactory
@@ -102,13 +105,13 @@ class Social extends AbstractModel
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
-
         $this->customerFactory = $customerFactory;
         $this->customerRepository = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
         $this->storeManager = $storeManager;
         $this->apiHelper = $apiHelper;
+
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
     /**
@@ -116,14 +119,14 @@ class Social extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('Mageplaza\SocialLogin\Model\ResourceModel\Social');
+        $this->_init(ResourceModel\Social::class);
     }
 
     /**
      * @param $identify
      * @param $type
+     *
      * @return Customer
-     * @throws LocalizedException
      */
     public function getCustomerBySocial($identify, $type)
     {
@@ -143,6 +146,7 @@ class Social extends AbstractModel
     /**
      * @param $email
      * @param null $websiteId
+     *
      * @return Customer
      * @throws LocalizedException
      */
@@ -150,7 +154,6 @@ class Social extends AbstractModel
     {
         /** @var Customer $customer */
         $customer = $this->customerFactory->create();
-
         $customer->setWebsiteId($websiteId ?: $this->storeManager->getWebsite()->getId());
         $customer->loadByEmail($email);
 
@@ -160,6 +163,7 @@ class Social extends AbstractModel
     /**
      * @param $data
      * @param $store
+     *
      * @return mixed
      * @throws Exception
      */
@@ -179,13 +183,16 @@ class Social extends AbstractModel
             $customer = $this->customerRepository->save($customer);
 
             $objectManager = ObjectManager::getInstance();
-            $mathRandom = $objectManager->get('Magento\Framework\Math\Random');
+            $mathRandom = $objectManager->get(Random::class);
             $newPasswordToken = $mathRandom->getUniqueHash();
-            $accountManagement = $objectManager->get('Magento\Customer\Api\AccountManagementInterface');
+            $accountManagement = $objectManager->get(AccountManagementInterface::class);
             $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
 
             if ($this->apiHelper->canSendPassword($store)) {
-                $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
+                $this->getEmailNotification()->newAccount(
+                    $customer,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD
+                );
             }
 
             $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
@@ -221,6 +228,7 @@ class Social extends AbstractModel
      * @param $identifier
      * @param $customerId
      * @param $type
+     *
      * @return $this
      * @throws Exception
      */
@@ -240,17 +248,18 @@ class Social extends AbstractModel
 
     /**
      * @param $apiName
+     *
      * @return mixed
      * @throws LocalizedException
      */
     public function getUserProfile($apiName)
     {
         $config = [
-            "base_url"   => $this->apiHelper->getBaseAuthUrl(),
-            "providers"  => [
+            'base_url'   => $this->apiHelper->getBaseAuthUrl(),
+            'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
-            "debug_mode" => false
+            'debug_mode' => false
         ];
 
         $auth = new Hybrid_Auth($config);
@@ -265,8 +274,8 @@ class Social extends AbstractModel
     public function getProviderData($apiName)
     {
         $data = [
-            "enabled" => $this->apiHelper->isEnabled(),
-            "keys"    => [
+            'enabled' => $this->apiHelper->isEnabled(),
+            'keys'    => [
                 'id'     => $this->apiHelper->getAppId(),
                 'key'    => $this->apiHelper->getAppId(),
                 'secret' => $this->apiHelper->getAppSecret()

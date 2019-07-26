@@ -35,9 +35,4 @@ class Register extends \Magento\Customer\Block\Form\Register
     {
         return $this;
     }
-
-    public function isGdprProEnabled()
-    {
-        return $this->_moduleManager->isEnabled('Mageplaza_GdprPro');
-    }
 }

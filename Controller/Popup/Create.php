@@ -165,11 +165,9 @@ class Create extends CreatePost
     {
         $formId = 'user_create';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
-        if ($captchaModel->isRequired() && !$captchaModel->isCorrect($this->socialHelper->captchaResolve($this->getRequest(), $formId))) {
-            return false;
-        }
+        $resolve = $this->socialHelper->captchaResolve($this->getRequest(), $formId);
 
-        return true;
+        return !($captchaModel->isRequired() && !$captchaModel->isCorrect($resolve));
     }
 
     /**
@@ -181,7 +179,6 @@ class Create extends CreatePost
     {
         /** @var Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
-
         $result = [
             'success' => false,
             'message' => []
@@ -226,10 +223,10 @@ class Create extends CreatePost
                     $this->subscriberFactory->create()->subscribeCustomerById($customer->getId());
                 }
 
-                $this->_eventManager->dispatch(
-                    'customer_register_success',
-                    ['account_controller' => $this, 'customer' => $customer]
-                );
+                $this->_eventManager->dispatch('customer_register_success', [
+                    'account_controller' => $this,
+                    'customer'           => $customer
+                ]);
 
                 $confirmationStatus = $this->accountManagement->getConfirmationStatus($customer->getId());
                 if ($confirmationStatus === AccountManagementInterface::ACCOUNT_CONFIRMATION_REQUIRED) {
@@ -315,10 +312,11 @@ class Create extends CreatePost
      *
      * @param string $password
      * @param string $confirmation
+     *
      * @return boolean
      */
     protected function checkPasswordConfirmation($password, $confirmation)
     {
-        return $password == $confirmation;
+        return $password === $confirmation;
     }
 }

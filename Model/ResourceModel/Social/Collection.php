@@ -22,6 +22,7 @@
 namespace Mageplaza\SocialLogin\Model\ResourceModel\Social;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Mageplaza\SocialLogin\Model\ResourceModel\Social;
 
 /**
  * Class Collection
@@ -35,6 +36,6 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init('Mageplaza\SocialLogin\Model\Social', 'Mageplaza\SocialLogin\Model\ResourceModel\Social');
+        $this->_init(\Mageplaza\SocialLogin\Model\Social::class, Social::class);
     }
 }

@@ -41,6 +41,7 @@ class RedirectUrl extends FormField
 
     /**
      * RedirectUrl constructor.
+     *
      * @param Context $context
      * @param SocialHelper $socialHelper
      * @param array $data
@@ -51,11 +52,13 @@ class RedirectUrl extends FormField
         array $data = []
     ) {
         $this->socialHelper = $socialHelper;
+
         parent::__construct($context, $data);
     }
 
     /**
      * @param AbstractElement $element
+     *
      * @return string
      * @throws LocalizedException
      */

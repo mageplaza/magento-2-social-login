@@ -41,14 +41,14 @@ class Callback extends AbstractSocial
             $_REQUEST['hauth_done'] = 'Live';
         }
 
-        if ($this->checkRequest('hauth_start', false) && (
-                $this->checkRequest('error_reason', 'user_denied')
-                && $this->checkRequest('error', 'access_denied')
-                && $this->checkRequest('error_code', '200')
-                && $this->checkRequest('hauth_done', 'Facebook')
+        if ($this->checkRequest('hauth_start', false)
+            && (($this->checkRequest('error_reason', 'user_denied')
+                 && $this->checkRequest('error', 'access_denied')
+                 && $this->checkRequest('error_code', '200')
+                 && $this->checkRequest('hauth_done', 'Facebook'))
                 || ($this->checkRequest('hauth_done', 'Twitter') && $this->checkRequest('denied'))
             )) {
-            return $this->_appendJs(sprintf("<script>window.close();</script>"));
+            return $this->_appendJs(sprintf('<script>window.close();</script>'));
         }
 
         Hybrid_Endpoint::process();
@@ -63,9 +63,8 @@ class Callback extends AbstractSocial
     public function checkRequest($key, $value = null)
     {
         $param = $this->getRequest()->getParam($key, false);
-
         if ($value) {
-            return $param == $value;
+            return $param === $value;
         }
 
         return $param;

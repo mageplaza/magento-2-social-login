@@ -35,7 +35,8 @@ class Data extends CoreHelper
 
     /**
      * @param RequestInterface $request
-     * @param                                         $formId
+     * @param $formId
+     *
      * @return string
      */
     public function captchaResolve(RequestInterface $request, $formId)
@@ -47,6 +48,7 @@ class Data extends CoreHelper
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function canSendPassword($storeId = null)
@@ -56,6 +58,7 @@ class Data extends CoreHelper
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getPopupEffect($storeId = null)
@@ -65,12 +68,13 @@ class Data extends CoreHelper
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getStyleManagement($storeId = null)
     {
         $style = $this->getConfigGeneral('style_management', $storeId);
-        if ($style == 'custom') {
+        if ($style === 'custom') {
             return $this->getCustomColor($storeId);
         }
 
@@ -79,6 +83,7 @@ class Data extends CoreHelper
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getCustomColor($storeId = null)
@@ -88,6 +93,7 @@ class Data extends CoreHelper
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function getCustomCss($storeId = null)
@@ -97,6 +103,7 @@ class Data extends CoreHelper
 
     /**
      * @param null $storeId
+     *
      * @return mixed
      */
     public function requireRealEmail($storeId = null)
@@ -109,8 +116,6 @@ class Data extends CoreHelper
      */
     public function isSecure()
     {
-        $isSecure = $this->getConfigValue('web/secure/use_in_frontend');
-
-        return $isSecure;
+        return $this->getConfigValue('web/secure/use_in_frontend');
     }
 }
