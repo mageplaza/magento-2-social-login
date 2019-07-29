@@ -184,34 +184,7 @@
                                    autocomplete="off"/>
                         </div>
                     </div>
-                    <?= $block->getChildHtml('form_additional_info'); ?>
-                    <?= $block->getChildHtml('create.captcha'); ?>
-
-                    <?php if ($block->isGdprProEnabled()) : ?>
-                        <?php
-                        /** @var \Mageplaza\GdprPro\Helper\Data $helper */
-                        $helper = $this->helper(\Mageplaza\GdprPro\Helper\Data::class);
-                        ?>
-                        <?php if ($helper->getEnableTermAndCondition()) : ?>
-                            <div class="field register-tac-container">
-                                <label for="tac-content"
-                                       class="label"><span><?= $block->escapeHtml(__('Terms and Conditions')) ?></span></label>
-                                <div class="control">
-                          <span class="tac-content" id="tac-content">
-                              <?= $helper->getTermAndConditionContent(); ?>
-                          </span>
-                                </div>
-                            </div>
-                            <div class="field choice checkbox-tac required">
-                                <input type="checkbox" name="agree_gdpr_tac"
-                                       title="<?= $helper->getTitleCheckboxTAC() ?>" value="1" id="agree_gdpr_tac"
-                                       class="checkbox" data-validate="{required:true}">
-                                <label for="agree_gdpr_tac"
-                                       class="label"><span><?= $helper->getTitleCheckboxTAC() ?></span></label>
-                            </div>
-                        <?php endif; ?>
-                    <?php endif; ?>
-
+                    <?= $block->getChildHtml('form_additional_info') ?>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
@@ -230,7 +203,7 @@
                     'mage/mage'
                 ], function ($) {
                     var dataForm = $('#social-form-create'),
-                        ignore = <?= $_dob->isEnabled() ? '\'input[id$="full"]\'' : 'null'; ?>;
+                        ignore = <?= $_dob->isEnabled() ? '\'input[id$="full"]\'' : 'null' ?>;
 
                     dataForm.mage('validation', {
                         <?php if ($_dob->isEnabled()) : ?>

@@ -64,7 +64,7 @@ class Social extends HelperData
      */
     public function getSocialTypes()
     {
-        $socialTypes = $this->_getSocialTypes();
+        $socialTypes = $this->getSocialTypesArray();
         uksort($socialTypes, function ($a, $b) {
             $sortA = $this->getConfigValue("sociallogin/{$a}/sort_order") ?: 0;
             $sortB = $this->getConfigValue("sociallogin/{$b}/sort_order") ?: 0;
@@ -222,7 +222,7 @@ class Social extends HelperData
     /**
      * @return array
      */
-    public function _getSocialTypes()
+    public function getSocialTypesArray()
     {
         return [
             'facebook'   => 'Facebook',
