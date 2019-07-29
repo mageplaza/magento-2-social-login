@@ -27,7 +27,7 @@
         <div class="block-content">
             <form class="form-password-forget" id="social-form-password-forget" data-mage-init='{"validation":{}}'>
                 <fieldset class="fieldset" data-hasrequired="<?= __('* Required Fields') ?>">
-                    <div class="field note"><?= __('Please enter your email address below to receive a password reset link.'); ?></div>
+                    <div class="field note"><?= __('Please enter your email address below to receive a password reset link.') ?></div>
                     <div class="field email required">
                         <label for="email_address" class="label"><span><?= __('Email') ?></span></label>
                         <div class="control">
@@ -36,8 +36,7 @@
                                    data-validate="{required:true, 'validate-email':true}"/>
                         </div>
                     </div>
-                    <?= $block->getChildHtml('form_additional_info'); ?>
-                    <?= $block->getChildHtml('forgot.captcha'); ?>
+                    <?= $block->getChildHtml('form_additional_info') ?>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
