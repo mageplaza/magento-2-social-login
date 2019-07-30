@@ -28,12 +28,12 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     // default permissions
     public $scope = "email";
 
-    const VERSION = '3.0';
+    const VERSION = '5.0';
 
     // default user fields map
     public $fields = [
         // Old that saved for backward-compability
-        'identifier'  => 'uid',
+        'identifier'  => 'id',
         'firstName'   => 'first_name',
         'lastName'    => 'last_name',
         'displayName' => 'screen_name',
@@ -138,7 +138,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
                 "User profile request failed! {$this->providerId} returned an error #{$response->error->error_code}: {$response->error->error_msg}",
                 6
             );
-        } elseif (!isset($response->response[0]) || !isset($response->response[0]->uid)) {
+        } elseif (!isset($response->response[0]) || !isset($response->response[0]->id)) {
             throw new Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }
 
