@@ -12,6 +12,7 @@ namespace Mageplaza\SocialLogin\Model\Providers\Oauth;
 use Exception;
 use Hybrid_Logger;
 use StdClass;
+use Mageplaza\SocialLogin\Helper\Data as HelperData;
 
 class OAuth2Client
 {
@@ -67,14 +68,33 @@ class OAuth2Client
 
     protected $response  = null;
 
-    //--
+    /**
+     * @var HelperData
+     */
+    protected $_helperData;
 
-    public function __construct($client_id = false, $client_secret = false, $redirect_uri = '', $compressed = false)
+    /**
+     * OAuth2Client constructor.
+     *
+     * @param bool $client_id
+     * @param bool $client_secret
+     * @param string $redirect_uri
+     * @param bool $compressed
+     * @param HelperData $helperData
+     */
+    public function __construct(
+        $client_id = false,
+        $client_secret = false,
+        $redirect_uri = '',
+        $compressed = false,
+        HelperData $helperData
+    )
     {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->redirect_uri = $redirect_uri;
         $this->curl_compressed = $compressed;
+        $this->_helperData = $helperData;
     }
 
     public function authorizeUrl($extras = [])
@@ -249,7 +269,7 @@ class OAuth2Client
     private function request($url, $params = false, $type = "GET")
     {
         Hybrid_Logger::info("Enter OAuth2Client::request( $url )");
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", serialize($params));
+        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", $this->_helperData->serialize($params));
 
         $urlEncodedParams = http_build_query($params, '', '&');
 
@@ -301,8 +321,8 @@ class OAuth2Client
         if ($response === false) {
             Hybrid_Logger::error("OAuth2Client::request(). curl_exec error: ", curl_error($ch));
         }
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request info: ", serialize(curl_getinfo($ch)));
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request result: ", serialize($response));
+        Hybrid_Logger::debug("OAuth2Client::request(). dump request info: ", $this->_helperData->serialize(curl_getinfo($ch)));
+        Hybrid_Logger::debug("OAuth2Client::request(). dump request result: ", $this->_helperData->serialize($response));
 
         $this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->http_info = array_merge($this->http_info, curl_getinfo($ch));

@@ -38,17 +38,19 @@ class Callback extends AbstractSocial
         $param = $this->getRequest()->getParams();
 
         if (isset($param['live.php'])) {
-            $_REQUEST['hauth_done'] = 'Live';
+            $request = array_merge($param, ['hauth_done' => 'Live']);
         }
-
         if ($this->checkRequest('hauth_start', false)
             && (($this->checkRequest('error_reason', 'user_denied')
-                 && $this->checkRequest('error', 'access_denied')
-                 && $this->checkRequest('error_code', '200')
-                 && $this->checkRequest('hauth_done', 'Facebook'))
+                    && $this->checkRequest('error', 'access_denied')
+                    && $this->checkRequest('error_code', '200')
+                    && $this->checkRequest('hauth_done', 'Facebook'))
                 || ($this->checkRequest('hauth_done', 'Twitter') && $this->checkRequest('denied'))
             )) {
             return $this->_appendJs(sprintf('<script>window.close();</script>'));
+        }
+        if (isset($request)) {
+            Hybrid_Endpoint::process($request);
         }
 
         Hybrid_Endpoint::process();

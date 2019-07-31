@@ -82,14 +82,14 @@ class AmazonOAuth2Client extends OAuth2Client
     private function request($url, $params = false, $type = "GET")
     {
         Hybrid_Logger::info("Enter OAuth2Client::request( $url )");
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", serialize($params));
+        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", $this->_helperData->serialize($params));
 
         if ($type == "GET") {
             $url = $url . (strpos($url, '?') ? '&' : '?') . http_build_query($params, '', '&');
         }
 
         $this->http_info = [];
-        $ch = curl_init();
+        $ch              = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -128,8 +128,8 @@ class AmazonOAuth2Client extends OAuth2Client
         if ($response === false) {
             Hybrid_Logger::error("OAuth2Client::request(). curl_exec error: ", curl_error($ch));
         }
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request info: ", serialize(curl_getinfo($ch)));
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request result: ", serialize($response));
+        Hybrid_Logger::debug("OAuth2Client::request(). dump request info: ", $this->_helperData->serialize(curl_getinfo($ch)));
+        Hybrid_Logger::debug("OAuth2Client::request(). dump request result: ", $this->_helperData->serialize($response));
 
         $this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->http_info = array_merge($this->http_info, curl_getinfo($ch));
