@@ -22,7 +22,7 @@ define([
     'jquery',
     'Magento_Customer/js/customer-data',
     'mage/translate',
-    'mageplaza/core/jquery/popup'
+    'Mageplaza_Core/js/jquery.magnific-popup.min'
 ], function ($, customerData, $t) {
     'use strict';
 

@@ -1670,11 +1670,6 @@
 #bnt-social-login-authentication{
     margin: 12px 80px;
 }
-.grecaptcha-badge{
-    visibility: unset !important;
-    position: unset !important;
-    height: 70px !important;
-}
 .actions-toolbar > .secondary:last-child{
     float: left;
 }
