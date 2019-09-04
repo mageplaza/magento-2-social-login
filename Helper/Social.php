@@ -164,7 +164,7 @@ class Social extends HelperData
                 $param = 'live.php';
                 break;
             case 'Yahoo':
-                return $this->getDomainUrl();
+                return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
         }
@@ -173,18 +173,6 @@ class Social extends HelperData
         }
 
         return $authUrl . ($param ? (strpos($authUrl, '?') ? '&' : '?') . $param : '');
-    }
-
-    /**
-     * @return mixed
-     * @throws LocalizedException
-     */
-    public function getDomainUrl()
-    {
-        $url = $this->getBaseAuthUrl();
-        $parse = parse_url($url);
-
-        return $parse['host'];
     }
 
     /**

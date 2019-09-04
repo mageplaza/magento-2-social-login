@@ -38,7 +38,7 @@
                         <div class="control">
                             <input name="username" id="social_login_email" type="email" class="input-text"
                                    value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()) :
-                                        ?> autocomplete="off"<?php endif; ?>
+                                ?> autocomplete="off"<?php endif; ?>
                                    title="<?= __('Email') ?>"
                                    data-validate="{required:true, 'validate-email':true}">
                         </div>
@@ -60,15 +60,19 @@
                                 <span><?= __('Login') ?></span>
                             </button>
                         </div>
-                        <div class="secondary">
-                            <a class="action remind" href="#"><span><?= __('Forgot Your Password?') ?></span></a>
-                        </div>
                     </div><br>
                     <div class="actions-toolbar">
                         <div class="primary">
-                            <a class="action create" href="#"><span><?= __('Create New Account?') ?></span></a>
+                            <a class="action remind" href="#"><span><?= __('Forgot Your Password?') ?></span></a>
                         </div>
-                    </div>
+                    </div><br>
+                    <?php if ($block->getFullActionName() !== 'checkout_index_index') : ?>
+                        <div class="actions-toolbar">
+                            <div class="primary">
+                                <a class="action create" href="#"><span><?= __('Create New Account?') ?></span></a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </fieldset>
             </form>
         </div>

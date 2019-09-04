@@ -137,4 +137,5 @@ class Social extends Template
 
         return $this->getUrl('sociallogin/social/login', $params);
     }
+
 }
