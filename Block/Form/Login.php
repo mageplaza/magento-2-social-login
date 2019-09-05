@@ -35,12 +35,4 @@ class Login extends \Magento\Customer\Block\Form\Login
     {
         return $this;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFullActionName()
-    {
-        return $this->_request->getFullActionName();
-    }
 }

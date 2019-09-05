@@ -66,13 +66,11 @@
                             <a class="action remind" href="#"><span><?= __('Forgot Your Password?') ?></span></a>
                         </div>
                     </div><br>
-                    <?php if ($block->getFullActionName() !== 'checkout_index_index') : ?>
-                        <div class="actions-toolbar">
-                            <div class="primary">
-                                <a class="action create" href="#"><span><?= __('Create New Account?') ?></span></a>
-                            </div>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <a class="action create" href="#"><span><?= __('Create New Account?') ?></span></a>
                         </div>
-                    <?php endif; ?>
+                    </div>
                 </fieldset>
             </form>
         </div>
