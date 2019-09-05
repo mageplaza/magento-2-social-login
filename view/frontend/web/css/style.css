@@ -140,7 +140,8 @@
     margin-left: 25px;
     color: #ffffff;
 }
-.block-authentication .actions-toolbar{
+
+.block-authentication .actions-toolbar {
     margin-bottom: unset !important;
 }
 
@@ -849,9 +850,11 @@
     color: #0370c4;
     background-color: #fff
 }
+
 .btn-mailru .fa-mailru {
     background: url("images/mailru-logo.png") no-repeat;
 }
+
 .btn-mailru .fa-mailru {
     content: ""
 }
@@ -1667,13 +1670,20 @@
 .btn-live .fa-live:before {
     content: ""
 }
-#bnt-social-login-authentication{
+
+#bnt-social-login-authentication {
     margin: 12px 80px;
 }
-.actions-toolbar > .secondary:last-child{
+
+.actions-toolbar > .secondary:last-child {
     float: left;
 }
-@media only screen and (min-width: 768px){
+
+.form-customer-login .g-recaptcha {
+    margin: unset !important;
+}
+
+@media only screen and (min-width: 768px) {
     .popup-authentication .actions-toolbar {
         margin-bottom: 0;
         margin-top: unset !important;
