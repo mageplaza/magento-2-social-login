@@ -1682,7 +1682,6 @@
 .form-customer-login .g-recaptcha {
     margin: unset !important;
 }
-
 @media only screen and (min-width: 768px) {
     .popup-authentication .actions-toolbar {
         margin-bottom: 0;
