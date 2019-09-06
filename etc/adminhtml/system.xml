@@ -390,14 +390,6 @@
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
-                    <label>Callback Url</label>
-                    <validate>required-entry</validate>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort Order</label>
                     <depends>
