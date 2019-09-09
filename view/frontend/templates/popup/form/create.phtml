@@ -56,7 +56,7 @@
                     <?php $_dob = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Dob') ?>
                     <?php if ($_dob->isEnabled()) : ?>
                         <div class="field date field-dob">
-                            <label class="label" for="dob"><span>Date of Birth</span></label>
+                            <label class="label" for="dob"><span><?= __('Date of Birth') ?></span></label>
                             <div class="control customer-dob">
                                 <input type="text" name="mp_sociallogin_dob" id="mp_sociallogin_dob" value="" class="" data-validate="{"validate-date":{"dateFormat":"M\/d\/Y"}}"/>
                                 <script type="text/javascript">
@@ -66,7 +66,11 @@
                                             dateFormat: "M/d/Y",
                                             buttonImage: "<?= /* @noEscape */ $_dob->getViewFileUrl('Magento_Theme::calendar.png')?>",
                                             yearRange: "-120y:c+nn",
-                                            buttonText: "Select Date", maxDate: "-1d", changeMonth: true, changeYear: true, showOn: "both"
+                                            buttonText: "Select Date",
+                                            maxDate: "-1d",
+                                            changeMonth: true,
+                                            changeYear: true,
+                                            showOn: "both"
                                         })
                                     });
                                 </script>

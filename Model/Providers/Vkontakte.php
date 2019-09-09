@@ -15,6 +15,7 @@ use Hybrid_User_Profile;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use OAuth2Client;
+use RuntimeException;
 
 /**
  * Class Vkontakte
@@ -22,11 +23,11 @@ use OAuth2Client;
  */
 class Vkontakte extends Hybrid_Provider_Model_OAuth2
 {
-    public $scope = 'email';
+    public $scope   = 'email';
 
     public $version = '5.0';
 
-    public $fields = [
+    public $fields  = [
         'identifier'  => 'id',
         'firstName'   => 'first_name',
         'lastName'    => 'last_name',
@@ -53,9 +54,9 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     {
         parent::initialize();
 
-        $this->api->api_base_url  = 'https://api.vk.com/method/';
+        $this->api->api_base_url = 'https://api.vk.com/method/';
         $this->api->authorize_url = 'https://oauth.vk.com/authorize';
-        $this->api->token_url     = 'https://oauth.vk.com/token';
+        $this->api->token_url = 'https://oauth.vk.com/token';
         if (!empty($this->config['fields'])) {
             $this->fields = $this->config['fields'];
         }
@@ -86,8 +87,8 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     {
         /** @var RequestInterface $request */
         $request = $this->getDataObject(RequestInterface::class);
-        $params  = $request->getParams();
-        $error   = array_key_exists('error', $params) ? $params['error'] : '';
+        $params = $request->getParams();
+        $error = array_key_exists('error', $params) ? $params['error'] : '';
 
         if ($error) {
             throw new Exception("Authentication failed! {$this->providerId} returned an error: $error", 5);
@@ -111,8 +112,10 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         $this->token('expires_at', $this->api->access_token_expires_at);
 
         Hybrid_Auth::storage()->set("hauth_session.{$this->providerId}.user_id", $response->user_id);
-        Hybrid_Auth::storage()->set("hauth_session.{$this->providerId}.user_email",
-            !empty($response->email) ? $response->email : null);
+        Hybrid_Auth::storage()->set(
+            "hauth_session.{$this->providerId}.user_email",
+            !empty($response->email) ? $response->email : null
+        );
 
         // set user connected locally
         $this->setUserConnected();
@@ -124,18 +127,19 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
      */
     function getUserProfile()
     {
-
         $this->refreshToken();
 
         $params['user_ids'] = Hybrid_Auth::storage()->get("hauth_session.{$this->providerId}.user_id");
-        $params['fields']   = implode(',', $this->fields);
-        $params['v']        = $this->version;
+        $params['fields'] = implode(',', $this->fields);
+        $params['v'] = $this->version;
 
         $response = $this->api->api('users.get', 'GET', $params);
 
         if (isset($response->error)) {
-            throw new \RuntimeException("User profile request failed! {$this->providerId} returned an error #{$response->error->error_code}: {$response->error->error_msg}",
-                6);
+            throw new RuntimeException(
+                "User profile request failed! {$this->providerId} returned an error #{$response->error->error_code}: {$response->error->error_msg}",
+                6
+            );
         }
 
         if (!isset($response->response[0], $response->response[0]->id)) {
@@ -213,13 +217,13 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
             $birthday = explode('.', $user->bdate);
             switch (count($birthday)) {
                 case 3:
-                    $user->birthDay   = (int) $birthday[0];
+                    $user->birthDay = (int) $birthday[0];
                     $user->birthMonth = (int) $birthday[1];
-                    $user->birthYear  = (int) $birthday[2];
+                    $user->birthYear = (int) $birthday[2];
                     break;
 
                 case 2:
-                    $user->birthDay   = (int) $birthday[0];
+                    $user->birthDay = (int) $birthday[0];
                     $user->birthMonth = (int) $birthday[1];
                     break;
             }
@@ -228,7 +232,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         if (!empty($user->city) && $withAdditionalRequests) {
             $params = ['city_ids' => $user->city];
             $cities = (array) $this->api->api('database.getCitiesById', 'GET', $params);
-            $city   = reset($cities);
+            $city = reset($cities);
 
             if (is_array($city)) {
                 $city = reset($city);
@@ -240,9 +244,9 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         }
 
         if (!empty($user->country) && $withAdditionalRequests) {
-            $params    = ['country_ids' => $user->country];
+            $params = ['country_ids' => $user->country];
             $countries = (array) $this->api->api('database.getCountriesById', 'GET', $params);
-            $country   = reset($countries);
+            $country = reset($countries);
 
             if (is_array($country)) {
                 $country = reset($country);
