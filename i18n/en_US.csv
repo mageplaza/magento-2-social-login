@@ -50,6 +50,7 @@ Zoom-out,Zoom-out
 "Or Sign In With","Or Sign In With"
 "Create New Account","Create New Account"
 "Sign Up for Newsletter","Sign Up for Newsletter"
+"Date of Birth","Date of Birth"
 "Address Information","Address Information"
 Company,Company
 "Phone Number","Phone Number"
@@ -62,7 +63,6 @@ State/Province,State/Province
 "Zip/Postal Code","Zip/Postal Code"
 Country,Country
 "Confirm Password","Confirm Password"
-"Terms and Conditions","Terms and Conditions"
 "Create an Account","Create an Account"
 Back,Back
 "Real email address is required to social networks","Real email address is required to social networks"

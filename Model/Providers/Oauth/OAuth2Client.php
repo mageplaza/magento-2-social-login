@@ -11,8 +11,8 @@ namespace Mageplaza\SocialLogin\Model\Providers\Oauth;
 // v0.1.1
 use Exception;
 use Hybrid_Logger;
-use StdClass;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
+use StdClass;
 
 class OAuth2Client
 {
@@ -88,8 +88,7 @@ class OAuth2Client
         $redirect_uri = '',
         $compressed = false,
         HelperData $helperData
-    )
-    {
+    ) {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->redirect_uri = $redirect_uri;
@@ -321,8 +320,14 @@ class OAuth2Client
         if ($response === false) {
             Hybrid_Logger::error("OAuth2Client::request(). curl_exec error: ", curl_error($ch));
         }
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request info: ", $this->_helperData->serialize(curl_getinfo($ch)));
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request result: ", $this->_helperData->serialize($response));
+        Hybrid_Logger::debug(
+            "OAuth2Client::request(). dump request info: ",
+            $this->_helperData->serialize(curl_getinfo($ch))
+        );
+        Hybrid_Logger::debug(
+            "OAuth2Client::request(). dump request result: ",
+            $this->_helperData->serialize($response)
+        );
 
         $this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->http_info = array_merge($this->http_info, curl_getinfo($ch));

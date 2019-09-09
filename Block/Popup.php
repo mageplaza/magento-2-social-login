@@ -155,5 +155,4 @@ class Popup extends Template
     {
         return (bool) $this->helperData->isSecure();
     }
-
 }
