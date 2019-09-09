@@ -1677,6 +1677,8 @@
 
 .actions-toolbar > .secondary:last-child {
     float: left;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
 .form-customer-login .g-recaptcha {
