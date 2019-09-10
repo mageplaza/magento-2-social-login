@@ -36,37 +36,37 @@
                 <style_management>#3399cc</style_management>
             </general>
             <facebook>
-                <sort_order>1</sort_order>
+                <sort_order>10</sort_order>
             </facebook>
             <google>
-                <sort_order>2</sort_order>
+                <sort_order>20</sort_order>
             </google>
             <amazon>
-                <sort_order>3</sort_order>
+                <sort_order>30</sort_order>
             </amazon>
             <twitter>
-                <sort_order>4</sort_order>
+                <sort_order>40</sort_order>
             </twitter>
             <linkedin>
-                <sort_order>5</sort_order>
+                <sort_order>50</sort_order>
             </linkedin>
             <yahoo>
-                <sort_order>6</sort_order>
+                <sort_order>60</sort_order>
             </yahoo>
             <foursquare>
-                <sort_order>7</sort_order>
+                <sort_order>70</sort_order>
             </foursquare>
             <instagram>
-                <sort_order>8</sort_order>
+                <sort_order>80</sort_order>
             </instagram>
             <vkontakte>
-                <sort_order>9</sort_order>
+                <sort_order>90</sort_order>
             </vkontakte>
             <github>
-                <sort_order>10</sort_order>
+                <sort_order>100</sort_order>
             </github>
             <live>
-                <sort_order>11</sort_order>
+                <sort_order>110</sort_order>
             </live>
         </sociallogin>
     </default>
