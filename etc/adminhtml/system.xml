@@ -287,7 +287,7 @@
                 </field>
                 <field id="redirect_url" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
-                    <label>Callback Domain</label>
+                    <label>Redirect URI(s)</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
