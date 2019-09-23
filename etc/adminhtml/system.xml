@@ -47,6 +47,10 @@
                     <label>Use Popup Login</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="authentication_popup" translate="label comment" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use Popup Login As Authentication Popup</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="link_trigger" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Popup Links Selector</label>
                     <comment>Comma-separated.</comment>

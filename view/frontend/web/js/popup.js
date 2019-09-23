@@ -76,6 +76,7 @@ define([
             this.initObject();
             this.initLink();
             this.initObserve();
+            this.replaceAuthModal();
             window.fakeEmailCallback = function (type) {
                 self.options.fakeEmailType = type;
                 self.showEmail();
@@ -86,20 +87,20 @@ define([
          * Init object will be used
          */
         initObject: function () {
-            this.loginForm = $(this.options.loginForm);
+            this.loginForm  = $(this.options.loginForm);
             this.createForm = $(this.options.createForm);
             this.forgotForm = $(this.options.forgotForm);
 
             this.forgotFormContainer = $(this.options.forgotFormContainer);
             this.createFormContainer = $(this.options.createFormContainer);
-            this.loginFormContainer = $(this.options.loginFormContainer);
+            this.loginFormContainer  = $(this.options.loginFormContainer);
 
-            this.loginFormContent = $(this.options.loginFormContent);
+            this.loginFormContent  = $(this.options.loginFormContent);
             this.forgotFormContent = $(this.options.forgotFormContent);
             this.createFormContent = $(this.options.createFormContent);
 
-            this.emailFormContainer = $(this.options.emailFormContainer);
-            this.fakeEmailFrom = $(this.options.fakeEmailFrom);
+            this.emailFormContainer   = $(this.options.emailFormContainer);
+            this.fakeEmailFrom        = $(this.options.fakeEmailFrom);
             this.fakeEmailFormContent = $(this.options.fakeEmailFormContent);
         },
 
@@ -107,18 +108,16 @@ define([
          * Init links login
          */
         initLink: function () {
-            var self = this,
+            var self       = this,
                 headerLink = $(this.options.headerLink);
 
             if (headerLink.length) {
                 headerLink.find('a').each(function (link) {
-                    var el = $(this),
+                    var el   = $(this),
                         href = el.attr('href');
 
                     if (typeof href !== 'undefined' && (href.search('customer/account/login') !== -1 || href.search('customer/account/create') !== -1)) {
-                        el.addClass('social-login');
-                        el.attr('href', self.options.popup);
-                        el.attr('data-effect', self.options.popupEffect);
+                        self.addAttribute(el);
                         el.on('click', function (event) {
                             if (href.search('customer/account/create') !== -1) {
                                 self.showCreate();
@@ -130,23 +129,13 @@ define([
                         });
                     }
                 });
-
-                headerLink.magnificPopup({
-                    delegate: 'a.social-login',
-                    removalDelay: 500,
-                    callbacks: {
-                        beforeOpen: function () {
-                            this.st.mainClass = this.st.el.attr('data-effect');
-                        }
-                    },
-                    midClick: true
-                });
+                self.enablePopup(headerLink, 'a.social-login');
             }
 
             this.options.createFormUrl = this.correctUrlProtocol(this.options.createFormUrl);
-            this.options.formLoginUrl = this.correctUrlProtocol(this.options.formLoginUrl);
+            this.options.formLoginUrl  = this.correctUrlProtocol(this.options.formLoginUrl);
             this.options.forgotFormUrl = this.correctUrlProtocol(this.options.forgotFormUrl);
-            this.options.fakeEmailUrl = this.correctUrlProtocol(this.options.fakeEmailUrl);
+            this.options.fakeEmailUrl  = this.correctUrlProtocol(this.options.fakeEmailUrl);
         },
 
         /**
@@ -320,15 +309,15 @@ define([
                 return;
             }
 
-            var self = this,
-                options = this.options,
-                loginData = {},
+            var self          = this,
+                options       = this.options,
+                loginData     = {},
                 formDataArray = this.loginForm.serializeArray();
 
             formDataArray.forEach(function (entry) {
                 loginData[entry.name] = entry.value;
                 if (entry.name.includes('user_login')) {
-                    loginData['captcha_string'] = entry.value;
+                    loginData['captcha_string']  = entry.value;
                     loginData['captcha_form_id'] = 'user_login';
                 }
             });
@@ -372,8 +361,8 @@ define([
                 return;
             }
 
-            var self = this,
-                options = this.options,
+            var self       = this,
+                options    = this.options,
                 parameters = this.forgotForm.serialize();
 
             this.appendLoading(this.forgotFormContent);
@@ -399,12 +388,12 @@ define([
                 return;
             }
             var input = $("<input>")
-                .attr("type", "hidden")
-                .attr("name", "type").val(this.options.fakeEmailType.toLowerCase());
+            .attr("type", "hidden")
+            .attr("name", "type").val(this.options.fakeEmailType.toLowerCase());
             $(this.fakeEmailFrom).append($(input));
 
-            var self = this;
-            var options = this.options,
+            var self       = this;
+            var options    = this.options,
                 parameters = this.fakeEmailFrom.serialize();
 
             this.appendLoading(this.fakeEmailFormContent);
@@ -436,8 +425,8 @@ define([
                 return;
             }
 
-            var self = this,
-                options = this.options,
+            var self       = this,
+                options    = this.options,
                 parameters = this.createForm.serialize();
 
             this.appendLoading(this.createFormContent);
@@ -483,7 +472,7 @@ define([
          * @param response
          */
         addMsg: function (block, response) {
-            var message = response.message,
+            var message      = response.message,
                 messageClass = response.success ? this.options.successMsgClass : this.options.errorMsgClass;
 
             if (typeof (message) === 'object' && message.length > 0) {
@@ -520,6 +509,69 @@ define([
             }
 
             currentMessage.append($('<div>' + message + '</div>'));
+        },
+
+        /**
+         * Replace Authentication Popup with SL popup
+         */
+        replaceAuthModal: function () {
+            var self           = this,
+                cartSummary    = $('.cart-summary'),
+                child_selector = 'button.social-login',
+                cart           = customerData.get('cart'),
+                customer       = customerData.get('customer'),
+                miniCart       = $('#minicart-content-wrapper'),
+                pccBtn         = $('button[data-role = proceed-to-checkout]');
+
+
+            self.addAttribute(pccBtn);
+            pccBtn.on('click', function (event) {
+                if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
+                    self.showLogin();
+                    event.preventDefault();
+                }
+            });
+
+            miniCart.on('click', '#top-cart-btn-checkout', function (event) {
+                if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
+                    event.stopPropagation();
+                    var el = $(this);
+                    self.addAttribute(el);
+                    self.showLogin();
+                    event.preventDefault();
+                }
+            });
+            self.enablePopup(cartSummary, child_selector);
+            self.enablePopup(miniCart, child_selector)
+        },
+
+        /**
+         * Add attribute to element
+         * @param element
+         */
+        addAttribute: function (element) {
+            var self = this;
+            element.addClass('social-login');
+            element.attr('href', self.options.popup);
+            element.attr('data-effect', self.options.popupEffect);
+        },
+
+        /**
+         *  Enable Magnific Popup
+         * @param parent_selector
+         * @param child_selector
+         */
+        enablePopup: function (parent_selector, child_selector) {
+            parent_selector.magnificPopup({
+                delegate: child_selector,
+                removalDelay: 500,
+                callbacks: {
+                    beforeOpen: function () {
+                        this.st.mainClass = this.st.el.attr('data-effect');
+                    }
+                },
+                midClick: true
+            });
         }
     });
 

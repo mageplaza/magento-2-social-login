@@ -1,3 +1,5 @@
+<?xml version="1.0"?>
+<!--
 /**
  * Mageplaza
  *
@@ -13,19 +15,13 @@
  * version in the future.
  *
  * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
+ * @package     Mageplaza_FreeShippingBar
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-
-var config = {
-    paths: {
-        socialProvider: 'Mageplaza_SocialLogin/js/provider',
-        socialPopupForm: 'Mageplaza_SocialLogin/js/popup'
-    },
-    map: {
-        '*': {
-            'Magento_Checkout/js/proceed-to-checkout': 'Mageplaza_SocialLogin/js/proceed-to-checkout'
-        }
-    }
-};
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="social_login_add_data" type="Mageplaza\SocialLogin\Plugin\CustomerData\Cart"/>
+    </type>
+</config>

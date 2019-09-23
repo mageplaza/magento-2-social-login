@@ -32,6 +32,7 @@
                 <send_password>0</send_password>
                 <social_display>1,2,3</social_display>
                 <popup_login>1</popup_login>
+                <authentication_popup>1</authentication_popup>
                 <popup_effect>mfp-move-from-top</popup_effect>
                 <style_management>#3399cc</style_management>
             </general>
