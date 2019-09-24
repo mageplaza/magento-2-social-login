@@ -520,7 +520,7 @@ define([
                 child_selector = 'button.social-login',
                 cart           = customerData.get('cart'),
                 customer       = customerData.get('customer'),
-                miniCart       = $('#minicart-content-wrapper'),
+                miniCartBtn    = $('#minicart-content-wrapper'),
                 pccBtn         = $('button[data-role = proceed-to-checkout]');
 
 
@@ -532,17 +532,22 @@ define([
                 }
             });
 
-            miniCart.on('click', '#top-cart-btn-checkout', function (event) {
+            var existCondition = setInterval(function () {
+                if ($('#minicart-content-wrapper #top-cart-btn-checkout').length) {
+                    clearInterval(existCondition);
+                    self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
+                }
+            }, 100);
+
+            $('#minicart-content-wrapper').on('click', ' #top-cart-btn-checkout', function (event) {
                 if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
                     event.stopPropagation();
-                    var el = $(this);
-                    self.addAttribute(el);
                     self.showLogin();
                     event.preventDefault();
                 }
             });
             self.enablePopup(cartSummary, child_selector);
-            self.enablePopup(miniCart, child_selector)
+            self.enablePopup(miniCartBtn, child_selector)
         },
 
         /**
