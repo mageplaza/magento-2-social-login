@@ -41,6 +41,7 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\User\Model\User;
 
 /**
  * Class Social
@@ -49,6 +50,10 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Social extends AbstractModel
 {
+    const STATUS_PROCESS = 'processing';
+    const STATUS_LOGIN   = 'logging';
+    const STATUS_CONNECT = 'connected';
+
     /**
      * @type StoreManagerInterface
      */
@@ -80,6 +85,11 @@ class Social extends AbstractModel
     protected $apiName;
 
     /**
+     * @var UserFactory
+     */
+    protected $_userModel;
+
+    /**
      * Social constructor.
      *
      * @param Context $context
@@ -91,6 +101,7 @@ class Social extends AbstractModel
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
+     * @param UserFactory $userFactory
      * @param array $data
      */
     public function __construct(
@@ -101,15 +112,17 @@ class Social extends AbstractModel
         CustomerRepositoryInterface $customerRepository,
         StoreManagerInterface $storeManager,
         \Mageplaza\SocialLogin\Helper\Social $apiHelper,
+        User $userModel,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        $this->customerFactory = $customerFactory;
-        $this->customerRepository = $customerRepository;
+        $this->customerFactory     = $customerFactory;
+        $this->customerRepository  = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
-        $this->storeManager = $storeManager;
-        $this->apiHelper = $apiHelper;
+        $this->storeManager        = $storeManager;
+        $this->apiHelper           = $apiHelper;
+        $this->_userModel          = $userModel;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -182,9 +195,9 @@ class Social extends AbstractModel
             // If customer exists existing hash will be used by Repository
             $customer = $this->customerRepository->save($customer);
 
-            $objectManager = ObjectManager::getInstance();
-            $mathRandom = $objectManager->get(Random::class);
-            $newPasswordToken = $mathRandom->getUniqueHash();
+            $objectManager     = ObjectManager::getInstance();
+            $mathRandom        = $objectManager->get(Random::class);
+            $newPasswordToken  = $mathRandom->getUniqueHash();
             $accountManagement = $objectManager->get(AccountManagementInterface::class);
             $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
 
@@ -195,7 +208,7 @@ class Social extends AbstractModel
                 );
             }
 
-            $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
+            $this->setAuthorCustomer($data['identifier'], $data['type'], $customer->getId());
         } catch (AlreadyExistsException $e) {
             throw new InputMismatchException(
                 __('A customer with the same email already exists in an associated website.')
@@ -226,22 +239,21 @@ class Social extends AbstractModel
 
     /**
      * @param $identifier
-     * @param $customerId
+     * @param null $customerId
      * @param $type
+     * @param null $userId
      *
      * @return $this
      * @throws Exception
      */
-    public function setAuthorCustomer($identifier, $customerId, $type)
+    public function setAuthorCustomer($identifier, $type, $customerId = null)
     {
         $this->setData([
             'social_id'              => $identifier,
             'customer_id'            => $customerId,
             'type'                   => $type,
             'is_send_password_email' => $this->apiHelper->canSendPassword()
-        ])
-            ->setId(null)
-            ->save();
+        ])->setId(null)->save();
 
         return $this;
     }
@@ -249,21 +261,24 @@ class Social extends AbstractModel
     /**
      * @param $apiName
      *
+     * @param $area
+     *
      * @return mixed
      * @throws LocalizedException
      */
-    public function getUserProfile($apiName)
+    public function getUserProfile($apiName, $area = null)
     {
+
         $config = [
-            'base_url'   => $this->apiHelper->getBaseAuthUrl(),
+            'base_url'   => $this->apiHelper->getBaseAuthUrl($area),
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
-            'debug_mode' => false
+            'debug_mode' => false,
         ];
+        $auth   = new Hybrid_Auth($config);
 
-        $auth = new Hybrid_Auth($config);
-        $adapter = $auth->authenticate($apiName, $this->apiHelper->getAuthenticateParams($apiName));
+        $adapter = $auth->authenticate($apiName);
 
         return $adapter->getUserProfile();
     }
@@ -283,5 +298,77 @@ class Social extends AbstractModel
         ];
 
         return array_merge($data, $this->apiHelper->getSocialConfig($apiName));
+    }
+
+    /**
+     * @param $identify
+     * @param $type
+     *
+     * @return User|UserFactory
+     */
+    public function getUserBySocial($identify, $type)
+    {
+        $user = $this->_userModel;
+
+        $socialCustomer = $this->getCollection()
+            ->addFieldToFilter('social_id', $identify)
+            ->addFieldToFilter('type', $type)->addFieldToFilter('user_id', ['notnull' => true])
+            ->getFirstItem();
+
+
+        if ($socialCustomer && $socialCustomer->getId()) {
+            $user->load($socialCustomer->getUserId());
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return mixed
+     */
+    public function getUser($type)
+    {
+        return $this->getCollection()
+            ->addFieldToSelect('user_id')
+            ->addFieldToSelect('social_customer_id')
+            ->addFieldToFilter('type', $type)
+            ->addFieldToFilter('status', self::STATUS_LOGIN)
+            ->getFirstItem();
+    }
+
+    /**
+     * @param $socialCustomerId
+     * @param $identifier
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function updateAuthCustomer($socialCustomerId, $identifier)
+    {
+        $social = $this->load($socialCustomerId);
+        $social->addData([
+            'social_id' => $identifier,
+            'status'    => self::STATUS_CONNECT
+        ]);
+        $social->save();
+
+        return $this;
+    }
+
+    /**
+     * @param $socialCustomerId
+     * @param $status
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function updateStatus($socialCustomerId, $status)
+    {
+        $social = $this->load($socialCustomerId);
+        $social->addData(['status' => $status])->save();
+
+        return $this;
     }
 }
