@@ -29,6 +29,7 @@ use Mageplaza\SocialLogin\Model\Providers\Amazon;
 use Mageplaza\SocialLogin\Model\Providers\GitHub;
 use Mageplaza\SocialLogin\Model\Providers\Instagram;
 use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Class Social
@@ -124,6 +125,16 @@ class Social extends HelperData
     /**
      * @param null $storeId
      *
+     * @return array|mixed
+     */
+    public function isSignInAsAdmin($storeId = null)
+    {
+        return $this->getConfigValue("sociallogin/{$this->_type}/admin", $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
      * @return mixed
      */
     public function getAppId($storeId = null)
@@ -179,16 +190,17 @@ class Social extends HelperData
      * @return string
      * @throws LocalizedException
      */
-    public function getBaseAuthUrl()
+    public function getBaseAuthUrl($area = null)
     {
         $storeId = $this->getScopeUrl();
+
         /** @var Store $store */
         $store = $this->storeManager->getStore($storeId);
 
         return $this->_getUrl('sociallogin/social/callback', [
             '_nosid'  => true,
             '_scope'  => $storeId,
-            '_secure' => $store->isUrlSecure()
+            '_secure' => true
         ]);
     }
 
