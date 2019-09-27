@@ -94,7 +94,8 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
             'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
-            'Google'    => ['scope' => 'profile email']
+            'Google'    => ['scope' => 'profile email'],
+            'Paypal' => ['scope' =>['openid', 'profile', 'email', 'https://uri.paypal.com/services/paypalattributes']]
         ];
 
         if ($type && array_key_exists($type, $apiData)) {

@@ -50,9 +50,11 @@ use Magento\User\Model\User;
  */
 class Social extends AbstractModel
 {
-    const STATUS_PROCESS = 'processing';
-    const STATUS_LOGIN   = 'logging';
-    const STATUS_CONNECT = 'connected';
+    public const STATUS_PROCESS = 'processing';
+
+    public const STATUS_LOGIN = 'logging';
+
+    public const STATUS_CONNECT = 'connected';
 
     /**
      * @type StoreManagerInterface
@@ -85,7 +87,7 @@ class Social extends AbstractModel
     protected $apiName;
 
     /**
-     * @var UserFactory
+     * @var User
      */
     protected $_userModel;
 
@@ -99,9 +101,9 @@ class Social extends AbstractModel
      * @param CustomerRepositoryInterface $customerRepository
      * @param StoreManagerInterface $storeManager
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
+     * @param User $userModel
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
-     * @param UserFactory $userFactory
      * @param array $data
      */
     public function __construct(
@@ -208,7 +210,7 @@ class Social extends AbstractModel
                 );
             }
 
-            $this->setAuthorCustomer($data['identifier'], $data['type'], $customer->getId());
+            $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
         } catch (AlreadyExistsException $e) {
             throw new InputMismatchException(
                 __('A customer with the same email already exists in an associated website.')
@@ -246,7 +248,7 @@ class Social extends AbstractModel
      * @return $this
      * @throws Exception
      */
-    public function setAuthorCustomer($identifier, $type, $customerId = null)
+    public function setAuthorCustomer($identifier, $customerId, $type)
     {
         $this->setData([
             'social_id'              => $identifier,
@@ -276,6 +278,7 @@ class Social extends AbstractModel
             ],
             'debug_mode' => false,
         ];
+
         $auth   = new Hybrid_Auth($config);
 
         $adapter = $auth->authenticate($apiName);
@@ -328,12 +331,13 @@ class Social extends AbstractModel
      *
      * @return mixed
      */
-    public function getUser($type)
+    public function getUser($type, $identifier)
     {
         return $this->getCollection()
             ->addFieldToSelect('user_id')
             ->addFieldToSelect('social_customer_id')
             ->addFieldToFilter('type', $type)
+            ->addFieldToFilter('social_id', base64_decode($identifier))
             ->addFieldToFilter('status', self::STATUS_LOGIN)
             ->getFirstItem();
     }

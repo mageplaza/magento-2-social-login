@@ -102,7 +102,6 @@ class Social extends Template
             $button['key'] = $key;
             $button['btn_key'] = $this->getBtnKey($key);
         }
-
         return $availableButtons;
     }
 
