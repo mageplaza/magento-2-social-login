@@ -98,8 +98,9 @@
                     <comment><![CDATA[Create app <a href="https://developers.facebook.com/apps" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -140,8 +141,9 @@
                     <comment><![CDATA[Create app <a href="https://code.google.com/apis/console/" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -182,8 +184,9 @@
                     <comment><![CDATA[Create app <a href="https://sellercentral.amazon.com/gp/homepage.html" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -224,8 +227,9 @@
                     <comment><![CDATA[Create app <a href="https://dev.twitter.com/apps" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -269,8 +273,9 @@
                     <comment><![CDATA[Create app <a href="https://www.linkedin.com/secure/developer" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -311,8 +316,9 @@
                     <comment><![CDATA[Create app <a href="https://developer.yahoo.com/apps/" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -353,8 +359,9 @@
                     <comment><![CDATA[Create app <a href="https://www.foursquare.com/oauth/" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -395,8 +402,9 @@
                     <comment><![CDATA[Create app <a href="http://instagram.com/developer/clients/manage/" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -437,8 +445,9 @@
                     <comment><![CDATA[Create app <a href="https://new.vk.com/dev" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -472,8 +481,9 @@
                     <comment><![CDATA[Create app <a href="https://github.com/settings/applications/new" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -515,8 +525,9 @@
                     <comment><![CDATA[Create app <a href="https://account.live.com/developers/applications/create" target="_bank">here</a>]]></comment>
                 </field>
                 <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign in as admin</label>
+                    <label>Sign In As Admin</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
