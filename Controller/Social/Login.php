@@ -18,9 +18,7 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-
 namespace Mageplaza\SocialLogin\Controller\Social;
-
 use Exception;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Raw;
@@ -28,7 +26,6 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
-
 /**
  * Class Login
  * @package Mageplaza\SocialLogin\Controller\Social
@@ -46,33 +43,28 @@ class Login extends AbstractSocial
     {
         if ($this->checkCustomerLogin() && $this->session->isLoggedIn()) {
             $this->_redirect('customer/account');
-
             return;
         }
-
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type'));
         if (!$type) {
             $this->_forward('noroute');
-
             return;
         }
 
         try {
             $userProfile = $this->apiObject->getUserProfile($type);
+
             if (!$userProfile->identifier) {
                 return $this->emailRedirect($type);
             }
         } catch (Exception $e) {
             $this->setBodyResponse($e->getMessage());
-
             return;
         }
-
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         if (!$customer->getId()) {
             if (!$userProfile->email && $this->apiHelper->requireRealEmail()) {
                 $this->session->setUserProfile($userProfile);
-
                 return $this->_appendJs(sprintf(
                     "<script>window.close();window.opener.fakeEmailCallback('%s');</script>",
                     $type
@@ -81,10 +73,8 @@ class Login extends AbstractSocial
             $customer = $this->createCustomerProcess($userProfile, $type);
         }
         $this->refresh($customer);
-
         return $this->_appendJs();
     }
-
     /**
      * @return bool
      */
@@ -92,7 +82,6 @@ class Login extends AbstractSocial
     {
         return true;
     }
-
     /**
      * @param $message
      */
@@ -119,7 +108,6 @@ class Login extends AbstractSocial
 </style>
 Style;
         $content .= '</body></html>';
-
         $this->getResponse()->setBody($content);
     }
 }

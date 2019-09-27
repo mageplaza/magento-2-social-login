@@ -22,7 +22,6 @@
 namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Hybrid_Endpoint;
-
 /**
  * Class Callback
  *
@@ -65,6 +64,7 @@ class Callback extends AbstractSocial
     public function checkRequest($key, $value = null)
     {
         $param = $this->getRequest()->getParam($key, false);
+
         if ($value) {
             return $param === $value;
         }

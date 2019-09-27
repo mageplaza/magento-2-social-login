@@ -45,7 +45,6 @@ use Magento\User\Model\User;
 
 /**
  * Class Social
- *
  * @package Mageplaza\SocialLogin\Model
  */
 class Social extends AbstractModel
@@ -241,9 +240,8 @@ class Social extends AbstractModel
 
     /**
      * @param $identifier
-     * @param null $customerId
+     * @param $customerId
      * @param $type
-     * @param null $userId
      *
      * @return $this
      * @throws Exception
@@ -262,8 +260,7 @@ class Social extends AbstractModel
 
     /**
      * @param $apiName
-     *
-     * @param $area
+     * @param null $area
      *
      * @return mixed
      * @throws LocalizedException
@@ -277,16 +274,18 @@ class Social extends AbstractModel
                 $apiName => $this->getProviderData($apiName)
             ],
             'debug_mode' => false,
+            'debug_file' => BP . '/var/log/social.log'
         ];
 
-        $auth   = new Hybrid_Auth($config);
-
+        $auth    = new Hybrid_Auth($config);
         $adapter = $auth->authenticate($apiName);
 
         return $adapter->getUserProfile();
     }
 
     /**
+     * @param $apiName
+     *
      * @return array
      */
     public function getProviderData($apiName)
@@ -307,7 +306,7 @@ class Social extends AbstractModel
      * @param $identify
      * @param $type
      *
-     * @return User|UserFactory
+     * @return User
      */
     public function getUserBySocial($identify, $type)
     {
@@ -328,8 +327,9 @@ class Social extends AbstractModel
 
     /**
      * @param $type
+     * @param $identifier
      *
-     * @return mixed
+     * @return \Magento\Framework\DataObject
      */
     public function getUser($type, $identifier)
     {
