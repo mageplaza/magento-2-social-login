@@ -1685,6 +1685,10 @@
     margin: unset !important;
 }
 
+.box .box-content{
+    min-height: 345px;
+}
+
 @media only screen and (min-width: 768px) {
     .popup-authentication .actions-toolbar {
         margin-bottom: 0;

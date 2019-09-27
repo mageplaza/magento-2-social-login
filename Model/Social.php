@@ -49,11 +49,11 @@ use Magento\User\Model\User;
  */
 class Social extends AbstractModel
 {
-    public const STATUS_PROCESS = 'processing';
+    const STATUS_PROCESS = 'processing';
 
-    public const STATUS_LOGIN = 'logging';
+    const STATUS_LOGIN = 'logging';
 
-    public const STATUS_CONNECT = 'connected';
+    const STATUS_CONNECT = 'connected';
 
     /**
      * @type StoreManagerInterface

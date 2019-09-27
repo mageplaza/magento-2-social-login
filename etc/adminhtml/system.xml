@@ -131,6 +131,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="google" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -174,6 +175,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="amazon" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -217,6 +219,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="twitter" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -306,6 +309,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="yahoo" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -349,6 +353,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="foursquare" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -392,6 +397,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="instagram" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -435,6 +441,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="vkontakte" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -471,6 +478,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="github" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -515,6 +523,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
             <group id="live" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -559,6 +568,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
         </section>
