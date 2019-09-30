@@ -267,7 +267,6 @@ class Social extends AbstractModel
      */
     public function getUserProfile($apiName, $area = null)
     {
-
         $config = [
             'base_url'   => $this->apiHelper->getBaseAuthUrl($area),
             'providers'  => [
@@ -277,10 +276,19 @@ class Social extends AbstractModel
             'debug_file' => BP . '/var/log/social.log'
         ];
 
-        $auth    = new Hybrid_Auth($config);
-        $adapter = $auth->authenticate($apiName);
+        $auth = new Hybrid_Auth($config);
 
-        return $adapter->getUserProfile();
+        try {
+            $adapter     = $auth->authenticate($apiName);
+            $userProfile = $adapter->getUserProfile();
+        } catch (Exception $e) {
+            $auth->logoutAllProviders();
+            $auth        = new Hybrid_Auth($config);
+            $adapter     = $auth->authenticate($apiName);
+            $userProfile = $adapter->getUserProfile();
+        }
+
+        return $userProfile;
     }
 
     /**
