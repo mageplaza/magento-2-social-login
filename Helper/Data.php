@@ -21,12 +21,8 @@
 
 namespace Mageplaza\SocialLogin\Helper;
 
-use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData as CoreHelper;
-use Magento\Framework\Serialize\Serializer\Serialize;
 
 /**
  * Class Data
@@ -36,19 +32,6 @@ use Magento\Framework\Serialize\Serializer\Serialize;
 class Data extends CoreHelper
 {
     const CONFIG_MODULE_PATH = 'sociallogin';
-
-    public $_serialize;
-
-    public function __construct(
-        Context $context,
-        ObjectManagerInterface $objectManager,
-        StoreManagerInterface $storeManager,
-        Serialize $serialize
-    ) {
-        $this->_serialize = $serialize;
-
-        parent::__construct($context, $objectManager, $storeManager);
-    }
 
     /**
      * @param RequestInterface $request

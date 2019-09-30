@@ -29,7 +29,6 @@ use Mageplaza\SocialLogin\Model\Providers\Amazon;
 use Mageplaza\SocialLogin\Model\Providers\GitHub;
 use Mageplaza\SocialLogin\Model\Providers\Instagram;
 use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Class Social

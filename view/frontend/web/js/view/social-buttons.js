@@ -54,7 +54,6 @@ define(
              */
             socials: function () {
                 var socials = [];
-
                 $.each(this.buttonLists, function (key, social) {
                     socials.push(social);
                 });
