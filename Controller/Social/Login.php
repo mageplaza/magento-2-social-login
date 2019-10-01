@@ -62,9 +62,13 @@ class Login extends AbstractSocial
             return;
         }
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+        $userProfile->email = '';
+
         if (!$customer->getId()) {
-            if (!$userProfile->email && $this->apiHelper->requireRealEmail()) {
+            $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
+            if ((!$userProfile->email && $this->apiHelper->requireRealEmail()) || $requiredMoreInfo === 1) {
                 $this->session->setUserProfile($userProfile);
+
                 return $this->_appendJs(sprintf(
                     "<script>window.close();window.opener.fakeEmailCallback('%s');</script>",
                     $type

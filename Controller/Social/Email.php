@@ -82,7 +82,7 @@ class Email extends AbstractSocial
         CustomerFactory $customerFactory
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->customerFactory = $customerFactory;
+        $this->customerFactory   = $customerFactory;
 
         parent::__construct(
             $context,
@@ -106,8 +106,9 @@ class Email extends AbstractSocial
     {
         /** @var Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
+        $params     = $this->getRequest()->getParams();
+        $type       = $this->apiHelper->setType($params['type']);
 
-        $type = $this->apiHelper->setType($this->getRequest()->getParam('type', null));
         if (!$type) {
             $this->_forward('noroute');
 
@@ -116,7 +117,12 @@ class Email extends AbstractSocial
 
         $result = ['success' => false];
 
-        $realEmail = $this->getRequest()->getParam('realEmail', null);
+        $pwdObj    = $this->_objectManager->get('Magento\Framework\Encryption\EncryptorInterface');
+        $realEmail = $params['realEmail'];
+        $firstname = isset($params['firstname']) ? $params['firstname'] : null;
+        $lastname  = isset($params['lastname']) ? $params['lastname'] : null;
+        $password  = isset($params['password']) ? $pwdObj->getHash($params['password'], true) : null;
+
         if (!$realEmail) {
             $result['message'] = __('Email is Null');
 
@@ -132,15 +138,19 @@ class Email extends AbstractSocial
             return $resultJson->setData($result);
         }
 
-        $userProfile = $this->session->getUserProfile();
-        $userProfile->email = $realEmail;
+        $userProfile            = $this->session->getUserProfile();
+        $userProfile->email     = $realEmail;
+        $userProfile->firstName = $firstname ?: $userProfile->firstName;
+        $userProfile->lastName  = $lastname ?: $userProfile->lastName;
+        $userProfile->password  = $password ?: null;
+
 
         $customer = $this->createCustomerProcess($userProfile, $type);
         $this->refresh($customer);
 
         $result['success'] = true;
         $result['message'] = __('Success!');
-        $result['url'] = $this->_loginPostRedirect();
+        $result['url']     = $this->_loginPostRedirect();
 
         return $resultJson->setData($result);
     }

@@ -117,12 +117,12 @@ abstract class AbstractSocial extends Action
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory
     ) {
-        $this->storeManager = $storeManager;
-        $this->accountManager = $accountManager;
-        $this->apiHelper = $apiHelper;
-        $this->apiObject = $apiObject;
-        $this->session = $customerSession;
-        $this->accountRedirect = $accountRedirect;
+        $this->storeManager     = $storeManager;
+        $this->accountManager   = $accountManager;
+        $this->apiHelper        = $apiHelper;
+        $this->apiObject        = $apiObject;
+        $this->session          = $customerSession;
+        $this->accountRedirect  = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
 
         parent::__construct($context);
@@ -155,7 +155,8 @@ abstract class AbstractSocial extends Action
             'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
             'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
             'identifier' => $userProfile->identifier,
-            'type'       => $type
+            'type'       => $type,
+            'password'   => $userProfile->password
         ], $this->getUserData($userProfile));
 
         return $this->createCustomer($user, $type);

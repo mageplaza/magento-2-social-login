@@ -193,14 +193,18 @@ class Social extends AbstractModel
             ->setCreatedIn($store->getName());
 
         try {
-            // If customer exists existing hash will be used by Repository
-            $customer = $this->customerRepository->save($customer);
+            if ($data['password'] !== null) {
+                $customer = $this->customerRepository->save($customer, $data['password']);
+            } else {
+                // If customer exists existing hash will be used by Repository
+                $customer = $this->customerRepository->save($customer);
 
-            $objectManager     = ObjectManager::getInstance();
-            $mathRandom        = $objectManager->get(Random::class);
-            $newPasswordToken  = $mathRandom->getUniqueHash();
-            $accountManagement = $objectManager->get(AccountManagementInterface::class);
-            $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
+                $objectManager     = ObjectManager::getInstance();
+                $mathRandom        = $objectManager->get(Random::class);
+                $newPasswordToken  = $mathRandom->getUniqueHash();
+                $accountManagement = $objectManager->get(AccountManagementInterface::class);
+                $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
+            }
 
             if ($this->apiHelper->canSendPassword($store)) {
                 $this->getEmailNotification()->newAccount(

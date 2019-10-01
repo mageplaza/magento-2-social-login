@@ -35,6 +35,15 @@
                                    data-validate="{required:true, 'validate-email':true}"/>
                         </div>
                     </div>
+                    <?= $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Name')->setObject($block->getFormData())->setForceUseCustomerAttributes(true)->toHtml() ?>
+                    <div class="field password required">
+                        <label for="password" class="label"><span><?= __('Password') ?></span></label>
+                        <div class="control">
+                            <input type="password" name="password" id="password-social"
+                                   title="<?= __('Password') ?>" class="input-text"
+                                   data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
+                        </div>
+                    </div>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">

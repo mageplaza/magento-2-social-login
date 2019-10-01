@@ -64,7 +64,19 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[ Entering email address is required to social networks which don't provide real E-mail. ]]></comment>
                 </field>
-                <field id="popup_effect" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="require_more_info" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Require For More Info.</label>
+                    <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\RequestInfo</source_model>
+                    <comment>Request Customers To Enter Information When Creating An Account</comment>
+                </field>
+                <field id="information_require" translate="label comment" type="multiselect" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Information Required</label>
+                    <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Information</source_model>
+                    <depends>
+                        <field id="request_information" separator=",">1,2</field>
+                    </depends>
+                </field>
+                <field id="popup_effect" translate="label" type="select" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Popup Effect</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Effect</source_model>
                     <depends>

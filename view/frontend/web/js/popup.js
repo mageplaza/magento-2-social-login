@@ -408,7 +408,7 @@ define([
                 self.addMsg(self.fakeEmailFrom, response);
                 self.removeLoading(self.fakeEmailFormContent);
                 if (response.success) {
-                    if (response.url == '' || response.url == null) {
+                    if (response.url === '' || response.url == null) {
                         window.location.reload(true);
                     } else {
                         window.location.href = response.url;

@@ -112,6 +112,26 @@ class Data extends CoreHelper
     }
 
     /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function requiredMoreInfo($storeId = null)
+    {
+        return $this->getConfigGeneral('require_more_info', $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getInfoRequire($storeId = null)
+    {
+        return $this->getConfigGeneral('information_require', $storeId);
+    }
+
+    /**
      * @return mixed
      */
     public function isSecure()
