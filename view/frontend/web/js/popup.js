@@ -75,6 +75,7 @@ define([
             var self = this;
             this.initObject();
             this.initLink();
+            this.initCheckoutBtn();
             this.initObserve();
             this.replaceAuthModal();
             window.fakeEmailCallback = function (type) {
@@ -136,6 +137,31 @@ define([
             this.options.formLoginUrl  = this.correctUrlProtocol(this.options.formLoginUrl);
             this.options.forgotFormUrl = this.correctUrlProtocol(this.options.forgotFormUrl);
             this.options.fakeEmailUrl  = this.correctUrlProtocol(this.options.fakeEmailUrl);
+        },
+
+        /**
+         * Init checkout login button
+         */
+        initCheckoutBtn: function () {
+            var self = this;
+
+            var existCondition = setInterval(function () {
+                var el      = $('.authentication-wrapper .action-auth-toggle'),
+                    wrapper = $('.authentication-wrapper');
+
+                if (el.length) {
+                    clearInterval(existCondition);
+                    self.addAttribute(el);
+                    el.removeAttr('data-trigger');
+
+                    wrapper.on('click', '.action-auth-toggle', function (event) {
+                        self.showLogin();
+                        event.stopPropagation();
+                    });
+
+                    self.enablePopup(wrapper, 'button.social-login');
+                }
+            }, 100);
         },
 
         /**
@@ -523,31 +549,34 @@ define([
                 miniCartBtn    = $('#minicart-content-wrapper'),
                 pccBtn         = $('button[data-role = proceed-to-checkout]');
 
+            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
+                var condition = true;
 
-            self.addAttribute(pccBtn);
-            pccBtn.on('click', function (event) {
-                if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
-                    self.showLogin();
-                    event.preventDefault();
-                }
-            });
+                self.addAttribute(pccBtn);
+                pccBtn.on('click', function (event) {
+                    if (condition){
+                        self.showLogin();
+                        event.preventDefault();
+                    }
+                });
 
-            var existCondition = setInterval(function () {
-                if ($('#minicart-content-wrapper #top-cart-btn-checkout').length) {
-                    clearInterval(existCondition);
-                    self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
-                }
-            }, 100);
+                var existCondition = setInterval(function () {
+                    if ($('#minicart-content-wrapper #top-cart-btn-checkout').length) {
+                        clearInterval(existCondition);
+                        self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
+                    }
+                }, 100);
 
-            $('#minicart-content-wrapper').on('click', ' #top-cart-btn-checkout', function (event) {
-                if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
-                    event.stopPropagation();
-                    self.showLogin();
-                    event.preventDefault();
-                }
-            });
-            self.enablePopup(cartSummary, child_selector);
-            self.enablePopup(miniCartBtn, child_selector)
+                $('#minicart-content-wrapper').on('click', ' #top-cart-btn-checkout', function (event) {
+                    if (condition){
+                        event.stopPropagation();
+                        self.showLogin();
+                        event.preventDefault();
+                    }
+                });
+                self.enablePopup(cartSummary, child_selector);
+                self.enablePopup(miniCartBtn, child_selector)
+            }
         },
 
         /**
