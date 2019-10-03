@@ -33,10 +33,12 @@ use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
+use Magento\Framework\Encryption\EncryptorInterface;
 
 /**
  * Class AbstractSocial
@@ -51,9 +53,14 @@ class Email extends AbstractSocial
     protected $resultJsonFactory;
 
     /**
-     * @var Customer
+     * @var CustomerFactory
      */
     protected $customerFactory;
+
+    /**
+     * @var EncryptorInterface
+     */
+    protected $_encrypt;
 
     /**
      * Email constructor.
@@ -68,6 +75,7 @@ class Email extends AbstractSocial
      * @param RawFactory $resultRawFactory
      * @param JsonFactory $resultJsonFactory
      * @param CustomerFactory $customerFactory
+     * @param EncryptorInterface $encrypt
      */
     public function __construct(
         Context $context,
@@ -79,10 +87,12 @@ class Email extends AbstractSocial
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
-        CustomerFactory $customerFactory
+        CustomerFactory $customerFactory,
+        EncryptorInterface $encrypt
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->customerFactory   = $customerFactory;
+        $this->_encrypt          = $encrypt;
 
         parent::__construct(
             $context,
@@ -98,9 +108,10 @@ class Email extends AbstractSocial
 
     /**
      * @return ResponseInterface|Json|ResultInterface|void
+     * @throws FailureToSendException
      * @throws InputException
      * @throws LocalizedException
-     * @throws FailureToSendException
+     * @throws NoSuchEntityException
      */
     public function execute()
     {
@@ -115,19 +126,11 @@ class Email extends AbstractSocial
             return;
         }
 
-        $result = ['success' => false];
-
-        $pwdObj    = $this->_objectManager->get('Magento\Framework\Encryption\EncryptorInterface');
-        $realEmail = $params['realEmail'];
+        $result    = ['success' => false];
+        $realEmail = isset($params['realEmail']) ? $params['realEmail'] : null;
         $firstname = isset($params['firstname']) ? $params['firstname'] : null;
         $lastname  = isset($params['lastname']) ? $params['lastname'] : null;
-        $password  = isset($params['password']) ? $pwdObj->getHash($params['password'], true) : null;
-
-        if (!$realEmail) {
-            $result['message'] = __('Email is Null');
-
-            return $resultJson->setData($result);
-        }
+        $password  = isset($params['password']) ? $this->_encrypt->getHash($params['password'], true) : null;
 
         $customer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
@@ -139,11 +142,10 @@ class Email extends AbstractSocial
         }
 
         $userProfile            = $this->session->getUserProfile();
-        $userProfile->email     = $realEmail;
+        $userProfile->email     = $realEmail ?: $userProfile->email;
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
         $userProfile->lastName  = $lastname ?: $userProfile->lastName;
         $userProfile->password  = $password ?: null;
-
 
         $customer = $this->createCustomerProcess($userProfile, $type);
         $this->refresh($customer);

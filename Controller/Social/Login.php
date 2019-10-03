@@ -19,6 +19,7 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 namespace Mageplaza\SocialLogin\Controller\Social;
+
 use Exception;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Raw;
@@ -26,6 +27,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
+
 /**
  * Class Login
  * @package Mageplaza\SocialLogin\Controller\Social
@@ -33,21 +35,22 @@ use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 class Login extends AbstractSocial
 {
     /**
-     * @return $this|ResponseInterface|Raw|ResultInterface|void
-     * @throws Exception
+     * @return ResponseInterface|Raw|ResultInterface|Login|void
+     * @throws FailureToSendException
      * @throws InputException
      * @throws LocalizedException
-     * @throws FailureToSendException
      */
     public function execute()
     {
         if ($this->checkCustomerLogin() && $this->session->isLoggedIn()) {
             $this->_redirect('customer/account');
+
             return;
         }
         $type = $this->apiHelper->setType($this->getRequest()->getParam('type'));
         if (!$type) {
             $this->_forward('noroute');
+
             return;
         }
 
@@ -59,14 +62,15 @@ class Login extends AbstractSocial
             }
         } catch (Exception $e) {
             $this->setBodyResponse($e->getMessage());
+
             return;
         }
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
-        $userProfile->email = '';
 
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
-            if ((!$userProfile->email && $this->apiHelper->requireRealEmail()) || $requiredMoreInfo === 1) {
+            if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
+
                 $this->session->setUserProfile($userProfile);
 
                 return $this->_appendJs(sprintf(
@@ -77,8 +81,10 @@ class Login extends AbstractSocial
             $customer = $this->createCustomerProcess($userProfile, $type);
         }
         $this->refresh($customer);
+
         return $this->_appendJs();
     }
+
     /**
      * @return bool
      */
@@ -86,6 +92,7 @@ class Login extends AbstractSocial
     {
         return true;
     }
+
     /**
      * @param $message
      */

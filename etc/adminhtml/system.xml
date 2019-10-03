@@ -59,11 +59,6 @@
                         <field id="popup_login">1</field>
                     </depends>
                 </field>
-                <field id="fake_email_require" translate="label comment" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Require Real Email</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[ Entering email address is required to social networks which don't provide real E-mail. ]]></comment>
-                </field>
                 <field id="require_more_info" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Require For More Info.</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\RequestInfo</source_model>
@@ -73,7 +68,7 @@
                     <label>Information Required</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Information</source_model>
                     <depends>
-                        <field id="request_information" separator=",">1,2</field>
+                        <field id="require_more_info" separator=",">1,2</field>
                     </depends>
                 </field>
                 <field id="popup_effect" translate="label" type="select" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">

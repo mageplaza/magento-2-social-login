@@ -65,7 +65,9 @@ define([
             createForm: '#social-form-create',
             createAccBtn: '#social-form-create .action.create',
             createBackBtn: '#social-form-create .action.back',
-            createFormUrl: ''
+            createFormUrl: '',
+            showFields: '',
+            availableFields: ['name', 'email', 'password']
         },
 
         /**
@@ -78,6 +80,7 @@ define([
             this.initCheckoutBtn();
             this.initObserve();
             this.replaceAuthModal();
+            this.hideFieldOnPopup()
             window.fakeEmailCallback = function (type) {
                 self.options.fakeEmailType = type;
                 self.showEmail();
@@ -605,6 +608,26 @@ define([
                     }
                 },
                 midClick: true
+            });
+        },
+
+        /**
+         * function hide field not allow show on require more information popup
+         * */
+        hideFieldOnPopup: function () {
+            var self = this;
+            $.each(self.options.availableFields, function (k, fieldName) {
+                var elField   = $('.field-' + fieldName + '-social'),
+                    elConfirm = $('.field-confirmation-social');
+
+                if ($.inArray(fieldName, self.options.showFields.split(',')) === -1) {
+                    if (fieldName === 'password'){
+                        elConfirm.remove();
+                    }
+                    elField.remove();
+                } else {
+                    elField.show();
+                }
             });
         }
     });

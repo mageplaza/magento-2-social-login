@@ -106,16 +106,6 @@ class Data extends CoreHelper
      *
      * @return mixed
      */
-    public function requireRealEmail($storeId = null)
-    {
-        return $this->getConfigGeneral('fake_email_require', $storeId);
-    }
-
-    /**
-     * @param null $storeId
-     *
-     * @return mixed
-     */
     public function requiredMoreInfo($storeId = null)
     {
         return $this->getConfigGeneral('require_more_info', $storeId);
@@ -126,7 +116,7 @@ class Data extends CoreHelper
      *
      * @return mixed
      */
-    public function getInfoRequire($storeId = null)
+    public function getFieldCanShow($storeId = null)
     {
         return $this->getConfigGeneral('information_require', $storeId);
     }

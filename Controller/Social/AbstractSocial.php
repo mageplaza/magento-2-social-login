@@ -150,13 +150,14 @@ abstract class AbstractSocial extends Action
     public function createCustomerProcess($userProfile, $type)
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
+
         $user = array_merge([
             'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
             'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
             'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
             'identifier' => $userProfile->identifier,
             'type'       => $type,
-            'password'   => $userProfile->password
+            'password'   => isset($userProfile->password) ? $userProfile->password : null
         ], $this->getUserData($userProfile));
 
         return $this->createCustomer($user, $type);

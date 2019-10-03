@@ -149,7 +149,9 @@ class Social extends AbstractModel
         $socialCustomer = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
+            ->addFieldToFilter('status', ['null' => 'true'])
             ->getFirstItem();
+
         if ($socialCustomer && $socialCustomer->getId()) {
             $customer->load($socialCustomer->getCustomerId());
         }

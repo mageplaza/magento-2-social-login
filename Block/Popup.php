@@ -55,7 +55,7 @@ class Popup extends Template
         CustomerSession $customerSession,
         array $data = []
     ) {
-        $this->helperData = $helperData;
+        $this->helperData      = $helperData;
         $this->customerSession = $customerSession;
 
         parent::__construct($context, $data);
@@ -69,8 +69,8 @@ class Popup extends Template
     public function isEnabled()
     {
         return $this->helperData->isEnabled()
-               && !$this->customerSession->isLoggedIn()
-               && $this->helperData->getConfigGeneral('popup_login');
+            && !$this->customerSession->isLoggedIn()
+            && $this->helperData->getConfigGeneral('popup_login');
     }
 
     /**
@@ -86,10 +86,19 @@ class Popup extends Template
             'formLoginUrl'  => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
             'createFormUrl' => $this->getCreateFormUrl(),
-            'fakeEmailUrl'  => $this->getFakeEmailUrl()
+            'fakeEmailUrl'  => $this->getFakeEmailUrl(),
+            'showFields'    => $this->getFieldCanShow()
         ];
 
         return json_encode($params);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldCanShow()
+    {
+        return $this->helperData->getFieldCanShow();
     }
 
     /**
