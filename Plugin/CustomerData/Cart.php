@@ -53,7 +53,7 @@ class Cart
      */
     public function afterGetSectionData(CustomerCart $subject, $result)
     {
-        if ($this->_helperData->isEnabled()) {
+        if ($this->_helperData->isEnabled() && $this->_helperData->isReplaceAuthModal()) {
             $result['isReplaceAuthModal'] = $this->_helperData->isReplaceAuthModal();
         }
 

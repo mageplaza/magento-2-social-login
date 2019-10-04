@@ -67,7 +67,8 @@ define([
             createBackBtn: '#social-form-create .action.back',
             createFormUrl: '',
             showFields: '',
-            availableFields: ['name', 'email', 'password']
+            availableFields: ['name', 'email', 'password'],
+            condition: false
         },
 
         /**
@@ -122,6 +123,8 @@ define([
 
                     if (typeof href !== 'undefined' && (href.search('customer/account/login') !== -1 || href.search('customer/account/create') !== -1)) {
                         self.addAttribute(el);
+                        el.attr('data-trigger', 'authentication');
+                        el.append($('.authentication-wrapper'));
                         el.on('click', function (event) {
                             if (href.search('customer/account/create') !== -1) {
                                 self.showCreate();
@@ -552,34 +555,33 @@ define([
                 miniCartBtn    = $('#minicart-content-wrapper'),
                 pccBtn         = $('button[data-role = proceed-to-checkout]');
 
-            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
-                var condition = true;
-
-                self.addAttribute(pccBtn);
-                pccBtn.on('click', function (event) {
-                    if (condition){
-                        self.showLogin();
-                        event.preventDefault();
+            var existCondition = setInterval(function () {
+                if ($('#minicart-content-wrapper #top-cart-btn-checkout').length) {
+                    clearInterval(existCondition);
+                    if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
+                        self.options.condition = true;
                     }
-                });
-
-                var existCondition = setInterval(function () {
-                    if ($('#minicart-content-wrapper #top-cart-btn-checkout').length) {
-                        clearInterval(existCondition);
-                        self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
+                    self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
+                    $('#minicart-content-wrapper').on('click', ' #top-cart-btn-checkout', function (event) {
+                        if (self.options.condition) {
+                            self.showLogin();
+                            event.stopPropagation();
+                        }
+                    });
+                    if (self.options.condition){
+                        self.enablePopup(miniCartBtn, child_selector);
                     }
-                }, 100);
+                }
+            }, 100);
 
-                $('#minicart-content-wrapper').on('click', ' #top-cart-btn-checkout', function (event) {
-                    if (condition){
-                        event.stopPropagation();
-                        self.showLogin();
-                        event.preventDefault();
-                    }
-                });
-                self.enablePopup(cartSummary, child_selector);
-                self.enablePopup(miniCartBtn, child_selector)
-            }
+            self.addAttribute(pccBtn);
+            pccBtn.on('click', function (event) {
+                if (self.options.condition) {
+                    self.showLogin();
+                    event.preventDefault();
+                }
+            });
+            self.enablePopup(cartSummary, child_selector);
         },
 
         /**
@@ -621,7 +623,7 @@ define([
                     elConfirm = $('.field-confirmation-social');
 
                 if ($.inArray(fieldName, self.options.showFields.split(',')) === -1) {
-                    if (fieldName === 'password'){
+                    if (fieldName === 'password') {
                         elConfirm.remove();
                     }
                     elField.remove();
