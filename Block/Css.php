@@ -60,7 +60,7 @@ class Css extends Template
     protected function _prepareLayout()
     {
         if ($this->_helper->isEnabled()) {
-            if ($this->_helper->getConfigGeneral('popup_login')) {
+            if ($this->_helper->getPopupLogin()) {
                 $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');

@@ -45,7 +45,7 @@
                 </field>
                 <field id="popup_login" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Popup Login</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Popup</source_model>
                 </field>
                 <field id="authentication_popup" translate="label comment" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Popup Login As Authentication Popup</label>

@@ -138,4 +138,14 @@ class Data extends CoreHelper
     {
         return $this->getConfigGeneral('authentication_popup', $storeId);
     }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getPopupLogin($storeId = null)
+    {
+        return $this->getConfigGeneral('popup_login', $storeId);
+    }
 }

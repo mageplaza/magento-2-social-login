@@ -70,7 +70,7 @@ class Popup extends Template
     {
         return $this->helperData->isEnabled()
             && !$this->customerSession->isLoggedIn()
-            && $this->helperData->getConfigGeneral('popup_login');
+            && $this->helperData->getPopupLogin();
     }
 
     /**
