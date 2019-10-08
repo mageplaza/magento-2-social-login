@@ -161,6 +161,7 @@ define([
                     wrapper.on('click', '.action-auth-toggle', function (event) {
                         self.showLogin();
                         event.stopPropagation();
+                        event.preventDefault();
                     });
 
                     if (parseInt(self.options.popupLogin) === 1) {
