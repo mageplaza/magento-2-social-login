@@ -81,7 +81,7 @@ define([
             this.initCheckoutBtn();
             this.initObserve();
             this.replaceAuthModal();
-            this.hideFieldOnPopup()
+            this.hideFieldOnPopup();
             window.fakeEmailCallback = function (type) {
                 self.options.fakeEmailType = type;
                 self.showEmail();
@@ -123,8 +123,6 @@ define([
 
                     if (typeof href !== 'undefined' && (href.search('customer/account/login') !== -1 || href.search('customer/account/create') !== -1)) {
                         self.addAttribute(el);
-                        el.attr('data-trigger', 'authentication');
-                        el.append($('.authentication-wrapper'));
                         el.on('click', function (event) {
                             if (href.search('customer/account/create') !== -1) {
                                 self.showCreate();

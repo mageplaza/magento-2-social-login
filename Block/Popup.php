@@ -62,15 +62,16 @@ class Popup extends Template
     }
 
     /**
-     * Is enable popup
-     *
-     * @return bool
+     * @return bool|mixed
      */
     public function isEnabled()
     {
-        return $this->helperData->isEnabled()
-            && !$this->customerSession->isLoggedIn()
-            && $this->helperData->getPopupLogin();
+        if ($this->helperData->isEnabled() && !$this->customerSession->isLoggedIn() && $this->helperData->getPopupLogin()) {
+
+            return $this->helperData->getPopupLogin();
+        }
+
+        return false;
     }
 
     /**
