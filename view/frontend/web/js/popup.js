@@ -566,7 +566,7 @@ define([
                             event.stopPropagation();
                         }
                     });
-                    if (self.options.condition){
+                    if (self.options.condition && parseInt(self.options.popupLogin) === 1){
                         self.enablePopup(miniCartBtn, child_selector);
                     }
                 }
