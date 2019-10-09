@@ -159,9 +159,10 @@ define([
                     el.removeAttr('data-trigger');
 
                     wrapper.on('click', '.action-auth-toggle', function (event) {
+                        $('#checkout .authentication-wrapper .authentication-dropdown ').remove();
+
                         self.showLogin();
                         event.stopPropagation();
-                        event.preventDefault();
                     });
 
                     if (parseInt(self.options.popupLogin) === 1) {
