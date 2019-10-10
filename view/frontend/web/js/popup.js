@@ -134,7 +134,9 @@ define([
                         });
                     }
                 });
-                self.enablePopup(headerLink, 'a.social-login');
+                if (parseInt(self.options.popupLogin) === 1) {
+                    self.enablePopup(headerLink, 'a.social-login-btn');
+                }
             }
 
             this.options.createFormUrl = this.correctUrlProtocol(this.options.createFormUrl);
@@ -159,14 +161,14 @@ define([
                     el.removeAttr('data-trigger');
 
                     wrapper.on('click', '.action-auth-toggle', function (event) {
-                        $('#checkout .authentication-wrapper .authentication-dropdown ').remove();
-
+                        $('.block-authentication').modal('closeModal');
+                        self.openModal();
                         self.showLogin();
                         event.stopPropagation();
                     });
 
                     if (parseInt(self.options.popupLogin) === 1) {
-                        self.enablePopup(wrapper, 'button.social-login');
+                        self.enablePopup(wrapper, 'button.social-login-btn');
                     }
                 }
             }, 100);
@@ -551,7 +553,7 @@ define([
         replaceAuthModal: function () {
             var self           = this,
                 cartSummary    = $('.cart-summary'),
-                child_selector = 'button.social-login',
+                child_selector = 'button.social-login-btn',
                 cart           = customerData.get('cart'),
                 customer       = customerData.get('customer'),
                 miniCartBtn    = $('#minicart-content-wrapper'),
@@ -566,6 +568,7 @@ define([
                     self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
                     $('#minicart-content-wrapper').on('click', ' #top-cart-btn-checkout', function (event) {
                         if (self.options.condition) {
+                            self.openModal();
                             self.showLogin();
                             event.stopPropagation();
                         }
@@ -576,7 +579,9 @@ define([
                 }
             }, 100);
 
-            self.addAttribute(pccBtn);
+            if (self.options.condition){
+                self.addAttribute(pccBtn);
+            }
             pccBtn.on('click', function (event) {
                 if (self.options.condition) {
                     self.showLogin();
@@ -592,13 +597,20 @@ define([
             }
         },
 
+
+        /**
+         * Open Modal
+         */
+        openModal: function(){
+        },
+
         /**
          * Add attribute to element
          * @param element
          */
         addAttribute: function (element) {
             var self = this;
-            element.addClass('social-login');
+            element.addClass('social-login-btn');
             element.attr('href', self.options.popup);
             element.attr('data-effect', self.options.popupEffect);
         },
