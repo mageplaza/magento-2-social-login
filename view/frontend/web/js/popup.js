@@ -579,7 +579,7 @@ define([
                 }
             }, 100);
 
-            if (self.options.condition){
+            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1){
                 self.addAttribute(pccBtn);
             }
             pccBtn.on('click', function (event) {
