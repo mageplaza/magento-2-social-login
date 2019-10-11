@@ -165,4 +165,12 @@ class Popup extends Template
     {
         return (bool) $this->helperData->isSecure();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStyleManagement()
+    {
+        return $this->helperData->getStyleManagement();
+    }
 }
