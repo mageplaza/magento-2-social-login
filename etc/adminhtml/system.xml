@@ -82,14 +82,14 @@
                     <label>Style Management</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Color</source_model>
                     <depends>
-                        <field id="popup_login">1</field>
+                        <field id="popup_login" separator=",">1,2,3</field>
                     </depends>
                 </field>
                 <field id="custom_color" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom Color</label>
                     <validate>jscolor {hash:true,refine:false}</validate>
                     <depends>
-                        <field id="popup_login">1</field>
+                        <field id="popup_login" separator=",">1,2,3</field>
                         <field id="style_management">custom</field>
                     </depends>
                 </field>
