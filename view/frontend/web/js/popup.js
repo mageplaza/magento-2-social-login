@@ -162,6 +162,7 @@ define([
 
                     wrapper.on('click', '.action-auth-toggle', function (event) {
                         $('.block-authentication').modal('closeModal');
+                        $('._has-auth-shown .authentication-wrapper').css('z-index', 1);
                         self.openModal();
                         self.showLogin();
                         event.stopPropagation();
