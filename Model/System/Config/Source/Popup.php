@@ -29,7 +29,7 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class Popup implements ArrayInterface
 {
-    const POPUP_LOGIN = 1;
+    const POPUP_LOGIN = 'popup_login';
 
     /**
      * @return array

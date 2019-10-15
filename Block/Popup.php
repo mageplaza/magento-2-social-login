@@ -88,7 +88,9 @@ class Popup extends Template
             'forgotFormUrl' => $this->getForgotFormUrl(),
             'createFormUrl' => $this->getCreateFormUrl(),
             'fakeEmailUrl'  => $this->getFakeEmailUrl(),
-            'showFields'    => $this->getFieldCanShow()
+            'showFields'    => $this->getFieldCanShow(),
+            'popupLogin'    => $this->isEnabled(),
+            'actionName'    => $this->_request->getFullActionName()
         ];
 
         return json_encode($params);
@@ -172,5 +174,13 @@ class Popup extends Template
     public function getStyleManagement()
     {
         return $this->helperData->getStyleManagement();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRequireMoreInfo()
+    {
+        return ($this->helperData->requiredMoreInfo() && !$this->isEnabled());
     }
 }

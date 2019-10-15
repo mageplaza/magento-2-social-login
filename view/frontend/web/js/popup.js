@@ -22,8 +22,9 @@ define([
     'jquery',
     'Magento_Customer/js/customer-data',
     'mage/translate',
+    'Magento_Ui/js/modal/modal',
     'Mageplaza_Core/js/jquery.magnific-popup.min'
-], function ($, customerData, $t) {
+], function ($, customerData, $t, modal) {
     'use strict';
 
     $.widget('mageplaza.socialpopup', {
@@ -68,7 +69,9 @@ define([
             createFormUrl: '',
             showFields: '',
             availableFields: ['name', 'email', 'password'],
-            condition: false
+            condition: false,
+            popupLogin: false,
+            actionName: ''
         },
 
         /**
@@ -116,7 +119,7 @@ define([
             var self       = this,
                 headerLink = $(this.options.headerLink);
 
-            if (headerLink.length) {
+            if (headerLink.length && self.options.popupLogin) {
                 headerLink.find('a').each(function (link) {
                     var el   = $(this),
                         href = el.attr('href');
@@ -134,7 +137,7 @@ define([
                         });
                     }
                 });
-                if (parseInt(self.options.popupLogin) === 1) {
+                if (self.options.popupLogin === 'popup_login') {
                     self.enablePopup(headerLink, 'a.social-login-btn');
                 }
             }
@@ -162,13 +165,13 @@ define([
 
                     wrapper.on('click', '.action-auth-toggle', function (event) {
                         $('.block-authentication').modal('closeModal');
-                        $('._has-auth-shown .authentication-wrapper').css('z-index', 1);
+                        $('.social-popup-slide ').css('z-index', 999);
                         self.openModal();
                         self.showLogin();
                         event.stopPropagation();
                     });
 
-                    if (parseInt(self.options.popupLogin) === 1) {
+                    if (self.options.popupLogin === 'popup_login') {
                         self.enablePopup(wrapper, 'button.social-login-btn');
                     }
                 }
@@ -279,10 +282,29 @@ define([
          * Show email page
          */
         showEmail: function () {
+            if (!this.options.popupLogin) {
+                this.emailFormContainer.show();
+                this.enablePopup();
+            } else {
+                var actions = ['customer_account_login', 'customer_account_create'];
+                if ($.inArray(this.options.actionName, actions) !== -1) {
+                    this.openModal();
+                    this.emailFormContainer.show();
+                }
+            }
+
             this.loginFormContainer.hide();
             this.forgotFormContainer.hide();
             this.createFormContainer.hide();
-            this.emailFormContainer.show();
+        },
+
+        /**
+         * Open Modal
+         */
+        openModal: function () {
+            if (this.options.popupLogin === 'popup_login') {
+                $('.social-login-btn').trigger('click');
+            }
         },
 
         /**
@@ -574,35 +596,28 @@ define([
                             event.stopPropagation();
                         }
                     });
-                    if (self.options.condition && parseInt(self.options.popupLogin) === 1) {
+                    if (self.options.condition && self.options.popupLogin === 'popup_login') {
                         self.enablePopup(miniCartBtn, child_selector);
                     }
                 }
             }, 100);
 
-            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1){
+            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
                 self.addAttribute(pccBtn);
             }
             pccBtn.on('click', function (event) {
                 if (self.options.condition) {
                     self.showLogin();
-                    if (parseInt(self.options.popupLogin) === 1) {
+                    if (self.options.popupLogin === 'popup_login') {
                         event.preventDefault();
                     } else {
                         event.stopPropagation();
                     }
                 }
             });
-            if (parseInt(self.options.popupLogin) === 1) {
+            if (self.options.popupLogin === 'popup_login') {
                 self.enablePopup(cartSummary, child_selector);
             }
-        },
-
-
-        /**
-         * Open Modal
-         */
-        openModal: function(){
         },
 
         /**
@@ -621,17 +636,32 @@ define([
          * @param parent_selector
          * @param child_selector
          */
-        enablePopup: function (parent_selector, child_selector) {
-            parent_selector.magnificPopup({
-                delegate: child_selector,
-                removalDelay: 500,
-                callbacks: {
-                    beforeOpen: function () {
-                        this.st.mainClass = this.st.el.attr('data-effect');
-                    }
-                },
-                midClick: true
-            });
+        enablePopup: function (parent_selector = null, child_selector = null) {
+            if (!this.options.popupLogin) {
+                var wrapper = $(this.options.popup),
+                    options = {
+                        'type': 'popup',
+                        'responsive': true,
+                        'modalClass': 'request-popup',
+                        'buttons': [],
+                        'parentModalClass': '_has-modal request-popup-has-modal'
+                    };
+
+                modal(options, wrapper);
+                wrapper.modal('openModal');
+
+            } else {
+                parent_selector.magnificPopup({
+                    delegate: child_selector,
+                    removalDelay: 500,
+                    callbacks: {
+                        beforeOpen: function () {
+                            this.st.mainClass = this.st.el.attr('data-effect');
+                        }
+                    },
+                    midClick: true
+                });
+            }
         },
 
         /**
