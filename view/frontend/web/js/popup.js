@@ -81,7 +81,6 @@ define([
             var self = this;
             this.initObject();
             this.initLink();
-            this.initCheckoutBtn();
             this.initObserve();
             this.replaceAuthModal();
             this.hideFieldOnPopup();
@@ -146,36 +145,6 @@ define([
             this.options.formLoginUrl  = this.correctUrlProtocol(this.options.formLoginUrl);
             this.options.forgotFormUrl = this.correctUrlProtocol(this.options.forgotFormUrl);
             this.options.fakeEmailUrl  = this.correctUrlProtocol(this.options.fakeEmailUrl);
-        },
-
-        /**
-         * Init checkout login button
-         */
-        initCheckoutBtn: function () {
-            var self = this;
-
-            var existCondition = setInterval(function () {
-                var el      = $('.authentication-wrapper .action-auth-toggle'),
-                    wrapper = $('.authentication-wrapper');
-
-                if (el.length) {
-                    clearInterval(existCondition);
-                    self.addAttribute(el);
-                    el.removeAttr('data-trigger');
-
-                    wrapper.on('click', '.action-auth-toggle', function (event) {
-                        $('.block-authentication').modal('closeModal');
-                        $('.social-popup-slide ').css('z-index', 999);
-                        self.openModal();
-                        self.showLogin();
-                        event.stopPropagation();
-                    });
-
-                    if (self.options.popupLogin === 'popup_login') {
-                        self.enablePopup(wrapper, 'button.social-login-btn');
-                    }
-                }
-            }, 100);
         },
 
         /**
@@ -293,6 +262,7 @@ define([
                 }
             }
 
+            this.emailFormContainer.show();
             this.loginFormContainer.hide();
             this.forgotFormContainer.hide();
             this.createFormContainer.hide();

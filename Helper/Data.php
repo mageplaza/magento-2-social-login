@@ -136,7 +136,7 @@ class Data extends CoreHelper
      */
     public function isReplaceAuthModal($storeId = null)
     {
-        return $this->getConfigGeneral('authentication_popup', $storeId);
+        return $this->getPopupLogin() && $this->getConfigGeneral('authentication_popup', $storeId);
     }
 
     /**
