@@ -569,21 +569,16 @@ define([
                 }
             }, 100);
 
-            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
-                self.addAttribute(pccBtn);
-            }
-            pccBtn.on('click', function (event) {
-                if (self.options.condition) {
-                    self.showLogin();
-                    if (self.options.popupLogin === 'popup_login') {
-                        event.preventDefault();
-                    } else {
-                        event.stopPropagation();
-                    }
+            if (!customer().firstname && cart().isGuestCheckoutAllowed === false && cart().isReplaceAuthModal && pccBtn.length) {
+                pccBtn.replaceWith(
+                    '<a title="Proceed to Checkout" class="action primary checkout social-login-btn">' +
+                    '<span>Proceed to Checkout</span>' +
+                    '</a>'
+                );
+                if (self.options.popupLogin === 'popup_login') {
+                    self.addAttribute($('a.checkout.social-login-btn'));
+                    self.enablePopup(cartSummary, 'a.social-login-btn');
                 }
-            });
-            if (self.options.popupLogin === 'popup_login') {
-                self.enablePopup(cartSummary, child_selector);
             }
         },
 
