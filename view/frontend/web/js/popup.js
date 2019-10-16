@@ -257,7 +257,7 @@ define([
             } else {
                 var actions = ['customer_account_login', 'customer_account_create'];
                 if ($.inArray(this.options.actionName, actions) !== -1) {
-                    this.openModal();
+                    this.options.popupLogin === 'popup_login' ? $('.social-login-btn').trigger('click') : this.openModal();
                     this.emailFormContainer.show();
                 }
             }
@@ -272,9 +272,6 @@ define([
          * Open Modal
          */
         openModal: function () {
-            if (this.options.popupLogin === 'popup_login') {
-                $('.social-login-btn').trigger('click');
-            }
         },
 
         /**
@@ -555,7 +552,7 @@ define([
             var existCondition = setInterval(function () {
                 if ($('#minicart-content-wrapper #top-cart-btn-checkout').length) {
                     clearInterval(existCondition);
-                    if (!customer().firstname && cart().isGuestCheckoutAllowed === false && parseInt(cart().isReplaceAuthModal) === 1) {
+                    if (!customer().firstname && cart().isGuestCheckoutAllowed === false && cart().isReplaceAuthModal) {
                         self.options.condition = true;
                     }
                     self.addAttribute($('#minicart-content-wrapper #top-cart-btn-checkout'));
