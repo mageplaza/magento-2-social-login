@@ -197,7 +197,7 @@ class Social extends AbstractModel
         try {
             if ($data['password'] !== null) {
                 $customer      = $this->customerRepository->save($customer, $data['password']);
-                $emailTemplate = EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED;
+                $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED);
             } else {
                 // If customer exists existing hash will be used by Repository
                 $customer = $this->customerRepository->save($customer);
@@ -206,12 +206,11 @@ class Social extends AbstractModel
                 $mathRandom        = $objectManager->get(Random::class);
                 $newPasswordToken  = $mathRandom->getUniqueHash();
                 $accountManagement = $objectManager->get(AccountManagementInterface::class);
-                $emailTemplate     = EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD;
                 $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
             }
 
             if ($this->apiHelper->canSendPassword($store)) {
-                $this->getEmailNotification()->newAccount($customer, $emailTemplate);
+                $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
             }
 
             $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
