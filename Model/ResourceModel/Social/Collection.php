@@ -23,6 +23,7 @@ namespace Mageplaza\SocialLogin\Model\ResourceModel\Social;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Mageplaza\SocialLogin\Model\ResourceModel\Social;
+use Zend_Db_Expr;
 
 /**
  * Class Collection
@@ -37,5 +38,24 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(\Mageplaza\SocialLogin\Model\Social::class, Social::class);
+    }
+
+    /**
+     * @param $type
+     */
+    public function filterOrder($type)
+    {
+        $sales_order_table = $this->getTable('sales_order');
+
+        $this->getSelect()->join(
+            ['top_social_login' => $sales_order_table],
+            'main_table.customer_id = top_social_login.customer_id',
+            [
+                'grand_total' => 'top_social_login.base_grand_total',
+                'total_item' => 'top_social_login.total_item_count'
+            ]
+        );
+
+        $this->getSelect()->where("main_table.type='" .$type ."'");
     }
 }
