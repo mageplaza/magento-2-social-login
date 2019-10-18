@@ -52,7 +52,8 @@ class Collection extends AbstractCollection
             'main_table.customer_id = top_social_login.customer_id',
             [
                 'grand_total' => 'top_social_login.base_grand_total',
-                'total_item' => 'top_social_login.total_item_count'
+                'total_item' => 'top_social_login.total_item_count',
+                'created_at' => 'top_social_login.created_At'
             ]
         );
 

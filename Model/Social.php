@@ -42,6 +42,7 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 
 /**
  * Class Social
@@ -91,6 +92,11 @@ class Social extends AbstractModel
     protected $_userModel;
 
     /**
+     * @var DateTime
+     */
+    protected $_dateTime;
+
+    /**
      * Social constructor.
      *
      * @param Context $context
@@ -103,6 +109,7 @@ class Social extends AbstractModel
      * @param User $userModel
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
+     * @param DateTime $dateTime
      * @param array $data
      */
     public function __construct(
@@ -114,6 +121,7 @@ class Social extends AbstractModel
         StoreManagerInterface $storeManager,
         \Mageplaza\SocialLogin\Helper\Social $apiHelper,
         User $userModel,
+        DateTime $dateTime,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -124,6 +132,7 @@ class Social extends AbstractModel
         $this->storeManager        = $storeManager;
         $this->apiHelper           = $apiHelper;
         $this->_userModel          = $userModel;
+        $this->_dateTime           = $dateTime;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -196,8 +205,9 @@ class Social extends AbstractModel
 
         try {
             if ($data['password'] !== null) {
-                $customer      = $this->customerRepository->save($customer, $data['password']);
-                $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED);
+                $customer = $this->customerRepository->save($customer, $data['password']);
+                $this->getEmailNotification()->newAccount($customer,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED);
             } else {
                 // If customer exists existing hash will be used by Repository
                 $customer = $this->customerRepository->save($customer);
@@ -210,7 +220,8 @@ class Social extends AbstractModel
             }
 
             if ($this->apiHelper->canSendPassword($store)) {
-                $this->getEmailNotification()->newAccount($customer, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
+                $this->getEmailNotification()->newAccount($customer,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
             }
 
             $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
@@ -256,8 +267,10 @@ class Social extends AbstractModel
             'social_id'              => $identifier,
             'customer_id'            => $customerId,
             'type'                   => $type,
-            'is_send_password_email' => $this->apiHelper->canSendPassword()
-        ])->setId(null)->save();
+            'is_send_password_email' => $this->apiHelper->canSendPassword(),
+            'social_created_at'      => $this->_dateTime->date()
+        ])->
+        setId(null)->save();
 
         return $this;
     }
