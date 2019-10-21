@@ -53,7 +53,7 @@ class Data extends CoreHelper
      */
     public function canSendPassword($storeId = null)
     {
-        return $this->getConfigGeneral('send_password', $storeId);
+        return !in_array('password', explode(',', $this->getFieldCanShow()), true) && $this->getConfigGeneral('send_password', $storeId);
     }
 
     /**

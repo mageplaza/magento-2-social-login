@@ -38,9 +38,6 @@
                 <field id="send_password" translate="label comment" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Send Password To Customer</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="information_require" separator=",">name,email</field>
-                    </depends>
                 </field>
                 <field id="social_display" translate="label comment" type="multiselect" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show Social Login Buttons on</label>
@@ -50,7 +47,7 @@
                     <label>Use Popup Login</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Popup</source_model>
                 </field>
-                <field id="authentication_popup" translate="label comment" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="authentication_popup" translate="label comment" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Popup Login As Authentication Popup</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
