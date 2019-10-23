@@ -468,7 +468,11 @@ define([
                 } else if (response.success) {
                     customerData.invalidate(['customer']);
                     self.addMsg(self.createFormContent, response);
-                    window.location.reload(true);
+                    if (response.url === '' || response.url == null) {
+                        window.location.reload(true);
+                    } else {
+                        window.location.href = response.url;
+                    }
                 } else {
                     self.reloadCaptcha('create');
                     self.addMsg(self.createFormContent, response);

@@ -73,6 +73,7 @@
                     <depends>
                         <field id="require_more_info" separator=",">1,2</field>
                     </depends>
+                    <validate>required</validate>
                 </field>
                 <field id="popup_effect" translate="label" type="select" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Popup Effect</label>

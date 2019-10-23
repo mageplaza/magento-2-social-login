@@ -28,6 +28,7 @@ use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\StateException;
@@ -215,6 +216,7 @@ class Create extends CreatePost
             $result['message'][] = __('We can\'t save the customer.');
         }
 
+        $result['url']     = $this->_loginPostRedirect();
         $this->session->setCustomerFormData($this->getRequest()->getPostValue());
 
         return $resultJson->setData($result);
@@ -265,5 +267,24 @@ class Create extends CreatePost
     protected function checkPasswordConfirmation($password, $confirmation)
     {
         return $password === $confirmation;
+    }
+
+    /**
+     * Return redirect url by config
+     *
+     * @return mixed
+     */
+    protected function _loginPostRedirect()
+    {
+        $url = $this->_url->getUrl('customer/account');
+
+        $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
+        $this->_eventManager->dispatch('social_manager_get_login_redirect', [
+            'object'  => $object,
+            'request' => $this->_request
+        ]);
+        $url = $object->getUrl();
+
+        return $url;
     }
 }

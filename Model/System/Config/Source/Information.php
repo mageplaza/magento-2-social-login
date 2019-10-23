@@ -29,8 +29,8 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class Information implements ArrayInterface
 {
-    const INFOR_NAME = 'name';
     const INFO_EMAIL = 'email';
+    const INFOR_NAME = 'name';
     const INFOR_PW   = 'password';
 
     /**
@@ -40,9 +40,8 @@ class Information implements ArrayInterface
     {
 
         return [
-            ['value' => '', 'label' => __('-- Please Select --')],
-            ['value' => self::INFOR_NAME, 'label' => __('Name')],
             ['value' => self::INFO_EMAIL, 'label' => __('Email')],
+            ['value' => self::INFOR_NAME, 'label' => __('Name')],
             ['value' => self::INFOR_PW, 'label' => __('Password')]
         ];
     }
