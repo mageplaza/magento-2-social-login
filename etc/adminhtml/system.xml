@@ -63,9 +63,9 @@
                     </depends>
                 </field>
                 <field id="require_more_info" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Require For More Info.</label>
+                    <label>Require More Info.</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\RequestInfo</source_model>
-                    <comment>Request Customers To Enter Information When Creating An Account</comment>
+                    <comment>Request the customer to enter information when creating an account.</comment>
                 </field>
                 <field id="information_require" translate="label comment" type="multiselect" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Information Required</label>

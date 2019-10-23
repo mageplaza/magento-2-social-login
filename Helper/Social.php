@@ -175,6 +175,8 @@ class Social extends HelperData
                 break;
             case 'Yahoo':
                 return $authUrl;
+            case 'Twitter':
+                return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
         }

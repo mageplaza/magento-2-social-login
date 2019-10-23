@@ -46,7 +46,7 @@ class Position implements ArrayInterface
             ['value' => '', 'label' => __('-- Please Select --')],
             ['value' => self::PAGE_LOGIN, 'label' => __('Customer Login Page')],
             ['value' => self::PAGE_CREATE, 'label' => __('Customer Create Page')],
-            ['value' => self::PAGE_POPUP, 'label' => __('Social Popup Login')],
+            ['value' => self::PAGE_POPUP, 'label' => __('Social Login Popup')],
             ['value' => self::PAGE_AUTHEN, 'label' => __('Customer Authentication Popup')]
         ];
     }

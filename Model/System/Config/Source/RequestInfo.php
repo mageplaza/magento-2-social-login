@@ -38,8 +38,8 @@ class RequestInfo implements ArrayInterface
     {
         return [
             ['value' => '', 'label' => __('-- Please Select --')],
-            ['value' => 1, 'label' => __('Always')],
-            ['value' => 2, 'label' => __('Social Account Don\'t Provide Real E-mail.')]
+            ['value' => 1, 'label' => __('Always Require')],
+            ['value' => 2, 'label' => __('If social account does not provide E-mail.')]
         ];
     }
 }
