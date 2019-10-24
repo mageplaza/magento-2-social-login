@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 namespace Mageplaza\SocialLogin\Controller\Social;
 
@@ -30,6 +30,7 @@ use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 
 /**
  * Class Login
+ *
  * @package Mageplaza\SocialLogin\Controller\Social
  */
 class Login extends AbstractSocial
@@ -73,10 +74,12 @@ class Login extends AbstractSocial
 
                 $this->session->setUserProfile($userProfile);
 
-                return $this->_appendJs(sprintf(
-                    "<script>window.close();window.opener.fakeEmailCallback('%s');</script>",
-                    $type
-                ));
+                return $this->_appendJs(
+                    sprintf(
+                        "<script>window.close();window.opener.fakeEmailCallback('%s');</script>",
+                        $type
+                    )
+                );
             }
             $customer = $this->createCustomerProcess($userProfile, $type);
         }

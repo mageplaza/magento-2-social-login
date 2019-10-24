@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Setup;
@@ -35,7 +35,7 @@ use Zend_Db_Exception;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @param SchemaSetupInterface $setup
+     * @param SchemaSetupInterface   $setup
      * @param ModuleContextInterface $context
      *
      * @throws Zend_Db_Exception
@@ -47,12 +47,14 @@ class InstallSchema implements InstallSchemaInterface
         if (!$installer->tableExists('mageplaza_social_customer')) {
             $table = $installer->getConnection()
                 ->newTable($installer->getTable('mageplaza_social_customer'))
-                ->addColumn('social_customer_id', Table::TYPE_INTEGER, 11, [
+                ->addColumn(
+                    'social_customer_id', Table::TYPE_INTEGER, 11, [
                     'identity' => true,
                     'nullable' => false,
                     'primary'  => true,
                     'unsigned' => true,
-                ], 'Social Customer ID')
+                    ], 'Social Customer ID'
+                )
                 ->addColumn('social_id', Table::TYPE_TEXT, 255, ['unsigned' => true, 'nullable => false'], 'Social Id')
                 ->addColumn(
                     'customer_id',

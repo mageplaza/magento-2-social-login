@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Block;
@@ -40,9 +40,9 @@ class Css extends Template
     /**
      * Css constructor.
      *
-     * @param Context $context
+     * @param Context    $context
      * @param DataHelper $helper
-     * @param array $data
+     * @param array      $data
      */
     public function __construct(
         Context $context,
@@ -68,7 +68,8 @@ class Css extends Template
             } elseif (in_array(
                 $this->_request->getFullActionName(),
                 ['customer_account_login', 'customer_account_create', 'customer_account_index']
-            )) {
+            )
+            ) {
                 $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
             }

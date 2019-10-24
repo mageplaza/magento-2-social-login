@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
@@ -65,17 +65,17 @@ class Email extends AbstractSocial
     /**
      * Email constructor.
      *
-     * @param Context $context
-     * @param StoreManagerInterface $storeManager
+     * @param Context                    $context
+     * @param StoreManagerInterface      $storeManager
      * @param AccountManagementInterface $accountManager
-     * @param SocialHelper $apiHelper
-     * @param Social $apiObject
-     * @param Session $customerSession
-     * @param AccountRedirect $accountRedirect
-     * @param RawFactory $resultRawFactory
-     * @param JsonFactory $resultJsonFactory
-     * @param CustomerFactory $customerFactory
-     * @param EncryptorInterface $encrypt
+     * @param SocialHelper               $apiHelper
+     * @param Social                     $apiObject
+     * @param Session                    $customerSession
+     * @param AccountRedirect            $accountRedirect
+     * @param RawFactory                 $resultRawFactory
+     * @param JsonFactory                $resultJsonFactory
+     * @param CustomerFactory            $customerFactory
+     * @param EncryptorInterface         $encrypt
      */
     public function __construct(
         Context $context,
@@ -115,7 +115,9 @@ class Email extends AbstractSocial
      */
     public function execute()
     {
-        /** @var Json $resultJson */
+        /**
+ * @var Json $resultJson 
+*/
         $resultJson = $this->resultJsonFactory->create();
         $params     = $this->getRequest()->getParams();
         $type       = $this->apiHelper->setType($params['type']);

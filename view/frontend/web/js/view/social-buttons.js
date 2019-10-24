@@ -12,10 +12,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 /*jshint browser:true jquery:true*/
 /*global alert*/
@@ -43,30 +43,34 @@ define(
             }
         };
 
-        return Component.extend({
-            defaults: {
-                template: 'Mageplaza_SocialLogin/social-buttons'
-            },
-            buttonLists: window.socialAuthenticationPopup,
+        return Component.extend(
+            {
+                defaults: {
+                    template: 'Mageplaza_SocialLogin/social-buttons'
+                },
+                buttonLists: window.socialAuthenticationPopup,
 
-            /**
-             * @returns {Array}
-             */
-            socials: function () {
-                var socials = [];
-                $.each(this.buttonLists, function (key, social) {
-                    socials.push(social);
-                });
+                /**
+                 * @returns {Array}
+                 */
+                socials: function () {
+                    var socials = [];
+                    $.each(
+                        this.buttonLists, function (key, social) {
+                            socials.push(social);
+                        }
+                    );
 
-                return socials;
-            },
+                    return socials;
+                },
 
-            /**
-             * @returns {boolean}
-             */
-            isActive: function () {
-                return (typeof this.buttonLists !== 'undefined');
+                /**
+                 * @returns {boolean}
+                 */
+                isActive: function () {
+                    return (typeof this.buttonLists !== 'undefined');
+                }
             }
-        });
+        );
     }
 );

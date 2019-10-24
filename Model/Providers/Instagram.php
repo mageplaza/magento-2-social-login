@@ -21,6 +21,7 @@ class Instagram extends Hybrid_Provider_Model_OAuth2
 
     /**
      * IDp wrappers initializer
+     *
      * @throws Exception
      */
     function initialize()
@@ -49,6 +50,7 @@ class Instagram extends Hybrid_Provider_Model_OAuth2
 
     /**
      * load the user profile from the IDp api client
+     *
      * @return Hybrid_User_Profile
      * @throws Exception
      */

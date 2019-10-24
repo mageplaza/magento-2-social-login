@@ -34,6 +34,7 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
 
     /**
      * IDp wrappers initializer
+     *
      * @throws Exception
      */
     function initialize()
@@ -51,12 +52,14 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
         }
 
         // create a new OAuth2 client instance
-        $this->api = ObjectManager::getInstance()->create(AmazonOAuth2Client::class, [
+        $this->api = ObjectManager::getInstance()->create(
+            AmazonOAuth2Client::class, [
             'client_id'     => $this->config['keys']['id'],
             'client_secret' => $this->config['keys']['secret'],
             'redirect_uri'  => $this->endpoint,
             'compressed'    => $this->compressed
-        ]);
+            ]
+        );
 
         $this->api->api_base_url = 'https://api.amazon.com';
         $this->api->authorize_url = 'https://www.amazon.com/ap/oa';
@@ -80,6 +83,7 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
 
     /**
      * load the user profile from the IDp api client
+     *
      * @return Hybrid_User_Profile
      * @throws Exception
      */

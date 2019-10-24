@@ -19,6 +19,7 @@ use RuntimeException;
 
 /**
  * Class Vkontakte
+ *
  * @package Mageplaza\SocialLogin\Model\Providers
  */
 class Vkontakte extends Hybrid_Provider_Model_OAuth2
@@ -85,7 +86,9 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
      */
     function loginFinish()
     {
-        /** @var RequestInterface $request */
+        /**
+ * @var RequestInterface $request 
+*/
         $request = $this->getDataObject(RequestInterface::class);
         $params = $request->getParams();
         $error = array_key_exists('error', $params) ? $params['error'] : '';
@@ -181,7 +184,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
 
     /**
      * @param $response
-     * @param bool $withAdditionalRequests
+     * @param bool     $withAdditionalRequests
      *
      * @return Hybrid_User_Contact
      */
@@ -199,33 +202,33 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
 
         if (isset($user->gender)) {
             switch ($user->gender) {
-                case 1:
-                    $user->gender = 'female';
-                    break;
+            case 1:
+                $user->gender = 'female';
+                break;
 
-                case 2:
-                    $user->gender = 'male';
-                    break;
+            case 2:
+                $user->gender = 'male';
+                break;
 
-                default:
-                    $user->gender = null;
-                    break;
+            default:
+                $user->gender = null;
+                break;
             }
         }
 
         if (!empty($user->bdate)) {
             $birthday = explode('.', $user->bdate);
             switch (count($birthday)) {
-                case 3:
-                    $user->birthDay = (int) $birthday[0];
-                    $user->birthMonth = (int) $birthday[1];
-                    $user->birthYear = (int) $birthday[2];
-                    break;
+            case 3:
+                $user->birthDay = (int) $birthday[0];
+                $user->birthMonth = (int) $birthday[1];
+                $user->birthYear = (int) $birthday[2];
+                break;
 
-                case 2:
-                    $user->birthDay = (int) $birthday[0];
-                    $user->birthMonth = (int) $birthday[1];
-                    break;
+            case 2:
+                $user->birthDay = (int) $birthday[0];
+                $user->birthMonth = (int) $birthday[1];
+                break;
             }
         }
 

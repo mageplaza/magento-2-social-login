@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
@@ -98,14 +98,14 @@ abstract class AbstractSocial extends Action
     /**
      * Login constructor.
      *
-     * @param Context $context
-     * @param StoreManagerInterface $storeManager
+     * @param Context                    $context
+     * @param StoreManagerInterface      $storeManager
      * @param AccountManagementInterface $accountManager
-     * @param SocialHelper $apiHelper
-     * @param Social $apiObject
-     * @param Session $customerSession
-     * @param AccountRedirect $accountRedirect
-     * @param RawFactory $resultRawFactory
+     * @param SocialHelper               $apiHelper
+     * @param Social                     $apiObject
+     * @param Session                    $customerSession
+     * @param AccountRedirect            $accountRedirect
+     * @param RawFactory                 $resultRawFactory
      */
     public function __construct(
         Context $context,
@@ -151,14 +151,16 @@ abstract class AbstractSocial extends Action
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
 
-        $user = array_merge([
+        $user = array_merge(
+            [
             'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
             'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
             'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
             'identifier' => $userProfile->identifier,
             'type'       => $type,
             'password'   => isset($userProfile->password) ? $userProfile->password : null
-        ], $this->getUserData($userProfile));
+            ], $this->getUserData($userProfile)
+        );
 
         return $this->createCustomer($user, $type);
     }
@@ -205,7 +207,7 @@ abstract class AbstractSocial extends Action
      * Redirect to login page if social data is not contain email address
      *
      * @param $apiLabel
-     * @param bool $needTranslate
+     * @param bool     $needTranslate
      *
      * @return $this
      */
@@ -238,10 +240,12 @@ abstract class AbstractSocial extends Action
         }
 
         $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
-        $this->_eventManager->dispatch('social_manager_get_login_redirect', [
+        $this->_eventManager->dispatch(
+            'social_manager_get_login_redirect', [
             'object'  => $object,
             'request' => $this->_request
-        ]);
+            ]
+        );
         $url = $object->getUrl();
 
         return $url;
@@ -256,13 +260,17 @@ abstract class AbstractSocial extends Action
      */
     public function _appendJs($content = null)
     {
-        /** @var Raw $resultRaw */
+        /**
+ * @var Raw $resultRaw 
+*/
         $resultRaw = $this->resultRawFactory->create();
 
-        return $resultRaw->setContents($content ?: sprintf(
-            "<script>window.opener.socialCallback('%s', window);</script>",
-            $this->_loginPostRedirect()
-        ));
+        return $resultRaw->setContents(
+            $content ?: sprintf(
+                "<script>window.opener.socialCallback('%s', window);</script>",
+                $this->_loginPostRedirect()
+            )
+        );
     }
 
     /**
@@ -288,7 +296,7 @@ abstract class AbstractSocial extends Action
     /**
      * Retrieve cookie manager
      *
-     * @return PhpCookieManager
+     * @return     PhpCookieManager
      * @deprecated
      */
     private function getCookieManager()
@@ -305,7 +313,7 @@ abstract class AbstractSocial extends Action
     /**
      * Retrieve cookie metadata factory
      *
-     * @return CookieMetadataFactory
+     * @return     CookieMetadataFactory
      * @deprecated
      */
     private function getCookieMetadataFactory()

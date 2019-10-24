@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Popup;
@@ -125,7 +125,9 @@ class Create extends CreatePost
      */
     public function execute()
     {
-        /** @var Json $resultJson */
+        /**
+ * @var Json $resultJson 
+*/
         $resultJson = $this->getJsonFactory()->create();
         $result     = [
             'success' => false,
@@ -171,10 +173,12 @@ class Create extends CreatePost
                     $this->subscriberFactory->create()->subscribeCustomerById($customer->getId());
                 }
 
-                $this->_eventManager->dispatch('customer_register_success', [
+                $this->_eventManager->dispatch(
+                    'customer_register_success', [
                     'account_controller' => $this,
                     'customer'           => $customer
-                ]);
+                    ]
+                );
 
                 $confirmationStatus = $this->accountManagement->getConfirmationStatus($customer->getId());
                 if ($confirmationStatus === AccountManagementInterface::ACCOUNT_CONFIRMATION_REQUIRED) {

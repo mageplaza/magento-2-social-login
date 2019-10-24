@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Block;
@@ -44,10 +44,10 @@ class Popup extends Template
     protected $customerSession;
 
     /**
-     * @param Context $context
-     * @param HelperData $helperData
+     * @param Context         $context
+     * @param HelperData      $helperData
      * @param CustomerSession $customerSession
-     * @param array $data
+     * @param array           $data
      */
     public function __construct(
         Context $context,

@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Model;
@@ -46,6 +46,7 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 
 /**
  * Class Social
+ *
  * @package Mageplaza\SocialLogin\Model
  */
 class Social extends AbstractModel
@@ -99,18 +100,18 @@ class Social extends AbstractModel
     /**
      * Social constructor.
      *
-     * @param Context $context
-     * @param Registry $registry
-     * @param CustomerFactory $customerFactory
-     * @param CustomerInterfaceFactory $customerDataFactory
-     * @param CustomerRepositoryInterface $customerRepository
-     * @param StoreManagerInterface $storeManager
+     * @param Context                              $context
+     * @param Registry                             $registry
+     * @param CustomerFactory                      $customerFactory
+     * @param CustomerInterfaceFactory             $customerDataFactory
+     * @param CustomerRepositoryInterface          $customerRepository
+     * @param StoreManagerInterface                $storeManager
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
-     * @param User $userModel
-     * @param AbstractResource|null $resource
-     * @param AbstractDb|null $resourceCollection
-     * @param DateTime $dateTime
-     * @param array $data
+     * @param User                                 $userModel
+     * @param AbstractResource|null                $resource
+     * @param AbstractDb|null                      $resourceCollection
+     * @param DateTime                             $dateTime
+     * @param array                                $data
      */
     public function __construct(
         Context $context,
@@ -170,14 +171,16 @@ class Social extends AbstractModel
 
     /**
      * @param $email
-     * @param null $websiteId
+     * @param null  $websiteId
      *
      * @return Customer
      * @throws LocalizedException
      */
     public function getCustomerByEmail($email, $websiteId = null)
     {
-        /** @var Customer $customer */
+        /**
+ * @var Customer $customer 
+*/
         $customer = $this->customerFactory->create();
         $customer->setWebsiteId($websiteId ?: $this->storeManager->getWebsite()->getId());
         $customer->loadByEmail($email);
@@ -194,7 +197,9 @@ class Social extends AbstractModel
      */
     public function createCustomerSocial($data, $store)
     {
-        /** @var CustomerInterface $customer */
+        /**
+ * @var CustomerInterface $customer 
+*/
         $customer = $this->customerDataFactory->create();
         $customer->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
@@ -206,8 +211,10 @@ class Social extends AbstractModel
         try {
             if ($data['password'] !== null) {
                 $customer = $this->customerRepository->save($customer, $data['password']);
-                $this->getEmailNotification()->newAccount($customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED);
+                $this->getEmailNotification()->newAccount(
+                    $customer,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED
+                );
             } else {
                 // If customer exists existing hash will be used by Repository
                 $customer = $this->customerRepository->save($customer);
@@ -220,8 +227,10 @@ class Social extends AbstractModel
             }
 
             if ($this->apiHelper->canSendPassword($store)) {
-                $this->getEmailNotification()->newAccount($customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD);
+                $this->getEmailNotification()->newAccount(
+                    $customer,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD
+                );
             }
 
             $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
@@ -237,7 +246,9 @@ class Social extends AbstractModel
             throw $e;
         }
 
-        /** @var Customer $customer */
+        /**
+ * @var Customer $customer 
+*/
         $customer = $this->customerFactory->create()->load($customer->getId());
 
         return $customer;
@@ -263,21 +274,23 @@ class Social extends AbstractModel
      */
     public function setAuthorCustomer($identifier, $customerId, $type)
     {
-        $this->setData([
+        $this->setData(
+            [
             'social_id'              => $identifier,
             'customer_id'            => $customerId,
             'type'                   => $type,
             'is_send_password_email' => $this->apiHelper->canSendPassword(),
             'social_created_at'      => $this->_dateTime->date()
-        ])->
-        setId(null)->save();
+            ]
+        )
+            ->setId(null)->save();
 
         return $this;
     }
 
     /**
      * @param $apiName
-     * @param null $area
+     * @param null    $area
      *
      * @return mixed
      * @throws LocalizedException
@@ -377,10 +390,12 @@ class Social extends AbstractModel
     public function updateAuthCustomer($socialCustomerId, $identifier)
     {
         $social = $this->load($socialCustomerId);
-        $social->addData([
+        $social->addData(
+            [
             'social_id' => $identifier,
             'status'    => self::STATUS_CONNECT
-        ]);
+            ]
+        );
         $social->save();
 
         return $this;
