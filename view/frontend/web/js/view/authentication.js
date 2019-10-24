@@ -59,7 +59,7 @@ define(
 
                                 var el = $('.authentication-wrapper a');
                                 el.addClass('social-login-btn');
-                                el.css('cursor', 'point');
+                                el.css('cursor', 'pointer');
                             }
 
                             if (self.popup.length !== 0) {
