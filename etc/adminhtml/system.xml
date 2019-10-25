@@ -59,7 +59,7 @@
                     <comment>Comma-separated.</comment>
                     <!--Compatible: Etheme_YourStore[ .dropdown-menu.dropdown-menu&#45;&#45;xs-full ]-->
                     <depends>
-                        <field id="popup_login">1</field>
+                        <field id="popup_login" separator=",">popup_login,quick_login,popup_slide</field>
                     </depends>
                 </field>
                 <field id="require_more_info" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -79,21 +79,21 @@
                     <label>Popup Effect</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Effect</source_model>
                     <depends>
-                        <field id="popup_login">1</field>
+                        <field id="popup_login" separator=",">popup_login</field>
                     </depends>
                 </field>
                 <field id="style_management" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Style Management</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Color</source_model>
                     <depends>
-                        <field id="popup_login" separator=",">1,2,3</field>
+                        <field id="popup_login" separator=",">popup_login,quick_login,popup_slide</field>
                     </depends>
                 </field>
                 <field id="custom_color" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom Color</label>
                     <validate>jscolor {hash:true,refine:false}</validate>
                     <depends>
-                        <field id="popup_login" separator=",">1,2,3</field>
+                        <field id="popup_login" separator=",">popup_login,quick_login,popup_slide</field>
                         <field id="style_management">custom</field>
                     </depends>
                 </field>
@@ -108,22 +108,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://developers.facebook.com/apps" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Facebook App Id</label>
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook App ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Facebook App Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -152,22 +144,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://code.google.com/apis/console/" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -196,22 +180,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://sellercentral.amazon.com/gp/homepage.html" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -240,22 +216,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://dev.twitter.com/apps" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Consumer Key</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Consumer Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -286,22 +254,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://www.linkedin.com/secure/developer" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Id Client</label>
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>ID Client</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Client</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -330,22 +290,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://developer.yahoo.com/apps/" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -374,22 +326,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://www.foursquare.com/oauth/" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -398,7 +342,7 @@
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
-                    <label>Callback Url</label>
+                    <label>Callback URL</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
@@ -418,22 +362,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="http://instagram.com/developer/clients/manage/" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -462,22 +398,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://new.vk.com/dev" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Application ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secure Key</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -499,22 +427,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://github.com/settings/applications/new" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -523,7 +443,7 @@
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
-                    <label>Callback Url</label>
+                    <label>Callback URL</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
@@ -544,22 +464,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Create app <a href="https://account.live.com/developers/applications/create" target="_bank">here</a>]]></comment>
                 </field>
-                <field id="admin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sign In As Admin</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If Yes, the admin can sign in the store backend via this social account</comment>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
                 </field>
-                <field id="app_secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Secret</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -568,7 +480,7 @@
                 </field>
                 <field id="redirect_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
-                    <label>Callback Url</label>
+                    <label>Callback URL</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id="is_enabled">1</field>

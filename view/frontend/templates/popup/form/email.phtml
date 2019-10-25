@@ -28,27 +28,27 @@
             <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
                 <fieldset class="fieldset" data-hasrequired="<?= __('* Required Fields') ?>">
                     <div class="field note"><?= __('Please complete your information below to creat an account.') ?></div>
+                    <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
+                            <label class="label" for="request-firstname" style="font-weight: 600"><span><?= __('First Name') ?></span></label>
+                            <div class="control">
+                                <input type="text" id="request-firstname" name="firstname" title="<?= __('First Name') ?>"
+                                       class="input-text required-entry" data-validate="{required:true}"
+                                       aria-required="true">
+                            </div>
+                    </div>
+                    <div class="field field-name-social required col-mp mp-6" style="padding: 0">
+                            <label class="label" for="request-lastname" style="font-weight: 600"><span><?= __('Last Name') ?></span></label>
+                            <div class="control">
+                                <input type="text" id="request-lastname" name="lastname" title="<?= __('Last Name') ?>"
+                                       class="input-text required-entry" data-validate="{required:true}"
+                                       aria-required="true">
+                            </div>
+                    </div>
                     <div class="field field-email-social required">
                         <label for="request-email" class="label"><span><?= __('Email') ?></span></label>
                         <div class="control">
                             <input type="email" name="realEmail" alt="email" id="request-email" class="input-text"
                                    data-validate="{required:true, 'validate-email':true}"/>
-                        </div>
-                    </div>
-                    <div class="field field-name-social required">
-                        <label class="label" for="request-firstname"><span><?= __('First Name') ?></span></label>
-                        <div class="control">
-                            <input type="text" id="request-firstname" name="firstname" title="<?= __('First Name') ?>"
-                                   class="input-text required-entry" data-validate="{required:true}"
-                                   aria-required="true">
-                        </div>
-                    </div>
-                    <div class="field field-name-social required">
-                        <label class="label" for="request-lastname"><span><?= __('Last Name') ?></span></label>
-                        <div class="control">
-                            <input type="text" id="request-lastname" name="lastname" title="<?= __('Last Name') ?>"
-                                   class="input-text required-entry" data-validate="{required:true}"
-                                   aria-required="true">
                         </div>
                     </div>
                     <div class="field field-password-social required">

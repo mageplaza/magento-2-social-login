@@ -20,11 +20,11 @@
 
 define(
     [
-    'jquery',
-    'Magento_Customer/js/customer-data',
-    'mage/translate',
-    'Magento_Ui/js/modal/modal',
-    'Mageplaza_Core/js/jquery.magnific-popup.min'
+        'jquery',
+        'Magento_Customer/js/customer-data',
+        'mage/translate',
+        'Magento_Ui/js/modal/modal',
+        'Mageplaza_Core/js/jquery.magnific-popup.min'
     ], function ($, customerData, $t, modal) {
         'use strict';
 
@@ -73,7 +73,9 @@ define(
                     availableFields: ['name', 'email', 'password'],
                     condition: false,
                     popupLogin: false,
-                    actionName: ''
+                    actionName: '',
+                    firstName: '',
+                    lastName: ','
                 },
 
                 /**
@@ -86,8 +88,10 @@ define(
                     this.initObserve();
                     this.replaceAuthModal();
                     this.hideFieldOnPopup();
-                    window.fakeEmailCallback = function (type) {
+                    window.fakeEmailCallback = function (type, firstname, lastname) {
                         self.options.fakeEmailType = type;
+                        self.options.firstName     = firstname;
+                        self.options.lastName      = lastname;
                         self.showEmail();
                     };
                 },
@@ -118,13 +122,13 @@ define(
                  */
                 initLink: function () {
                     var self       = this,
-                    headerLink = $(this.options.headerLink);
+                        headerLink = $(this.options.headerLink);
 
                     if (headerLink.length && self.options.popupLogin) {
                         headerLink.find('a').each(
                             function (link) {
                                 var el   = $(this),
-                                href = el.attr('href');
+                                    href = el.attr('href');
 
                                 if (typeof href !== 'undefined' && (href.search('customer/account/login') !== -1 || href.search('customer/account/create') !== -1)) {
                                     self.addAttribute(el);
@@ -266,17 +270,31 @@ define(
                  * Show email page
                  */
                 showEmail: function () {
-                    if (!this.options.popupLogin) {
-                        this.emailFormContainer.show();
-                        this.enablePopup();
-                    } else {
-                        var actions = ['customer_account_login', 'customer_account_create'];
-                        if ($.inArray(this.options.actionName, actions) !== -1) {
-                            this.options.popupLogin === 'popup_login' ? $('.social-login-btn').trigger('click') : this.openModal();
-                            this.emailFormContainer.show();
+                    var wrapper = $('#social-login-popup'),
+                        actions = ['customer_account_login', 'customer_account_create'];
+
+                    if (this.options.popupLogin !== 'popup_login') {
+                        if (this.options.popupLogin === 'popup_slide') {
+                            $('.quick-login-wrapper').modal('closeModal');
                         }
+                        var options = {
+                            'type': 'popup',
+                            'responsive': true,
+                            'modalClass': 'request-popup',
+                            'buttons': [],
+                            'parentModalClass': '_has-modal request-popup-has-modal'
+                        };
+                        modal(options, wrapper);
+                        wrapper.modal('openModal');
                     }
 
+                    if ($.inArray(this.options.actionName, actions) !== -1) {
+                        this.options.popupLogin ? $('.social-login-btn').trigger('click') : wrapper.modal('openModal');
+                        this.emailFormContainer.show();
+                    }
+
+                    $('#request-firstname').val(this.options.firstName);
+                    $('#request-lastname').val(this.options.lastName);
                     this.emailFormContainer.show();
                     this.loginFormContainer.hide();
                     this.forgotFormContainer.hide();
@@ -354,9 +372,9 @@ define(
                     }
 
                     var self          = this,
-                    options       = this.options,
-                    loginData     = {},
-                    formDataArray = this.loginForm.serializeArray();
+                        options       = this.options,
+                        loginData     = {},
+                        formDataArray = this.loginForm.serializeArray();
 
                     formDataArray.forEach(
                         function (entry) {
@@ -416,8 +434,8 @@ define(
                     }
 
                     var self       = this,
-                    options    = this.options,
-                    parameters = this.forgotForm.serialize();
+                        options    = this.options,
+                        parameters = this.forgotForm.serialize();
 
                     this.appendLoading(this.forgotFormContent);
                     this.removeMsg(this.forgotFormContent, options.errorMsgClass);
@@ -452,7 +470,7 @@ define(
 
                     var self       = this;
                     var options    = this.options,
-                    parameters = this.fakeEmailFrom.serialize();
+                        parameters = this.fakeEmailFrom.serialize();
 
                     this.appendLoading(this.fakeEmailFormContent);
                     this.removeMsg(this.fakeEmailFormContent, options.errorMsgClass);
@@ -488,8 +506,8 @@ define(
                     }
 
                     var self       = this,
-                    options    = this.options,
-                    parameters = this.createForm.serialize();
+                        options    = this.options,
+                        parameters = this.createForm.serialize();
 
                     this.appendLoading(this.createFormContent);
                     this.removeMsg(this.createFormContent, options.errorMsgClass);
@@ -543,7 +561,7 @@ define(
                  */
                 addMsg: function (block, response) {
                     var message      = response.message,
-                    messageClass = response.success ? this.options.successMsgClass : this.options.errorMsgClass;
+                        messageClass = response.success ? this.options.successMsgClass : this.options.errorMsgClass;
 
                     if (typeof (message) === 'object' && message.length > 0) {
                         message.forEach(
@@ -588,12 +606,12 @@ define(
                  */
                 replaceAuthModal: function () {
                     var self           = this,
-                    cartSummary    = $('.cart-summary'),
-                    child_selector = 'button.social-login-btn',
-                    cart           = customerData.get('cart'),
-                    customer       = customerData.get('customer'),
-                    miniCartBtn    = $('#minicart-content-wrapper'),
-                    pccBtn         = $('button[data-role = proceed-to-checkout]');
+                        cartSummary    = $('.cart-summary'),
+                        child_selector = 'button.social-login-btn',
+                        cart           = customerData.get('cart'),
+                        customer       = customerData.get('customer'),
+                        miniCartBtn    = $('#minicart-content-wrapper'),
+                        pccBtn         = $('button[data-role = proceed-to-checkout]');
 
                     var existCondition = setInterval(
                         function () {
@@ -651,33 +669,18 @@ define(
                  * @param child_selector
                  */
                 enablePopup: function (parent_selector = null, child_selector = null) {
-                    if (!this.options.popupLogin) {
-                        var wrapper = $(this.options.popup),
-                        options = {
-                            'type': 'popup',
-                            'responsive': true,
-                            'modalClass': 'request-popup',
-                            'buttons': [],
-                            'parentModalClass': '_has-modal request-popup-has-modal'
-                        };
-
-                        modal(options, wrapper);
-                        wrapper.modal('openModal');
-
-                    } else {
-                        parent_selector.magnificPopup(
-                            {
-                                delegate: child_selector,
-                                removalDelay: 500,
-                                callbacks: {
-                                    beforeOpen: function () {
-                                        this.st.mainClass = this.st.el.attr('data-effect');
-                                    }
-                                },
-                                midClick: true
-                            }
-                        );
-                    }
+                    parent_selector.magnificPopup(
+                        {
+                            delegate: child_selector,
+                            removalDelay: 500,
+                            callbacks: {
+                                beforeOpen: function () {
+                                    this.st.mainClass = this.st.el.attr('data-effect');
+                                }
+                            },
+                            midClick: true
+                        }
+                    );
                 },
 
                 /**
@@ -688,7 +691,7 @@ define(
                     $.each(
                         self.options.availableFields, function (k, fieldName) {
                             var elField   = $('.field-' + fieldName + '-social'),
-                            elConfirm = $('.field-confirmation-social');
+                                elConfirm = $('.field-confirmation-social');
                             if (self.options.showFields) {
                                 if ($.inArray(fieldName, self.options.showFields.split(',')) === -1) {
                                     if (fieldName === 'password') {

@@ -76,8 +76,8 @@ class Login extends AbstractSocial
 
                 return $this->_appendJs(
                     sprintf(
-                        "<script>window.close();window.opener.fakeEmailCallback('%s');</script>",
-                        $type
+                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        $type, $userProfile->firstName, $userProfile->lastName
                     )
                 );
             }
