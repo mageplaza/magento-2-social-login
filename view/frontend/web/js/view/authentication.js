@@ -63,25 +63,16 @@ define(
                             }
 
                             if (self.popup.length !== 0) {
-                                var effect = self.popup.socialpopup('getEffect');
                                 el.attr('href', '#social-login-popup');
-                                el.attr('data-effect', effect);
-                                el.on(
-                                    'click', function () {
-                                        self.popup.socialpopup('showLogin');
-                                        self.popup.socialpopup('loadApi');
-                                    }
-                                );
+                                el.on('click', function () {
+                                    self.popup.socialpopup('showLogin');
+                                    self.popup.socialpopup('loadApi');
+                                });
 
                                 $('.authentication-wrapper').magnificPopup(
                                     {
                                         delegate: 'a.social-login-btn',
                                         removalDelay: 500,
-                                        callbacks: {
-                                            beforeOpen: function () {
-                                                this.st.mainClass = this.st.el.attr('data-effect');
-                                            }
-                                        },
                                         midClick: true
                                     }
                                 );
@@ -102,7 +93,7 @@ define(
                     return this;
                 },
                 /**
-                 * Is login form enabled for current customer 
+                 * Is login form enabled for current customer
                  */
                 isActive: function () {
                     return !customer.isLoggedIn();
