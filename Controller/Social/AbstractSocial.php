@@ -98,14 +98,14 @@ abstract class AbstractSocial extends Action
     /**
      * Login constructor.
      *
-     * @param Context                    $context
-     * @param StoreManagerInterface      $storeManager
+     * @param Context $context
+     * @param StoreManagerInterface $storeManager
      * @param AccountManagementInterface $accountManager
-     * @param SocialHelper               $apiHelper
-     * @param Social                     $apiObject
-     * @param Session                    $customerSession
-     * @param AccountRedirect            $accountRedirect
-     * @param RawFactory                 $resultRawFactory
+     * @param SocialHelper $apiHelper
+     * @param Social $apiObject
+     * @param Session $customerSession
+     * @param AccountRedirect $accountRedirect
+     * @param RawFactory $resultRawFactory
      */
     public function __construct(
         Context $context,
@@ -153,12 +153,12 @@ abstract class AbstractSocial extends Action
 
         $user = array_merge(
             [
-            'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
-            'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
-            'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
-            'identifier' => $userProfile->identifier,
-            'type'       => $type,
-            'password'   => isset($userProfile->password) ? $userProfile->password : null
+                'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+                'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+                'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+                'identifier' => $userProfile->identifier,
+                'type'       => $type,
+                'password'   => isset($userProfile->password) ? $userProfile->password : null
             ], $this->getUserData($userProfile)
         );
 
@@ -207,7 +207,7 @@ abstract class AbstractSocial extends Action
      * Redirect to login page if social data is not contain email address
      *
      * @param $apiLabel
-     * @param bool     $needTranslate
+     * @param bool $needTranslate
      *
      * @return $this
      */
@@ -242,8 +242,8 @@ abstract class AbstractSocial extends Action
         $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
         $this->_eventManager->dispatch(
             'social_manager_get_login_redirect', [
-            'object'  => $object,
-            'request' => $this->_request
+                'object'  => $object,
+                'request' => $this->_request
             ]
         );
         $url = $object->getUrl();
@@ -260,17 +260,26 @@ abstract class AbstractSocial extends Action
      */
     public function _appendJs($content = null)
     {
-        /**
- * @var Raw $resultRaw 
-*/
+        /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
 
-        return $resultRaw->setContents(
-            $content ?: sprintf(
-                "<script>window.opener.socialCallback('%s', window);</script>",
-                $this->_loginPostRedirect()
-            )
-        );
+        if ($this->_loginPostRedirect()) {
+            $raw = $resultRaw->setContents(
+                $content ?: sprintf(
+                    "<script>window.opener.socialCallback('%s', window);</script>",
+                    $this->_loginPostRedirect()
+                )
+            );
+        } else {
+            $raw = $resultRaw->setContents($content ?:
+                "<script>
+                    window.opener.location.reload(true);
+                    window.close();
+                </script>"
+            );
+        }
+
+        return $raw;
     }
 
     /**

@@ -40,9 +40,9 @@ class Css extends Template
     /**
      * Css constructor.
      *
-     * @param Context    $context
+     * @param Context $context
      * @param DataHelper $helper
-     * @param array      $data
+     * @param array $data
      */
     public function __construct(
         Context $context,
