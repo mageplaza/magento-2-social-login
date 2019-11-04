@@ -32,8 +32,8 @@
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[This extension is fully compatible with <a href="https://goo.gl/C6kwiJ" target="_blank">One Step Checkout</a>.
-                    <br> Increase 25% conversion rate with <a href="https://goo.gl/6chU3c" target="_blank">Layered Navigation</a>]]></comment>
+                    <comment><![CDATA[This extension is fully compatible with <a href="https://www.mageplaza.com/magento-2-one-step-checkout-extension/" target="_blank">One Step Checkout</a>.
+                    <br> Increase 25% conversion rate with <a href="https://www.mageplaza.com/magento-2-layered-navigation-extension/" target="_blank">Layered Navigation</a>]]></comment>
                 </field>
                 <field id="send_password" translate="label comment" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Send Password To Customer</label>
