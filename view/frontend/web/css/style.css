@@ -1705,3 +1705,7 @@
         z-index: 900;
     }
 }
+
+.customer-account-create .account-social-login, .customer-account-login .account-social-login {
+    display: block !important
+}
