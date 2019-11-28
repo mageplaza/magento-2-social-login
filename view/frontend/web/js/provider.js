@@ -30,15 +30,14 @@ define([
      */
     window.socialCallback = function (url, windowObj) {
         customerData.invalidate(['customer']);
-        customerData.reload(['customer'], true);
-
-        if (url !== '') {
-            window.location.href = url;
-        } else {
-            window.location.reload(true);
-        }
-
-        windowObj.close();
+        customerData.reload(['customer'], true).done(function() {
+           if (url !== '') {
+               window.location.href = url;
+           } else {
+               window.location.reload(true);
+           }
+           windowObj.close();
+        });
     };
 
     return function (config, element) {
