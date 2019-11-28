@@ -24,6 +24,7 @@ namespace Mageplaza\SocialLogin\Controller\Popup;
 use Exception;
 use Magento\Captcha\Helper\Data as CaptchaData;
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface as CustomerRepository;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Api\Data\RegionInterfaceFactory;
@@ -126,6 +127,7 @@ class Create extends CreatePost
         CustomerExtractor $customerExtractor,
         DataObjectHelper $dataObjectHelper,
         AccountRedirect $accountRedirect,
+        CustomerRepository $customerRepository,
         JsonFactory $resultJsonFactory,
         CaptchaData $captchaHelper,
         Data $socialHelper
@@ -152,7 +154,8 @@ class Create extends CreatePost
             $escaper,
             $customerExtractor,
             $dataObjectHelper,
-            $accountRedirect
+            $accountRedirect,
+            $customerRepository
         );
     }
 
