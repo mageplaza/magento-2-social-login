@@ -53,24 +53,25 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
 
         // create a new OAuth2 client instance
         $this->api = ObjectManager::getInstance()->create(
-            AmazonOAuth2Client::class, [
-            'client_id'     => $this->config['keys']['id'],
-            'client_secret' => $this->config['keys']['secret'],
-            'redirect_uri'  => $this->endpoint,
-            'compressed'    => $this->compressed
+            AmazonOAuth2Client::class,
+            [
+                'client_id'     => $this->config['keys']['id'],
+                'client_secret' => $this->config['keys']['secret'],
+                'redirect_uri'  => $this->endpoint,
+                'compressed'    => $this->compressed
             ]
         );
 
-        $this->api->api_base_url = 'https://api.amazon.com';
+        $this->api->api_base_url  = 'https://api.amazon.com';
         $this->api->authorize_url = 'https://www.amazon.com/ap/oa';
-        $this->api->token_url = 'https://api.amazon.com/auth/o2/token';
+        $this->api->token_url     = 'https://api.amazon.com/auth/o2/token';
 
         $this->api->curl_header = ['Content-Type: application/x-www-form-urlencoded'];
 
         // If we have an access token, set it
         if ($this->token('access_token')) {
-            $this->api->access_token = $this->token('access_token');
-            $this->api->refresh_token = $this->token('refresh_token');
+            $this->api->access_token            = $this->token('access_token');
+            $this->api->refresh_token           = $this->token('refresh_token');
             $this->api->access_token_expires_in = $this->token('expires_in');
             $this->api->access_token_expires_at = $this->token('expires_at');
         }
@@ -94,10 +95,10 @@ class Amazon extends Hybrid_Provider_Model_OAuth2
             throw new Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }
 
-        $this->user->profile->identifier = $data->user_id;
-        $this->user->profile->email = $data->email;
+        $this->user->profile->identifier  = $data->user_id;
+        $this->user->profile->email       = $data->email;
         $this->user->profile->displayName = $data->name;
-        $this->user->profile->zip = $data->postal_code;
+        $this->user->profile->zip         = $data->postal_code;
 
         return $this->user->profile;
     }

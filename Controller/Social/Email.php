@@ -31,6 +31,7 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -38,7 +39,6 @@ use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
-use Magento\Framework\Encryption\EncryptorInterface;
 
 /**
  * Class AbstractSocial
@@ -65,17 +65,17 @@ class Email extends AbstractSocial
     /**
      * Email constructor.
      *
-     * @param Context                    $context
-     * @param StoreManagerInterface      $storeManager
+     * @param Context $context
+     * @param StoreManagerInterface $storeManager
      * @param AccountManagementInterface $accountManager
-     * @param SocialHelper               $apiHelper
-     * @param Social                     $apiObject
-     * @param Session                    $customerSession
-     * @param AccountRedirect            $accountRedirect
-     * @param RawFactory                 $resultRawFactory
-     * @param JsonFactory                $resultJsonFactory
-     * @param CustomerFactory            $customerFactory
-     * @param EncryptorInterface         $encrypt
+     * @param SocialHelper $apiHelper
+     * @param Social $apiObject
+     * @param Session $customerSession
+     * @param AccountRedirect $accountRedirect
+     * @param RawFactory $resultRawFactory
+     * @param JsonFactory $resultJsonFactory
+     * @param CustomerFactory $customerFactory
+     * @param EncryptorInterface $encrypt
      */
     public function __construct(
         Context $context,
@@ -116,8 +116,8 @@ class Email extends AbstractSocial
     public function execute()
     {
         /**
- * @var Json $resultJson 
-*/
+         * @var Json $resultJson
+         */
         $resultJson = $this->resultJsonFactory->create();
         $params     = $this->getRequest()->getParams();
         $type       = $this->apiHelper->setType($params['type']);

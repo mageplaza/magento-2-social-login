@@ -44,10 +44,10 @@ class Popup extends Template
     protected $customerSession;
 
     /**
-     * @param Context         $context
-     * @param HelperData      $helperData
+     * @param Context $context
+     * @param HelperData $helperData
      * @param CustomerSession $customerSession
-     * @param array           $data
+     * @param array $data
      */
     public function __construct(
         Context $context,
@@ -67,7 +67,6 @@ class Popup extends Template
     public function isEnabled()
     {
         if ($this->helperData->isEnabled() && !$this->customerSession->isLoggedIn() && $this->helperData->getPopupLogin()) {
-
             return $this->helperData->getPopupLogin();
         }
 

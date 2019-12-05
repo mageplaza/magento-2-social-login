@@ -126,8 +126,8 @@ class Create extends CreatePost
     public function execute()
     {
         /**
- * @var Json $resultJson 
-*/
+         * @var Json $resultJson
+         */
         $resultJson = $this->getJsonFactory()->create();
         $result     = [
             'success' => false,
@@ -174,9 +174,10 @@ class Create extends CreatePost
                 }
 
                 $this->_eventManager->dispatch(
-                    'customer_register_success', [
-                    'account_controller' => $this,
-                    'customer'           => $customer
+                    'customer_register_success',
+                    [
+                        'account_controller' => $this,
+                        'customer'           => $customer
                     ]
                 );
 
@@ -220,7 +221,7 @@ class Create extends CreatePost
             $result['message'][] = __('We can\'t save the customer.');
         }
 
-        $result['url']     = $this->_loginPostRedirect();
+        $result['url'] = $this->_loginPostRedirect();
         $this->session->setCustomerFormData($this->getRequest()->getPostValue());
 
         return $resultJson->setData($result);

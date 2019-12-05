@@ -35,7 +35,7 @@
                 <authentication_popup>1</authentication_popup>
                 <popup_effect>mfp-move-from-top</popup_effect>
                 <style_management>#6e716e</style_management>
-                <require_more_info>1</require_more_info>
+                <require_more_info>2</require_more_info>
                 <information_require>email,name,password</information_require>
             </general>
             <facebook>

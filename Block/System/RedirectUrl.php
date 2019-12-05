@@ -42,9 +42,9 @@ class RedirectUrl extends FormField
     /**
      * RedirectUrl constructor.
      *
-     * @param Context      $context
+     * @param Context $context
      * @param SocialHelper $socialHelper
-     * @param array        $data
+     * @param array $data
      */
     public function __construct(
         Context $context,
@@ -64,9 +64,9 @@ class RedirectUrl extends FormField
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $elementId = explode('_', $element->getHtmlId());
+        $elementId   = explode('_', $element->getHtmlId());
         $redirectUrl = $this->socialHelper->getAuthUrl($elementId[1]);
-        $html = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
+        $html        = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
 
         return $html;
     }

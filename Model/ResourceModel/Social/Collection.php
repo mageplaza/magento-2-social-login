@@ -23,7 +23,6 @@ namespace Mageplaza\SocialLogin\Model\ResourceModel\Social;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Mageplaza\SocialLogin\Model\ResourceModel\Social;
-use Zend_Db_Expr;
 
 /**
  * Class Collection

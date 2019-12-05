@@ -32,6 +32,7 @@ use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\State\InputMismatchException;
@@ -40,9 +41,9 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
-use Magento\Framework\Stdlib\DateTime\DateTime;
 
 /**
  * Class Social
@@ -100,18 +101,18 @@ class Social extends AbstractModel
     /**
      * Social constructor.
      *
-     * @param Context                              $context
-     * @param Registry                             $registry
-     * @param CustomerFactory                      $customerFactory
-     * @param CustomerInterfaceFactory             $customerDataFactory
-     * @param CustomerRepositoryInterface          $customerRepository
-     * @param StoreManagerInterface                $storeManager
+     * @param Context $context
+     * @param Registry $registry
+     * @param CustomerFactory $customerFactory
+     * @param CustomerInterfaceFactory $customerDataFactory
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param StoreManagerInterface $storeManager
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
-     * @param User                                 $userModel
-     * @param AbstractResource|null                $resource
-     * @param AbstractDb|null                      $resourceCollection
-     * @param DateTime                             $dateTime
-     * @param array                                $data
+     * @param User $userModel
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param DateTime $dateTime
+     * @param array $data
      */
     public function __construct(
         Context $context,
@@ -171,7 +172,7 @@ class Social extends AbstractModel
 
     /**
      * @param $email
-     * @param null  $websiteId
+     * @param null $websiteId
      *
      * @return Customer
      * @throws LocalizedException
@@ -179,8 +180,8 @@ class Social extends AbstractModel
     public function getCustomerByEmail($email, $websiteId = null)
     {
         /**
- * @var Customer $customer 
-*/
+         * @var Customer $customer
+         */
         $customer = $this->customerFactory->create();
         $customer->setWebsiteId($websiteId ?: $this->storeManager->getWebsite()->getId());
         $customer->loadByEmail($email);
@@ -198,8 +199,8 @@ class Social extends AbstractModel
     public function createCustomerSocial($data, $store)
     {
         /**
- * @var CustomerInterface $customer 
-*/
+         * @var CustomerInterface $customer
+         */
         $customer = $this->customerDataFactory->create();
         $customer->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
@@ -247,8 +248,8 @@ class Social extends AbstractModel
         }
 
         /**
- * @var Customer $customer 
-*/
+         * @var Customer $customer
+         */
         $customer = $this->customerFactory->create()->load($customer->getId());
 
         return $customer;
@@ -276,11 +277,11 @@ class Social extends AbstractModel
     {
         $this->setData(
             [
-            'social_id'              => $identifier,
-            'customer_id'            => $customerId,
-            'type'                   => $type,
-            'is_send_password_email' => $this->apiHelper->canSendPassword(),
-            'social_created_at'      => $this->_dateTime->date()
+                'social_id'              => $identifier,
+                'customer_id'            => $customerId,
+                'type'                   => $type,
+                'is_send_password_email' => $this->apiHelper->canSendPassword(),
+                'social_created_at'      => $this->_dateTime->date()
             ]
         )
             ->setId(null)->save();
@@ -290,7 +291,7 @@ class Social extends AbstractModel
 
     /**
      * @param $apiName
-     * @param null    $area
+     * @param null $area
      *
      * @return mixed
      * @throws LocalizedException
@@ -355,7 +356,6 @@ class Social extends AbstractModel
             ->addFieldToFilter('type', $type)->addFieldToFilter('user_id', ['notnull' => true])
             ->getFirstItem();
 
-
         if ($socialCustomer && $socialCustomer->getId()) {
             $user->load($socialCustomer->getUserId());
         }
@@ -367,7 +367,7 @@ class Social extends AbstractModel
      * @param $type
      * @param $identifier
      *
-     * @return \Magento\Framework\DataObject
+     * @return DataObject
      */
     public function getUser($type, $identifier)
     {
@@ -392,8 +392,8 @@ class Social extends AbstractModel
         $social = $this->load($socialCustomerId);
         $social->addData(
             [
-            'social_id' => $identifier,
-            'status'    => self::STATUS_CONNECT
+                'social_id' => $identifier,
+                'status'    => self::STATUS_CONNECT
             ]
         );
         $social->save();

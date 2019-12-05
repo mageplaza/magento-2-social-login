@@ -39,7 +39,6 @@ class Information implements ArrayInterface
      */
     public function toOptionArray()
     {
-
         return [
             ['value' => self::INFO_EMAIL, 'label' => __('Email')],
             ['value' => self::INFOR_NAME, 'label' => __('Name')],

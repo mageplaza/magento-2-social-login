@@ -17,7 +17,6 @@ Login,Login
 "We're unable to send the password reset email.","We're unable to send the password reset email."
 "New User","New User"
 "Email is Null, Please enter email in your %1 profile","Email is Null, Please enter email in your %1 profile"
-"Email is Null","Email is Null"
 "Email already exists","Email already exists"
 Success!,Success!
 "Ooophs, we got an error: %1","Ooophs, we got an error: %1"
@@ -25,6 +24,7 @@ Success!,Success!
 Default,Default
 Orange,Orange
 Green,Green
+Grey,Grey
 Black,Black
 Blue,Blue
 "Dark Blue","Dark Blue"
@@ -38,11 +38,16 @@ Newspaper,Newspaper
 "Move from top","Move from top"
 "3D unfold","3D unfold"
 Zoom-out,Zoom-out
+Name,Name
+None,None
+"Popup Login","Popup Login"
 "-- Please Select --","-- Please Select --"
 "Customer Login Page","Customer Login Page"
 "Customer Create Page","Customer Create Page"
-"Social Popup Login","Social Popup Login"
+"Social Login Popup","Social Login Popup"
 "Customer Authentication Popup","Customer Authentication Popup"
+"Always Require","Always Require"
+"If social account does not provide E-mail.","If social account does not provide E-mail."
 "Login By %1","Login By %1"
 "Sign in with %1","Sign in with %1"
 "Sign In","Sign In"
@@ -65,8 +70,10 @@ Country,Country
 "Confirm Password","Confirm Password"
 "Create an Account","Create an Account"
 Back,Back
-"Real email address is required to social networks","Real email address is required to social networks"
-"Please enter your email address below to create account.","Please enter your email address below to create account."
+"The information below is required for social login","The information below is required for social login"
+"Please complete your information below to creat an account.","Please complete your information below to creat an account."
+"First Name","First Name"
+"Last Name","Last Name"
 Submit,Submit
 "Forgot Password","Forgot Password"
 "Please enter your email address below to receive a password reset link.","Please enter your email address below to receive a password reset link."
@@ -75,22 +82,26 @@ Submit,Submit
 "Social Login","Social Login"
 General,General
 Enable,Enable
-"This extension is fully compatible with <a href=""https://goo.gl/C6kwiJ"" target=""_blank"">One Step Checkout</a>.
-                    <br> Increase 25% conversion rate with <a href=""https://goo.gl/6chU3c"" target=""_blank"">Layered Navigation</a>","This extension is fully compatible with <a href=""https://goo.gl/C6kwiJ"" target=""_blank"">One Step Checkout</a>.
-                    <br> Increase 25% conversion rate with <a href=""https://goo.gl/6chU3c"" target=""_blank"">Layered Navigation</a>"
+"This extension is fully compatible with <a href=""https://www.mageplaza.com/magento-2-one-step-checkout-extension/"" target=""_blank"">One Step Checkout</a>.
+                    <br> Increase 25% conversion rate with <a href=""https://www.mageplaza.com/magento-2-layered-navigation-extension/"" target=""_blank"">Layered Navigation</a>","This extension is fully compatible with <a href=""https://www.mageplaza.com/magento-2-one-step-checkout-extension/"" target=""_blank"">One Step Checkout</a>.
+                    <br> Increase 25% conversion rate with <a href=""https://www.mageplaza.com/magento-2-layered-navigation-extension/"" target=""_blank"">Layered Navigation</a>"
 "Send Password To Customer","Send Password To Customer"
+"Install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=mageplaza&utm_medium=mageplaza&utm_campaign=social-login&utm_content=SMTP"" target=""_blank"">Mageplaza SMTP</a> to avoid sending emails to spam box.","Install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=mageplaza&utm_medium=mageplaza&utm_campaign=social-login&utm_content=SMTP"" target=""_blank"">Mageplaza SMTP</a> to avoid sending emails to spam box."
 "Show Social Login Buttons on","Show Social Login Buttons on"
 "Use Popup Login","Use Popup Login"
+"Use Popup Login As Authentication Popup","Use Popup Login As Authentication Popup"
+"Social Login popup will be used to replace Magento Default Login popup if ""Allow Guest Checkout"" is No.","Social Login popup will be used to replace Magento Default Login popup if ""Allow Guest Checkout"" is No."
 "Popup Links Selector","Popup Links Selector"
-"Require Real Email","Require Real Email"
-"Entering email address is required to social networks which don't provide real E-mail.","Entering email address is required to social networks which don't provide real E-mail."
+"Require More Info.","Require More Info."
+"Request the customer to enter information when creating an account.","Request the customer to enter information when creating an account."
+"Information Required","Information Required"
 "Popup Effect","Popup Effect"
 "Style Management","Style Management"
 "Custom Color","Custom Color"
 "Custom CSS","Custom CSS"
 Facebook,Facebook
 "Create app <a href=""https://developers.facebook.com/apps"" target=""_bank"">here</a>","Create app <a href=""https://developers.facebook.com/apps"" target=""_bank"">here</a>"
-"Facebook App Id","Facebook App Id"
+"Facebook App ID","Facebook App ID"
 "Facebook App Secret","Facebook App Secret"
 "Valid OAuth redirect URIs","Valid OAuth redirect URIs"
 "Sort Order","Sort Order"
@@ -107,13 +118,13 @@ Twitter,Twitter
 "Consumer Secret","Consumer Secret"
 LinkedIn,LinkedIn
 "Create app <a href=""https://www.linkedin.com/secure/developer"" target=""_bank"">here</a>","Create app <a href=""https://www.linkedin.com/secure/developer"" target=""_bank"">here</a>"
-"Id Client","Id Client"
+"ID Client","ID Client"
 "Secret Client","Secret Client"
 Yahoo,Yahoo
 "Create app <a href=""https://developer.yahoo.com/apps/"" target=""_bank"">here</a>","Create app <a href=""https://developer.yahoo.com/apps/"" target=""_bank"">here</a>"
 Foursquare,Foursquare
 "Create app <a href=""https://www.foursquare.com/oauth/"" target=""_bank"">here</a>","Create app <a href=""https://www.foursquare.com/oauth/"" target=""_bank"">here</a>"
-"Callback Url","Callback Url"
+"Callback URL","Callback URL"
 Instagram,Instagram
 "Create app <a href=""http://instagram.com/developer/clients/manage/"" target=""_bank"">here</a>","Create app <a href=""http://instagram.com/developer/clients/manage/"" target=""_bank"">here</a>"
 Vkontakte,Vkontakte
