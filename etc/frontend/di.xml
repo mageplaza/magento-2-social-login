@@ -15,15 +15,13 @@
  * version in the future.
  *
  * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
+ * @package     Mageplaza_FreeShippingBar
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_SocialLogin" setup_version="1.1.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="social_login_add_data" type="Mageplaza\SocialLogin\Plugin\CustomerData\Cart"/>
+    </type>
 </config>

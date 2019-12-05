@@ -23,7 +23,7 @@
 
 /** @var \Mageplaza\SocialLogin\Helper\Data $helper */
 $helper = $block->helper();
-$color = $helper->getStyleManagement();
+$color  = $helper->getStyleManagement();
 
 use Mageplaza\SocialLogin\Block\Css; ?>
 <style>
@@ -33,7 +33,8 @@ use Mageplaza\SocialLogin\Block\Css; ?>
 
     #social-login-popup .social-login #bnt-social-login-authentication,
     #social-login-popup .forgot .primary button,
-    #social-login-popup .create .primary button {
+    #social-login-popup .create .primary button,
+    #social-login-popup .fake-email .primary button {
         background-color: <?= $color ?>;
         border: <?= $color ?>
     }

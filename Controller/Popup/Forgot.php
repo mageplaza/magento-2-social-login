@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Popup;
@@ -78,13 +78,13 @@ class Forgot extends Action
     protected $socialHelper;
 
     /**
-     * @param Context $context
-     * @param Session $customerSession
+     * @param Context                    $context
+     * @param Session                    $customerSession
      * @param AccountManagementInterface $customerAccountManagement
-     * @param Escaper $escaper
-     * @param JsonFactory $resultJsonFactory
-     * @param CaptchaData $captchaHelper
-     * @param Data $socialHelper
+     * @param Escaper                    $escaper
+     * @param JsonFactory                $resultJsonFactory
+     * @param CaptchaData                $captchaHelper
+     * @param Data                       $socialHelper
      */
     public function __construct(
         Context $context,
@@ -123,7 +123,9 @@ class Forgot extends Action
      */
     public function execute()
     {
-        /** @var Json $resultJson */
+        /**
+ * @var Json $resultJson 
+*/
         $resultJson = $this->resultJsonFactory->create();
 
         $result = [
@@ -137,7 +139,9 @@ class Forgot extends Action
             return $resultJson->setData($result);
         }
 
-        /** @var Redirect $resultRedirect */
+        /**
+ * @var Redirect $resultRedirect 
+*/
         $email = (string) $this->getRequest()->getPost('email');
         if ($email) {
             if (!Zend_Validate::is($email, 'EmailAddress')) {

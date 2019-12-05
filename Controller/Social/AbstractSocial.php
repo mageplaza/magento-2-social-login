@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Controller\Social;
@@ -117,12 +117,12 @@ abstract class AbstractSocial extends Action
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory
     ) {
-        $this->storeManager = $storeManager;
-        $this->accountManager = $accountManager;
-        $this->apiHelper = $apiHelper;
-        $this->apiObject = $apiObject;
-        $this->session = $customerSession;
-        $this->accountRedirect = $accountRedirect;
+        $this->storeManager     = $storeManager;
+        $this->accountManager   = $accountManager;
+        $this->apiHelper        = $apiHelper;
+        $this->apiObject        = $apiObject;
+        $this->session          = $customerSession;
+        $this->accountRedirect  = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
 
         parent::__construct($context);
@@ -150,13 +150,17 @@ abstract class AbstractSocial extends Action
     public function createCustomerProcess($userProfile, $type)
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
-        $user = array_merge([
-            'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
-            'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
-            'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
-            'identifier' => $userProfile->identifier,
-            'type'       => $type
-        ], $this->getUserData($userProfile));
+
+        $user = array_merge(
+            [
+                'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+                'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+                'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+                'identifier' => $userProfile->identifier,
+                'type'       => $type,
+                'password'   => isset($userProfile->password) ? $userProfile->password : null
+            ], $this->getUserData($userProfile)
+        );
 
         return $this->createCustomer($user, $type);
     }
@@ -236,10 +240,12 @@ abstract class AbstractSocial extends Action
         }
 
         $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
-        $this->_eventManager->dispatch('social_manager_get_login_redirect', [
-            'object'  => $object,
-            'request' => $this->_request
-        ]);
+        $this->_eventManager->dispatch(
+            'social_manager_get_login_redirect', [
+                'object'  => $object,
+                'request' => $this->_request
+            ]
+        );
         $url = $object->getUrl();
 
         return $url;
@@ -257,10 +263,23 @@ abstract class AbstractSocial extends Action
         /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
 
-        return $resultRaw->setContents($content ?: sprintf(
-            "<script>window.opener.socialCallback('%s', window);</script>",
-            $this->_loginPostRedirect()
-        ));
+        if ($this->_loginPostRedirect()) {
+            $raw = $resultRaw->setContents(
+                $content ?: sprintf(
+                    "<script>window.opener.socialCallback('%s', window);</script>",
+                    $this->_loginPostRedirect()
+                )
+            );
+        } else {
+            $raw = $resultRaw->setContents($content ?:
+                "<script>
+                    window.opener.location.reload(true);
+                    window.close();
+                </script>"
+            );
+        }
+
+        return $raw;
     }
 
     /**
@@ -286,7 +305,7 @@ abstract class AbstractSocial extends Action
     /**
      * Retrieve cookie manager
      *
-     * @return PhpCookieManager
+     * @return     PhpCookieManager
      * @deprecated
      */
     private function getCookieManager()
@@ -303,7 +322,7 @@ abstract class AbstractSocial extends Action
     /**
      * Retrieve cookie metadata factory
      *
-     * @return CookieMetadataFactory
+     * @return     CookieMetadataFactory
      * @deprecated
      */
     private function getCookieMetadataFactory()

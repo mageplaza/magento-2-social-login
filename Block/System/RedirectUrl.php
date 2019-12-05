@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_SocialLogin
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\SocialLogin\Block\System;
@@ -42,9 +42,9 @@ class RedirectUrl extends FormField
     /**
      * RedirectUrl constructor.
      *
-     * @param Context $context
+     * @param Context      $context
      * @param SocialHelper $socialHelper
-     * @param array $data
+     * @param array        $data
      */
     public function __construct(
         Context $context,

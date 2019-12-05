@@ -76,10 +76,10 @@ class OAuth2Client
     /**
      * OAuth2Client constructor.
      *
-     * @param bool $client_id
-     * @param bool $client_secret
-     * @param string $redirect_uri
-     * @param bool $compressed
+     * @param bool       $client_id
+     * @param bool       $client_secret
+     * @param string     $redirect_uri
+     * @param bool       $compressed
      * @param HelperData $helperData
      */
     public function __construct(
@@ -189,18 +189,18 @@ class OAuth2Client
         $response = null;
 
         switch ($method) {
-            case 'GET':
-                $response = $this->request($url, $parameters, "GET");
-                break;
-            case 'POST':
-                $response = $this->request($url, $parameters, "POST");
-                break;
-            case 'DELETE':
-                $response = $this->request($url, $parameters, "DELETE");
-                break;
-            case 'PATCH':
-                $response = $this->request($url, $parameters, "PATCH");
-                break;
+        case 'GET':
+            $response = $this->request($url, $parameters, "GET");
+            break;
+        case 'POST':
+            $response = $this->request($url, $parameters, "POST");
+            break;
+        case 'DELETE':
+            $response = $this->request($url, $parameters, "DELETE");
+            break;
+        case 'PATCH':
+            $response = $this->request($url, $parameters, "PATCH");
+            break;
         }
 
         if ($response && $decode_json) {

@@ -26,7 +26,6 @@ use StdClass;
  * from subclass.
  *
  * @link http://stackoverflow.com/questions/5224790/curl-post-format-for-curlopt-postfields
- *
  */
 class AmazonOAuth2Client extends OAuth2Client
 {
@@ -74,7 +73,7 @@ class AmazonOAuth2Client extends OAuth2Client
 
     /**
      * @param $url
-     * @param bool $params
+     * @param bool   $params
      * @param string $type
      *
      * @return mixed

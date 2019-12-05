@@ -24,30 +24,23 @@ namespace Mageplaza\SocialLogin\Model\System\Config\Source;
 use Magento\Framework\Option\ArrayInterface;
 
 /**
- * Class Position
+ * Class Popup
  *
  * @package Mageplaza\SocialLogin\Model\System\Config\Source
  */
-class Position implements ArrayInterface
+class Popup implements ArrayInterface
 {
-    const PAGE_LOGIN  = 1;
-    const PAGE_CREATE = 2;
-    const PAGE_POPUP  = 3;
-    const PAGE_AUTHEN = 4;
+    const POPUP_LOGIN = 'popup_login';
 
     /**
-     * Options getter
-     *
      * @return array
      */
     public function toOptionArray()
     {
+
         return [
-            ['value' => '', 'label' => __('-- Please Select --')],
-            ['value' => self::PAGE_LOGIN, 'label' => __('Customer Login Page')],
-            ['value' => self::PAGE_CREATE, 'label' => __('Customer Create Page')],
-            ['value' => self::PAGE_POPUP, 'label' => __('Social Login Popup')],
-            ['value' => self::PAGE_AUTHEN, 'label' => __('Customer Authentication Popup')]
+            ['value' => '', 'label' => __('None')],
+            ['value' => self::POPUP_LOGIN, 'label' => __('Popup Login')]
         ];
     }
 }

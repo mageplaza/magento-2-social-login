@@ -28,21 +28,25 @@
     margin: 0 auto;
 }
 
-#social-login-popup {
+#social-login-popup,
+#request-popup {
     overflow: hidden
 }
 
-#social-login-popup .block-container {
+#social-login-popup .block-container,
+#request-popup .block-container {
     width: 100%;
     display: inline-block;
 }
 
-#social-login-popup .social-login-title {
+#social-login-popup .social-login-title,
+#request-popup .social-login-title {
     padding: 10px 10px;
     background-color: #3399cc;
 }
 
-#social-login-popup .block-container .block {
+#social-login-popup .block-container .block,
+#request-popup .block-container .block {
     padding: 20px 25px;
     margin: 0;
 }
@@ -55,13 +59,15 @@
     background: #fbfaf6 url('images/ajax-loader.gif') no-repeat center center;
 }
 
-#social-login-popup .block-container .block .block-title {
+#social-login-popup .block-container .block .block-title,
+#request-popup .block-container .block .block-title {
     padding-bottom: 10px;
     margin-bottom: 10px;
     border-bottom: 1px solid #ccc;
 }
 
-#social-login-popup .fieldset {
+#social-login-popup .fieldset,
+#request-popup .fieldset {
     margin: 0px;
 }
 
@@ -73,7 +79,8 @@
     width: 215px;
 }
 
-#social-login-popup .actions-toolbar > .secondary .action.back {
+#social-login-popup .actions-toolbar > .secondary .action.back,
+#request-popup .actions-toolbar > .secondary .action.back {
     display: block;
 }
 
@@ -1684,9 +1691,21 @@
 .form-customer-login .g-recaptcha {
     margin: unset !important;
 }
+
 @media only screen and (min-width: 768px) {
     .popup-authentication .actions-toolbar {
         margin-bottom: 0;
         margin-top: unset !important;
     }
+}
+
+@media only screen and (max-width: 767px) {
+    .modal-popup.request-popup.modal-slide {
+        left: 0;
+        z-index: 900;
+    }
+}
+
+.customer-account-create .account-social-login, .customer-account-login .account-social-login {
+    display: block !important
 }

@@ -24,17 +24,12 @@ namespace Mageplaza\SocialLogin\Model\System\Config\Source;
 use Magento\Framework\Option\ArrayInterface;
 
 /**
- * Class Position
+ * Class RequestInfo
  *
  * @package Mageplaza\SocialLogin\Model\System\Config\Source
  */
-class Position implements ArrayInterface
+class RequestInfo implements ArrayInterface
 {
-    const PAGE_LOGIN  = 1;
-    const PAGE_CREATE = 2;
-    const PAGE_POPUP  = 3;
-    const PAGE_AUTHEN = 4;
-
     /**
      * Options getter
      *
@@ -44,10 +39,8 @@ class Position implements ArrayInterface
     {
         return [
             ['value' => '', 'label' => __('-- Please Select --')],
-            ['value' => self::PAGE_LOGIN, 'label' => __('Customer Login Page')],
-            ['value' => self::PAGE_CREATE, 'label' => __('Customer Create Page')],
-            ['value' => self::PAGE_POPUP, 'label' => __('Social Login Popup')],
-            ['value' => self::PAGE_AUTHEN, 'label' => __('Customer Authentication Popup')]
+            ['value' => 1, 'label' => __('Always Require')],
+            ['value' => 2, 'label' => __('If social account does not provide E-mail.')]
         ];
     }
 }
