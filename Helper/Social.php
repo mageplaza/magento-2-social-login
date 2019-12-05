@@ -66,7 +66,8 @@ class Social extends HelperData
     {
         $socialTypes = $this->getSocialTypesArray();
         uksort(
-            $socialTypes, function ($a, $b) {
+            $socialTypes,
+            function ($a, $b) {
                 $sortA = $this->getConfigValue("sociallogin/{$a}/sort_order") ?: 0;
                 $sortB = $this->getConfigValue("sociallogin/{$b}/sort_order") ?: 0;
                 if ($sortA === $sortB) {
@@ -169,18 +170,18 @@ class Social extends HelperData
 
         $type = $this->setType($type);
         switch ($type) {
-        case 'Facebook':
-            $param = 'hauth_done=' . $type;
-            break;
-        case 'Live':
-            $param = 'live.php';
-            break;
-        case 'Yahoo':
-            return $authUrl;
-        case 'Twitter':
-            return $authUrl;
-        default:
-            $param = 'hauth.done=' . $type;
+            case 'Facebook':
+                $param = 'hauth_done=' . $type;
+                break;
+            case 'Live':
+                $param = 'live.php';
+                break;
+            case 'Yahoo':
+                return $authUrl;
+            case 'Twitter':
+                return $authUrl;
+            default:
+                $param = 'hauth.done=' . $type;
         }
         if ($type === 'Live') {
             return $authUrl . $param;
@@ -198,15 +199,16 @@ class Social extends HelperData
         $storeId = $this->getScopeUrl();
 
         /**
- * @var Store $store 
-*/
+         * @var Store $store
+         */
         $store = $this->storeManager->getStore($storeId);
 
         return $this->_getUrl(
-            'sociallogin/social/callback', [
-            '_nosid'  => true,
-            '_scope'  => $storeId,
-            '_secure' => true
+            'sociallogin/social/callback',
+            [
+                '_nosid'  => true,
+                '_scope'  => $storeId,
+                '_secure' => true
             ]
         );
     }

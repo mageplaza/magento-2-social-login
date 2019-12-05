@@ -71,13 +71,14 @@ class Login extends AbstractSocial
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
             if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
-
                 $this->session->setUserProfile($userProfile);
 
                 return $this->_appendJs(
                     sprintf(
                         "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
-                        $type, $userProfile->firstName, $userProfile->lastName
+                        $type,
+                        $userProfile->firstName,
+                        $userProfile->lastName
                     )
                 );
             }

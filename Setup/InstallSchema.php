@@ -35,7 +35,7 @@ use Zend_Db_Exception;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @param SchemaSetupInterface   $setup
+     * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
      *
      * @throws Zend_Db_Exception
@@ -48,12 +48,16 @@ class InstallSchema implements InstallSchemaInterface
             $table = $installer->getConnection()
                 ->newTable($installer->getTable('mageplaza_social_customer'))
                 ->addColumn(
-                    'social_customer_id', Table::TYPE_INTEGER, 11, [
+                    'social_customer_id',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
                     'identity' => true,
                     'nullable' => false,
                     'primary'  => true,
                     'unsigned' => true,
-                    ], 'Social Customer ID'
+                    ],
+                    'Social Customer ID'
                 )
                 ->addColumn('social_id', Table::TYPE_TEXT, 255, ['unsigned' => true, 'nullable => false'], 'Social Id')
                 ->addColumn(

@@ -159,7 +159,8 @@ abstract class AbstractSocial extends Action
                 'identifier' => $userProfile->identifier,
                 'type'       => $type,
                 'password'   => isset($userProfile->password) ? $userProfile->password : null
-            ], $this->getUserData($userProfile)
+            ],
+            $this->getUserData($userProfile)
         );
 
         return $this->createCustomer($user, $type);
@@ -241,7 +242,8 @@ abstract class AbstractSocial extends Action
 
         $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
         $this->_eventManager->dispatch(
-            'social_manager_get_login_redirect', [
+            'social_manager_get_login_redirect',
+            [
                 'object'  => $object,
                 'request' => $this->_request
             ]
@@ -275,8 +277,7 @@ abstract class AbstractSocial extends Action
                 "<script>
                     window.opener.location.reload(true);
                     window.close();
-                </script>"
-            );
+                </script>");
         }
 
         return $raw;

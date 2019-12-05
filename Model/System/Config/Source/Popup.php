@@ -37,7 +37,6 @@ class Popup implements ArrayInterface
      */
     public function toOptionArray()
     {
-
         return [
             ['value' => '', 'label' => __('None')],
             ['value' => self::POPUP_LOGIN, 'label' => __('Popup Login')]

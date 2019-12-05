@@ -39,9 +39,9 @@ class Social extends Template
     protected $socialHelper;
 
     /**
-     * @param Context      $context
+     * @param Context $context
      * @param SocialHelper $socialHelper
-     * @param array        $data
+     * @param array $data
      */
     public function __construct(
         Context $context,
@@ -81,11 +81,11 @@ class Social extends Template
     public function getBtnKey($key)
     {
         switch ($key) {
-        case 'vkontakte':
-            $class = 'vk';
-            break;
-        default:
-            $class = $key;
+            case 'vkontakte':
+                $class = 'vk';
+                break;
+            default:
+                $class = $key;
         }
 
         return $class;
@@ -98,10 +98,11 @@ class Social extends Template
     {
         $availableButtons = $this->getAvailableSocials();
         foreach ($availableButtons as $key => &$button) {
-            $button['url'] = $this->getLoginUrl($key, ['authen' => 'popup']);
-            $button['key'] = $key;
+            $button['url']     = $this->getLoginUrl($key, ['authen' => 'popup']);
+            $button['key']     = $key;
             $button['btn_key'] = $this->getBtnKey($key);
         }
+
         return $availableButtons;
     }
 
@@ -126,7 +127,7 @@ class Social extends Template
 
     /**
      * @param $socialKey
-     * @param array     $params
+     * @param array $params
      *
      * @return string
      */

@@ -78,13 +78,13 @@ class Forgot extends Action
     protected $socialHelper;
 
     /**
-     * @param Context                    $context
-     * @param Session                    $customerSession
+     * @param Context $context
+     * @param Session $customerSession
      * @param AccountManagementInterface $customerAccountManagement
-     * @param Escaper                    $escaper
-     * @param JsonFactory                $resultJsonFactory
-     * @param CaptchaData                $captchaHelper
-     * @param Data                       $socialHelper
+     * @param Escaper $escaper
+     * @param JsonFactory $resultJsonFactory
+     * @param CaptchaData $captchaHelper
+     * @param Data $socialHelper
      */
     public function __construct(
         Context $context,
@@ -95,12 +95,12 @@ class Forgot extends Action
         CaptchaData $captchaHelper,
         Data $socialHelper
     ) {
-        $this->session = $customerSession;
+        $this->session                   = $customerSession;
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->escaper = $escaper;
-        $this->resultJsonFactory = $resultJsonFactory;
-        $this->captchaHelper = $captchaHelper;
-        $this->socialHelper = $socialHelper;
+        $this->escaper                   = $escaper;
+        $this->resultJsonFactory         = $resultJsonFactory;
+        $this->captchaHelper             = $captchaHelper;
+        $this->socialHelper              = $socialHelper;
 
         parent::__construct($context);
     }
@@ -110,9 +110,9 @@ class Forgot extends Action
      */
     public function checkCaptcha()
     {
-        $formId = 'user_forgotpassword';
+        $formId       = 'user_forgotpassword';
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
-        $resolve = $this->socialHelper->captchaResolve($this->getRequest(), $formId);
+        $resolve      = $this->socialHelper->captchaResolve($this->getRequest(), $formId);
 
         return !($captchaModel->isRequired() && !$captchaModel->isCorrect($resolve));
     }
@@ -124,8 +124,8 @@ class Forgot extends Action
     public function execute()
     {
         /**
- * @var Json $resultJson 
-*/
+         * @var Json $resultJson
+         */
         $resultJson = $this->resultJsonFactory->create();
 
         $result = [
@@ -140,8 +140,8 @@ class Forgot extends Action
         }
 
         /**
- * @var Redirect $resultRedirect 
-*/
+         * @var Redirect $resultRedirect
+         */
         $email = (string) $this->getRequest()->getPost('email');
         if ($email) {
             if (!Zend_Validate::is($email, 'EmailAddress')) {
@@ -154,23 +154,23 @@ class Forgot extends Action
                     $email,
                     AccountManagement::EMAIL_RESET
                 );
-                $result['success'] = true;
+                $result['success']   = true;
                 $result['message'][] = __(
                     'If there is an account associated with %1 you will receive an email with a link to reset your password.',
                     $this->escaper->escapeHtml($email)
                 );
             } catch (NoSuchEntityException $e) {
-                $result['success'] = true;
+                $result['success']   = true;
                 $result['message'][] = __(
                     'If there is an account associated with %1 you will receive an email with a link to reset your password.',
                     $this->escaper->escapeHtml($email)
                 );
                 // Do nothing, we don't want anyone to use this action to determine which email accounts are registered.
             } catch (SecurityViolationException $exception) {
-                $result['error'] = true;
+                $result['error']     = true;
                 $result['message'][] = $exception->getMessage();
             } catch (Exception $exception) {
-                $result['error'] = true;
+                $result['error']     = true;
                 $result['message'][] = __('We\'re unable to send the password reset email.');
             }
         }

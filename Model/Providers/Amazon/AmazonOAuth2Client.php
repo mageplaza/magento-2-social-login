@@ -73,7 +73,7 @@ class AmazonOAuth2Client extends OAuth2Client
 
     /**
      * @param $url
-     * @param bool   $params
+     * @param bool $params
      * @param string $type
      *
      * @return mixed
@@ -88,7 +88,7 @@ class AmazonOAuth2Client extends OAuth2Client
         }
 
         $this->http_info = [];
-        $ch = curl_init();
+        $ch              = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
