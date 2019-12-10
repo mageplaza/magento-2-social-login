@@ -23,7 +23,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
      * @link https://developers.facebook.com/docs/facebook-login/permissions
      * @var array $scope
      */
-    public $scope = ['email', 'user_about_me', 'user_birthday', 'user_hometown', 'user_location', 'user_website', 'publish_actions', 'read_custom_friendlists'];
+    public $scope = array('email', 'public_profile');
 
     /**
      * Provider API client
@@ -59,7 +59,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
         $this->api = new FacebookSDK([
             'app_id' => $this->config["keys"]["id"],
             'app_secret' => $this->config["keys"]["secret"],
-            'default_graph_version' => 'v2.8',
+            'default_graph_version' => !empty($this->config['default_graph_version']) ? $this->config['default_graph_version'] : 'v2.12',
             'trustForwarded' => $trustForwarded,
         ]);
     }
@@ -178,8 +178,9 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
     * {@inheridoc}
     */
    function getUserPages($writableonly = false) {
-       if (( isset($this->config['scope']) && strpos($this->config['scope'], 'manage_pages') === false ) || (!isset($this->config['scope']) && strpos($this->scope, 'manage_pages') === false ))
-           throw new Exception("User status requires manage_page permission!");
+       if (!in_array('manage_pages', $this->scope)) {
+           throw new Exception("Get user pages requires manage_page permission!");
+       }
 
        try {
            $pages = $this->api->get("/me/accounts", $this->token('access_token'));
@@ -211,7 +212,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
      */
     function getUserProfile() {
         try {
-            $fields = [
+            $fields = array(
                 'id',
                 'name',
                 'first_name',
@@ -225,7 +226,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
                 'hometown',
                 'location',
                 'birthday'
-            ];
+            );
             $response = $this->api->get('/me?fields=' . implode(',', $fields), $this->token('access_token'));
             $data = $response->getDecodedBody();
         } catch (FacebookSDKException $e) {
@@ -278,8 +279,12 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
      * {@inheritdoc}
      */
     function getUserContacts() {
+        if (!in_array('user_friends', $this->scope)) {
+           throw new Exception("Get user contacts requires user_friends permission!");
+        }
+
         $apiCall = '?fields=link,name';
-        $returnedContacts = [];
+        $returnedContacts = array();
         $pagedList = true;
 
         while ($pagedList) {
@@ -303,7 +308,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
             $returnedContacts = array_merge($returnedContacts, $response['data']);
         }
 
-        $contacts = [];
+        $contacts = array();
         foreach ($returnedContacts as $item) {
 
             $uc = new Hybrid_User_Contact();
@@ -339,10 +344,10 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
         }
 
         if (!$response || !count($response['data'])) {
-            return [];
+            return array();
         }
 
-        $activities = [];
+        $activities = array();
         foreach ($response['data'] as $item) {
 
             $ua = new Hybrid_User_Activity();
