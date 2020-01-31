@@ -160,7 +160,6 @@ class Social extends AbstractModel
         $socialCustomer = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
-            ->addFieldToFilter('status', ['null' => 'true'])
             ->getFirstItem();
 
         if ($socialCustomer && $socialCustomer->getId()) {
@@ -376,7 +375,6 @@ class Social extends AbstractModel
             ->addFieldToSelect('social_customer_id')
             ->addFieldToFilter('type', $type)
             ->addFieldToFilter('social_id', base64_decode($identifier))
-            ->addFieldToFilter('status', self::STATUS_LOGIN)
             ->getFirstItem();
     }
 
