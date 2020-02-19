@@ -54,6 +54,18 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
+        
+        if( version_compare($context->getVersion(), '1.1.1', '<') {
+            $connection->addColumn(
+                $tableName,
+                'status',
+                [
+                    'type'    => Table::TYPE_TEXT,
+                    'length'  => 255,
+                    'comment' => 'Status',
+                ]
+            );
+        }
 
         $installer->endSetup();
     }
