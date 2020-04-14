@@ -96,7 +96,9 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
             'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
-            'Google'    => ['scope' => 'profile email']
+            // 'Google'    => ['scope' => 'profile email'],
+            // Removed the "profile" scope, because I was getting 404 error on the callback. Removing profile fixed it
+            'Google'    => ['scope' => 'email']
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
