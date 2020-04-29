@@ -101,7 +101,7 @@ abstract class Hybrid_Provider_Model {
     // initialize the current provider adapter
     $this->initialize();
 
-    Hybrid_Logger::debug("Hybrid_Provider_Model::__construct( $providerId ) initialized. dump current adapter instance: ", serialize($this));
+    // Hybrid_Logger::debug("Hybrid_Provider_Model::__construct( $providerId ) initialized. dump current adapter instance: ", serialize($this));
   }
 
   /**
