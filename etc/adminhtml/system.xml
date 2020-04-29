@@ -238,7 +238,7 @@
                     <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
                     <label>Callback URL</label>
                     <comment><![CDATA[ If you create app from developer.twitter.com, then remove "?hauth.done=Twitter"<br>
-                                Ex: http://localhost.com/dev223/sociallogin/social/callback/<br>
+                                Ex: http://yourdomain.com/sociallogin/social/callback/<br>
                              ]]></comment>
                     <depends>
                         <field id="is_enabled">1</field>

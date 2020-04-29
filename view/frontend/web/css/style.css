@@ -1706,6 +1706,21 @@
     }
 }
 
+@media only screen and (max-width: 766px) {
+    .secondary {
+        width: 93%;
+        padding-top: 0;
+        margin-top: 0;
+    }
+    #bnt-social-login-authentication {
+        margin-bottom: 0;
+    }
+    .forgot-pass-title {
+        width: 80%;
+        font-size: 1.45em;
+    }
+}
+
 .customer-account-create .account-social-login, .customer-account-login .account-social-login {
     display: block !important
 }
