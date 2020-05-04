@@ -52,10 +52,10 @@ class InstallSchema implements InstallSchemaInterface
                     Table::TYPE_INTEGER,
                     11,
                     [
-                    'identity' => true,
-                    'nullable' => false,
-                    'primary'  => true,
-                    'unsigned' => true,
+                        'identity' => true,
+                        'nullable' => false,
+                        'primary'  => true,
+                        'unsigned' => true,
                     ],
                     'Social Customer ID'
                 )
@@ -85,8 +85,8 @@ class InstallSchema implements InstallSchemaInterface
                     Table::TYPE_INTEGER,
                     10,
                     [
-                    'nullable' => true,
-                    'unsigned' => true,
+                        'nullable' => true,
+                        'unsigned' => true,
                     ],
                     'User Id'
                 )
@@ -95,7 +95,7 @@ class InstallSchema implements InstallSchemaInterface
                     Table::TYPE_TEXT,
                     255,
                     [
-                    'nullable' => true,
+                        'nullable' => true,
                     ],
                     'Status'
                 )
