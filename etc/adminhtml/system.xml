@@ -103,6 +103,17 @@
                 </field>
                 <field id="custom_css" translate="label" type="textarea" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Custom CSS</label>
+                    <comment><![CDATA[
+                        If you use <b> Quick Login </b> or <b> Popup Slide </b>, you should fill this field with those class: <br>
+                        #bnt-social-login-fake-email { <br>
+                          background-color: <b> Your Color in Style Management field </b> !important; <br>
+                          border: <b> Your Color in Style Management field </b> !important; <br>
+                        } <br>
+
+                        #request-popup .social-login-title { <br>
+                          background-color: <b> Your Color in Style Management field </b> !important; <br>
+                        } <br>
+                    ]]></comment>
                 </field>
             </group>
             <group id="facebook" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

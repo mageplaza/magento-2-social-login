@@ -37,6 +37,16 @@
                 <style_management>#6e716e</style_management>
                 <require_more_info>2</require_more_info>
                 <information_require>email,name,password</information_require>
+                <custom_css>
+                #bnt-social-login-fake-email {
+                    background-color: grey !important;
+                    border: grey !important;
+                }
+
+                #request-popup .social-login-title {
+                    background-color: grey !important;
+                }
+                </custom_css>
             </general>
             <facebook>
                 <sort_order>10</sort_order>
