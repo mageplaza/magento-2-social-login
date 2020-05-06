@@ -53,7 +53,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'comment' => 'Social Created At',
                 ]
             );
-        }
         if ($connection->tableColumnExists($tableName, 'user_id') === false) {
             $connection->addColumn(
                 $tableName,
@@ -86,7 +85,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-
+        }
         $installer->endSetup();
     }
 }
