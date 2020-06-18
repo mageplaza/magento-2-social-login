@@ -152,6 +152,10 @@
     margin-bottom: unset !important;
 }
 
+.btn-authentication-pop {
+    width: 175px;
+}
+
 
 .social-login-authentication-channel .actions-toolbar.social-btn > .primary .action {
     width: 100%;

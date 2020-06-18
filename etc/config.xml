@@ -28,24 +28,23 @@
             </module>
             <general>
                 <enabled>0</enabled>
-                <link_trigger>.header.links, .section-item-content .header.links</link_trigger>
+                <link_trigger>.header.links, .section-item-content .header.links, .authorization-link</link_trigger>
                 <send_password>1</send_password>
                 <social_display>1,2,3,4</social_display>
                 <popup_login>popup_slide</popup_login>
-                <authentication_popup>1</authentication_popup>
+                <authentication_popup>0</authentication_popup>
                 <popup_effect>mfp-move-from-top</popup_effect>
                 <style_management>#6e716e</style_management>
-                <require_more_info>2</require_more_info>
                 <information_require>email,name,password</information_require>
                 <custom_css>
-                #bnt-social-login-fake-email {
+                    #bnt-social-login-fake-email {
                     background-color: grey !important;
                     border: grey !important;
-                }
+                    }
 
-                #request-popup .social-login-title {
+                    #request-popup .social-login-title {
                     background-color: grey !important;
-                }
+                    }
                 </custom_css>
             </general>
             <facebook>
