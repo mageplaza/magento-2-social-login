@@ -5,6 +5,7 @@
     "mageplaza/module-core": "^1.4.5",
     "mageplaza/module-smtp": "^1.2.6",
     "mageplaza/module-google-recaptcha": "^1.0.2",
+    "avada/module-proofo": "^1.0.2",
     "hybridauth/hybridauth": "^2.14.0"
   }
   ,
@@ -12,7 +13,7 @@
     "roave/security-advisories": "dev-master"
   },
   "type": "magento2-module",
-  "version": "2.8.2",
+  "version": "2.8.3",
   "license": "proprietary",
   "authors": [
     {
@@ -39,7 +40,8 @@
     "mageplaza",
     "google",
     "facebook",
-    "twitter"
+    "twitter",
+    "social proof"
   ],
   "autoload": {
     "files": [
