@@ -70,6 +70,9 @@
                     <label>Require More Info.</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\RequestInfo</source_model>
                     <comment>Request the customer to enter information when creating an account.</comment>
+                    <depends>
+                        <field id="popup_login" separator=",">quick_login,popup_login,popup_slide</field>
+                    </depends>
                 </field>
                 <field id="information_require" translate="label comment" type="multiselect" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Information Required</label>

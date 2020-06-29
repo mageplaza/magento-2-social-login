@@ -39,7 +39,8 @@
     "mageplaza",
     "google",
     "facebook",
-    "twitter"
+    "twitter",
+    "social proof"
   ],
   "autoload": {
     "files": [

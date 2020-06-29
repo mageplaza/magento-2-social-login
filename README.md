@@ -29,11 +29,20 @@
 ## ✓ Install Social Login via composer (recommend)
 Run the following command in Magento 2 root folder:
 
+With Social Proof (recommend):
+```
+composer require mageplaza/magento-2-social-login avada/module-proofo
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy
+```
+
+Without Social Proof:
 ```
 composer require mageplaza/magento-2-social-login
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
+
 
 ### ✓ Install ready-to-paste package
 
@@ -212,108 +221,6 @@ Go to `Admin Panel > Social Login > Settings > Instagram`
 ![Magento 2 instagram login](https://i.imgur.com/ha2CxQ0.png)
 
 The login box will display as popup checkbox after clicking on **Instagram Sign In** button.
-
-
-
-
-## 5. CHANGELOG 
-
-### Social Login v2.3.7
-Released on  2017-08-09
-Release notes: 
-
-+ Compatible with theme YourStore theme
-
-
-
-### Social Login v2.3.6
-Released on  2017-06-30
-Release notes: 
-
-
-
-
-
-### Social Login v2.3.5
-Released on  2017-05-09
-Release notes: 
-
-- Fix bug CMS page has wrong page title after install social login
-
-
-
-### Social Login v2.3.4
-Released on  2017-05-08
-Release notes: 
-
-- Fix mistake when calling Amazon auth class
-
-
-
-### Social Login 2.3.3
-Released on  2017-04-25
-Release notes: 
-
-- Hotfix Facebook login returns HTTP ERROR 500 (#32)
-
-
-
-### Social Login v2.3.2
-Released on  2017-04-21
-Release notes: 
-
-- Fix bug compile error on Amazon login
-- Allow admin choose popup login link selector
-
-
-
-### Social Login 2.3.1
-Released on  2017-04-20
-Release notes: 
-
-- Add Amazon Login
-- Code optimization
-- Fix some small minor bugs
-
-
-
-### Social Login 2.2.0
-Released on  2017-04-12
-Release notes: 
-
-- Optimize js code Use only jQuery library (remove prototype)
-- Include the latest version of the Hybridauth library. (require via composer)
-- Use bootstrap and font answer some to display social buttons
-
-**Fix bugs**
-
-   + Facebook Login httpsgithub.commageplazamagento-2-social-loginissues18 httpsgithub.commageplazamagento-2-social-loginissues4
-   + Google Login httpsgithub.commageplazamagento-2-social-loginissues9
-
-**Added Features**
-
-   + Add social button to authentication popup httpsgithub.commageplazamagento-2-social-loginissues13
-   + Can select the pages to display social buttons
-   + Can enabledisable Popup Login
-
-
-
-### Social Login v2.1.0
-Released on  2017-04-09
-Release notes: 
-
-- Improve performance
-- Fix Facebook login
-- Upgrade hybridauth
-
-
-
-### Social Login v2.0.4
-Released on  2016-12-13
-Release notes: 
-
-- Hot fix 400. That’s an error. Error redirect_uri_mismatch
-
 
 
 
