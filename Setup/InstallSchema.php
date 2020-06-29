@@ -75,42 +75,11 @@ class InstallSchema implements InstallSchemaInterface
                     'Is Send Password Email'
                 )
                 ->addColumn('type', Table::TYPE_TEXT, 255, ['default' => ''], 'Type')
-                ->addColumn(
-                    'social_created_at',
-                    Table::TYPE_TIMESTAMP,
-                    'Social Created At'
-                )
-                ->addColumn(
-                    'user_id',
-                    Table::TYPE_INTEGER,
-                    10,
-                    [
-                        'nullable' => true,
-                        'unsigned' => true,
-                    ],
-                    'User Id'
-                )
-                ->addColumn(
-                    'status',
-                    Table::TYPE_TEXT,
-                    255,
-                    [
-                        'nullable' => true,
-                    ],
-                    'Status'
-                )
                 ->addForeignKey(
                     $installer->getFkName('mageplaza_social_customer', 'customer_id', 'customer_entity', 'entity_id'),
                     'customer_id',
                     $installer->getTable('customer_entity'),
                     'entity_id',
-                    Table::ACTION_CASCADE
-                )
-                ->addForeignKey(
-                    $installer->getFkName('mageplaza_social_customer', 'user_id', 'admin_user', 'user_id'),
-                    'user_id',
-                    $installer->getTable('admin_user'),
-                    'user_id',
                     Table::ACTION_CASCADE
                 )
                 ->setComment('Social Customer Table');

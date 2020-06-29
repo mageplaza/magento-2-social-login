@@ -240,7 +240,7 @@ abstract class AbstractSocial extends Action
             }
         }
 
-        $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
+        $object = new DataObject(['url' => $url]);
         $this->_eventManager->dispatch(
             'social_manager_get_login_redirect',
             [
