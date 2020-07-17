@@ -38,7 +38,7 @@ if ($block->canShow() && sizeof($availableSocials)) :
         </div>
     </div>
 <?php endif; ?>
-<?php if ($childBlock->isRequireMoreInfo()) : ?>
+<?php if ($childBlock && $childBlock->isRequireMoreInfo()) : ?>
     <div id="social-login-popup" class="white-popup mfp-with-anim mfp-hide"
          data-mage-init='{"Mageplaza_SocialLogin/js/popup":<?= $childBlock->getFormParams() ?>}'>
         <?= $block->getChildHtml('request.info') ?>
