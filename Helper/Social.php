@@ -96,7 +96,8 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
             'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
-            'Google'    => ['scope' => 'profile email']
+            'Google'    => ['scope' => 'profile email'],
+            'Yahoo'    => ['scope' => 'profile']
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
