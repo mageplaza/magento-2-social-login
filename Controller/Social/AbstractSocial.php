@@ -249,6 +249,7 @@ abstract class AbstractSocial extends Action
             ]
         );
         $url = $object->getUrl();
+
         return $url;
     }
 
