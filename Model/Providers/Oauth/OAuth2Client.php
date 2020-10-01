@@ -89,18 +89,18 @@ class OAuth2Client
         $compressed = false,
         HelperData $helperData
     ) {
-        $this->client_id       = $client_id;
-        $this->client_secret   = $client_secret;
-        $this->redirect_uri    = $redirect_uri;
+        $this->client_id = $client_id;
+        $this->client_secret = $client_secret;
+        $this->redirect_uri = $redirect_uri;
         $this->curl_compressed = $compressed;
-        $this->_helperData     = $helperData;
+        $this->_helperData = $helperData;
     }
 
     public function authorizeUrl($extras = [])
     {
         $params = [
-            "client_id"     => $this->client_id,
-            "redirect_uri"  => $this->redirect_uri,
+            "client_id" => $this->client_id,
+            "redirect_uri" => $this->redirect_uri,
             "response_type" => "code"
         ];
 
@@ -116,11 +116,11 @@ class OAuth2Client
     public function authenticate($code)
     {
         $params = [
-            "client_id"     => $this->client_id,
+            "client_id" => $this->client_id,
             "client_secret" => $this->client_secret,
-            "grant_type"    => "authorization_code",
-            "redirect_uri"  => $this->redirect_uri,
-            "code"          => $code
+            "grant_type" => "authorization_code",
+            "redirect_uri" => $this->redirect_uri,
+            "code" => $code
         ];
 
         $response = $this->request($this->token_url, $params, $this->curl_authenticate_method);
@@ -186,7 +186,7 @@ class OAuth2Client
         }
 
         $parameters[$this->sign_token_name] = $this->access_token;
-        $response                           = null;
+        $response = null;
 
         switch ($method) {
             case 'GET':
@@ -241,7 +241,7 @@ class OAuth2Client
     public function tokenInfo($accesstoken)
     {
         $params['access_token'] = $this->access_token;
-        $response               = $this->request($this->token_info_url, $params);
+        $response = $this->request($this->token_info_url, $params);
 
         return $this->parseRequestResult($response);
     }
@@ -249,9 +249,9 @@ class OAuth2Client
     public function refreshToken($parameters = [])
     {
         $params = [
-            "client_id"     => $this->client_id,
+            "client_id" => $this->client_id,
             "client_secret" => $this->client_secret,
-            "grant_type"    => "refresh_token"
+            "grant_type" => "refresh_token"
         ];
 
         foreach ($parameters as $k => $v) {
@@ -277,7 +277,7 @@ class OAuth2Client
         }
 
         $this->http_info = [];
-        $ch              = curl_init();
+        $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

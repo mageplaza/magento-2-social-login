@@ -55,7 +55,7 @@ class Popup extends Template
         CustomerSession $customerSession,
         array $data = []
     ) {
-        $this->helperData      = $helperData;
+        $this->helperData = $helperData;
         $this->customerSession = $customerSession;
 
         parent::__construct($context, $data);
@@ -81,15 +81,15 @@ class Popup extends Template
     public function getFormParams()
     {
         $params = [
-            'headerLink'    => $this->getHeaderLink(),
-            'popupEffect'   => $this->getPopupEffect(),
-            'formLoginUrl'  => $this->getFormLoginUrl(),
+            'headerLink' => $this->getHeaderLink(),
+            'popupEffect' => $this->getPopupEffect(),
+            'formLoginUrl' => $this->getFormLoginUrl(),
             'forgotFormUrl' => $this->getForgotFormUrl(),
             'createFormUrl' => $this->getCreateFormUrl(),
-            'fakeEmailUrl'  => $this->getFakeEmailUrl(),
-            'showFields'    => $this->getFieldCanShow(),
-            'popupLogin'    => $this->isEnabled(),
-            'actionName'    => $this->_request->getFullActionName()
+            'fakeEmailUrl' => $this->getFakeEmailUrl(),
+            'showFields' => $this->getFieldCanShow(),
+            'popupLogin' => $this->isEnabled(),
+            'actionName' => $this->_request->getFullActionName()
         ];
 
         return json_encode($params);
@@ -164,7 +164,7 @@ class Popup extends Template
      */
     public function isSecure()
     {
-        return (bool) $this->helperData->isSecure();
+        return (bool)$this->helperData->isSecure();
     }
 
     /**

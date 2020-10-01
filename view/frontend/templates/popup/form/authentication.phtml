@@ -37,7 +37,7 @@
                         <label class="label" for="social_login_email"><span><?= __('Email') ?></span></label>
                         <div class="control">
                             <input name="username" id="social_login_email" type="email" class="input-text"
-                                   value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()) :
+                                   value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()):
                                         ?> autocomplete="off"<?php endif; ?>
                                    title="<?= __('Email') ?>"
                                    data-validate="{required:true, 'validate-email':true}">

@@ -128,13 +128,13 @@ class Social extends AbstractModel
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        $this->customerFactory     = $customerFactory;
-        $this->customerRepository  = $customerRepository;
+        $this->customerFactory = $customerFactory;
+        $this->customerRepository = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
-        $this->storeManager        = $storeManager;
-        $this->apiHelper           = $apiHelper;
-        $this->_userModel          = $userModel;
-        $this->_dateTime           = $dateTime;
+        $this->storeManager = $storeManager;
+        $this->apiHelper = $apiHelper;
+        $this->_userModel = $userModel;
+        $this->_dateTime = $dateTime;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -220,9 +220,9 @@ class Social extends AbstractModel
                 // If customer exists existing hash will be used by Repository
                 $customer = $this->customerRepository->save($customer);
 
-                $objectManager     = ObjectManager::getInstance();
-                $mathRandom        = $objectManager->get(Random::class);
-                $newPasswordToken  = $mathRandom->getUniqueHash();
+                $objectManager = ObjectManager::getInstance();
+                $mathRandom = $objectManager->get(Random::class);
+                $newPasswordToken = $mathRandom->getUniqueHash();
                 $accountManagement = $objectManager->get(AccountManagementInterface::class);
                 $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
             }
@@ -277,11 +277,11 @@ class Social extends AbstractModel
     {
         $this->setData(
             [
-                'social_id'              => $identifier,
-                'customer_id'            => $customerId,
-                'type'                   => $type,
+                'social_id' => $identifier,
+                'customer_id' => $customerId,
+                'type' => $type,
                 'is_send_password_email' => $this->apiHelper->canSendPassword(),
-                'social_created_at'      => $this->_dateTime->date()
+                'social_created_at' => $this->_dateTime->date()
             ]
         )
             ->setId(null)->save();
@@ -299,8 +299,8 @@ class Social extends AbstractModel
     public function getUserProfile($apiName, $area = null)
     {
         $config = [
-            'base_url'   => $this->apiHelper->getBaseAuthUrl($area),
-            'providers'  => [
+            'base_url' => $this->apiHelper->getBaseAuthUrl($area),
+            'providers' => [
                 $apiName => $this->getProviderData($apiName)
             ],
             'debug_mode' => false,
@@ -310,12 +310,12 @@ class Social extends AbstractModel
         $auth = new Hybrid_Auth($config);
 
         try {
-            $adapter     = $auth->authenticate($apiName);
+            $adapter = $auth->authenticate($apiName);
             $userProfile = $adapter->getUserProfile();
         } catch (Exception $e) {
             $auth->logoutAllProviders();
-            $auth        = new Hybrid_Auth($config);
-            $adapter     = $auth->authenticate($apiName);
+            $auth = new Hybrid_Auth($config);
+            $adapter = $auth->authenticate($apiName);
             $userProfile = $adapter->getUserProfile();
         }
 
@@ -331,9 +331,9 @@ class Social extends AbstractModel
     {
         $data = [
             'enabled' => $this->apiHelper->isEnabled(),
-            'keys'    => [
-                'id'     => $this->apiHelper->getAppId(),
-                'key'    => $this->apiHelper->getAppId(),
+            'keys' => [
+                'id' => $this->apiHelper->getAppId(),
+                'key' => $this->apiHelper->getAppId(),
                 'secret' => $this->apiHelper->getAppSecret()
             ]
         ];
@@ -393,7 +393,7 @@ class Social extends AbstractModel
         $social->addData(
             [
                 'social_id' => $identifier,
-                'status'    => self::STATUS_CONNECT
+                'status' => self::STATUS_CONNECT
             ]
         );
         $social->save();

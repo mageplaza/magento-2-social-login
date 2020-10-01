@@ -30,9 +30,9 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class Position implements ArrayInterface
 {
-    const PAGE_LOGIN  = 1;
+    const PAGE_LOGIN = 1;
     const PAGE_CREATE = 2;
-    const PAGE_POPUP  = 3;
+    const PAGE_POPUP = 3;
     const PAGE_AUTHEN = 4;
 
     /**
