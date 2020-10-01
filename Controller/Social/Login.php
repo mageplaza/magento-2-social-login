@@ -18,6 +18,7 @@
  * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license   https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Exception;
@@ -69,7 +70,7 @@ class Login extends AbstractSocial
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
 
         if (!$customer->getId()) {
-            $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
+            $requiredMoreInfo = (int)$this->apiHelper->requiredMoreInfo();
             if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
                 $this->session->setUserProfile($userProfile);
 

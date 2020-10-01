@@ -50,11 +50,11 @@ class Collection extends AbstractCollection
             ['top_social_login' => $sales_order_table],
             'main_table.customer_id = top_social_login.customer_id',
             [
-                'grand_total'    => 'top_social_login.base_subtotal',
-                'created_at'     => 'top_social_login.created_At',
+                'grand_total' => 'top_social_login.base_subtotal',
+                'created_at' => 'top_social_login.created_At',
                 'total_refunded' => 'top_social_login.base_total_refunded',
                 'total_canceled' => 'top_social_login.base_subtotal_canceled',
-                'store_id'       => 'top_social_login.store_id'
+                'store_id' => 'top_social_login.store_id'
             ]
         );
 

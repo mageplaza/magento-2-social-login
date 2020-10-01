@@ -91,8 +91,8 @@ class Email extends AbstractSocial
         EncryptorInterface $encrypt
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->customerFactory   = $customerFactory;
-        $this->_encrypt          = $encrypt;
+        $this->customerFactory = $customerFactory;
+        $this->_encrypt = $encrypt;
 
         parent::__construct(
             $context,
@@ -119,8 +119,8 @@ class Email extends AbstractSocial
          * @var Json $resultJson
          */
         $resultJson = $this->resultJsonFactory->create();
-        $params     = $this->getRequest()->getParams();
-        $type       = $this->apiHelper->setType($params['type']);
+        $params = $this->getRequest()->getParams();
+        $type = $this->apiHelper->setType($params['type']);
 
         if (!$type) {
             $this->_forward('noroute');
@@ -128,11 +128,11 @@ class Email extends AbstractSocial
             return;
         }
 
-        $result    = ['success' => false];
+        $result = ['success' => false];
         $realEmail = isset($params['realEmail']) ? $params['realEmail'] : null;
         $firstname = isset($params['firstname']) ? $params['firstname'] : null;
-        $lastname  = isset($params['lastname']) ? $params['lastname'] : null;
-        $password  = isset($params['password']) ? $this->_encrypt->getHash($params['password'], true) : null;
+        $lastname = isset($params['lastname']) ? $params['lastname'] : null;
+        $password = isset($params['password']) ? $this->_encrypt->getHash($params['password'], true) : null;
 
         $customer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
@@ -143,18 +143,18 @@ class Email extends AbstractSocial
             return $resultJson->setData($result);
         }
 
-        $userProfile            = $this->session->getUserProfile();
-        $userProfile->email     = $realEmail ?: $userProfile->email;
+        $userProfile = $this->session->getUserProfile();
+        $userProfile->email = $realEmail ?: $userProfile->email;
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
-        $userProfile->lastName  = $lastname ?: $userProfile->lastName;
-        $userProfile->password  = $password ?: null;
+        $userProfile->lastName = $lastname ?: $userProfile->lastName;
+        $userProfile->password = $password ?: null;
 
         $customer = $this->createCustomerProcess($userProfile, $type);
         $this->refresh($customer);
 
         $result['success'] = true;
         $result['message'] = __('Success!');
-        $result['url']     = $this->_loginPostRedirect();
+        $result['url'] = $this->_loginPostRedirect();
 
         return $resultJson->setData($result);
     }

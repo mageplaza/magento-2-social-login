@@ -54,7 +54,7 @@ class InstallSchema implements InstallSchemaInterface
                     [
                         'identity' => true,
                         'nullable' => false,
-                        'primary'  => true,
+                        'primary' => true,
                         'unsigned' => true,
                     ],
                     'Social Customer ID'

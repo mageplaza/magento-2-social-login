@@ -23,13 +23,13 @@ use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 
 ?>
 <?php $availableSocials = $block->getAvailableSocials(); ?>
-<?php if ($block->canShow(Position::PAGE_POPUP) && sizeof($availableSocials)) : ?>
+<?php if ($block->canShow(Position::PAGE_POPUP) && sizeof($availableSocials)): ?>
     <div class="block social-login-authentication-channel col-mp mp-5">
         <div class="block-title">
             <?= __('Or Sign In With') ?>
         </div>
         <div class="block-content">
-            <?php foreach ($availableSocials as $key => $social) : ?>
+            <?php foreach ($availableSocials as $key => $social): ?>
                 <div class="actions-toolbar social-btn <?= $key ?>-login">
                     <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
                        data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'>
@@ -53,7 +53,7 @@ use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
  */
 ?>
 <?php $authenConfig = $block->getSocialButtonsConfig(); ?>
-<?php if ($block->canShow(Position::PAGE_AUTHEN) && sizeof($availableSocials)) : ?>
+<?php if ($block->canShow(Position::PAGE_AUTHEN) && sizeof($availableSocials)): ?>
     <script>
         window.socialAuthenticationPopup = <?= Zend_Json::encode($authenConfig); ?>;
     </script>

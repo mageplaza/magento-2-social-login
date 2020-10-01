@@ -41,11 +41,11 @@
                                    data-validate="{required:true, 'validate-email':true}"/>
                         </div>
                     </div>
-                    <?php if ($block->isNewsletterEnabled()) : ?>
+                    <?php if ($block->isNewsletterEnabled()): ?>
                         <div class="field choice newsletter">
                             <input type="checkbox" class="checkbox" name="is_subscribed"
                                    title="<?= __('Sign Up for Newsletter') ?>" value="1"
-                                   id="is_subscribed"<?php if ($block->getFormData()->getIsSubscribed()) :
+                                   id="is_subscribed"<?php if ($block->getFormData()->getIsSubscribed()):
                                         ?> checked="checked"<?php
                                                      endif; ?> />
                             <label for="is_subscribed"
@@ -54,7 +54,7 @@
                         <?= $block->getChildHtml('customer.form.register.newsletter') ?>
                     <?php endif ?>
                     <?php $_dob = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Dob') ?>
-                    <?php if ($_dob->isEnabled()) : ?>
+                    <?php if ($_dob->isEnabled()): ?>
                         <div class="field date field-dob">
                             <label class="label" for="dob"><span><?= __('Date of Birth') ?></span></label>
                             <div class="control customer-dob">
@@ -78,15 +78,15 @@
                         </div>
                     <?php endif ?>
                     <?php $_taxvat = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Taxvat') ?>
-                    <?php if ($_taxvat->isEnabled()) : ?>
+                    <?php if ($_taxvat->isEnabled()): ?>
                         <?= $_taxvat->setTaxvat($block->getFormData()->getTaxvat())->toHtml() ?>
                     <?php endif ?>
                     <?php $_gender = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Gender') ?>
-                    <?php if ($_gender->isEnabled()) : ?>
+                    <?php if ($_gender->isEnabled()): ?>
                         <?= $_gender->setGender($block->getFormData()->getGender())->toHtml() ?>
                     <?php endif ?>
                 </fieldset>
-                <?php if ($block->getShowAddressFields()) : ?>
+                <?php if ($block->getShowAddressFields()): ?>
                     <fieldset class="fieldset address">
                         <legend class="legend"><span><?= __('Address Information') ?></span></legend>
                         <br>
@@ -120,7 +120,7 @@
                                        class="input-text <?= $_streetValidationClass ?>"/>
                                 <div class="nested">
                                     <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
-                                    <?php for ($_i = 2, $_n = $this->helper('Magento\Customer\Helper\Address')->getStreetLines(); $_i <= $_n; $_i++) : ?>
+                                    <?php for ($_i = 2, $_n = $this->helper('Magento\Customer\Helper\Address')->getStreetLines(); $_i <= $_n; $_i++): ?>
                                         <div class="field additional">
                                             <label class="label"
                                                    for="street_<?= $_i ?>"><span><?= __('Address') ?></span></label>
@@ -175,7 +175,7 @@
                         </div>
 
                         <?php $addressAttributes = $block->getChildBlock('customer_form_address_user_attributes'); ?>
-                        <?php if ($addressAttributes) : ?>
+                        <?php if ($addressAttributes): ?>
                             <?php $addressAttributes->setEntityType('customer_address'); ?>
                             <?php $addressAttributes->setFieldIdFormat('address:%1$s')->setFieldNameFormat('address[%1$s]'); ?>
                             <?php $block->restoreSessionData($addressAttributes->getMetadataForm(), 'address'); ?>
@@ -226,7 +226,7 @@
                         ignore = <?= $_dob->isEnabled() ? '\'input[id$="full"]\'' : 'null' ?>;
 
                     dataForm.mage('validation', {
-                        <?php if ($_dob->isEnabled()) : ?>
+                        <?php if ($_dob->isEnabled()): ?>
                         errorPlacement: function (error, element) {
                             if (element.prop('id').search('full') !== -1) {
                                 var dobElement = $(element).parents('.customer-dob'),
@@ -239,13 +239,13 @@
                             }
                         },
                         ignore: ':hidden:not(' + ignore + ')'
-                        <?php else : ?>
+                        <?php else: ?>
                         ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
                         <?php endif ?>
                     });
                 });
             </script>
-            <?php if ($block->getShowAddressFields()) : ?>
+            <?php if ($block->getShowAddressFields()): ?>
                 <script type="text/x-magento-init">
                     {
                         "#country": {

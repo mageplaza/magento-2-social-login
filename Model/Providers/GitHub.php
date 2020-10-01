@@ -31,9 +31,9 @@ class GitHub extends Hybrid_Provider_Model_OAuth2
         parent::initialize();
 
         // Provider api end-points
-        $this->api->api_base_url  = "https://api.github.com/";
+        $this->api->api_base_url = "https://api.github.com/";
         $this->api->authorize_url = "https://github.com/login/oauth/authorize";
-        $this->api->token_url     = "https://github.com/login/oauth/access_token";
+        $this->api->token_url = "https://github.com/login/oauth/access_token";
     }
 
     /**
@@ -49,14 +49,14 @@ class GitHub extends Hybrid_Provider_Model_OAuth2
             throw new Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }
 
-        $this->user->profile->identifier  = $data->id;
+        $this->user->profile->identifier = $data->id;
         $this->user->profile->displayName = $data->name;
         $this->user->profile->description = $data->bio;
-        $this->user->profile->photoURL    = $data->avatar_url;
-        $this->user->profile->profileURL  = $data->html_url;
-        $this->user->profile->email       = $data->email;
-        $this->user->profile->webSiteURL  = $data->blog;
-        $this->user->profile->region      = $data->location;
+        $this->user->profile->photoURL = $data->avatar_url;
+        $this->user->profile->profileURL = $data->html_url;
+        $this->user->profile->email = $data->email;
+        $this->user->profile->webSiteURL = $data->blog;
+        $this->user->profile->region = $data->location;
 
         if (empty($this->user->profile->displayName)) {
             $this->user->profile->displayName = $data->login;

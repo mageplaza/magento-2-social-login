@@ -19,7 +19,7 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 ?>
-<?php if ($block->isEnabled() && $block->isEnabled() === 'popup_login') : ?>
+<?php if ($block->isEnabled() && $block->isEnabled() === 'popup_login'): ?>
     <div id="social-login-popup" class="white-popup mfp-with-anim mfp-hide"
          data-mage-init='{"socialPopupForm": <?= $block->getFormParams() ?>}'>
         <?= $block->getChildHtml('popup.email') ?>

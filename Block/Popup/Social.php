@@ -64,7 +64,7 @@ class Social extends Template
             $this->socialHelper->setType($socialKey);
             if ($this->socialHelper->isEnabled()) {
                 $availabelSocials[$socialKey] = [
-                    'label'     => $socialLabel,
+                    'label' => $socialLabel,
                     'login_url' => $this->getLoginUrl($socialKey),
                 ];
             }
@@ -98,8 +98,8 @@ class Social extends Template
     {
         $availableButtons = $this->getAvailableSocials();
         foreach ($availableButtons as $key => &$button) {
-            $button['url']     = $this->getLoginUrl($key, ['authen' => 'popup']);
-            $button['key']     = $key;
+            $button['url'] = $this->getLoginUrl($key, ['authen' => 'popup']);
+            $button['key'] = $key;
             $button['btn_key'] = $this->getBtnKey($key);
         }
 
