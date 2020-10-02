@@ -1,5 +1,7 @@
 # Mageplaza Social Login is compatible with YourStore theme
 
+## YourStore theme is now not available on Themeforest, there is no update anymore. We still keep support current version.
+
 [Mageplaza Social Login](https://www.mageplaza.com/magento-2-social-login-extension/) now is fully compatible with [Etheme_yourstore](https://themeforest.net/item/yourstore-premium-multipurpose-magento-theme/17782705) 
 
 ## How to use
