@@ -25,6 +25,7 @@ use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Session;
@@ -87,6 +88,7 @@ class Email extends AbstractSocial
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
      * @param JsonFactory $resultJsonFactory
+     * @param Customer $customerModel
      * @param CustomerFactory $customerFactory
      * @param EncryptorInterface $encrypt
      * @param CustomerRepositoryInterface $_customerRepositoryInterface
@@ -102,6 +104,7 @@ class Email extends AbstractSocial
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
+        Customer $customerModel,
         CustomerFactory $customerFactory,
         EncryptorInterface $encrypt,
         CustomerRepositoryInterface $_customerRepositoryInterface,
@@ -122,7 +125,8 @@ class Email extends AbstractSocial
             $apiObject,
             $customerSession,
             $accountRedirect,
-            $resultRawFactory
+            $resultRawFactory,
+            $customerModel
         );
     }
 
