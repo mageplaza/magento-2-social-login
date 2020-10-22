@@ -189,6 +189,7 @@ class Email extends AbstractSocial
                 $session->setCustomerDataAsLoggedIn($customer);
                 $session->regenerateId();
             } else {
+                $session = $this->session;
                 $customerRepositoryInterface = $this->_customerRepositoryInterface;
                 $customerId = $customerRepositoryInterface->get($userProfile->email, $websiteId = null)->getId();
                 $customer = $customerRepositoryInterface->getById($customerId);
@@ -196,6 +197,8 @@ class Email extends AbstractSocial
                 $customerSecure = $customerRegistry->retrieveSecureData($customerId);
                 $customerSecure->setPasswordHash($userProfile->password);
                 $customerRepositoryInterface->save($customer);
+                $session->setCustomerDataAsLoggedIn($customer);
+                $session->regenerateId();
             }
         } else {
             $customer = $this->createCustomerProcess($userProfile, $type);
