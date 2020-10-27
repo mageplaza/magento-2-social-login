@@ -42,6 +42,13 @@
                         <![CDATA[Install <a href="https://www.mageplaza.com/magento-2-smtp/?utm_source=mageplaza&utm_medium=mageplaza&utm_campaign=social-login&utm_content=SMTP" target="_blank">Mageplaza SMTP</a> to avoid sending emails to spam box.]]>
                     </comment>
                 </field>
+                <field id="check_mode" translate="label comment" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Check password when login</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        Validate account after login with Social provider(s)
+                    </comment>
+                </field>
                 <field id="social_display" translate="label comment" type="multiselect" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Social Login Buttons on</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Position</source_model>
