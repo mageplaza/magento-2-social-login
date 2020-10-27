@@ -22,11 +22,11 @@
 $availableSocials = $block->getAvailableSocials();
 $childBlock = $block->getChildBlock('request.info');
 
-if ($block->canShow() && sizeof($availableSocials)) :
+if ($block->canShow() && sizeof($availableSocials)):
     ?>
     <div class="block social-login-authentication-channel account-social-login">
         <div class="block-content">
-            <?php foreach ($availableSocials as $key => $social) : ?>
+            <?php foreach ($availableSocials as $key => $social): ?>
                 <div class="actions-toolbar social-btn social-btn-actions-toolbar <?= $key ?>-login">
                     <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
                        data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'>
@@ -38,7 +38,7 @@ if ($block->canShow() && sizeof($availableSocials)) :
         </div>
     </div>
 <?php endif; ?>
-<?php if ($childBlock && $childBlock->isRequireMoreInfo()) : ?>
+<?php if ($childBlock && $childBlock->isRequireMoreInfo()): ?>
     <div id="social-login-popup" class="white-popup mfp-with-anim mfp-hide"
          data-mage-init='{"Mageplaza_SocialLogin/js/popup":<?= $childBlock->getFormParams() ?>}'>
         <?= $block->getChildHtml('request.info') ?>

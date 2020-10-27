@@ -96,6 +96,11 @@ abstract class AbstractSocial extends Action
     protected $resultRawFactory;
 
     /**
+     * @var Customer
+     */
+    protected $customerModel;
+
+    /**
      * Login constructor.
      *
      * @param Context $context
@@ -106,6 +111,7 @@ abstract class AbstractSocial extends Action
      * @param Session $customerSession
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
+     * @param Customer $customerModel
      */
     public function __construct(
         Context $context,
@@ -115,7 +121,8 @@ abstract class AbstractSocial extends Action
         Social $apiObject,
         Session $customerSession,
         AccountRedirect $accountRedirect,
-        RawFactory $resultRawFactory
+        RawFactory $resultRawFactory,
+        Customer $customerModel
     ) {
         $this->storeManager     = $storeManager;
         $this->accountManager   = $accountManager;
@@ -124,6 +131,7 @@ abstract class AbstractSocial extends Action
         $this->session          = $customerSession;
         $this->accountRedirect  = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
+        $this->customerModel    = $customerModel;
 
         parent::__construct($context);
     }
@@ -240,7 +248,7 @@ abstract class AbstractSocial extends Action
             }
         }
 
-        $object = new DataObject(['url' => $url]);
+        $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
         $this->_eventManager->dispatch(
             'social_manager_get_login_redirect',
             [

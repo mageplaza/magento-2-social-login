@@ -30,6 +30,7 @@
                 <enabled>0</enabled>
                 <link_trigger>.header.links, .section-item-content .header.links, .authorization-link</link_trigger>
                 <send_password>1</send_password>
+                <check_mode>1</check_mode>
                 <social_display>1,2,3,4</social_display>
                 <popup_login>popup_slide</popup_login>
                 <authentication_popup>0</authentication_popup>

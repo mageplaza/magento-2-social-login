@@ -182,4 +182,12 @@ class Popup extends Template
     {
         return ($this->helperData->requiredMoreInfo() && !$this->isEnabled());
     }
+
+    /**
+     * @return mixed
+     */
+    public function isCheckMode()
+    {
+        return (bool) $this->helperData->isCheckMode();
+    }
 }
