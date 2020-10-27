@@ -14,7 +14,6 @@ use Hybrid_User_Contact;
 use Hybrid_User_Profile;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
-use OAuth2Client;
 use RuntimeException;
 
 /**
