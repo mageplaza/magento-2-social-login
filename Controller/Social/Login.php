@@ -18,6 +18,7 @@
  * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license   https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Exception;
@@ -68,8 +69,9 @@ class Login extends AbstractSocial
         }
         $customer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
 
+        $customerData = $this->customerModel->load($customer->getId());
         if (!$customer->getId()) {
-            $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
+            $requiredMoreInfo = (int)$this->apiHelper->requiredMoreInfo();
             if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
                 $this->session->setUserProfile($userProfile);
 
@@ -83,6 +85,30 @@ class Login extends AbstractSocial
                 );
             }
             $customer = $this->createCustomerProcess($userProfile, $type);
+        } else {
+            if(is_null($customerData->getData('password_hash'))){
+                $userProfile->hash = '';
+                $this->session->setUserProfile($userProfile);
+                return $this->_appendJs(
+                    sprintf(
+                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        $type,
+                        $userProfile->firstName,
+                        $userProfile->lastName
+                    )
+                );
+            } else {
+                $userProfile->hash = $customerData->getData('password_hash');
+                $this->session->setUserProfile($userProfile);
+                return $this->_appendJs(
+                    sprintf(
+                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        $type,
+                        $userProfile->firstName,
+                        $userProfile->lastName
+                    )
+                );
+            }
         }
         $this->refresh($customer);
 

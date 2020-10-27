@@ -21,9 +21,13 @@
 
 namespace Mageplaza\SocialLogin\Controller\Social;
 
+use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
@@ -63,6 +67,16 @@ class Email extends AbstractSocial
     protected $_encrypt;
 
     /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $_customerRepositoryInterface;
+
+    /**
+     * @var CustomerRegistry
+     */
+    protected $_customerRegistry;
+
+    /**
      * Email constructor.
      *
      * @param Context $context
@@ -74,8 +88,11 @@ class Email extends AbstractSocial
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
      * @param JsonFactory $resultJsonFactory
+     * @param Customer $customerModel
      * @param CustomerFactory $customerFactory
      * @param EncryptorInterface $encrypt
+     * @param CustomerRepositoryInterface $_customerRepositoryInterface
+     * @param CustomerRegistry $_customerRegistry
      */
     public function __construct(
         Context $context,
@@ -87,12 +104,18 @@ class Email extends AbstractSocial
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
+        Customer $customerModel,
         CustomerFactory $customerFactory,
-        EncryptorInterface $encrypt
-    ) {
+        EncryptorInterface $encrypt,
+        CustomerRepositoryInterface $_customerRepositoryInterface,
+        CustomerRegistry $_customerRegistry
+    )
+    {
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->customerFactory   = $customerFactory;
-        $this->_encrypt          = $encrypt;
+        $this->customerFactory = $customerFactory;
+        $this->_encrypt = $encrypt;
+        $this->_customerRepositoryInterface = $_customerRepositoryInterface;
+        $this->_customerRegistry = $_customerRegistry;
 
         parent::__construct(
             $context,
@@ -102,7 +125,8 @@ class Email extends AbstractSocial
             $apiObject,
             $customerSession,
             $accountRedirect,
-            $resultRawFactory
+            $resultRawFactory,
+            $customerModel
         );
     }
 
@@ -119,8 +143,8 @@ class Email extends AbstractSocial
          * @var Json $resultJson
          */
         $resultJson = $this->resultJsonFactory->create();
-        $params     = $this->getRequest()->getParams();
-        $type       = $this->apiHelper->setType($params['type']);
+        $params = $this->getRequest()->getParams();
+        $type = $this->apiHelper->setType($params['type']);
 
         if (!$type) {
             $this->_forward('noroute');
@@ -128,11 +152,11 @@ class Email extends AbstractSocial
             return;
         }
 
-        $result    = ['success' => false];
+        $result = ['success' => false];
         $realEmail = isset($params['realEmail']) ? $params['realEmail'] : null;
         $firstname = isset($params['firstname']) ? $params['firstname'] : null;
-        $lastname  = isset($params['lastname']) ? $params['lastname'] : null;
-        $password  = isset($params['password']) ? $this->_encrypt->getHash($params['password'], true) : null;
+        $lastname = isset($params['lastname']) ? $params['lastname'] : null;
+        $password = isset($params['password']) ? $this->_encrypt->getHash($params['password'], true) : null;
 
         $customer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
@@ -143,18 +167,47 @@ class Email extends AbstractSocial
             return $resultJson->setData($result);
         }
 
-        $userProfile            = $this->session->getUserProfile();
-        $userProfile->email     = $realEmail ?: $userProfile->email;
+        $userProfile = $this->session->getUserProfile();
+        $userProfile->email = $realEmail ?: $userProfile->email;
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
-        $userProfile->lastName  = $lastname ?: $userProfile->lastName;
-        $userProfile->password  = $password ?: null;
+        $userProfile->lastName = $lastname ?: $userProfile->lastName;
+        $userProfile->password = $password ?: null;
 
-        $customer = $this->createCustomerProcess($userProfile, $type);
-        $this->refresh($customer);
+        $checkCustomer = $this->customerFactory->create()
+            ->setWebsiteId($this->getStore()->getWebsiteId())
+            ->loadByEmail($userProfile->email);
+        if ($checkCustomer->getId()) {
+            if ($userProfile->hash !== '') {
+                $loginTrial = $this->accountManager;
+                $session = $this->session;
+                try {
+                    $customer = $loginTrial->authenticate($userProfile->email, $params['password']);
+                } catch (Exception $e) {
+                    $result['message'] = __('Wrong password');
+                    return $resultJson->setData($result);
+                }
+                $session->setCustomerDataAsLoggedIn($customer);
+                $session->regenerateId();
+            } else {
+                $session = $this->session;
+                $customerRepositoryInterface = $this->_customerRepositoryInterface;
+                $customerId = $customerRepositoryInterface->get($userProfile->email, $websiteId = null)->getId();
+                $customer = $customerRepositoryInterface->getById($customerId);
+                $customerRegistry = $this->_customerRegistry;
+                $customerSecure = $customerRegistry->retrieveSecureData($customerId);
+                $customerSecure->setPasswordHash($userProfile->password);
+                $customerRepositoryInterface->save($customer);
+                $session->setCustomerDataAsLoggedIn($customer);
+                $session->regenerateId();
+            }
+        } else {
+            $customer = $this->createCustomerProcess($userProfile, $type);
+            $this->refresh($customer);
+        }
 
         $result['success'] = true;
         $result['message'] = __('Success!');
-        $result['url']     = $this->_loginPostRedirect();
+        $result['url'] = $this->_loginPostRedirect();
 
         return $resultJson->setData($result);
     }
