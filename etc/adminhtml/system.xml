@@ -43,11 +43,9 @@
                     </comment>
                 </field>
                 <field id="check_mode" translate="label comment" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Check password when login</label>
+                    <label>Require Enter Password</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>
-                        Validate account after login with Social provider(s)
-                    </comment>
+                    <comment>Require enter password confirmation when logging in with social for the first time on existing account.</comment>
                 </field>
                 <field id="social_display" translate="label comment" type="multiselect" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Social Login Buttons on</label>

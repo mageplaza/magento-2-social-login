@@ -18,6 +18,7 @@ Login,Login
 "New User","New User"
 "Email is Null, Please enter email in your %1 profile","Email is Null, Please enter email in your %1 profile"
 "Email already exists","Email already exists"
+"Wrong password","Wrong password"
 Success!,Success!
 "Ooophs, we got an error: %1","Ooophs, we got an error: %1"
 "A customer with the same email already exists in an associated website.","A customer with the same email already exists in an associated website."
@@ -75,6 +76,8 @@ Back,Back
 "First Name","First Name"
 "Last Name","Last Name"
 Submit,Submit
+"Validate your login","Validate your login"
+"Please complete your information below to login.","Please complete your information below to login."
 "Forgot Password","Forgot Password"
 "Please enter your email address below to receive a password reset link.","Please enter your email address below to receive a password reset link."
 "Could not authenticate. Please try again later","Could not authenticate. Please try again later"
@@ -86,6 +89,8 @@ Enable,Enable
                     <br> Increase 25% conversion rate with <a href=""https://www.mageplaza.com/magento-2-layered-navigation-extension/"" target=""_blank"">Layered Navigation</a>"
 "Send Password To Customer","Send Password To Customer"
 "Install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=mageplaza&utm_medium=mageplaza&utm_campaign=social-login&utm_content=SMTP"" target=""_blank"">Mageplaza SMTP</a> to avoid sending emails to spam box.","Install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=mageplaza&utm_medium=mageplaza&utm_campaign=social-login&utm_content=SMTP"" target=""_blank"">Mageplaza SMTP</a> to avoid sending emails to spam box."
+"Require Enter Password","Require Enter Password"
+"Require enter password confirmation when logging in with social for the first time on existing account.","Require enter password confirmation when logging in with social for the first time on existing account."
 "Show Social Login Buttons on","Show Social Login Buttons on"
 "Use Popup Login","Use Popup Login"
 "Use Popup Login As Authentication Popup","Use Popup Login As Authentication Popup"

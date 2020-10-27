@@ -109,8 +109,7 @@ class Email extends AbstractSocial
         EncryptorInterface $encrypt,
         CustomerRepositoryInterface $_customerRepositoryInterface,
         CustomerRegistry $_customerRegistry
-    )
-    {
+    ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->customerFactory = $customerFactory;
         $this->_encrypt = $encrypt;
