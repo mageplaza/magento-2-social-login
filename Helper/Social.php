@@ -50,6 +50,7 @@ class Social extends HelperData
     public function setType($type)
     {
         $listTypes = $this->getSocialTypes();
+
         if (!$type || !array_key_exists($type, $listTypes)) {
             return null;
         }
@@ -197,11 +198,6 @@ class Social extends HelperData
     public function getBaseAuthUrl($area = null)
     {
         $storeId = $this->getScopeUrl();
-
-        /**
-         * @var Store $store
-         */
-        $store = $this->storeManager->getStore($storeId);
 
         return $this->_getUrl(
             'sociallogin/social/callback',

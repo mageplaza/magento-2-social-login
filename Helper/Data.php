@@ -74,6 +74,7 @@ class Data extends CoreHelper
     public function getStyleManagement($storeId = null)
     {
         $style = $this->getConfigGeneral('style_management', $storeId);
+
         if ($style === 'custom') {
             return $this->getCustomColor($storeId);
         }

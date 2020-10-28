@@ -40,6 +40,7 @@ class Callback extends AbstractSocial
         if (isset($param['live.php'])) {
             $request = array_merge($param, ['hauth_done' => 'Live']);
         }
+
         if ($this->checkRequest('hauth_start', false)
             && (($this->checkRequest('error_reason', 'user_denied')
                     && $this->checkRequest('error', 'access_denied')
@@ -49,6 +50,7 @@ class Callback extends AbstractSocial
         ) {
             return $this->_appendJs(sprintf('<script>window.close();</script>'));
         }
+
         if (isset($request)) {
             Hybrid_Endpoint::process($request);
         }

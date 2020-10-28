@@ -160,6 +160,7 @@ class Email extends AbstractSocial
         $customer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
             ->loadByEmail($realEmail);
+
         if ($customer->getId()) {
             $result['message'] = __('Email already exists');
 
@@ -175,10 +176,12 @@ class Email extends AbstractSocial
         $checkCustomer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
             ->loadByEmail($userProfile->email);
+
         if ($checkCustomer->getId()) {
             if ($userProfile->hash !== '') {
                 $loginTrial = $this->accountManager;
                 $session    = $this->session;
+
                 try {
                     $customer = $loginTrial->authenticate($userProfile->email, $params['password']);
                 } catch (Exception $e) {
@@ -186,6 +189,7 @@ class Email extends AbstractSocial
 
                     return $resultJson->setData($result);
                 }
+
                 $session->setCustomerDataAsLoggedIn($customer);
                 $session->regenerateId();
             } else {
