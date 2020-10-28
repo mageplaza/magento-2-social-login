@@ -28,23 +28,23 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     public $version = '5.0';
 
     public $fields = [
-        'identifier' => 'id',
-        'firstName' => 'first_name',
-        'lastName' => 'last_name',
+        'identifier'  => 'id',
+        'firstName'   => 'first_name',
+        'lastName'    => 'last_name',
         'displayName' => 'screen_name',
-        'gender' => 'sex',
-        'photoURL' => 'photo_big',
-        'home_town' => 'home_town',
-        'profileURL' => 'domain',
-        'nickname' => 'nickname',
-        'bdate' => 'bdate',
-        'timezone' => 'timezone',
-        'photo_rec' => 'photo_rec',
-        'domain' => 'domain',
-        'photo_max' => 'photo_max',
-        'home_phone' => 'home_phone',
-        'city' => 'city',
-        'country' => 'country',
+        'gender'      => 'sex',
+        'photoURL'    => 'photo_big',
+        'home_town'   => 'home_town',
+        'profileURL'  => 'domain',
+        'nickname'    => 'nickname',
+        'bdate'       => 'bdate',
+        'timezone'    => 'timezone',
+        'photo_rec'   => 'photo_rec',
+        'domain'      => 'domain',
+        'photo_max'   => 'photo_max',
+        'home_phone'  => 'home_phone',
+        'city'        => 'city',
+        'country'     => 'country',
     ];
 
     /**
@@ -54,9 +54,9 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     {
         parent::initialize();
 
-        $this->api->api_base_url = 'https://api.vk.com/method/';
+        $this->api->api_base_url  = 'https://api.vk.com/method/';
         $this->api->authorize_url = 'https://oauth.vk.com/authorize';
-        $this->api->token_url = 'https://oauth.vk.com/token';
+        $this->api->token_url     = 'https://oauth.vk.com/token';
         if (!empty($this->config['fields'])) {
             $this->fields = $this->config['fields'];
         }
@@ -89,8 +89,8 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
          * @var RequestInterface $request
          */
         $request = $this->getDataObject(RequestInterface::class);
-        $params = $request->getParams();
-        $error = array_key_exists('error', $params) ? $params['error'] : '';
+        $params  = $request->getParams();
+        $error   = array_key_exists('error', $params) ? $params['error'] : '';
 
         if ($error) {
             throw new Exception("Authentication failed! {$this->providerId} returned an error: $error", 5);
@@ -132,8 +132,8 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         $this->refreshToken();
 
         $params['user_ids'] = Hybrid_Auth::storage()->get("hauth_session.{$this->providerId}.user_id");
-        $params['fields'] = implode(',', $this->fields);
-        $params['v'] = $this->version;
+        $params['fields']   = implode(',', $this->fields);
+        $params['v']        = $this->version;
 
         $response = $this->api->api('users.get', 'GET', $params);
 
@@ -219,13 +219,13 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
             $birthday = explode('.', $user->bdate);
             switch (count($birthday)) {
                 case 3:
-                    $user->birthDay = (int)$birthday[0];
+                    $user->birthDay   = (int)$birthday[0];
                     $user->birthMonth = (int)$birthday[1];
-                    $user->birthYear = (int)$birthday[2];
+                    $user->birthYear  = (int)$birthday[2];
                     break;
 
                 case 2:
-                    $user->birthDay = (int)$birthday[0];
+                    $user->birthDay   = (int)$birthday[0];
                     $user->birthMonth = (int)$birthday[1];
                     break;
             }
@@ -234,7 +234,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         if (!empty($user->city) && $withAdditionalRequests) {
             $params = ['city_ids' => $user->city];
             $cities = (array)$this->api->api('database.getCitiesById', 'GET', $params);
-            $city = reset($cities);
+            $city   = reset($cities);
 
             if (is_array($city)) {
                 $city = reset($city);
@@ -246,9 +246,9 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         }
 
         if (!empty($user->country) && $withAdditionalRequests) {
-            $params = ['country_ids' => $user->country];
+            $params    = ['country_ids' => $user->country];
             $countries = (array)$this->api->api('database.getCountriesById', 'GET', $params);
-            $country = reset($countries);
+            $country   = reset($countries);
 
             if (is_array($country)) {
                 $country = reset($country);
