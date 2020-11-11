@@ -31,9 +31,9 @@ class GitHub extends Hybrid_Provider_Model_OAuth2
         parent::initialize();
 
         // Provider api end-points
-        $this->api->api_base_url  = "https://api.github.com/";
-        $this->api->authorize_url = "https://github.com/login/oauth/authorize";
-        $this->api->token_url     = "https://github.com/login/oauth/access_token";
+        $this->api->api_base_url  = 'https://api.github.com/';
+        $this->api->authorize_url = 'https://github.com/login/oauth/authorize';
+        $this->api->token_url     = 'https://github.com/login/oauth/access_token';
     }
 
     /**
@@ -44,7 +44,7 @@ class GitHub extends Hybrid_Provider_Model_OAuth2
      */
     function getUserProfile()
     {
-        $data = $this->api->api("user");
+        $data = $this->api->api('user');
         if (!isset($data->id)) {
             throw new Exception("User profile request failed! {$this->providerId} returned an invalid response.", 6);
         }
@@ -65,7 +65,7 @@ class GitHub extends Hybrid_Provider_Model_OAuth2
         // request user emails from github api
         if (empty($data->email)) {
             try {
-                $emails = $this->api->api("user/emails");
+                $emails = $this->api->api('user/emails');
 
                 // fail gracefully, and let apps collect the email if not present
                 if (is_array($emails)) {

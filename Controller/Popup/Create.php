@@ -59,12 +59,12 @@ class Create extends CreatePost
     protected $socialHelper;
 
     /**
-     * @type
+     * @var PhpCookieManager
      */
     private $cookieMetadataManager;
 
     /**
-     * @type
+     * @var CookieMetadataFactory
      */
     private $cookieMetadataFactory;
 

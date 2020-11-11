@@ -143,6 +143,7 @@ class Forgot extends Action
          * @var Redirect $resultRedirect
          */
         $email = (string) $this->getRequest()->getPost('email');
+
         if ($email) {
             if (!Zend_Validate::is($email, 'EmailAddress')) {
                 $this->session->setForgottenEmail($email);

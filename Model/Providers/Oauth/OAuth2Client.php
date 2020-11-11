@@ -16,31 +16,31 @@ use StdClass;
 
 class OAuth2Client
 {
-    public $api_base_url = "";
+    public $api_base_url = '';
 
-    public $authorize_url = "";
+    public $authorize_url = '';
 
-    public $token_url = "";
+    public $token_url = '';
 
-    public $token_info_url = "";
+    public $token_info_url = '';
 
-    public $client_id = "";
+    public $client_id = '';
 
-    public $client_secret = "";
+    public $client_secret = '';
 
-    public $redirect_uri = "";
+    public $redirect_uri = '';
 
-    public $access_token = "";
+    public $access_token = '';
 
-    public $refresh_token = "";
+    public $refresh_token = '';
 
-    public $access_token_expires_in = "";
+    public $access_token_expires_in = '';
 
-    public $access_token_expires_at = "";
+    public $access_token_expires_at = '';
 
     //--
 
-    public $sign_token_name = "access_token";
+    public $sign_token_name = 'access_token';
 
     public $curl_time_out = 30;
 
@@ -52,9 +52,9 @@ class OAuth2Client
 
     public $curl_header = [];
 
-    public $curl_useragent = "OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/";
+    public $curl_useragent = 'OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/';
 
-    public $curl_authenticate_method = "POST";
+    public $curl_authenticate_method = 'POST';
 
     public $curl_proxy = null;
 
@@ -62,9 +62,9 @@ class OAuth2Client
 
     //--
 
-    public $http_code = "";
+    public $http_code = '';
 
-    public $http_info = "";
+    public $http_info = '';
 
     protected $response = null;
 
@@ -99,9 +99,9 @@ class OAuth2Client
     public function authorizeUrl($extras = [])
     {
         $params = [
-            "client_id"     => $this->client_id,
-            "redirect_uri"  => $this->redirect_uri,
-            "response_type" => "code"
+            'client_id'     => $this->client_id,
+            'redirect_uri'  => $this->redirect_uri,
+            'response_type' => "code"
         ];
 
         if (count($extras)) {
@@ -116,11 +116,11 @@ class OAuth2Client
     public function authenticate($code)
     {
         $params = [
-            "client_id"     => $this->client_id,
-            "client_secret" => $this->client_secret,
-            "grant_type"    => "authorization_code",
-            "redirect_uri"  => $this->redirect_uri,
-            "code"          => $code
+            'client_id'     => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'grant_type'    => 'authorization_code',
+            'redirect_uri'  => $this->redirect_uri,
+            'code' => $code
         ];
 
         $response = $this->request($this->token_url, $params, $this->curl_authenticate_method);
@@ -128,7 +128,7 @@ class OAuth2Client
         $response = $this->parseRequestResult($response);
 
         if (!$response || !isset($response->access_token)) {
-            throw new Exception("The Authorization Service has return: " . $response->error);
+            throw new Exception('The Authorization Service has return: ' . $response->error);
         }
 
         if (isset($response->access_token)) {
@@ -162,7 +162,7 @@ class OAuth2Client
 
                     // if wrong response
                     if (!isset($response->access_token) || !$response->access_token) {
-                        throw new Exception("The Authorization Service has return an invalid response while requesting a new access token. given up!");
+                        throw new Exception('The Authorization Service has return an invalid response while requesting a new access token. given up!');
                     }
 
                     // set new access_token
@@ -179,7 +179,7 @@ class OAuth2Client
     /**
      * Format and sign an oauth for provider api
      */
-    public function api($url, $method = "GET", $parameters = [], $decode_json = true)
+    public function api($url, $method = 'GET', $parameters = [], $decode_json = true)
     {
         if (strrpos($url, 'http://') !== 0 && strrpos($url, 'https://') !== 0) {
             $url = $this->api_base_url . $url;
@@ -190,16 +190,16 @@ class OAuth2Client
 
         switch ($method) {
             case 'GET':
-                $response = $this->request($url, $parameters, "GET");
+                $response = $this->request($url, $parameters, 'GET');
                 break;
             case 'POST':
-                $response = $this->request($url, $parameters, "POST");
+                $response = $this->request($url, $parameters, 'POST');
                 break;
             case 'DELETE':
-                $response = $this->request($url, $parameters, "DELETE");
+                $response = $this->request($url, $parameters, 'DELETE');
                 break;
             case 'PATCH':
-                $response = $this->request($url, $parameters, "PATCH");
+                $response = $this->request($url, $parameters, 'PATCH');
                 break;
         }
 
@@ -268,12 +268,12 @@ class OAuth2Client
     private function request($url, $params = false, $type = "GET")
     {
         Hybrid_Logger::info("Enter OAuth2Client::request( $url )");
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", $this->_helperData->serialize($params));
+        Hybrid_Logger::debug('OAuth2Client::request(). dump request params: ', $this->_helperData->serialize($params));
 
         $urlEncodedParams = http_build_query($params, '', '&');
 
-        if ($type == "GET") {
-            $url = $url . (strpos($url, '?') ? '&' : '?') . $urlEncodedParams;
+        if ($type === 'GET') {
+            $url .= (strpos($url, '?') ? '&' : '?') . $urlEncodedParams;
         }
 
         $this->http_info = [];
@@ -289,14 +289,14 @@ class OAuth2Client
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->curl_header);
 
         if ($this->curl_compressed) {
-            curl_setopt($ch, CURLOPT_ENCODING, "gzip,deflate");
+            curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
         }
 
         if ($this->curl_proxy) {
             curl_setopt($ch, CURLOPT_PROXY, $this->curl_proxy);
         }
 
-        if ($type == "POST") {
+        if ($type === 'POST') {
             curl_setopt($ch, CURLOPT_POST, 1);
 
             // Using URL encoded params here instead of a more convenient array
@@ -306,26 +306,26 @@ class OAuth2Client
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $urlEncodedParams);
             }
         }
-        if ($type == "DELETE") {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        if ($type === 'DELETE') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
-        if ($type == "PATCH") {
+        if ($type === 'PATCH') {
             curl_setopt($ch, CURLOPT_POST, 1);
             if ($params) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
             }
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
         }
         $response = curl_exec($ch);
         if ($response === false) {
-            Hybrid_Logger::error("OAuth2Client::request(). curl_exec error: ", curl_error($ch));
+            Hybrid_Logger::error('OAuth2Client::request(). curl_exec error: ', curl_error($ch));
         }
         Hybrid_Logger::debug(
-            "OAuth2Client::request(). dump request info: ",
+            'OAuth2Client::request(). dump request info: ',
             $this->_helperData->serialize(curl_getinfo($ch))
         );
         Hybrid_Logger::debug(
-            "OAuth2Client::request(). dump request result: ",
+            'OAuth2Client::request(). dump request result: ',
             $this->_helperData->serialize($response)
         );
 
