@@ -186,12 +186,27 @@
                     </fieldset>
                 <?php endif; ?>
                 <fieldset class="fieldset create account" data-hasrequired="<?= __('* Required Fields') ?>">
-                    <div class="field password required">
+                    <div class="field password required"
+                         data-mage-init='{
+							"passwordStrengthIndicator": {
+								"passwordSelector": "#password-social",
+				            	"passwordStrengthMeterSelector":"[data-role=strength-meter]",
+								"passwordStrengthMeterLabelSelector":"[data-role=strength-meter-label]"
+							}
+						}'>
                         <label for="password" class="label"><span><?= __('Password') ?></span></label>
                         <div class="control">
                             <input type="password" name="password" id="password-social"
                                    title="<?= __('Password') ?>" class="input-text"
                                    data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
+                            <div id="password-strength-meter-container" data-role="strength-meter" aria-live="polite">
+				                    <div id="password-strength-meter" class="password-strength-meter">
+					                    <?= $block->escapeHtml(__('Password Strength:')) ?>:
+				                        <span id="password-strength-meter-label" data-role="strength-meter-label">
+				                            <?= $block->escapeHtml(__('No Password')) ?>
+				                        </span>
+				                    </div>
+				                </div>
                         </div>
                     </div>
                     <div class="field confirmation required">
