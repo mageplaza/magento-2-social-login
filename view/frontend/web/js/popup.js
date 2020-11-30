@@ -640,7 +640,7 @@ define(
                     if (!customer().firstname && cart().isGuestCheckoutAllowed === false && cart().isReplaceAuthModal && pccBtn.length) {
                         pccBtn.replaceWith(
                             '<a title="Proceed to Checkout" class="action primary checkout social-login-btn">' +
-                            '<span>Proceed to Checkout</span>' +
+                            '<span>'+$t('Proceed to Checkout')+'</span>' +
                             '</a>'
                         );
                         if (self.options.popupLogin === 'popup_login') {
