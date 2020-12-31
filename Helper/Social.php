@@ -29,6 +29,7 @@ use Mageplaza\SocialLogin\Model\Providers\Amazon;
 use Mageplaza\SocialLogin\Model\Providers\GitHub;
 use Mageplaza\SocialLogin\Model\Providers\Instagram;
 use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
+use Mageplaza\SocialLogin\Model\Providers\Yahoo;
 
 /**
  * Class Social
@@ -97,7 +98,7 @@ class Social extends HelperData
             'Github' => ['wrapper' => ['class' => GitHub::class]],
             'Amazon' => ['wrapper' => ['class' => Amazon::class]],
             'Google' => ['scope' => 'profile email'],
-            'Yahoo' => ['scope' => 'profile']
+            'Yahoo' => ['wrapper' => ['class' => Yahoo::class]],
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
