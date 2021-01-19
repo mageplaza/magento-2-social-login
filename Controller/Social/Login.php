@@ -90,23 +90,9 @@ class Login extends AbstractSocial
             }
 
             $customer = $this->createCustomerProcess($userProfile, $type);
-        } else {
-            if($this->apiHelper->isCheckMode()) {
-                if ($customerData->getData('password_hash') === null) {
-                    $userProfile->hash = '';
-                    $this->session->setUserProfile($userProfile);
-
-                    return $this->_appendJs(
-                        sprintf(
-                            "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
-                            $type,
-                            $userProfile->firstName,
-                            $userProfile->lastName
-                        )
-                    );
-                }
-
-                $userProfile->hash = $customerData->getData('password_hash');
+        } elseif ($this->apiHelper->isCheckMode()) {
+            if ($customerData->getData('password_hash') === null) {
+                $userProfile->hash = '';
                 $this->session->setUserProfile($userProfile);
 
                 return $this->_appendJs(
@@ -118,6 +104,18 @@ class Login extends AbstractSocial
                     )
                 );
             }
+
+            $userProfile->hash = $customerData->getData('password_hash');
+            $this->session->setUserProfile($userProfile);
+
+            return $this->_appendJs(
+                sprintf(
+                    "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                    $type,
+                    $userProfile->firstName,
+                    $userProfile->lastName
+                )
+            );
         }
         $this->refresh($customer);
 
