@@ -38,11 +38,11 @@ class AmazonOAuth2Client extends OAuth2Client
     public function authenticate($code)
     {
         $params = [
-            "client_id" => $this->client_id,
-            "client_secret" => $this->client_secret,
-            "grant_type" => 'authorization_code',
-            "redirect_uri" => $this->redirect_uri,
-            "code" => $code,
+            'client_id'     => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'grant_type'    => 'authorization_code',
+            'redirect_uri'  => $this->redirect_uri,
+            'code'          => $code,
         ];
 
         $response = $this->request($this->token_url, http_build_query($params), $this->curl_authenticate_method);
@@ -56,9 +56,11 @@ class AmazonOAuth2Client extends OAuth2Client
         if (isset($response->access_token)) {
             $this->access_token = $response->access_token;
         }
+
         if (isset($response->refresh_token)) {
             $this->refresh_token = $response->refresh_token;
         }
+
         if (isset($response->expires_in)) {
             $this->access_token_expires_in = $response->expires_in;
         }
@@ -78,17 +80,17 @@ class AmazonOAuth2Client extends OAuth2Client
      *
      * @return mixed
      */
-    private function request($url, $params = false, $type = "GET")
+    private function request($url, $params = false, $type = 'GET')
     {
         Hybrid_Logger::info("Enter OAuth2Client::request( $url )");
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", $this->_helperData->serialize($params));
+        Hybrid_Logger::debug('OAuth2Client::request(). dump request params: ', $this->_helperData->serialize($params));
 
-        if ($type == "GET") {
-            $url = $url . (strpos($url, '?') ? '&' : '?') . http_build_query($params, '', '&');
+        if ($type === 'GET') {
+            $url .= (strpos($url, '?') ? '&' : '?') . http_build_query($params, '', '&');
         }
 
         $this->http_info = [];
-        $ch = curl_init();
+        $ch              = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -100,39 +102,39 @@ class AmazonOAuth2Client extends OAuth2Client
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->curl_header);
 
         if ($this->curl_compressed) {
-            curl_setopt($ch, CURLOPT_ENCODING, "gzip,deflate");
+            curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
         }
 
         if ($this->curl_proxy) {
             curl_setopt($ch, CURLOPT_PROXY, $this->curl_proxy);
         }
 
-        if ($type == "POST") {
+        if ($type === 'POST') {
             curl_setopt($ch, CURLOPT_POST, 1);
             if ($params) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
             }
         }
-        if ($type == "DELETE") {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        if ($type === 'DELETE') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
-        if ($type == "PATCH") {
+        if ($type === 'PATCH') {
             curl_setopt($ch, CURLOPT_POST, 1);
             if ($params) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
             }
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
         }
         $response = curl_exec($ch);
         if ($response === false) {
-            Hybrid_Logger::error("OAuth2Client::request(). curl_exec error: ", curl_error($ch));
+            Hybrid_Logger::error('OAuth2Client::request(). curl_exec error: ', curl_error($ch));
         }
         Hybrid_Logger::debug(
-            "OAuth2Client::request(). dump request info: ",
+            'OAuth2Client::request(). dump request info: ',
             $this->_helperData->serialize(curl_getinfo($ch))
         );
         Hybrid_Logger::debug(
-            "OAuth2Client::request(). dump request result: ",
+            'OAuth2Client::request(). dump request result: ',
             $this->_helperData->serialize($response)
         );
 

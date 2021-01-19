@@ -59,12 +59,12 @@ class Create extends CreatePost
     protected $socialHelper;
 
     /**
-     * @type
+     * @var PhpCookieManager
      */
     private $cookieMetadataManager;
 
     /**
-     * @type
+     * @var CookieMetadataFactory
      */
     private $cookieMetadataFactory;
 
@@ -111,9 +111,9 @@ class Create extends CreatePost
      */
     public function checkCaptcha()
     {
-        $formId = 'user_create';
+        $formId       = 'user_create';
         $captchaModel = $this->getCaptchaHelper()->getCaptcha($formId);
-        $resolve = $this->getSocialHelper()->captchaResolve($this->getRequest(), $formId);
+        $resolve      = $this->getSocialHelper()->captchaResolve($this->getRequest(), $formId);
 
         return !($captchaModel->isRequired() && !$captchaModel->isCorrect($resolve));
     }
@@ -129,7 +129,7 @@ class Create extends CreatePost
          * @var Json $resultJson
          */
         $resultJson = $this->getJsonFactory()->create();
-        $result = [
+        $result     = [
             'success' => false,
             'message' => []
         ];
@@ -155,14 +155,15 @@ class Create extends CreatePost
         $this->session->regenerateId();
 
         try {
-            $address = $this->extractAddress();
+            $address   = $this->extractAddress();
             $addresses = $address === null ? [] : [$address];
 
             $customer = $this->customerExtractor->extract('customer_account_create', $this->_request);
             $customer->setAddresses($addresses);
 
-            $password = $this->getRequest()->getParam('password');
+            $password     = $this->getRequest()->getParam('password');
             $confirmation = $this->getRequest()->getParam('password_confirmation');
+
             if (!$this->checkPasswordConfirmation($password, $confirmation)) {
                 $result['message'][] = __('Please make sure your passwords match.');
             } else {
@@ -177,11 +178,12 @@ class Create extends CreatePost
                     'customer_register_success',
                     [
                         'account_controller' => $this,
-                        'customer' => $customer
+                        'customer'           => $customer
                     ]
                 );
 
                 $confirmationStatus = $this->accountManagement->getConfirmationStatus($customer->getId());
+
                 if ($confirmationStatus === AccountManagementInterface::ACCOUNT_CONFIRMATION_REQUIRED) {
                     $email = $this->customerUrl->getEmailConfirmationUrl($customer->getEmail());
                     // @codingStandardsIgnoreStart
@@ -193,10 +195,11 @@ class Create extends CreatePost
                         )
                     );
                 } else {
-                    $result['success'] = true;
+                    $result['success']   = true;
                     $result['message'][] = __('Create an account successfully. Please wait...');
                     $this->session->setCustomerDataAsLoggedIn($customer);
                 }
+
                 if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
                     $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
                     $metadata->setPath('/');
@@ -285,7 +288,7 @@ class Create extends CreatePost
 
         $object = ObjectManager::getInstance()->create(DataObject::class, ['url' => $url]);
         $this->_eventManager->dispatch('social_manager_get_login_redirect', [
-            'object' => $object,
+            'object'  => $object,
             'request' => $this->_request
         ]);
         $url = $object->getUrl();
