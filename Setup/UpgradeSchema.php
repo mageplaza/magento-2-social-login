@@ -74,6 +74,27 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     Table::ACTION_CASCADE
                 );
             }
+            if ($connection->tableColumnExists($tableName, 'website_id') === false) {
+                $connection->addColumn(
+                    $tableName,
+                    'website_id',
+                    5,
+                    [
+                        'type' => Table::TYPE_INTEGER,
+                        'nullable' => false,
+                        'unsigned' => true,
+                        'comment' => 'Website Id',
+                    ]
+                );
+                $connection->addForeignKey(
+                    $installer->getFkName('mageplaza_social_website', 'website_id', 'core_website', 'website_id'),
+                    $tableName,
+                    'website_id',
+                    $installer->getTable('core_website'),
+                    'website_id',
+                    Table::ACTION_CASCADE
+                );
+            }
             if ($connection->tableColumnExists($tableName, 'status') === false) {
                 $connection->addColumn(
                     $tableName,

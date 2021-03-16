@@ -71,7 +71,6 @@ class Login extends AbstractSocial
         }
 
         $customer     = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
-        $customerData = $this->customerModel->load($customer->getId());
 
         if (!$customer->getId()) {
             $requiredMoreInfo = (int)$this->apiHelper->requiredMoreInfo();
@@ -91,6 +90,8 @@ class Login extends AbstractSocial
 
             $customer = $this->createCustomerProcess($userProfile, $type);
         } elseif ($this->apiHelper->isCheckMode()) {
+            $customerData = $this->customerModel->load($customer->getId());
+
             if ($customerData->getData('password_hash') === null) {
                 $userProfile->hash = '';
                 $this->session->setUserProfile($userProfile);
