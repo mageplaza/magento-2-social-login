@@ -43,11 +43,6 @@
                         <![CDATA[Install <a href="https://www.mageplaza.com/magento-2-smtp/?utm_source=mageplaza&utm_medium=mageplaza&utm_campaign=social-login&utm_content=SMTP" target="_blank">Mageplaza SMTP</a> to avoid sending emails to spam box.]]>
                     </comment>
                 </field>
-                <field id="check_mode" translate="label comment" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Require Enter Password</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Require enter password confirmation when logging in with social for the first time on existing account.</comment>
-                </field>
                 <field id="social_display" translate="label comment" type="multiselect" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Social Login Buttons on</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Position</source_model>
@@ -79,6 +74,11 @@
                     <depends>
                         <field id="popup_login" separator=",">quick_login,popup_login,popup_slide</field>
                     </depends>
+                </field>
+                <field id="check_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Require Enter Password</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Require enter password confirmation when logging in with social for the first time on existing account.</comment>
                 </field>
                 <field id="information_require" translate="label comment" type="multiselect" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Information Required</label>
@@ -516,6 +516,41 @@
                         <field id="is_enabled">1</field>
                     </depends>
                     <validate>validate-number</validate>
+                </field>
+            </group>
+            <group id="zalo" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Zalo</label>
+                <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Create app <a href="https://developers.zalo.me/createapp" target="_bank">here</a>]]></comment>
+                </field>
+                <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Application ID</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Application secret key</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_url" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
+                    <label>Callback URL</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
                 </field>
             </group>
         </section>

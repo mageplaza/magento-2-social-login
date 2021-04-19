@@ -27,7 +27,7 @@
                 <type>1</type>
             </module>
             <general>
-                <enabled>0</enabled>
+                <enabled>1</enabled>
                 <link_trigger>.header.links, .section-item-content .header.links, .authorization-link</link_trigger>
                 <send_password>1</send_password>
                 <check_mode>1</check_mode>
@@ -81,6 +81,9 @@
             <live>
                 <sort_order>110</sort_order>
             </live>
+            <zalo>
+                <sort_order>120</sort_order>
+            </zalo>
         </sociallogin>
     </default>
 </config>
