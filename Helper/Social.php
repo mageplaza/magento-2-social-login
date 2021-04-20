@@ -29,6 +29,7 @@ use Mageplaza\SocialLogin\Model\Providers\Amazon;
 use Mageplaza\SocialLogin\Model\Providers\GitHub;
 use Mageplaza\SocialLogin\Model\Providers\Instagram;
 use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
+use Mageplaza\SocialLogin\Model\Providers\Zalo;
 
 /**
  * Class Social
@@ -97,7 +98,8 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
             'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
-            'Google'    => ['scope' => 'profile email']
+            'Google'    => ['scope' => 'profile email'],
+            'Zalo'      => ['wrapper' => ['class' => Zalo::class], 'scope' => 'access_profile']
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
@@ -178,8 +180,8 @@ class Social extends HelperData
                 $param = 'live.php';
                 break;
             case 'Yahoo':
-                return $authUrl;
             case 'Twitter':
+            case 'Zalo':
                 return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
@@ -240,7 +242,8 @@ class Social extends HelperData
             'vkontakte'  => 'Vkontakte',
             'instagram'  => 'Instagram',
             'github'     => 'Github',
-            'live'       => 'Live'
+            'live'       => 'Live',
+            'zalo'       => 'Zalo'
         ];
     }
 }

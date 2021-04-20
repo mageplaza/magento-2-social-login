@@ -81,6 +81,9 @@
             <live>
                 <sort_order>110</sort_order>
             </live>
+            <zalo>
+                <sort_order>120</sort_order>
+            </zalo>
         </sociallogin>
     </default>
 </config>
