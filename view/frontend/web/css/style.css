@@ -1728,3 +1728,51 @@
 .customer-account-create .account-social-login, .customer-account-login .account-social-login {
     display: block !important
 }
+
+.btn-zalo .fa-zalo {
+    background: url(images/zalo-logo.png) no-repeat center;
+}
+
+.btn-zalo {
+    color: #fff;
+    background-color: #1468ff;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn-zalo:focus, .btn-zalo.focus {
+    color: #fff;
+    background-color: #0358f0;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-zalo:hover {
+    color: #fff;
+    background-color: #0358f0;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-zalo:active, .btn-zalo.active, .open > .dropdown-toggle.btn-zalo {
+    color: #fff;
+    background-color: #0358f0;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-zalo:active:hover, .btn-zalo.active:hover, .open > .dropdown-toggle.btn-flickr:hover, .btn-zalo:active:focus, .btn-zalo.active:focus, .open > .dropdown-toggle.btn-zalo:focus, .btn-zalo:active.focus, .btn-zalo.active.focus, .open > .dropdown-toggle.btn-zalo.focus {
+    color: #fff;
+    background-color: #0358f0;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-zalo:active, .btn-zalo.active, .open > .dropdown-toggle.btn-zalo {
+    background-image: none
+}
+
+.btn-zalo.disabled:hover, .btn-zalo[disabled]:hover, fieldset[disabled] .btn-zalo:hover, .btn-zalo.disabled:focus, .btn-zalo[disabled]:focus, fieldset[disabled] .btn-zalo:focus, .btn-zalo.disabled.focus, .btn-zalo[disabled].focus, fieldset[disabled] .btn-zalo.focus {
+    background-color: #ff0084;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.btn-zalo .badge {
+    color: #ff0084;
+    background-color: #fff
+}
