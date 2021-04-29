@@ -551,6 +551,7 @@
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>
+                    <validate>validate-number</validate>
                 </field>
             </group>
         </section>
