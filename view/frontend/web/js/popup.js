@@ -270,7 +270,7 @@ define(
                  * Show email page
                  */
                 showEmail: function () {
-                    var wrapper = $('#request-popup'),
+                    var wrapper = $('#social-login-popup'),
                         actions = ['customer_account_login', 'customer_account_create', 'multishipping_checkout_login'];
 
                     if (this.options.popupLogin !== 'popup_login') {
