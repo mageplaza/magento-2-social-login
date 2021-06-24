@@ -24,7 +24,7 @@
     <default>
         <sociallogin>
             <module>
-                <type>1</type>
+                <type>0</type>
             </module>
             <general>
                 <enabled>1</enabled>
