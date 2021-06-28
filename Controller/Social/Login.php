@@ -90,8 +90,7 @@ class Login extends AbstractSocial
             }
 
             $customer = $this->createCustomerProcess($userProfile, $type);
-
-        } else {
+        } elseif ($this->apiHelper->isCheckMode()) {
             if ($customerData->getData('password_hash') === null) {
                 $userProfile->hash = '';
                 $this->session->setUserProfile($userProfile);
