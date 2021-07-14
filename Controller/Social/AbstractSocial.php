@@ -158,7 +158,9 @@ abstract class AbstractSocial extends Action
     public function createCustomerProcess($userProfile, $type)
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
-
+        if (strtolower($type) === 'steam') {
+            $userProfile->identifier = trim($userProfile->identifier,"https://steamcommunity.com/openid/id/");
+        }
         $user = array_merge(
             [
                 'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
