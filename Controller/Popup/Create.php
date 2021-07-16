@@ -222,7 +222,7 @@ class Create extends CreatePost
             $result['message'][] = $this->escaper->escapeHtml($e->getMessage());
             if ($this->session->getMpRedirectUrl()) {
                 $result['redirect'] = $this->session->getMpRedirectUrl();
-                $this->session->unsetMpRedirectUrl();
+                $this->session->unsMpRedirectUrl();
             }
         } catch (Exception $e) {
             $result['message'][] = __('We can\'t save the customer.');
