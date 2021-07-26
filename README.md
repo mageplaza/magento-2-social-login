@@ -37,7 +37,7 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
-Without Social Proof:
+Without Marketing Automation:
 ```
 composer require mageplaza/magento-2-social-login
 php bin/magento setup:upgrade
