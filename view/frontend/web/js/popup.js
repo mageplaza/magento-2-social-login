@@ -24,7 +24,7 @@ define(
         'Magento_Customer/js/customer-data',
         'mage/translate',
         'Magento_Ui/js/modal/modal',
-        'https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js'
+        'Mageplaza_Core/js/jquery.magnific-popup.min'
     ], function ($, customerData, $t, modal) {
         'use strict';
 
