@@ -33,8 +33,8 @@
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[This extension is fully compatible with <a href="https://www.mageplaza.com/magento-2-one-step-checkout-extension/" target="_blank">One Step Checkout</a>. <br>
-                    1. Increase 25% conversion rate with <a href="https://www.mageplaza.com/magento-2-layered-navigation-extension/" target="_blank">Layered Navigation</a>
-                    2. <a href="https://pages.mageplaza.com/abandoned-cart-email-templates-for-magento/?utm_source=configuration&utm_campaign=m2-bannerslider" target="_blank">How to setup abandoned cart email series</a>]]></comment>
+                    1. Increase 25% conversion rate with <a href="https://www.mageplaza.com/magento-2-layered-navigation-extension/" target="_blank">Layered Navigation</a><br>
+                    2. Magento stores see upwards of 30% revenue 💰 with AVADA. <a href="https://go.avada.io/mageplaza">Learn more</a>]]></comment>
                 </field>
                 <field id="send_password" translate="label comment" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Send Password To Customer</label>
