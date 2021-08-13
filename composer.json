@@ -12,7 +12,7 @@
     "roave/security-advisories": "dev-master"
   },
   "type": "magento2-module",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "license": "proprietary",
   "authors": [
     {

@@ -29,14 +29,15 @@
 ## ✓ Install Social Login via composer (recommend)
 Run the following command in Magento 2 root folder:
 
-With Social Proof (recommend):
+
+With Marketing Automation (recommend):
 ```
-composer require mageplaza/magento-2-social-login avada/module-proofo
+composer require mageplaza/magento-2-social-login mageplaza/module-smtp
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
-Without Social Proof:
+Without Marketing Automation:
 ```
 composer require mageplaza/magento-2-social-login
 php bin/magento setup:upgrade
