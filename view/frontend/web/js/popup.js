@@ -83,6 +83,7 @@ define(
                  */
                 _create: function () {
                     var self = this;
+                    customerData.reload(true);
                     this.initObject();
                     this.initLink();
                     this.initObserve();
