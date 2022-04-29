@@ -155,12 +155,14 @@ class Social extends AbstractModel
      */
     public function getCustomerBySocial($identify, $type)
     {
+        $websiteId = $this->storeManager->getWebsite()->getId();
         $customer = $this->customerFactory->create();
 
         $socialCustomer = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
             ->addFieldToFilter('status', ['null' => 'true'])
+            ->addFieldToFilter('website_id', $websiteId)
             ->getFirstItem();
 
         if ($socialCustomer && $socialCustomer->getId()) {
@@ -281,7 +283,8 @@ class Social extends AbstractModel
                 'customer_id'            => $customerId,
                 'type'                   => $type,
                 'is_send_password_email' => $this->apiHelper->canSendPassword(),
-                'social_created_at'      => $this->_dateTime->date()
+                'social_created_at'      => $this->_dateTime->date(),
+                'website_id'             => $this->storeManager->getWebsite()->getId()
             ]
         )
             ->setId(null)->save();
