@@ -86,6 +86,22 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 );
             }
         }
+
+        if (version_compare($context->getVersion(), '1.2.0', '<')) {
+            if ($installer->tableExists('mageplaza_social_customer')) {
+                $columns = [
+                    'website_id'             => [
+                        'type'    => Table::TYPE_INTEGER,
+                        'comment' => 'Website Id',
+                    ]
+                ];
+
+                $tagTable = $installer->getTable('mageplaza_social_customer');
+                foreach ($columns as $name => $definition) {
+                    $connection->addColumn($tagTable, $name, $definition);
+                }
+            }
+        }
         $installer->endSetup();
     }
 }

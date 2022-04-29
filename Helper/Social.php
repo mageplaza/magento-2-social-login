@@ -99,6 +99,7 @@ class Social extends HelperData
             'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
             'Google'    => ['scope' => 'profile email'],
+            'Yahoo'     => ['scope' => 'profile'],
             'Zalo'      => ['wrapper' => ['class' => Zalo::class], 'scope' => 'access_profile']
         ];
 
@@ -181,6 +182,8 @@ class Social extends HelperData
                 break;
             case 'Yahoo':
             case 'Twitter':
+            case 'Vkontakte':
+            case 'Pinterest':
             case 'Zalo':
                 return $authUrl;
             default:
