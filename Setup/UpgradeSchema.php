@@ -88,7 +88,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             }
         }
 
-        if (version_compare($context->getVersion(), '1.2.2', '<')) {
+        if (version_compare($context->getVersion(), '1.2.1', '<')) {
             if ($installer->tableExists('mageplaza_social_customer')) {
                 $columns = [
                     'website_id'             => [
