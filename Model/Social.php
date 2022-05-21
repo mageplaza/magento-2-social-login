@@ -216,7 +216,7 @@ class Social extends AbstractModel
                 $customer = $this->customerRepository->save($customer, $data['password']);
                 $this->getEmailNotification()->newAccount(
                     $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,'',$store->getId()
                 );
             } else {
                 // If customer exists existing hash will be used by Repository
@@ -232,7 +232,9 @@ class Social extends AbstractModel
             if ($this->apiHelper->canSendPassword($store)) {
                 $this->getEmailNotification()->newAccount(
                     $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
+                    '',
+                    $store->getId()
                 );
             }
 
