@@ -156,7 +156,7 @@ class Social extends AbstractModel
     public function getCustomerBySocial($identify, $type)
     {
         $websiteId = $this->storeManager->getWebsite()->getId();
-        $customer = $this->customerFactory->create();
+        $customer  = $this->customerFactory->create();
 
         $socialCustomer = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
@@ -195,8 +195,11 @@ class Social extends AbstractModel
      * @param $data
      * @param $store
      *
-     * @return mixed
-     * @throws Exception
+     * @return Customer
+     * @throws InputMismatchException
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function createCustomerSocial($data, $store)
     {
@@ -216,7 +219,9 @@ class Social extends AbstractModel
                 $customer = $this->customerRepository->save($customer, $data['password']);
                 $this->getEmailNotification()->newAccount(
                     $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,'',$store->getId()
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,
+                    '',
+                    $store->getId()
                 );
             } else {
                 // If customer exists existing hash will be used by Repository
@@ -254,9 +259,7 @@ class Social extends AbstractModel
         /**
          * @var Customer $customer
          */
-        $customer = $this->customerFactory->create()->load($customer->getId());
-
-        return $customer;
+        return $this->customerFactory->create()->load($customer->getId());
     }
 
     /**
