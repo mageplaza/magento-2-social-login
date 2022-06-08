@@ -81,12 +81,12 @@ abstract class AbstractSocial extends Action
     protected $accountRedirect;
 
     /**
-     * @type
+     * @var PhpCookieManager
      */
     protected $cookieMetadataManager;
 
     /**
-     * @type
+     * @var CookieMetadataFactory
      */
     protected $cookieMetadataFactory;
 
@@ -124,14 +124,14 @@ abstract class AbstractSocial extends Action
         RawFactory $resultRawFactory,
         Customer $customerModel
     ) {
-        $this->storeManager = $storeManager;
-        $this->accountManager = $accountManager;
-        $this->apiHelper = $apiHelper;
-        $this->apiObject = $apiObject;
-        $this->session = $customerSession;
-        $this->accountRedirect = $accountRedirect;
+        $this->storeManager     = $storeManager;
+        $this->accountManager   = $accountManager;
+        $this->apiHelper        = $apiHelper;
+        $this->apiObject        = $apiObject;
+        $this->session          = $customerSession;
+        $this->accountRedirect  = $accountRedirect;
         $this->resultRawFactory = $resultRawFactory;
-        $this->customerModel = $customerModel;
+        $this->customerModel    = $customerModel;
 
         parent::__construct($context);
     }
@@ -158,15 +158,17 @@ abstract class AbstractSocial extends Action
     public function createCustomerProcess($userProfile, $type)
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
-
+        if (strtolower($type) === 'steam') {
+            $userProfile->identifier = trim($userProfile->identifier,"https://steamcommunity.com/openid/id/");
+        }
         $user = array_merge(
             [
-                'email' => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
-                'firstname' => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
-                'lastname' => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+                'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+                'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+                'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
                 'identifier' => $userProfile->identifier,
-                'type' => $type,
-                'password' => isset($userProfile->password) ? $userProfile->password : null
+                'type'       => $type,
+                'password'   => isset($userProfile->password) ? $userProfile->password : null
             ],
             $this->getUserData($userProfile)
         );
@@ -252,7 +254,7 @@ abstract class AbstractSocial extends Action
         $this->_eventManager->dispatch(
             'social_manager_get_login_redirect',
             [
-                'object' => $object,
+                'object'  => $object,
                 'request' => $this->_request
             ]
         );

@@ -32,7 +32,7 @@ class Information implements ArrayInterface
 {
     const INFO_EMAIL = 'email';
     const INFOR_NAME = 'name';
-    const INFOR_PW = 'password';
+    const INFOR_PW   = 'password';
 
     /**
      * @return array

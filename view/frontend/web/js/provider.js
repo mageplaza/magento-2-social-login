@@ -70,7 +70,9 @@ define(
                 },
 
                 openPopup: function () {
-                    window.open(config.url, config.label, this.getPopupParams());
+                    var date = new Date(),
+                        currentTime = date.getTime();
+                    window.open(config.url + '?' + currentTime, config.label, this.getPopupParams());
                 },
 
                 getPopupParams: function (w, h, l, t) {

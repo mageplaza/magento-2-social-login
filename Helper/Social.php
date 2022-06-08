@@ -30,6 +30,7 @@ use Mageplaza\SocialLogin\Model\Providers\GitHub;
 use Mageplaza\SocialLogin\Model\Providers\Instagram;
 use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
 use Mageplaza\SocialLogin\Model\Providers\Yahoo;
+use Mageplaza\SocialLogin\Model\Providers\Zalo;
 
 /**
  * Class Social
@@ -39,7 +40,7 @@ use Mageplaza\SocialLogin\Model\Providers\Yahoo;
 class Social extends HelperData
 {
     /**
-     * @type
+     * @var mixed
      */
     protected $_type;
 
@@ -90,15 +91,16 @@ class Social extends HelperData
     public function getSocialConfig($type)
     {
         $apiData = [
-            'Facebook' => ['trustForwarded' => false, 'scope' => 'email, public_profile'],
-            'Twitter' => ['includeEmail' => true],
-            'LinkedIn' => ['fields' => ['id', 'first-name', 'last-name', 'email-address']],
+            'Facebook'  => ['trustForwarded' => false, 'scope' => 'email, public_profile'],
+            'Twitter'   => ['includeEmail' => true],
+            'LinkedIn'  => ['fields' => ['id', 'first-name', 'last-name', 'email-address']],
             'Vkontakte' => ['wrapper' => ['class' => Vkontakte::class]],
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
-            'Github' => ['wrapper' => ['class' => GitHub::class]],
-            'Amazon' => ['wrapper' => ['class' => Amazon::class]],
-            'Google' => ['scope' => 'profile email'],
-            'Yahoo' => ['wrapper' => ['class' => Yahoo::class]],
+            'Github'    => ['wrapper' => ['class' => GitHub::class]],
+            'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
+            'Google'    => ['scope' => 'profile email'],
+            'Yahoo'     => ['wrapper' => ['class' => Yahoo::class]],
+            'Zalo'      => ['wrapper' => ['class' => Zalo::class], 'scope' => 'access_profile']
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
@@ -179,8 +181,8 @@ class Social extends HelperData
                 $param = 'live.php';
                 break;
             case 'Yahoo':
-                return $authUrl;
             case 'Twitter':
+            case 'Zalo':
                 return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
@@ -208,8 +210,8 @@ class Social extends HelperData
         return $this->_getUrl(
             'sociallogin/social/callback',
             [
-                '_nosid' => true,
-                '_scope' => $storeId,
+                '_nosid'  => true,
+                '_scope'  => $storeId,
                 '_secure' => true
             ]
         );
@@ -236,17 +238,18 @@ class Social extends HelperData
     public function getSocialTypesArray()
     {
         return [
-            'facebook' => 'Facebook',
-            'google' => 'Google',
-            'twitter' => 'Twitter',
-            'amazon' => 'Amazon',
-            'linkedin' => 'LinkedIn',
-            'yahoo' => 'Yahoo',
+            'facebook'   => 'Facebook',
+            'google'     => 'Google',
+            'twitter'    => 'Twitter',
+            'amazon'     => 'Amazon',
+            'linkedin'   => 'LinkedIn',
+            'yahoo'      => 'Yahoo',
             'foursquare' => 'Foursquare',
-            'vkontakte' => 'Vkontakte',
-            'instagram' => 'Instagram',
-            'github' => 'Github',
-            'live' => 'Live'
+            'vkontakte'  => 'Vkontakte',
+            'instagram'  => 'Instagram',
+            'github'     => 'Github',
+            'live'       => 'Live',
+            'zalo'       => 'Zalo'
         ];
     }
 }
