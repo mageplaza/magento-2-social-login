@@ -1776,3 +1776,10 @@
     color: #ff0084;
     background-color: #fff
 }
+
+.modal-popup.request-popup.modal-slide {
+    z-index: 1000 !important;
+}
+.modals-overlay {
+    z-index: 999 !important;
+}

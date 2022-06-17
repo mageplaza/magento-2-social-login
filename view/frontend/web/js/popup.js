@@ -695,10 +695,13 @@ define(
                                 elConfirm = $('.field-confirmation-social');
                             if (self.options.showFields) {
                                 if ($.inArray(fieldName, self.options.showFields.split(',')) === -1) {
-                                    if (fieldName === 'password') {
+                                    if (fieldName === 'password' && !self.options.checkMode) {
                                         elConfirm.remove();
+                                        elField.remove();
                                     }
-                                    elField.remove();
+                                    if(fieldName !== 'password') {
+                                        elField.remove();
+                                    }
                                 } else {
                                     elField.show();
                                 }
