@@ -155,12 +155,14 @@ class Social extends AbstractModel
      */
     public function getCustomerBySocial($identify, $type)
     {
+        $websiteId = $this->storeManager->getWebsite()->getId();
         $customer = $this->customerFactory->create();
 
         $socialCustomer = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
             ->addFieldToFilter('status', ['null' => 'true'])
+            ->addFieldToFilter('website_id', $websiteId)
             ->getFirstItem();
 
         if ($socialCustomer && $socialCustomer->getId()) {
@@ -214,7 +216,7 @@ class Social extends AbstractModel
                 $customer = $this->customerRepository->save($customer, $data['password']);
                 $this->getEmailNotification()->newAccount(
                     $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,'',$store->getId()
                 );
             } else {
                 // If customer exists existing hash will be used by Repository
@@ -230,7 +232,9 @@ class Social extends AbstractModel
             if ($this->apiHelper->canSendPassword($store)) {
                 $this->getEmailNotification()->newAccount(
                     $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
+                    '',
+                    $store->getId()
                 );
             }
 
@@ -281,7 +285,8 @@ class Social extends AbstractModel
                 'customer_id'            => $customerId,
                 'type'                   => $type,
                 'is_send_password_email' => $this->apiHelper->canSendPassword(),
-                'social_created_at'      => $this->_dateTime->date()
+                'social_created_at'      => $this->_dateTime->date(),
+                'website_id'             => $this->storeManager->getWebsite()->getId()
             ]
         )
             ->setId(null)->save();

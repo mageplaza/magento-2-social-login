@@ -26,7 +26,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
 {
     public $scope = 'email';
 
-    public $version = '5.0';
+    public $version = '5.107';
 
     public $fields = [
         'identifier'  => 'id',
