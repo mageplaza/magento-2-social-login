@@ -62,6 +62,7 @@ define(
             var model = {
                 initialize: function () {
                     var self = this;
+                    customerData.reload(true);
                     $(element).on(
                         'click', function () {
                             self.openPopup();

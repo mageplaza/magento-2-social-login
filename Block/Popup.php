@@ -89,7 +89,8 @@ class Popup extends Template
             'fakeEmailUrl'  => $this->getFakeEmailUrl(),
             'showFields'    => $this->getFieldCanShow(),
             'popupLogin'    => $this->isEnabled(),
-            'actionName'    => $this->_request->getFullActionName()
+            'actionName'    => $this->_request->getFullActionName(),
+            'checkMode'     => $this->isCheckMode()
         ];
 
         return json_encode($params);
@@ -180,7 +181,7 @@ class Popup extends Template
      */
     public function isRequireMoreInfo()
     {
-        return ($this->helperData->requiredMoreInfo() && !$this->isEnabled());
+        return ($this->helperData->requiredMoreInfo() && $this->isEnabled());
     }
 
     /**

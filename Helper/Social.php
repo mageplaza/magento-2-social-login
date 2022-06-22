@@ -181,6 +181,7 @@ class Social extends HelperData
                 break;
             case 'Yahoo':
             case 'Twitter':
+            case 'Vkontakte':
             case 'Zalo':
                 return $authUrl;
             default:

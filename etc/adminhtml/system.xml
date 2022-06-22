@@ -78,12 +78,16 @@
                 <field id="check_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Require Enter Password</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="popup_login" separator=",">quick_login,popup_login,popup_slide</field>
+                    </depends>
                     <comment>Require enter password confirmation when logging in with social for the first time on existing account.</comment>
                 </field>
                 <field id="information_require" translate="label comment" type="multiselect" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Information Required</label>
                     <source_model>Mageplaza\SocialLogin\Model\System\Config\Source\Information</source_model>
                     <depends>
+                        <field id="popup_login" separator=",">quick_login,popup_login,popup_slide</field>
                         <field id="require_more_info" separator=",">1,2</field>
                     </depends>
                     <validate>required</validate>
@@ -432,6 +436,13 @@
                 <field id="app_secret" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secure Key</label>
                     <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_url" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Mageplaza\SocialLogin\Block\System\RedirectUrl</frontend_model>
+                    <label>Callback URL</label>
                     <depends>
                         <field id="is_enabled">1</field>
                     </depends>

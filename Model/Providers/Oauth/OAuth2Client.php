@@ -83,17 +83,17 @@ class OAuth2Client
      * @param HelperData $helperData
      */
     public function __construct(
+        HelperData $helperData,
         $client_id = false,
         $client_secret = false,
         $redirect_uri = '',
-        $compressed = false,
-        HelperData $helperData
+        $compressed = false
     ) {
+        $this->_helperData     = $helperData;
         $this->client_id       = $client_id;
         $this->client_secret   = $client_secret;
         $this->redirect_uri    = $redirect_uri;
         $this->curl_compressed = $compressed;
-        $this->_helperData     = $helperData;
     }
 
     public function authorizeUrl($extras = [])

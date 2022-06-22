@@ -156,6 +156,6 @@ class Data extends CoreHelper
      */
     public function isCheckMode($storeId = null)
     {
-        return $this->getConfigGeneral('check_mode', $storeId);
+        return $this->getConfigGeneral('check_mode', $storeId) && $this->getPopupLogin() ;
     }
 }

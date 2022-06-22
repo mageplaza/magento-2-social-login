@@ -1776,3 +1776,7 @@
     color: #ff0084;
     background-color: #fff
 }
+
+.modal-popup.popup-authentication {
+    z-index: 1000;
+}
