@@ -25,6 +25,7 @@
         <sociallogin>
             <module>
                 <type>1</type>
+                <user_guide>social-login-m2</user_guide>
             </module>
             <general>
                 <enabled>1</enabled>
