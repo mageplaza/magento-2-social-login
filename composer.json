@@ -6,7 +6,7 @@
     "mageplaza/module-smtp": "^4.7.2",
     "mageplaza/module-google-recaptcha": "^4.0.1",
     "mageplaza/module-two-factor-authentication": "^4.0.3",
-    "hybridauth/hybridauth": "^2.14.0"
+    "hybridauth/hybridauth": "^3.8.2"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
