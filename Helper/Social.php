@@ -60,6 +60,11 @@ class Social extends HelperData
         return $listTypes[$type];
     }
 
+    public function getType()
+    {
+        return $this->_type;
+    }
+
     /**
      * @return array
      */
@@ -97,7 +102,7 @@ class Social extends HelperData
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
             'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
-            'Google'    => ['scope' => 'profile email'],
+            'Google'    => ['scope' => 'email'],
             'Yahoo'     => ['scope' => 'profile'],
             'Zalo'      => ['wrapper' => ['class' => Zalo::class], 'scope' => 'access_profile']
         ];

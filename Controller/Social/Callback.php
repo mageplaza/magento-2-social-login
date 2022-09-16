@@ -21,7 +21,7 @@
 
 namespace Mageplaza\SocialLogin\Controller\Social;
 
-use Hybrid_Endpoint;
+use Hybridauth\Endpoint as Hybrid_Endpoint;
 
 /**
  * Class Callback
@@ -36,7 +36,7 @@ class Callback extends AbstractSocial
     public function execute()
     {
         $param = $this->getRequest()->getParams();
-
+        $type  = $this->getRequest()->getParam('hauth_done');
         if (isset($param['live.php'])) {
             $request = array_merge($param, ['hauth_done' => 'Live']);
         }
@@ -49,11 +49,60 @@ class Callback extends AbstractSocial
         ) {
             return $this->_appendJs(sprintf('<script>window.close();</script>'));
         }
-        if (isset($request)) {
-            Hybrid_Endpoint::process($request);
+
+        $userProfile = $this->apiObject->getUserProfile($type, null, true, $param);
+        
+        try {
+            $userProfile = $this->apiObject->getUserProfile($type);
+
+            if (!$userProfile->identifier) {
+                return $this->emailRedirect($type);
+            }
+        } catch (Exception $e) {
+            $this->setBodyResponse($e->getMessage());
+
+            return;
         }
 
-        Hybrid_Endpoint::process();
+        $customer     = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+        $customerData = $this->customerModel->load($customer->getId());
+
+        if (!$customer->getId()) {
+            $requiredMoreInfo = (int)$this->apiHelper->requiredMoreInfo();
+
+            if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
+                $this->session->setUserProfile($userProfile);
+
+                return $this->_appendJs(
+                    sprintf(
+                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        $type,
+                        $userProfile->firstName,
+                        $userProfile->lastName
+                    )
+                );
+            }
+
+            $customer = $this->createCustomerProcess($userProfile, $type);
+        }
+        if ($this->apiHelper->isCheckMode()) {
+            if ($customerData->getData('password_hash') === null) {
+                $userProfile->hash = '';
+                $this->session->setUserProfile($userProfile);
+
+                return $this->_appendJs(
+                    sprintf(
+                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        $type,
+                        $userProfile->firstName,
+                        $userProfile->lastName
+                    )
+                );
+            }
+        }
+        $this->refresh($customer);
+
+        return $this->_appendJs();
     }
 
     /**

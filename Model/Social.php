@@ -22,7 +22,7 @@
 namespace Mageplaza\SocialLogin\Model;
 
 use Exception;
-use Hybrid_Auth;
+use Hybridauth\Hybridauth as Hybrid_Auth;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
@@ -304,27 +304,40 @@ class Social extends AbstractModel
      * @return mixed
      * @throws LocalizedException
      */
-    public function getUserProfile($apiName, $area = null)
+    public function getUserProfile($apiName, $area = null, $hasDone = false, $request = null)
     {
+        if (!$this->apiHelper->getType()) {
+            $this->apiHelper->setType(strtolower($apiName));
+        }
+
         $config = [
-            'base_url'   => $this->apiHelper->getBaseAuthUrl($area),
+            'callback'   => $this->apiHelper->getBaseAuthUrl($area) . '?hauth_done=' . $apiName,
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
-            'debug_mode' => false,
-            'debug_file' => BP . '/var/log/social.log'
+            'debug_mode' => true,
+            'debug_file' => BP . '/var/log/social.log',
         ];
 
         $auth = new Hybrid_Auth($config);
-
-        try {
-            $adapter     = $auth->authenticate($apiName);
-            $userProfile = $adapter->getUserProfile();
-        } catch (Exception $e) {
-            $auth->logoutAllProviders();
-            $auth        = new Hybrid_Auth($config);
-            $adapter     = $auth->authenticate($apiName);
-            $userProfile = $adapter->getUserProfile();
+        if ($hasDone) {
+            try {
+                $adapter = $auth->authenticate($apiName);
+                $adapter->authenticate();
+                $userProfile = $adapter->getUserProfile();
+            } catch (Exception $e) {
+                $auth->disconnectAllAdapters();
+            }
+        } else {
+            try {
+                $adapter     = $auth->authenticate($apiName);
+                $userProfile = $adapter->getUserProfile();
+            } catch (Exception $e) {
+                $auth->disconnectAllAdapters();
+                $auth        = new Hybrid_Auth($config);
+                $adapter     = $auth->authenticate($apiName);
+                $userProfile = $adapter->getUserProfile();
+            }
         }
 
         return $userProfile;

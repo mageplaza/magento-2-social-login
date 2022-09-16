@@ -9,7 +9,7 @@ namespace Mageplaza\SocialLogin\Model\Providers;
 
 use Exception;
 use Hybrid_Auth;
-use Hybrid_Provider_Model_OAuth2;
+use Hybridauth\Adapter\OAuth2 as Hybrid_Provider_Model_OAuth2;
 use Hybrid_User_Profile;
 use Magento\Framework\App\ObjectManager;
 use Mageplaza\SocialLogin\Model\Providers\Amazon\AmazonOAuth2Client;

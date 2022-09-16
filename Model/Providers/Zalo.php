@@ -8,14 +8,11 @@
 namespace Mageplaza\SocialLogin\Model\Providers;
 
 use Exception;
-use Hybrid_Provider_Model_OAuth2;
-use Hybrid_User_Profile;
+use Hybridauth\Adapter\OAuth2 as Hybrid_Provider_Model_OAuth2;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Serialize\Serializer\Serialize;
 use stdClass;
-use Hybrid_Auth;
-use Hybrid_Logger;
 
 /**
  * Hybrid_Providers_Zalo
@@ -88,17 +85,15 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         return $response;
     }
 
-    /**
-     * @param $code
-     *
+    /***
      * @return StdClass|mixed
      * @throws Exception
      */
-    function authenticate($code)
+    function authenticate()
     {
         $params = [
-            'app_id'     => $this->api->client_id,
-            'app_secret' => $this->api->client_secret,
+            'app_id'     => $this->apiRequest()->client_id,
+            'app_secret' => $this->apiRequest()->client_secret,
             'code'       => $code
         ];
 
