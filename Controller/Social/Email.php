@@ -143,7 +143,7 @@ class Email extends AbstractSocial
          */
         $resultJson = $this->resultJsonFactory->create();
         $params     = $this->getRequest()->getParams();
-        $type       = $this->apiHelper->setType($params['type']);
+        $type       = $this->apiHelper->setType($params['type'] ?? "");
 
         if (!$type) {
             $this->_forward('noroute');
@@ -156,56 +156,40 @@ class Email extends AbstractSocial
         $firstname = isset($params['firstname']) ? $params['firstname'] : null;
         $lastname  = isset($params['lastname']) ? $params['lastname'] : null;
         $password  = isset($params['password']) ? $this->_encrypt->getHash($params['password'], true) : null;
-        $customer = $this->customerFactory->create()
-            ->setWebsiteId($this->getStore()->getWebsiteId())
-            ->loadByEmail($realEmail);
+        if ($realEmail) {
+            $customer = $this->customerFactory->create()
+                ->setWebsiteId($this->getStore()->getWebsiteId())
+                ->loadByEmail($realEmail);
+            if ($customer->getId()) {
+                $result['message'] = __('Email already exists');
 
-        if ($customer->getId()) {
-            $result['message'] = __('Email already exists');
-
-            return $resultJson->setData($result);
+                return $resultJson->setData($result);
+            }
         }
 
         $userProfile            = $this->session->getUserProfile();
         $userProfile->email     = $realEmail ?: $userProfile->email;
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
         $userProfile->lastName  = $lastname ?: $userProfile->lastName;
-        $userProfile->password  = $password ?: null;
 
         $checkCustomer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
             ->loadByEmail($userProfile->email);
 
         if ($checkCustomer->getId()) {
-            if ($userProfile->hash !== '') {
-                $loginTrial = $this->accountManager;
-                $session    = $this->session;
-
-                try {
-                    $customer = $loginTrial->authenticate($userProfile->email, $params['password']);
-                } catch (Exception $e) {
-                    $result['message'] = __('Wrong password');
-
-                    return $resultJson->setData($result);
-                }
-
-                $session->setCustomerDataAsLoggedIn($customer);
-                $session->regenerateId();
-            } else {
-                $session                     = $this->session;
-                $customerRepositoryInterface = $this->_customerRepositoryInterface;
-                $customerId                  = $customerRepositoryInterface->get(
-                    $userProfile->email,
-                    $websiteId = null
-                )->getId();
-                $customer                    = $customerRepositoryInterface->getById($customerId);
-                $customerRegistry            = $this->_customerRegistry;
-                $customerSecure              = $customerRegistry->retrieveSecureData($customerId);
-                $customerSecure->setPasswordHash($userProfile->password);
-                $customerRepositoryInterface->save($customer);
-                $session->setCustomerDataAsLoggedIn($customer);
-                $session->regenerateId();
-            }
+            $session                     = $this->session;
+            $customerRepositoryInterface = $this->_customerRepositoryInterface;
+            $customerId                  = $customerRepositoryInterface->get(
+                $userProfile->email,
+                $websiteId = null
+            )->getId();
+            $customer                    = $customerRepositoryInterface->getById($customerId);
+            $customerRegistry            = $this->_customerRegistry;
+            $customerSecure              = $customerRegistry->retrieveSecureData($customerId);
+            $customerSecure->setPasswordHash($password);
+            $customerRepositoryInterface->save($customer);
+            $session->setCustomerDataAsLoggedIn($customer);
+            $session->regenerateId();
         } else {
             $customer = $this->createCustomerProcess($userProfile, $type);
             $this->refresh($customer);

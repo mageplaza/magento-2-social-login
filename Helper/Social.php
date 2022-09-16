@@ -60,6 +60,9 @@ class Social extends HelperData
         return $listTypes[$type];
     }
 
+    /**
+     * @return mixed | string
+     */
     public function getType()
     {
         return $this->_type;

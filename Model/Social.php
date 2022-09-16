@@ -22,7 +22,10 @@
 namespace Mageplaza\SocialLogin\Model;
 
 use Exception;
+use Hybridauth\Exception\InvalidArgumentException;
+use Hybridauth\Exception\UnexpectedValueException;
 use Hybridauth\Hybridauth as Hybrid_Auth;
+use Hybridauth\User\Profile;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
@@ -34,7 +37,9 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\InputMismatchException;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Model\AbstractModel;
@@ -198,8 +203,8 @@ class Social extends AbstractModel
      * @return Customer
      * @throws InputMismatchException
      * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function createCustomerSocial($data, $store)
     {
@@ -301,10 +306,12 @@ class Social extends AbstractModel
      * @param $apiName
      * @param null $area
      *
-     * @return mixed
+     * @return Profile
+     * @throws InvalidArgumentException
      * @throws LocalizedException
+     * @throws UnexpectedValueException
      */
-    public function getUserProfile($apiName, $area = null, $hasDone = false, $request = null)
+    public function getUserProfile($apiName, $area = null)
     {
         if (!$this->apiHelper->getType()) {
             $this->apiHelper->setType(strtolower($apiName));
@@ -315,29 +322,18 @@ class Social extends AbstractModel
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
-            'debug_mode' => true,
+            'debug_mode' => false,
             'debug_file' => BP . '/var/log/social.log',
         ];
-
-        $auth = new Hybrid_Auth($config);
-        if ($hasDone) {
-            try {
-                $adapter = $auth->authenticate($apiName);
-                $adapter->authenticate();
-                $userProfile = $adapter->getUserProfile();
-            } catch (Exception $e) {
-                $auth->disconnectAllAdapters();
-            }
-        } else {
-            try {
-                $adapter     = $auth->authenticate($apiName);
-                $userProfile = $adapter->getUserProfile();
-            } catch (Exception $e) {
-                $auth->disconnectAllAdapters();
-                $auth        = new Hybrid_Auth($config);
-                $adapter     = $auth->authenticate($apiName);
-                $userProfile = $adapter->getUserProfile();
-            }
+        $auth   = new Hybrid_Auth($config);
+        try {
+            $adapter     = $auth->authenticate($apiName);
+            $userProfile = $adapter->getUserProfile();
+        } catch (Exception $e) {
+            $auth->disconnectAllAdapters();
+            $auth        = new Hybrid_Auth($config);
+            $adapter     = $auth->authenticate($apiName);
+            $userProfile = $adapter->getUserProfile();
         }
 
         return $userProfile;
