@@ -313,12 +313,13 @@ class Social extends AbstractModel
      */
     public function getUserProfile($apiName, $area = null)
     {
+        $apiName = strtolower($apiName);
         if (!$this->apiHelper->getType()) {
-            $this->apiHelper->setType(strtolower($apiName));
+            $this->apiHelper->setType($apiName);
         }
 
         $config = [
-            'callback'   => $this->apiHelper->getBaseAuthUrl($area) . '?hauth_done=' . $apiName,
+            'callback'   => $this->apiHelper->getBaseAuthUrl($area) . '?hauth_done=' . ucfirst($apiName),
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
@@ -352,10 +353,28 @@ class Social extends AbstractModel
                 'id'     => $this->apiHelper->getAppId(),
                 'key'    => $this->apiHelper->getAppId(),
                 'secret' => $this->apiHelper->getAppSecret()
-            ]
+            ],
+            'adapter' => $this->getAdapter($apiName)
         ];
 
         return array_merge($data, $this->apiHelper->getSocialConfig($apiName));
+    }
+
+    /**
+     * @param $type
+     *
+     * @return string
+     */
+    protected function getAdapter($type)
+    {
+        $adapters = [
+            'zalo' => 'Zalo'
+        ];
+        if (isset($adapters[$type])) {
+            return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
+        }
+
+        return '';
     }
 
     /**

@@ -15,36 +15,86 @@ use Magento\Framework\Serialize\Serializer\Serialize;
 use stdClass;
 
 /**
- * Hybrid_Providers_Zalo
+ * Class Zalo
+ * @package Mageplaza\SocialLogin\Model\Providers
  */
 class Zalo extends Hybrid_Provider_Model_OAuth2
 {
     /**
-     * IDp wrappers initializer
-     *
-     * @throws Exception
+     * {@inheritdoc}
      */
-    function initialize()
-    {
-        parent::initialize();
+    protected $scope = 'email';
 
-        // Provider api end-points
-        $this->api->api_base_url  = 'https://oauth.zaloapp.com';
-        $this->api->authorize_url = 'https://oauth.zaloapp.com/v3/permission';
-        $this->api->token_url     = 'https://oauth.zaloapp.com/v3/access_token';
-    }
+    /**
+     * {@inheritdoc}
+     */
+    protected $apiBaseUrl = 'https://oauth.zaloapp.com';
 
-    function loginBegin()
+    /**
+     * {@inheritdoc}
+     */
+    protected $authorizeUrl = 'https://oauth.zaloapp.com/v4/permission';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $accessTokenUrl = 'https://oauth.zaloapp.com/v3/access_token';
+
+    //    /**
+    //     * IDp wrappers initializer
+    //     *
+    //     * @throws Exception
+    //     */
+    //    public function initialize()
+    //    {
+    //        parent::initialize();
+    //
+    //        // Provider api end-points
+    //        $this->api_base_url  = 'https://oauth.zaloapp.com';
+    //        $this->authorize_url = 'https://oauth.zaloapp.com/v3/permission';
+    //        $this->token_url     = 'https://oauth.zaloapp.com/v3/access_token';
+    //    }
+
+    //    public function authenticateBegin()
+    //    {
+    //        $parameters = [
+    //            'app_id'       => $this->clientId,
+    //            'redirect_uri' => $this->redirect_uri,
+    //            'state'        => time()
+    //        ];
+    //
+    //        Hybrid_Auth::redirect($this->authorizeUrl);
+    //    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getAuthorizeUrl($parameters = [])
     {
-        $parameters = [
-            'app_id'       => $this->api->client_id,
-            'redirect_uri' => $this->api->redirect_uri,
-            'state'        => time()
+        $parameters                             = [
+            'code_challenge' => $this->generate_pkce_codes(),
         ];
+        $this->AuthorizeUrlParameters           = array_merge($parameters, $this->AuthorizeUrlParameters);
+        $this->AuthorizeUrlParameters['app_id'] = $this->AuthorizeUrlParameters['client_id'];
+        if ($this->supportRequestState) {
+            if (!isset($this->AuthorizeUrlParameters['state'])) {
+                $this->AuthorizeUrlParameters['state'] = 'HA-' . str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
+            }
+            $this->storeData('authorization_state', $this->AuthorizeUrlParameters['state']);
+        }
 
-        Hybrid_Auth::redirect($this->api->authorizeUrl($parameters));
+        $queryParams = http_build_query($this->AuthorizeUrlParameters, '', '&', $this->AuthorizeUrlParametersEncType);
+
+        return $this->authorizeUrl . '?' . $queryParams;
     }
 
+    /**
+     * @param $url
+     * @param false $params
+     * @param string $type
+     *
+     * @return bool|string
+     */
     private function request($url, $params = false, $type = "GET")
     {
         /** @var Serialize $serialize */
@@ -89,12 +139,11 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
      * @return StdClass|mixed
      * @throws Exception
      */
-    function authenticate()
+    public function authenticatec()
     {
         $params = [
             'app_id'     => $this->apiRequest()->client_id,
             'app_secret' => $this->apiRequest()->client_secret,
-            'code'       => $code
         ];
 
         $response = $this->request($this->api->token_url, $params);
@@ -126,7 +175,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
     /**
      * @throws Exception
      */
-    function loginFinish()
+    public function loginFinish()
     {
         /** @var RequestInterface $request */
         $request = $this->getDataObject(RequestInterface::class);
@@ -191,29 +240,92 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
     }
 
     /**
-     * load the user profile from the IDp api client
-     *
-     * @return Hybrid_User_Profile
-     * @throws Exception
+     * @throws \Hybridauth\Exception\HttpRequestFailedException
+     * @throws \Hybridauth\Exception\HttpClientFailureException
+     * @throws \Hybridauth\Exception\InvalidAccessTokenException
      */
-    function getUserProfile()
+    public function getUserProfiled()
     {
-        $fields   = '&fields=id,birthday,name,gender,picture';
-        $response = $this->api->get('https://graph.zalo.me/v2.0/me?access_token=' . $this->api->access_token . $fields);
+        $fields = '&fields=id,birthday,name,gender,picture';
 
-        if (!isset($response)) {
-            throw new Exception("User profile request failed! {$this->providerId} returned an invalid response: " . Hybrid_Logger::dumpData($response),
-                6);
+        $fields = [
+            'id',
+            'name',
+            'first_name',
+            'last_name',
+            'email'
+        ];
+
+        // Note that en_US is needed for gender fields to match convention.
+        $locale   = $this->config->get('locale') ?: 'en_US';
+        $response = $this->apiRequest('me', 'GET', [
+            'fields' => implode(',', $fields),
+            'locale' => $locale,
+        ]);
+
+        $data = new \Data\Collection($response);
+
+        if (!$data->exists('id')) {
+            throw new UnexpectedApiResponseException('Provider API returned an unexpected response.');
         }
 
-        $data = $response;
+        $userProfile = new User\Profile();
 
-        $this->user->profile->identifier  = isset($data->id) ? $data->id : '';
-        $this->user->profile->firstName   = isset($data->name) ? $data->name : '';
-        $this->user->profile->lastName    = isset($data->name) ? $data->name : '';
-        $this->user->profile->displayName = isset($data->name) ? trim($data->name) : '';
-        $this->user->profile->gender      = isset($data->gender) ? $data->gender : '';
+        $userProfile->identifier  = $data->get('id');
+        $userProfile->displayName = $data->get('name');
+        $userProfile->firstName   = $data->get('first_name');
+        $userProfile->lastName    = $data->get('last_name');
+        $userProfile->profileURL  = $data->get('link');
+        $userProfile->webSiteURL  = $data->get('website');
+        $userProfile->gender      = $data->get('gender');
+        $userProfile->language    = $data->get('locale');
+        $userProfile->description = $data->get('about');
+        $userProfile->email       = $data->get('email');
 
-        return $this->user->profile;
+        // Fallback for profile URL in case Facebook does not provide "pretty" link with username (if user set it).
+        if (empty($userProfile->profileURL)) {
+            $userProfile->profileURL = $this->getProfileUrl($userProfile->identifier);
+        }
+
+        $userProfile->region = $data->filter('hometown')->get('name');
+
+        $photoSize = $this->config->get('photo_size') ?: '150';
+
+        $userProfile->photoURL = $this->apiBaseUrl . $userProfile->identifier;
+        $userProfile->photoURL .= '/picture?width=' . $photoSize . '&height=' . $photoSize;
+
+        $userProfile->emailVerified = $userProfile->email;
+
+        $userProfile = $this->fetchUserRegion($userProfile);
+
+        $userProfile = $this->fetchBirthday($userProfile, $data->get('birthday'));
+
+        return $userProfile;
+    }
+
+    public function base64url_encode($text)
+    {
+        $base64    = base64_encode($text);
+        $base64    = trim($base64, "=");
+        $base64url = strtr($base64, "+/", "-_");
+
+        return $base64url;
+    }
+
+    public function generate_state_param()
+    {
+        return bin2hex(openssl_random_pseudo_bytes(4));
+    }
+
+    public function generate_pkce_codes()
+    {
+        $random         = bin2hex(openssl_random_pseudo_bytes(32)); // a random 64-digit hex
+        $code_verifier  = $this->base64url_encode(pack('H*', $random));
+        $code_challenge = $this->base64url_encode(pack('H*', hash('sha256', $code_verifier)));
+
+        return [
+            "verifier"  => $code_verifier,
+            "challenge" => $code_challenge
+        ];
     }
 }
