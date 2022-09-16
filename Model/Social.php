@@ -319,7 +319,7 @@ class Social extends AbstractModel
         }
 
         $config = [
-            'callback'   => $this->apiHelper->getBaseAuthUrl($area) . '?hauth_done=' . ucfirst($apiName),
+            'callback'   => $this->apiHelper->getBaseAuthUrl($area) . '?hauth.done=' . ucfirst($apiName),
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
