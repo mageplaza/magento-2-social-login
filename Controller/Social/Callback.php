@@ -44,10 +44,17 @@ class Callback extends AbstractSocial
     public function execute()
     {
         $param = $this->getRequest()->getParams();
-        $type  = $this->getRequest()->getParam('hauth_done');
         if (isset($param['live.php'])) {
-            $request = array_merge($param, ['hauth_done' => 'Live']);
+            $param = array_merge($param, ['hauth_done' => 'Live']);
         }
+        if (isset($param['amazon.php'])) {
+            $param = array_merge($param, ['hauth_done' => 'Amazon']);
+        }
+        if (isset($param['vk.php'])) {
+            $param = array_merge($param, ['hauth_done' => 'Vkontakte']);
+        }
+        $type = $param['hauth_done'] ?? '';
+
         if ($this->checkRequest('hauth_start', false)
             && (($this->checkRequest('error_reason', 'user_denied')
                     && $this->checkRequest('error', 'access_denied')

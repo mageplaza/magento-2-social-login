@@ -40,32 +40,6 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
      */
     protected $accessTokenUrl = 'https://oauth.zaloapp.com/v3/access_token';
 
-    //    /**
-    //     * IDp wrappers initializer
-    //     *
-    //     * @throws Exception
-    //     */
-    //    public function initialize()
-    //    {
-    //        parent::initialize();
-    //
-    //        // Provider api end-points
-    //        $this->api_base_url  = 'https://oauth.zaloapp.com';
-    //        $this->authorize_url = 'https://oauth.zaloapp.com/v3/permission';
-    //        $this->token_url     = 'https://oauth.zaloapp.com/v3/access_token';
-    //    }
-
-    //    public function authenticateBegin()
-    //    {
-    //        $parameters = [
-    //            'app_id'       => $this->clientId,
-    //            'redirect_uri' => $this->redirect_uri,
-    //            'state'        => time()
-    //        ];
-    //
-    //        Hybrid_Auth::redirect($this->authorizeUrl);
-    //    }
-
     /**
      * {@inheritdoc}
      */
@@ -131,43 +105,6 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         $this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->http_info = array_merge($this->http_info, curl_getinfo($ch));
         curl_close($ch);
-
-        return $response;
-    }
-
-    /***
-     * @return StdClass|mixed
-     * @throws Exception
-     */
-    public function authenticatec()
-    {
-        $params = [
-            'app_id'     => $this->apiRequest()->client_id,
-            'app_secret' => $this->apiRequest()->client_secret,
-        ];
-
-        $response = $this->request($this->api->token_url, $params);
-
-        $response = $this->parseRequestResult($response);
-
-        if (!$response || !isset($response->access_token)) {
-            throw new Exception("The Authorization Service has return: " . $response->error);
-        }
-
-        if (isset($response->access_token)) {
-            $this->api->access_token = $response->access_token;
-        }
-
-        if (isset($response->expires_in)) {
-            $this->api->access_token_expires_in = $response->expires_in;
-        }
-
-        // Calculate when the access token expire.
-        if (isset($response->expires_in)) {
-            $this->api->access_token_expires_at = time() + $response->expires_in;
-        } else {
-            $this->api->access_token_expires_at = time() + 3600;
-        }
 
         return $response;
     }

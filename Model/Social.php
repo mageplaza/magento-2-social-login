@@ -319,20 +319,18 @@ class Social extends AbstractModel
                 $apiName => $this->getProviderData($apiName)
             ],
             'debug_mode' => false,
-            'debug_file' => BP . '/var/log/social.log',
+            'debug_file' => BP . '/var/log/social.log'
         ];
-        $auth    = new Hybrid_Auth($config);
         if ($apiName === 'live') {
             $config = array_merge($config, ['tenant' => 'consumers']);
         }
+        $auth = new Hybrid_Auth($config);
         try {
             $adapter     = $auth->authenticate($apiName);
             $userProfile = $adapter->getUserProfile();
         } catch (Exception $e) {
             $auth->disconnectAllAdapters();
-            $auth        = new Hybrid_Auth($config);
-            $adapter     = $auth->authenticate($apiName);
-            $userProfile = $adapter->getUserProfile();
+            throw  $e;
         }
 
         return $userProfile;
@@ -369,7 +367,8 @@ class Social extends AbstractModel
             return sprintf('Hybridauth\\Provider\\%s', 'MicrosoftGraph');
         }
         $adapters = [
-            'zalo' => 'Zalo'
+            'zalo' => 'Zalo',
+            'vkontakte' => 'Vkontakte'
         ];
         if (isset($adapters[$type])) {
             return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];

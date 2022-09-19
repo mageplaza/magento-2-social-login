@@ -184,10 +184,11 @@ class Social extends HelperData
                 $param = 'hauth_done=' . $type;
                 break;
             case 'Live':
-                $param = 'live.php';
-                return $authUrl . $param;
-            case 'Twitter':
+                return $authUrl . 'live.php';
             case 'Vkontakte':
+                return $authUrl . 'vk.php';
+            case 'Amazon':
+                return $authUrl . 'amazon.php';
             case 'Zalo':
                 return $authUrl;
             default:
