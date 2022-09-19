@@ -103,7 +103,6 @@ class Social extends HelperData
             'LinkedIn'  => ['fields' => ['id', 'first-name', 'last-name', 'email-address']],
             'Vkontakte' => ['wrapper' => ['class' => Vkontakte::class]],
             'Instagram' => ['wrapper' => ['class' => Instagram::class]],
-            'Github'    => ['wrapper' => ['class' => GitHub::class]],
             'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
             'Google'    => ['scope' => 'email'],
             'Yahoo'     => ['scope' => 'profile'],
@@ -186,17 +185,13 @@ class Social extends HelperData
                 break;
             case 'Live':
                 $param = 'live.php';
-                break;
-            case 'Yahoo':
+                return $authUrl . $param;
             case 'Twitter':
             case 'Vkontakte':
             case 'Zalo':
                 return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
-        }
-        if ($type === 'Live') {
-            return $authUrl . $param;
         }
 
         return $authUrl . ($param ? (strpos($authUrl, '?') ? '&' : '?') . $param : '');
@@ -206,7 +201,7 @@ class Social extends HelperData
      * @return string
      * @throws LocalizedException
      */
-    public function getBaseAuthUrl($area = null)
+    public function getBaseAuthUrl()
     {
         $storeId = $this->getScopeUrl();
 

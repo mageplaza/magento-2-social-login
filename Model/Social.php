@@ -304,29 +304,27 @@ class Social extends AbstractModel
 
     /**
      * @param $apiName
-     * @param null $area
      *
      * @return Profile
      * @throws InvalidArgumentException
      * @throws LocalizedException
      * @throws UnexpectedValueException
      */
-    public function getUserProfile($apiName, $area = null)
+    public function getUserProfile($apiName)
     {
         $apiName = strtolower($apiName);
-        if (!$this->apiHelper->getType()) {
-            $this->apiHelper->setType($apiName);
-        }
-
-        $config = [
-            'callback'   => $this->apiHelper->getBaseAuthUrl($area) . '?hauth.done=' . ucfirst($apiName),
+        $config  = [
+            'callback'   => $this->apiHelper->getAuthUrl($apiName),
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
             'debug_mode' => false,
             'debug_file' => BP . '/var/log/social.log',
         ];
-        $auth   = new Hybrid_Auth($config);
+        $auth    = new Hybrid_Auth($config);
+        if ($apiName === 'live') {
+            $config = array_merge($config, ['tenant' => 'consumers']);
+        }
         try {
             $adapter     = $auth->authenticate($apiName);
             $userProfile = $adapter->getUserProfile();
@@ -367,6 +365,9 @@ class Social extends AbstractModel
      */
     protected function getAdapter($type)
     {
+        if ($type === 'live') {
+            return sprintf('Hybridauth\\Provider\\%s', 'MicrosoftGraph');
+        }
         $adapters = [
             'zalo' => 'Zalo'
         ];
@@ -374,7 +375,7 @@ class Social extends AbstractModel
             return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
         }
 
-        return '';
+        return null;
     }
 
     /**
