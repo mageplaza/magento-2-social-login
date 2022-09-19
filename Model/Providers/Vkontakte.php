@@ -97,7 +97,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     {
         $params['v']       = $this->version;
         $params['fields']  = implode(',', $this->fields);
-        $params['user_id'] = $this->getStoredData('user_id');
+        $params['user_ids'] = $this->getStoredData('user_id');
 
         $response = $this->apiRequest('users.get', 'GET', $params);
 

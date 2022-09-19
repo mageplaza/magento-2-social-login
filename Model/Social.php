@@ -321,9 +321,6 @@ class Social extends AbstractModel
             'debug_mode' => false,
             'debug_file' => BP . '/var/log/social.log'
         ];
-        if ($apiName === 'live') {
-            $config = array_merge($config, ['tenant' => 'consumers']);
-        }
         $auth = new Hybrid_Auth($config);
         try {
             $adapter     = $auth->authenticate($apiName);
@@ -363,12 +360,10 @@ class Social extends AbstractModel
      */
     protected function getAdapter($type)
     {
-        if ($type === 'live') {
-            return sprintf('Hybridauth\\Provider\\%s', 'MicrosoftGraph');
-        }
         $adapters = [
-            'zalo' => 'Zalo',
-            'vkontakte' => 'Vkontakte'
+            'zalo'      => 'Zalo',
+            'vkontakte' => 'Vkontakte',
+            'live'      => 'MicrosoftGraph'
         ];
         if (isset($adapters[$type])) {
             return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
