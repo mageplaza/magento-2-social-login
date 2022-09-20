@@ -38,7 +38,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
     /**
      * {@inheritdoc}
      */
-    protected $accessTokenUrl = 'https://oauth.zaloapp.com/v3/access_token';
+    protected $accessTokenUrl = 'https://oauth.zaloapp.com/v4/access_token';
 
     /**
      * {@inheritdoc}
@@ -50,6 +50,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         ];
         $this->AuthorizeUrlParameters           = array_merge($parameters, $this->AuthorizeUrlParameters);
         $this->AuthorizeUrlParameters['app_id'] = $this->AuthorizeUrlParameters['client_id'];
+        unset($this->AuthorizeUrlParameters['client_id']);
         if ($this->supportRequestState) {
             if (!isset($this->AuthorizeUrlParameters['state'])) {
                 $this->AuthorizeUrlParameters['state'] = 'HA-' . str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
@@ -73,8 +74,6 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
     {
         /** @var Serialize $serialize */
         $serialize = $this->getDataObject(Serialize::class);
-        Hybrid_Logger::info("Enter OAuth2Client::request($url)");
-        Hybrid_Logger::debug("OAuth2Client::request(). dump request params: ", $serialize->serialize($params));
 
         $urlEncodedParams = http_build_query($params, '', '&');
 

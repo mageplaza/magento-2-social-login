@@ -190,7 +190,7 @@ class Social extends HelperData
             case 'Amazon':
                 return $authUrl . 'amazon.php';
             case 'Zalo':
-                return $authUrl;
+                return $authUrl . 'zalo.php';
             default:
                 $param = 'hauth.done=' . $type;
         }

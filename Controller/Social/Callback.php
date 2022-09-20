@@ -53,6 +53,9 @@ class Callback extends AbstractSocial
         if (isset($param['vk.php'])) {
             $param = array_merge($param, ['hauth_done' => 'Vkontakte']);
         }
+        if (isset($param['zalo.php'])) {
+            $param = array_merge($param, ['hauth_done' => 'Zalo']);
+        }
         $type = $param['hauth_done'] ?? '';
 
         if ($this->checkRequest('hauth_start', false)
