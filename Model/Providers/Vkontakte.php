@@ -141,8 +141,8 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         $user->profileURL  = $userData->get('photo_big');
         $user->gender      = $userData->get('sex');
         $user->birthDay    = $userData->get('bdate');
-        $user->city        = $userData->get('city')->title;
-        $user->country     = $userData->get('country')->title;
+        $user->city        = $userData->get('city') ? $userData->get('city')->title : "";
+        $user->country     = $userData->get('country') ? $userData->get('country')->title : "";
         $user->displayName = $userData->get('screen_name');
         $user->email       = $this->getStoredData('email');
 
