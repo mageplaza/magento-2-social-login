@@ -8,6 +8,7 @@
 namespace Mageplaza\SocialLogin\Model\Providers;
 
 use Hybridauth\Adapter\OAuth2 as Hybrid_Provider_Model_OAuth2;
+use Hybridauth\Data\Collection;
 use Hybridauth\Exception\Exception;
 use Hybridauth\Exception\HttpClientFailureException;
 use Hybridauth\Exception\HttpRequestFailedException;
@@ -95,8 +96,8 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
      */
     public function getUserProfile()
     {
-        $params['v']       = $this->version;
-        $params['fields']  = implode(',', $this->fields);
+        $params['v']        = $this->version;
+        $params['fields']   = implode(',', $this->fields);
         $params['user_ids'] = $this->getStoredData('user_id');
 
         $response = $this->apiRequest('users.get', 'GET', $params);
@@ -111,7 +112,7 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
         }
 
         if (!isset($response->response[0], $response->response[0]->id)) {
-            throw new Exception(
+            throw new RuntimeException(
                 "User profile request failed! {$this->providerId} returned an invalid response.",
                 6
             );
@@ -131,17 +132,18 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
     {
         $user = new Profile();
 
-        $response          = json_decode(json_encode($response), true)['response'][0];
-        $user->identifier  = $response['id'];
-        $user->firstName   = $response['first_name'];
-        $user->lastName    = $response['last_name'];
-        $user->region      = $response['home_town'];
-        $user->profileURL  = $response['photo_big'];
-        $user->gender      = $response['sex'];
-        $user->birthDay    = $response['bdate'];
-        $user->city        = $response['city']['title'];
-        $user->country     = $response['country']['title'];
-        $user->displayName = $response['screen_name'];
+        $userData = new Collection($response->response[0]);
+
+        $user->identifier  = $userData->get('id');
+        $user->firstName   = $userData->get('first_name');
+        $user->lastName    = $userData->get('last_name');
+        $user->region      = $userData->get('home_town');
+        $user->profileURL  = $userData->get('photo_big');
+        $user->gender      = $userData->get('sex');
+        $user->birthDay    = $userData->get('bdate');
+        $user->city        = $userData->get('city')->title;
+        $user->country     = $userData->get('country')->title;
+        $user->displayName = $userData->get('screen_name');
         $user->email       = $this->getStoredData('email');
 
         if (isset($user->gender)) {
