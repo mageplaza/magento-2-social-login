@@ -137,7 +137,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         $userProfile              = new Profile();
         $userProfile->identifier  = $data->get('id');
         $userProfile->firstName   = $data->get('name');
-        $userProfile->profileURL  = $data->get('picture')->data->url;
+        $userProfile->profileURL  = isset($data->get('picture')->data) ? $data->get('picture')->data->url : "";
         $userProfile->gender      = $data->get('gender');
         $userProfile->email       = $data->get('email');
         $userProfile->displayName = $data->get('name');
