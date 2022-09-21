@@ -227,7 +227,6 @@ class Social extends HelperData
             'yahoo'      => 'Yahoo',
             'foursquare' => 'Foursquare',
             'vkontakte'  => 'Vkontakte',
-            'instagram'  => 'Instagram',
             'github'     => 'Github',
             'live'       => 'Live',
             'zalo'       => 'Zalo'
