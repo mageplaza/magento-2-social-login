@@ -329,9 +329,6 @@ class Social extends AbstractModel
      */
     public function getUserProfile($apiName)
     {
-        if (!$apiName) {
-            $apiName = $this->getProviderConnected();
-        }
         $apiName = strtolower($apiName);
         $config  = [
             'callback'   => $this->apiHelper->getAuthUrl($apiName),
@@ -471,7 +468,7 @@ class Social extends AbstractModel
      * @return string
      * @throws NoSuchEntityException
      */
-    protected function getProviderConnected()
+    public function getProviderConnected()
     {
         $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo'];
         foreach ($providers as $provider) {

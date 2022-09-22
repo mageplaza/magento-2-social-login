@@ -358,6 +358,9 @@ abstract class AbstractSocial extends Action
     public function login($type)
     {
         try {
+            if (!$type) {
+                $type = $this->apiObject->getProviderConnected();
+            }
             $userProfile = $this->apiObject->getUserProfile($type);
             if (!$userProfile->identifier) {
                 return $this->emailRedirect($type);
