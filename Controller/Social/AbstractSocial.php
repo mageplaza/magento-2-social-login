@@ -356,11 +356,6 @@ abstract class AbstractSocial extends Action
     public function login($type)
     {
         try {
-            if (!$type) {
-                $this->setBodyResponse(__("Provider is not defined"));
-
-                return;
-            }
             $userProfile = $this->apiObject->getUserProfile($type);
             if (!$userProfile->identifier) {
                 return $this->emailRedirect($type);

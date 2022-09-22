@@ -153,7 +153,7 @@ class Social extends HelperData
     /**
      * @param $type
      *
-     * @return mixed|string
+     * @return string
      * @throws LocalizedException
      */
     public function getAuthUrl($type)
@@ -166,15 +166,18 @@ class Social extends HelperData
                 $param = 'hauth_done=' . $type;
                 break;
             case 'Live':
-                return $authUrl . 'live.php';
+                $param = 'live.php';
+                break;
+            case 'Yahoo':
+            case 'Twitter':
             case 'Vkontakte':
-                return $authUrl . 'vk.php';
-            case 'Amazon':
-                return $authUrl . 'amazon.php';
             case 'Zalo':
-                return $authUrl . 'zalo.php';
+                return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
+        }
+        if ($type === 'Live') {
+            return $authUrl . $param;
         }
 
         return $authUrl . ($param ? (strpos($authUrl, '?') ? '&' : '?') . $param : '');
