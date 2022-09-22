@@ -1,9 +1,23 @@
 <?php
-/*!
-* HybridAuth
-* http://hybridauth.sourceforge.net | https://github.com/hybridauth/hybridauth
-*  (c) 2009-2015 HybridAuth authors | hybridauth.sourceforge.net/licenses.html
-*/
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category  Mageplaza
+ * @package   Mageplaza_SocialLogin
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
+ */
 
 namespace Mageplaza\SocialLogin\Model\Providers;
 
@@ -40,8 +54,14 @@ class Vkontakte extends Hybrid_Provider_Model_OAuth2
      */
     protected $accessTokenUrl = 'https://oauth.vk.com/token';
 
+    /**
+     * @var string
+     */
     public $version = '5.107';
 
+    /**
+     * @var array
+     */
     public $fields = [
         'identifier'  => 'id',
         'firstName'   => 'first_name',

@@ -37,9 +37,10 @@ class Callback extends AbstractSocial
 {
     /**
      * @return ResponseInterface|Raw|ResultInterface|Callback|void
+     *
+     * @throws FailureToSendException
      * @throws InputException
      * @throws LocalizedException
-     * @throws FailureToSendException
      */
     public function execute()
     {

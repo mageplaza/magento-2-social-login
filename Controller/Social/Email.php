@@ -21,7 +21,6 @@
 
 namespace Mageplaza\SocialLogin\Controller\Social;
 
-use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
@@ -179,10 +178,7 @@ class Email extends AbstractSocial
         if ($checkCustomer->getId()) {
             $session                     = $this->session;
             $customerRepositoryInterface = $this->_customerRepositoryInterface;
-            $customerId                  = $customerRepositoryInterface->get(
-                $userProfile->email,
-                $websiteId = null
-            )->getId();
+            $customerId                  = $customerRepositoryInterface->get($userProfile->email)->getId();
             $customer                    = $customerRepositoryInterface->getById($customerId);
             $customerRegistry            = $this->_customerRegistry;
             $customerSecure              = $customerRegistry->retrieveSecureData($customerId);

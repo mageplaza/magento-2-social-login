@@ -39,7 +39,6 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\AlreadyExistsException;
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\InputMismatchException;
@@ -126,9 +125,10 @@ class Social extends AbstractModel
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
      * @param User $userModel
      * @param DateTime $dateTime
+     * @param HybridAuthSession $hybridAuthSession
+     * @param RequestInterface $request
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
-     * @param HybridAuthSession $hybridAuthSession
      * @param array $data
      */
     public function __construct(
@@ -173,6 +173,7 @@ class Social extends AbstractModel
      * @param $type
      *
      * @return Customer
+     * @throws LocalizedException
      */
     public function getCustomerBySocial($identify, $type)
     {
@@ -219,7 +220,6 @@ class Social extends AbstractModel
      * @return Customer
      * @throws InputMismatchException
      * @throws LocalizedException
-     * @throws InputException
      * @throws NoSuchEntityException
      */
     public function createCustomerSocial($data, $store)
@@ -324,6 +324,7 @@ class Social extends AbstractModel
      * @return Profile
      * @throws InvalidArgumentException
      * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @throws UnexpectedValueException
      */
     public function getUserProfile($apiName)

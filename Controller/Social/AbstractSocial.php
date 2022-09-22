@@ -51,27 +51,27 @@ use Mageplaza\SocialLogin\Model\Social;
 abstract class AbstractSocial extends Action
 {
     /**
-     * @type Session
+     * @var Session
      */
     protected $session;
 
     /**
-     * @type StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * @type AccountManagementInterface
+     * @var AccountManagementInterface
      */
     protected $accountManager;
 
     /**
-     * @type SocialHelper
+     * @var SocialHelper
      */
     protected $apiHelper;
 
     /**
-     * @type Social
+     * @var Social
      */
     protected $apiObject;
 
@@ -348,6 +348,8 @@ abstract class AbstractSocial extends Action
     }
 
     /**
+     * @param $type
+     *
      * @return $this|Raw|void
      * @throws FailureToSendException
      * @throws InputException
@@ -386,20 +388,18 @@ abstract class AbstractSocial extends Action
             }
 
             $customer = $this->createCustomerProcess($userProfile, $type);
-        }
-        if ($this->apiHelper->isCheckMode()) {
-            if ($customerData->getData('password_hash') === null) {
-                $this->session->setUserProfile($userProfile);
+        } elseif ($this->apiHelper->isCheckMode() && $customerData->getData('password_hash') === null) {
+            $this->session->setUserProfile($userProfile);
 
-                return $this->_appendJs(
-                    sprintf(
-                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
-                        $type,
-                        $userProfile->firstName,
-                        $userProfile->lastName
-                    )
-                );
-            }
+            return $this->_appendJs(
+                sprintf(
+                    "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                    $type,
+                    $userProfile->firstName,
+                    $userProfile->lastName
+                )
+            );
+
         }
         $this->refresh($customer);
 
