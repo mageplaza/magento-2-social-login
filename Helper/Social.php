@@ -23,13 +23,7 @@ namespace Mageplaza\SocialLogin\Helper;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Helper\Data as HelperData;
-use Mageplaza\SocialLogin\Model\Providers\Amazon;
-use Mageplaza\SocialLogin\Model\Providers\GitHub;
-use Mageplaza\SocialLogin\Model\Providers\Instagram;
-use Mageplaza\SocialLogin\Model\Providers\Vkontakte;
-use Mageplaza\SocialLogin\Model\Providers\Zalo;
 
 /**
  * Class Social
@@ -58,6 +52,14 @@ class Social extends HelperData
         $this->_type = $type;
 
         return $listTypes[$type];
+    }
+
+    /**
+     * @return mixed | string
+     */
+    public function getType()
+    {
+        return $this->_type;
     }
 
     /**
@@ -90,16 +92,11 @@ class Social extends HelperData
     public function getSocialConfig($type)
     {
         $apiData = [
-            'Facebook'  => ['trustForwarded' => false, 'scope' => 'email, public_profile'],
-            'Twitter'   => ['includeEmail' => true],
-            'LinkedIn'  => ['fields' => ['id', 'first-name', 'last-name', 'email-address']],
-            'Vkontakte' => ['wrapper' => ['class' => Vkontakte::class]],
-            'Instagram' => ['wrapper' => ['class' => Instagram::class]],
-            'Github'    => ['wrapper' => ['class' => GitHub::class]],
-            'Amazon'    => ['wrapper' => ['class' => Amazon::class]],
-            'Google'    => ['scope' => 'profile email'],
-            'Yahoo'     => ['scope' => 'profile'],
-            'Zalo'      => ['wrapper' => ['class' => Zalo::class], 'scope' => 'access_profile']
+            'Facebook' => ['trustForwarded' => false, 'scope' => 'email, public_profile'],
+            'Twitter'  => ['includeEmail' => true],
+            'LinkedIn' => ['fields' => ['id', 'first-name', 'last-name', 'email-address']],
+            'Google'   => ['scope' => 'email'],
+            'Yahoo'    => ['scope' => 'profile'],
         ];
 
         if ($type && array_key_exists($type, $apiData)) {
@@ -107,14 +104,6 @@ class Social extends HelperData
         }
 
         return [];
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getAuthenticateParams($type)
-    {
-        return null;
     }
 
     /**
@@ -164,7 +153,7 @@ class Social extends HelperData
     /**
      * @param $type
      *
-     * @return mixed|string
+     * @return string
      * @throws LocalizedException
      */
     public function getAuthUrl($type)
@@ -198,14 +187,9 @@ class Social extends HelperData
      * @return string
      * @throws LocalizedException
      */
-    public function getBaseAuthUrl($area = null)
+    public function getBaseAuthUrl()
     {
         $storeId = $this->getScopeUrl();
-
-        /**
-         * @var Store $store
-         */
-        $store = $this->storeManager->getStore($storeId);
 
         return $this->_getUrl(
             'sociallogin/social/callback',
@@ -246,7 +230,6 @@ class Social extends HelperData
             'yahoo'      => 'Yahoo',
             'foursquare' => 'Foursquare',
             'vkontakte'  => 'Vkontakte',
-            'instagram'  => 'Instagram',
             'github'     => 'Github',
             'live'       => 'Live',
             'zalo'       => 'Zalo'

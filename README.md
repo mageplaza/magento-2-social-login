@@ -1,6 +1,6 @@
 # The Most Popular Magento 2 Social Login Extension
 
-**Magento 2 Social Login extension** is designed for quick login to your Magento store without procesing complex register steps. Let say goodbye the complicated registration process and ignore a lot of unnecessarily required fields. *Magento 2 Social Login extension* is simply and powerful tool to integrate your Magento customer account to Facebook, Google Plus, Twitter, LinkedIn, and Instagram channel. Logging in via the social medias is the great idea to enhance your customer’s satisfaction.
+**Magento 2 Social Login extension** is designed for quick login to your Magento store without procesing complex register steps. Let say goodbye the complicated registration process and ignore a lot of unnecessarily required fields. *Magento 2 Social Login extension* is simply and powerful tool to integrate your Magento customer account to Facebook, Google Plus, Twitter, and LinkedIn channel. Logging in via the social medias is the great idea to enhance your customer’s satisfaction.
 
 ## Highlight features for Social Login
 
@@ -77,7 +77,7 @@ A: Please follow this guide: https://www.mageplaza.com/blog/magento-site-down.ht
 ## 4. Social Login user guide
 
 
-Customers are not patient enough to fill a lot of required information while those are available in social account as Facebook, LinkedIn, Instagram,.... [Mageplaza Social Login extension](https://www.mageplaza.com/magento-2-social-login-extension/), your customers only need to click on the social button and all necessary information is completed automatically.That is the main reason why **Magento 2 Social Login extension** is considered as the great solution for that convenience.
+Customers are not patient enough to fill a lot of required information while those are available in social account as Facebook, LinkedIn,.... [Mageplaza Social Login extension](https://www.mageplaza.com/magento-2-social-login-extension/), your customers only need to click on the social button and all necessary information is completed automatically.That is the main reason why **Magento 2 Social Login extension** is considered as the great solution for that convenience.
 
 Login to Magento Admin and do as the following:
 
@@ -202,28 +202,6 @@ Go to `Admin Panel > Social Login > Settings > LinkedIn`
 ![Magento 2 Login using LinkedIn](https://i.imgur.com/IKERf5H.png)
 
 The login box will display as popup checkbox after clicking on **LinkedIn Sign In** button.
-
-#### Instagram Sign In
-
-
-##### How to configure Instagram Login
-
-
-Go to `Admin Panel > Social Login > Settings > Instagram`
-
-![Magento 2 social login with instagram sign in button](http://i.imgur.com/Pahpc6R.png)
-
-* Choose Yes or No to enable or disable Instagram Sign In button on the front-end with Client ID and Client Secret.
-
-* If customers **login via Instagram**, you can send email notification about their account’s password on your site or not, that depends on setting in **Send Password to Customer** field.
-
-##### Login using Instagram account
-
-![Magento 2 instagram login](https://i.imgur.com/ha2CxQ0.png)
-
-The login box will display as popup checkbox after clicking on **Instagram Sign In** button.
-
-
 
 
 **Mageplaza extensions on Magento Marketplace, Github**

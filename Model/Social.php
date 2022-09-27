@@ -22,7 +22,11 @@
 namespace Mageplaza\SocialLogin\Model;
 
 use Exception;
-use Hybrid_Auth;
+use Hybridauth\Exception\InvalidArgumentException;
+use Hybridauth\Exception\UnexpectedValueException;
+use Hybridauth\Hybridauth as Hybrid_Auth;
+use Hybridauth\Storage\Session as HybridAuthSession;
+use Hybridauth\User\Profile;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
@@ -31,10 +35,12 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\InputMismatchException;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Model\AbstractModel;
@@ -99,6 +105,15 @@ class Social extends AbstractModel
     protected $_dateTime;
 
     /**
+     * @var HybridAuthSession
+     */
+    protected $_hybridAuthSession;
+    /**
+     * @var RequestInterface
+     */
+    protected $_request;
+
+    /**
      * Social constructor.
      *
      * @param Context $context
@@ -109,9 +124,11 @@ class Social extends AbstractModel
      * @param StoreManagerInterface $storeManager
      * @param \Mageplaza\SocialLogin\Helper\Social $apiHelper
      * @param User $userModel
+     * @param DateTime $dateTime
+     * @param HybridAuthSession $hybridAuthSession
+     * @param RequestInterface $request
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
-     * @param DateTime $dateTime
      * @param array $data
      */
     public function __construct(
@@ -124,6 +141,8 @@ class Social extends AbstractModel
         \Mageplaza\SocialLogin\Helper\Social $apiHelper,
         User $userModel,
         DateTime $dateTime,
+        HybridAuthSession $hybridAuthSession,
+        RequestInterface $request,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -135,6 +154,8 @@ class Social extends AbstractModel
         $this->apiHelper           = $apiHelper;
         $this->_userModel          = $userModel;
         $this->_dateTime           = $dateTime;
+        $this->_hybridAuthSession  = $hybridAuthSession;
+        $this->_request            = $request;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -152,6 +173,7 @@ class Social extends AbstractModel
      * @param $type
      *
      * @return Customer
+     * @throws LocalizedException
      */
     public function getCustomerBySocial($identify, $type)
     {
@@ -198,8 +220,7 @@ class Social extends AbstractModel
      * @return Customer
      * @throws InputMismatchException
      * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function createCustomerSocial($data, $store)
     {
@@ -299,32 +320,31 @@ class Social extends AbstractModel
 
     /**
      * @param $apiName
-     * @param null $area
      *
-     * @return mixed
+     * @return Profile
+     * @throws InvalidArgumentException
      * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws UnexpectedValueException
      */
-    public function getUserProfile($apiName, $area = null)
+    public function getUserProfile($apiName)
     {
-        $config = [
-            'base_url'   => $this->apiHelper->getBaseAuthUrl($area),
+        $apiName = strtolower($apiName);
+        $config  = [
+            'callback'   => $this->apiHelper->getAuthUrl($apiName),
             'providers'  => [
                 $apiName => $this->getProviderData($apiName)
             ],
             'debug_mode' => false,
             'debug_file' => BP . '/var/log/social.log'
         ];
-
-        $auth = new Hybrid_Auth($config);
-
+        $auth    = new Hybrid_Auth($config);
         try {
             $adapter     = $auth->authenticate($apiName);
             $userProfile = $adapter->getUserProfile();
         } catch (Exception $e) {
-            $auth->logoutAllProviders();
-            $auth        = new Hybrid_Auth($config);
-            $adapter     = $auth->authenticate($apiName);
-            $userProfile = $adapter->getUserProfile();
+            $auth->disconnectAllAdapters();
+            throw  $e;
         }
 
         return $userProfile;
@@ -343,10 +363,30 @@ class Social extends AbstractModel
                 'id'     => $this->apiHelper->getAppId(),
                 'key'    => $this->apiHelper->getAppId(),
                 'secret' => $this->apiHelper->getAppSecret()
-            ]
+            ],
+            'adapter' => $this->getAdapter($apiName)
         ];
 
         return array_merge($data, $this->apiHelper->getSocialConfig($apiName));
+    }
+
+    /**
+     * @param $type
+     *
+     * @return string
+     */
+    protected function getAdapter($type)
+    {
+        $adapters = [
+            'zalo'      => 'Zalo',
+            'vkontakte' => 'Vkontakte',
+            'live'      => 'MicrosoftGraph'
+        ];
+        if (isset($adapters[$type])) {
+            return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
+        }
+
+        return null;
     }
 
     /**
@@ -422,5 +462,30 @@ class Social extends AbstractModel
         $social->addData(['status' => $status])->save();
 
         return $this;
+    }
+
+    /**
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function getProviderConnected()
+    {
+        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo'];
+        foreach ($providers as $provider) {
+            $state = $this->_hybridAuthSession->get($provider . '.request_token');
+            if (!$state) {
+                $state = $this->_hybridAuthSession->get($provider . '.authorization_state');
+            }
+            $stateRemote = $this->_request->getParam('oauth_token');
+            if (!$stateRemote) {
+                $stateRemote = $this->_request->getParam('state');
+
+            }
+            if ($state === $stateRemote) {
+                return $provider;
+            }
+        }
+
+        throw new  NoSuchEntityException(__("Unknown Provider"));
     }
 }
