@@ -151,6 +151,18 @@ class Social extends HelperData
     }
 
     /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getAppPublicKey($storeId = null)
+    {
+        $appSecret = trim($this->getConfigValue("sociallogin/{$this->_type}/public_key", $storeId));
+
+        return $appSecret;
+    }
+
+    /**
      * @param $type
      *
      * @return string

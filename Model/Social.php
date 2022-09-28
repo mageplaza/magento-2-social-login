@@ -357,12 +357,16 @@ class Social extends AbstractModel
      */
     public function getProviderData($apiName)
     {
+        if (!$this->apiHelper->getType()) {
+            $this->apiHelper->setType($apiName);
+        }
         $data = [
             'enabled' => $this->apiHelper->isEnabled(),
             'keys'    => [
-                'id'     => $this->apiHelper->getAppId(),
-                'key'    => $this->apiHelper->getAppId(),
-                'secret' => $this->apiHelper->getAppSecret()
+                'id'         => $this->apiHelper->getAppId(),
+                'key'        => $this->apiHelper->getAppId(),
+                'secret'     => $this->apiHelper->getAppSecret(),
+                'public_key' => $apiName === 'odnoklassniki' ? $this->apiHelper->getAppPublicKey() : ''
             ],
             'adapter' => $this->getAdapter($apiName)
         ];
@@ -384,6 +388,13 @@ class Social extends AbstractModel
         ];
         if (isset($adapters[$type])) {
             return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
+        }
+        $adaptersPro = [
+            'pinterest'     => 'Pinterest',
+            'odnoklassniki' => 'Odnoklassniki'
+        ];
+        if (isset($adaptersPro[$type])) {
+            return 'Mageplaza\SocialLoginPro\Model\Providers' . "\\" . $adaptersPro[$type];
         }
 
         return null;
@@ -470,7 +481,7 @@ class Social extends AbstractModel
      */
     public function getProviderConnected()
     {
-        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo'];
+        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest'];
         foreach ($providers as $provider) {
             $state = $this->_hybridAuthSession->get($provider . '.request_token');
             if (!$state) {
