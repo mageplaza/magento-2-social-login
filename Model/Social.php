@@ -391,7 +391,8 @@ class Social extends AbstractModel
         }
         $adaptersPro = [
             'pinterest'     => 'Pinterest',
-            'odnoklassniki' => 'Odnoklassniki'
+            'odnoklassniki' => 'Odnoklassniki',
+            'mailru'        => 'Mailru'
         ];
         if (isset($adaptersPro[$type])) {
             return 'Mageplaza\SocialLoginPro\Model\Providers' . "\\" . $adaptersPro[$type];
