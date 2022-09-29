@@ -365,7 +365,7 @@ class Social extends AbstractModel
             'keys'    => [
                 'id'         => $this->apiHelper->getAppId(),
                 'key'        => $this->apiHelper->getAppId(),
-                'secret'     => $this->apiHelper->getAppSecret(),
+                'secret'     => $apiName !== 'steam' ? $this->apiHelper->getAppSecret() : '',
                 'public_key' => $apiName === 'odnoklassniki' ? $this->apiHelper->getAppPublicKey() : ''
             ],
             'adapter' => $this->getAdapter($apiName)
