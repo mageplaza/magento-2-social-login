@@ -168,7 +168,8 @@ abstract class AbstractSocial extends Action
                 'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
                 'identifier' => $userProfile->identifier,
                 'type'       => $type,
-                'password'   => isset($userProfile->password) ? $userProfile->password : null
+                'password'   => isset($userProfile->password) ? $userProfile->password :
+                    $this->getRequest()->getParam('password')
             ],
             $this->getUserData($userProfile)
         );
