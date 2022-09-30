@@ -21,7 +21,12 @@
 
 namespace Mageplaza\SocialLogin\Controller\Social;
 
-use Hybrid_Endpoint;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Raw;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 
 /**
  * Class Callback
@@ -31,15 +36,21 @@ use Hybrid_Endpoint;
 class Callback extends AbstractSocial
 {
     /**
-     * @inheritdoc
+     * @return ResponseInterface|Raw|ResultInterface|Callback|void
+     *
+     * @throws FailureToSendException
+     * @throws InputException
+     * @throws LocalizedException
      */
     public function execute()
     {
         $param = $this->getRequest()->getParams();
-
         if (isset($param['live.php'])) {
-            $request = array_merge($param, ['hauth_done' => 'Live']);
+            $param = array_merge($param, ['hauth_done' => 'Live']);
         }
+
+        $type = $param['hauth_done'] ?? '';
+
         if ($this->checkRequest('hauth_start', false)
             && (($this->checkRequest('error_reason', 'user_denied')
                     && $this->checkRequest('error', 'access_denied')
@@ -49,27 +60,7 @@ class Callback extends AbstractSocial
         ) {
             return $this->_appendJs(sprintf('<script>window.close();</script>'));
         }
-        if (isset($request)) {
-            Hybrid_Endpoint::process($request);
-        }
 
-        Hybrid_Endpoint::process();
-    }
-
-    /**
-     * @param $key
-     * @param null $value
-     *
-     * @return bool|mixed
-     */
-    public function checkRequest($key, $value = null)
-    {
-        $param = $this->getRequest()->getParam($key, false);
-
-        if ($value) {
-            return $param === $value;
-        }
-
-        return $param;
+        return $this->login($type);
     }
 }

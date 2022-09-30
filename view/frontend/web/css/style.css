@@ -1010,49 +1010,6 @@
     content: ""
 }
 
-.btn-instagram {
-    color: #fff;
-    background-color: #3f729b;
-    border-color: rgba(0, 0, 0, 0.2)
-}
-
-.btn-instagram:focus, .btn-instagram.focus {
-    color: #fff;
-    background-color: #305777;
-    border-color: rgba(0, 0, 0, 0.2)
-}
-
-.btn-instagram:hover {
-    color: #fff;
-    background-color: #305777;
-    border-color: rgba(0, 0, 0, 0.2)
-}
-
-.btn-instagram:active, .btn-instagram.active, .open > .dropdown-toggle.btn-instagram {
-    color: #fff;
-    background-color: #305777;
-    border-color: rgba(0, 0, 0, 0.2)
-}
-
-.btn-instagram:active:hover, .btn-instagram.active:hover, .open > .dropdown-toggle.btn-instagram:hover, .btn-instagram:active:focus, .btn-instagram.active:focus, .open > .dropdown-toggle.btn-instagram:focus, .btn-instagram:active.focus, .btn-instagram.active.focus, .open > .dropdown-toggle.btn-instagram.focus {
-    color: #fff;
-    background-color: #26455d;
-    border-color: rgba(0, 0, 0, 0.2)
-}
-
-.btn-instagram:active, .btn-instagram.active, .open > .dropdown-toggle.btn-instagram {
-    background-image: none
-}
-
-.btn-instagram.disabled:hover, .btn-instagram[disabled]:hover, fieldset[disabled] .btn-instagram:hover, .btn-instagram.disabled:focus, .btn-instagram[disabled]:focus, fieldset[disabled] .btn-instagram:focus, .btn-instagram.disabled.focus, .btn-instagram[disabled].focus, fieldset[disabled] .btn-instagram.focus {
-    background-color: #3f729b;
-    border-color: rgba(0, 0, 0, 0.2)
-}
-
-.btn-instagram .badge {
-    color: #3f729b;
-    background-color: #fff
-}
 
 .btn-linkedin {
     color: #fff;

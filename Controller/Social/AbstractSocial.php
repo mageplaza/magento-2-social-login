@@ -51,27 +51,27 @@ use Mageplaza\SocialLogin\Model\Social;
 abstract class AbstractSocial extends Action
 {
     /**
-     * @type Session
+     * @var Session
      */
     protected $session;
 
     /**
-     * @type StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * @type AccountManagementInterface
+     * @var AccountManagementInterface
      */
     protected $accountManager;
 
     /**
-     * @type SocialHelper
+     * @var SocialHelper
      */
     protected $apiHelper;
 
     /**
-     * @type Social
+     * @var Social
      */
     protected $apiObject;
 
@@ -159,7 +159,7 @@ abstract class AbstractSocial extends Action
     {
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
         if (strtolower($type) === 'steam') {
-            $userProfile->identifier = trim($userProfile->identifier,"https://steamcommunity.com/openid/id/");
+            $userProfile->identifier = trim($userProfile->identifier, "https://steamcommunity.com/openid/id/");
         }
         $user = array_merge(
             [
@@ -168,7 +168,8 @@ abstract class AbstractSocial extends Action
                 'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
                 'identifier' => $userProfile->identifier,
                 'type'       => $type,
-                'password'   => isset($userProfile->password) ? $userProfile->password : null
+                'password'   => isset($userProfile->password) ? $userProfile->password :
+                    $this->getRequest()->getParam('password')
             ],
             $this->getUserData($userProfile)
         );
@@ -345,5 +346,121 @@ abstract class AbstractSocial extends Action
         }
 
         return $this->cookieMetadataFactory;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return $this|Raw|void
+     * @throws FailureToSendException
+     * @throws InputException
+     * @throws LocalizedException
+     */
+    public function login($type)
+    {
+        try {
+            if (!$type) {
+                $type = $this->apiObject->getProviderConnected();
+            }
+            $userProfile = $this->apiObject->getUserProfile($type);
+            if (!$userProfile->identifier) {
+                return $this->emailRedirect($type);
+            }
+        } catch (Exception $e) {
+            $this->setBodyResponse($e->getMessage());
+
+            return;
+        }
+
+        $customer     = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+        $customerData = $this->customerModel->load($customer->getId());
+
+        if (!$customer->getId()) {
+            $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
+
+            if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
+                $this->session->setUserProfile($userProfile);
+
+                return $this->_appendJs(
+                    sprintf(
+                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        $type,
+                        $userProfile->firstName,
+                        $userProfile->lastName
+                    )
+                );
+            }
+
+            $customer = $this->createCustomerProcess($userProfile, $type);
+        } elseif ($this->apiHelper->isCheckMode() && $customerData->getData('password_hash') === null) {
+            $this->session->setUserProfile($userProfile);
+
+            return $this->_appendJs(
+                sprintf(
+                    "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                    $type,
+                    $userProfile->firstName,
+                    $userProfile->lastName
+                )
+            );
+
+        }
+        $this->refresh($customer);
+
+        return $this->_appendJs();
+    }
+
+    /**
+     * @param $key
+     * @param null $value
+     *
+     * @return bool|mixed
+     */
+    public function checkRequest($key, $value = null)
+    {
+        $param = $this->getRequest()->getParam($key, false);
+
+        if ($value) {
+            return $param === $value;
+        }
+
+        return $param;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkCustomerLogin()
+    {
+        return true;
+    }
+
+    /**
+     * @param $message
+     */
+    protected function setBodyResponse($message)
+    {
+        $content = '<html><head></head><body>';
+        $content .= '<div class="message message-error">' . __('Ooophs, we got an error: %1', $message) . '</div>';
+        $content .= <<<Style
+<style type="text/css">
+    .message{
+        background: #fffbbb;
+        border: none;
+        border-radius: 0;
+        color: #333333;
+        font-size: 1.4rem;
+        margin: 0 0 10px;
+        padding: 1.8rem 4rem 1.8rem 1.8rem;
+        position: relative;
+        text-shadow: none;
+    }
+    .message-error{
+        background:#ffcccc;
+    }
+</style>
+Style;
+        $content .= '</body></html>';
+        $this->getResponse()->setBody($content);
     }
 }
