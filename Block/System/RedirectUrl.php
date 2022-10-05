@@ -66,7 +66,10 @@ class RedirectUrl extends FormField
     {
         $elementId   = explode('_', $element->getHtmlId());
         $redirectUrl = $this->socialHelper->getAuthUrl($elementId[1]);
-        $html        = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
+        if ($elementId[2] === 'delete') {
+            $redirectUrl = $this->socialHelper->getDeleteDataUrl($elementId[1]);
+        }
+        $html = '<input style="opacity:1;" readonly id="' . $element->getHtmlId() . '" class="input-text admin__control-text" value="' . $redirectUrl . '" onclick="this.select()" type="text">';
 
         return $html;
     }
