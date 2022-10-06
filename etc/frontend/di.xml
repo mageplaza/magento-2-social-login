@@ -24,4 +24,7 @@
     <type name="Magento\Checkout\CustomerData\Cart">
         <plugin name="social_login_add_data" type="Mageplaza\SocialLogin\Plugin\CustomerData\Cart"/>
     </type>
+    <type name="Magento\Framework\App\Request\CsrfValidator">
+        <plugin name="social_login_csrf_validator" type="Mageplaza\SocialLogin\Plugin\CsrfValidator"/>
+    </type>
 </config>

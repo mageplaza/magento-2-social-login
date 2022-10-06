@@ -30,16 +30,16 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
 
 /**
- * Class DeleteSocial
+ * Class DataDeletion
  * @package Mageplaza\SocialLogin\Controller\Social
  */
 class DataDeletion extends AbstractSocial
 {
-
     /**
      * @type \Mageplaza\SocialLogin\Helper\Social
      */
@@ -94,7 +94,7 @@ class DataDeletion extends AbstractSocial
                 'url'               => $this->getStore()->getBaseUrl() . "/sociallogin/social/datadeletion/type/facebook?id={$data['algorithm']}",
                 'confirmation_code' => $data['algorithm'],
             ];
-            $response = json_encode($response);
+            $response = AbstractData::jsonEncode($response);
 
             return $this->getResponse()->representJson($response);
         }
@@ -113,13 +113,9 @@ class DataDeletion extends AbstractSocial
         [$encoded_sig, $payload] = explode('.', $signedRequest, 2);
 
         $this->apiHelper->setType('facebook');
-        $secret = $this->apiHelper->getAppSecret(); // Use your app secret here
-
-        // decode the data
-        $sig  = $this->base64UrlDecode($encoded_sig);
-        $data = json_decode($this->base64UrlDecode($payload), true);
-
-        // confirm the signature
+        $secret       = $this->apiHelper->getAppSecret();
+        $sig          = $this->base64UrlDecode($encoded_sig);
+        $data         = json_decode($this->base64UrlDecode($payload), true);
         $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
         if ($sig !== $expected_sig) {
             return null;
