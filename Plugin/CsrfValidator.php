@@ -23,7 +23,6 @@ namespace Mageplaza\SocialLogin\Plugin;
 
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\RequestInterface;
-use Mageplaza\SocialLogin\Helper\Data as HelperData;
 
 /**
  * Class CsrfValidation
@@ -31,25 +30,14 @@ use Mageplaza\SocialLogin\Helper\Data as HelperData;
  */
 class CsrfValidator
 {
-    /**
-     * @var HelperData
-     */
-    protected $_helperData;
-
-    /**
-     * Cart constructor.
-     *
-     * @param HelperData $helperData
-     */
-    public function __construct(HelperData $helperData)
-    {
-        $this->_helperData = $helperData;
-    }
 
     /**
      * @param \Magento\Framework\App\Request\CsrfValidator $subject
+     * @param callable $proceed
      * @param RequestInterface $request
      * @param ActionInterface $action
+     *
+     * @return bool
      */
     public function aroundValidate(
         \Magento\Framework\App\Request\CsrfValidator $subject,
@@ -61,6 +49,6 @@ class CsrfValidator
             return true;
         }
 
-        return $proceed();
+        return $proceed($request, $action);
     }
 }

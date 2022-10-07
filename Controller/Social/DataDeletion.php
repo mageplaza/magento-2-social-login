@@ -21,6 +21,7 @@
 
 namespace Mageplaza\SocialLogin\Controller\Social;
 
+use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Customer;
@@ -29,8 +30,9 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\View\Result\PageFactory;
 use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
 
@@ -40,11 +42,30 @@ use Mageplaza\SocialLogin\Model\Social;
  */
 class DataDeletion extends AbstractSocial
 {
+
     /**
-     * @type \Mageplaza\SocialLogin\Helper\Social
+     * @type PageFactory
+     */
+    protected $resultPageFactory;
+
+    /**
+     * @type SocialHelper
      */
     protected $apiHelper;
 
+    /**
+     * DataDeletion constructor.
+     *
+     * @param Context $context
+     * @param StoreManagerInterface $storeManager
+     * @param AccountManagementInterface $accountManager
+     * @param SocialHelper $apiHelper
+     * @param Social $apiObject
+     * @param Session $customerSession
+     * @param AccountRedirect $accountRedirect
+     * @param RawFactory $resultRawFactory
+     * @param Customer $customerModel
+     */
     public function __construct(
         Context $context,
         StoreManagerInterface $storeManager,
@@ -54,7 +75,8 @@ class DataDeletion extends AbstractSocial
         Session $customerSession,
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
-        Customer $customerModel
+        Customer $customerModel,
+        PageFactory $resultPageFactory
     ) {
         parent::__construct(
             $context,
@@ -67,40 +89,50 @@ class DataDeletion extends AbstractSocial
             $resultRawFactory,
             $customerModel
         );
-
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     /**
-     * @return ResponseInterface|ResultInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Zend_Log_Exception
+     * @return ResponseInterface|ResultInterface|void
+     * @throws NoSuchEntityException
      */
     public function execute()
     {
         $param = $this->getRequest()->getParams();
 
-        if (isset($param['type']) && $param['type'] === 'facebook') {
+        $resultRedirect = $this->resultRedirectFactory->create();
+
+        if (isset($param['type']) && $param['type'] === 'facebook' && isset($param['signed_request'])) {
             $signed_request = $param['signed_request'];
             $data           = $this->parseSignedRequest($signed_request);
             if ($data && $data['user_id']) {
                 $this->apiObject->load($data['user_id'], 'social_id');
                 try {
                     $this->apiObject->delete();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     return $this->getResponse()->representJson('');
                 }
             }
+
             $response = [
-                'url'               => $this->getStore()->getBaseUrl() . "/sociallogin/social/datadeletion/type/facebook?id={$data['algorithm']}",
-                'confirmation_code' => $data['algorithm'],
+                'url'               => $this->getStore()->getBaseUrl() . "sociallogin/social/datadeletion/type/facebook?id={$data['user_id']}",
+                'confirmation_code' => $data['user_id'],
             ];
-            $response = AbstractData::jsonEncode($response);
+            $response = json_encode($response, JSON_UNESCAPED_SLASHES);
 
             return $this->getResponse()->representJson($response);
         }
+        if (isset($param['type']) && isset($param['id'])) {
+            $paramsToDelete = [
+                'id'   => $param['id'],
+                'type' => $param['type'],
+            ];
+            $this->_forward('index', 'index', 'cms', $paramsToDelete);
+
+            return;
+        }
 
         return $this->getResponse()->representJson('');
-
     }
 
     /**
@@ -133,4 +165,5 @@ class DataDeletion extends AbstractSocial
     {
         return base64_decode(strtr($input, '-_', '+/'));
     }
+
 }
