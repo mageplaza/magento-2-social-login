@@ -50,19 +50,21 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
     /**
      * {@inheritdoc}
      */
-    protected $authorizeUrl = 'https://oauth.zaloapp.com/v3/permission';
+    protected $authorizeUrl = 'https://oauth.zaloapp.com/v4/permission';
 
     /**
      * {@inheritdoc}
      */
-    protected $accessTokenUrl = 'https://oauth.zaloapp.com/v3/access_token';
+    protected $accessTokenUrl = 'https://oauth.zaloapp.com/v4/access_token';
 
     /**
      * {@inheritdoc}
      */
     protected function getAuthorizeUrl($parameters = [])
     {
-
+        $parameters                             = [
+            'code_challenge' => $this->generatePkceCodes(),
+        ];
         $this->AuthorizeUrlParameters           = array_merge($parameters, $this->AuthorizeUrlParameters);
         $this->AuthorizeUrlParameters['app_id'] = $this->AuthorizeUrlParameters['client_id'];
         unset($this->AuthorizeUrlParameters['client_id']);
@@ -86,8 +88,9 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         $url              = $this->accessTokenUrl;
         $params           = [
             'app_id'     => $this->clientId,
-            'app_secret' => $this->clientSecret,
-            'code'       => $code
+            'secret_key' => $this->clientSecret,
+            'grant_type' => 'authorization_code',
+            'code'       => $code,
         ];
         $urlEncodedParams = http_build_query($params, '', '&');
         $url              = $url . (strpos($url, '?') ? '&' : '?') . $urlEncodedParams;
@@ -103,7 +106,12 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, []);
+        $header = [
+            "secret_key: {$this->clientSecret}",
+            "Content-Type: application/x-www-form-urlencoded",
+        ];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_POST, true);
         $response = curl_exec($ch);
         curl_close($ch);
 
@@ -157,5 +165,34 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         $userProfile->displayName = $data->get('name');
 
         return $userProfile;
+    }
+
+    /**
+     * @param $text
+     *
+     * @return string
+     */
+    public function base64UrlEncode($text)
+    {
+        $base64    = base64_encode($text);
+        $base64    = trim($base64, "=");
+        $base64url = strtr($base64, "+/", "-_");
+
+        return $base64url;
+    }
+
+    /**
+     * @return array
+     */
+    public function generatePkceCodes()
+    {
+        $random         = bin2hex(openssl_random_pseudo_bytes(32));
+        $code_verifier  = $this->base64UrlEncode(pack('H*', $random));
+        $code_challenge = $this->base64UrlEncode(pack('H*', hash('sha256', $code_verifier)));
+
+        return [
+            "verifier"  => $code_verifier,
+            "challenge" => $code_challenge,
+        ];
     }
 }
