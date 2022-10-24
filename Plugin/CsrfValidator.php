@@ -30,7 +30,6 @@ use Magento\Framework\App\RequestInterface;
  */
 class CsrfValidator
 {
-
     /**
      * @param \Magento\Framework\App\Request\CsrfValidator $subject
      * @param callable $proceed

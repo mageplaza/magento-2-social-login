@@ -98,8 +98,7 @@ class DataDeletion extends AbstractSocial
      */
     public function execute()
     {
-        $param = $this->getRequest()->getParams();
-
+        $param          = $this->getRequest()->getParams();
         $resultRedirect = $this->resultRedirectFactory->create();
 
         if (isset($param['type']) && $param['type'] === 'facebook' && isset($param['signed_request'])) {
@@ -113,7 +112,6 @@ class DataDeletion extends AbstractSocial
                     return $this->getResponse()->representJson('');
                 }
             }
-
             $response = [
                 'url'               => $this->getStore()->getBaseUrl() . "sociallogin/social/datadeletion/type/facebook?id={$data['user_id']}",
                 'confirmation_code' => $data['user_id'],
