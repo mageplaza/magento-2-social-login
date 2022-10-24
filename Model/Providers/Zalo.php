@@ -38,22 +38,22 @@ use RuntimeException;
 class Zalo extends Hybrid_Provider_Model_OAuth2
 {
     /**
-     * {@inheritdoc}
+     *  string
      */
     protected $scope = 'email';
 
     /**
-     * {@inheritdoc}
+     * string
      */
     protected $apiBaseUrl = 'https://oauth.zaloapp.com';
 
     /**
-     * {@inheritdoc}
+     * string
      */
     protected $authorizeUrl = 'https://oauth.zaloapp.com/v4/permission';
 
     /**
-     * {@inheritdoc}
+     * string
      */
     protected $accessTokenUrl = 'https://oauth.zaloapp.com/v4/access_token';
 
