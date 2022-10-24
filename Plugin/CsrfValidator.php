@@ -25,7 +25,7 @@ use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\RequestInterface;
 
 /**
- * Class CsrfValidation
+ * Class CsrfValidator
  * @package Mageplaza\SocialLogin\Plugin
  */
 class CsrfValidator

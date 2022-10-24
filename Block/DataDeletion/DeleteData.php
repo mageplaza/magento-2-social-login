@@ -38,6 +38,7 @@ class DeleteData extends Template
      * @type DataHelper
      */
     protected $_helper;
+
     /**
      * @var SocialHelper
      */
@@ -48,6 +49,7 @@ class DeleteData extends Template
      *
      * @param Context $context
      * @param DataHelper $helper
+     * @param SocialHelper $socialHelper
      * @param array $data
      */
     public function __construct(
@@ -71,7 +73,7 @@ class DeleteData extends Template
     }
 
     /**
-     *
+     * Check can ShowConfirm
      */
     public function isShowConfirm()
     {

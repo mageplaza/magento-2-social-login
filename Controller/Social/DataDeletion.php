@@ -22,19 +22,9 @@
 namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Exception;
-use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Customer\Model\Account\Redirect as AccountRedirect;
-use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\View\Result\PageFactory;
-use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
-use Mageplaza\SocialLogin\Model\Social;
 
 /**
  * Class DataDeletion
@@ -44,62 +34,12 @@ class DataDeletion extends AbstractSocial
 {
 
     /**
-     * @type PageFactory
-     */
-    protected $resultPageFactory;
-
-    /**
-     * @type SocialHelper
-     */
-    protected $apiHelper;
-
-    /**
-     * DataDeletion constructor.
-     *
-     * @param Context $context
-     * @param StoreManagerInterface $storeManager
-     * @param AccountManagementInterface $accountManager
-     * @param SocialHelper $apiHelper
-     * @param Social $apiObject
-     * @param Session $customerSession
-     * @param AccountRedirect $accountRedirect
-     * @param RawFactory $resultRawFactory
-     * @param Customer $customerModel
-     */
-    public function __construct(
-        Context $context,
-        StoreManagerInterface $storeManager,
-        AccountManagementInterface $accountManager,
-        SocialHelper $apiHelper,
-        Social $apiObject,
-        Session $customerSession,
-        AccountRedirect $accountRedirect,
-        RawFactory $resultRawFactory,
-        Customer $customerModel,
-        PageFactory $resultPageFactory
-    ) {
-        parent::__construct(
-            $context,
-            $storeManager,
-            $accountManager,
-            $apiHelper,
-            $apiObject,
-            $customerSession,
-            $accountRedirect,
-            $resultRawFactory,
-            $customerModel
-        );
-        $this->resultPageFactory = $resultPageFactory;
-    }
-
-    /**
      * @return ResponseInterface|ResultInterface|void
      * @throws NoSuchEntityException
      */
     public function execute()
     {
-        $param          = $this->getRequest()->getParams();
-        $resultRedirect = $this->resultRedirectFactory->create();
+        $param = $this->getRequest()->getParams();
 
         if (isset($param['type']) && $param['type'] === 'facebook' && isset($param['signed_request'])) {
             $signed_request = $param['signed_request'];

@@ -26,7 +26,7 @@ if ($block->isShowConfirm()): ?>
     </div>
     <script type="text/javascript">
         require(['jquery', 'Magento_Ui/js/modal/modal'], function ($, modal) {
-                var storeName = '<?= $block->getStoreName(); ?>';
+                var storeName = '<?= /** @noEscape  */ $block->getStoreName(); ?>';
                 var options   = {
                     type: 'popup',
                     responsive: true,
@@ -40,7 +40,7 @@ if ($block->isShowConfirm()): ?>
                         }
                     }]
                 };
-                var popup     = modal(options, $('#popup-modal'));
+                modal(options, $('#popup-modal'));
                 $("#popup-modal").modal("openModal");
             }
         );
