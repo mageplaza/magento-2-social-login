@@ -196,6 +196,20 @@ class Social extends HelperData
     }
 
     /**
+     * @param $type
+     *
+     * @return string
+     * @throws LocalizedException
+     */
+    public function getDeleteDataUrl($type)
+    {
+        $authUrl = $this->getBaseDelete();
+        $type    = $this->setType($type);
+
+        return $authUrl . 'type/' . strtolower($type);
+    }
+
+    /**
      * @return string
      * @throws LocalizedException
      */
@@ -208,7 +222,25 @@ class Social extends HelperData
             [
                 '_nosid'  => true,
                 '_scope'  => $storeId,
-                '_secure' => true
+                '_secure' => true,
+            ]
+        );
+    }
+
+    /**
+     * @return string
+     * @throws LocalizedException
+     */
+    public function getBaseDelete()
+    {
+        $storeId = $this->getScopeUrl();
+
+        return $this->_getUrl(
+            'sociallogin/social/datadeletion',
+            [
+                '_nosid'  => true,
+                '_scope'  => $storeId,
+                '_secure' => true,
             ]
         );
     }
@@ -244,7 +276,7 @@ class Social extends HelperData
             'vkontakte'  => 'Vkontakte',
             'github'     => 'Github',
             'live'       => 'Live',
-            'zalo'       => 'Zalo'
+            'zalo'       => 'Zalo',
         ];
     }
 }
