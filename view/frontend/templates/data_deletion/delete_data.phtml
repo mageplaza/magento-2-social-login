@@ -1,0 +1,48 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<?php /** @var \Mageplaza\SocialLogin\Block\DataDeletion\DeleteData $block */
+if ($block->isShowConfirm()): ?>
+    <div id="popup-modal" style="display:none;">
+        <h3> <?= __("Your data in our website has been deleted"); ?></h3>
+    </div>
+    <script type="text/javascript">
+        require(['jquery', 'Magento_Ui/js/modal/modal'], function ($, modal) {
+                var storeName = '<?= /** @noEscape  */ $block->getStoreName(); ?>';
+                var options   = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    title: 'Confirm Delete Data on ' + storeName,
+                    buttons: [{
+                        text: $.mage.__('Ok'),
+                        class: '',
+                        click: function () {
+                            this.closeModal();
+                        }
+                    }]
+                };
+                modal(options, $('#popup-modal'));
+                $("#popup-modal").modal("openModal");
+            }
+        );
+    </script>
+<?php endif; ?>
