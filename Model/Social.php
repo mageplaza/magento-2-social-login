@@ -288,7 +288,7 @@ class Social extends AbstractModel
      *
      * @return EmailNotificationInterface
      */
-    private function getEmailNotification()
+    protected function getEmailNotification()
     {
         return ObjectManager::getInstance()->get(EmailNotificationInterface::class);
     }
