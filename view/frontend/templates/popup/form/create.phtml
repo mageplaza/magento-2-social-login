@@ -46,8 +46,8 @@
                             <input type="checkbox" class="checkbox" name="is_subscribed"
                                    title="<?= __('Sign Up for Newsletter') ?>" value="1"
                                    id="is_subscribed"<?php if ($block->getFormData()->getIsSubscribed()):
-                                        ?> checked="checked"<?php
-                                                     endif; ?> />
+                                ?> checked="checked"<?php
+                            endif; ?> />
                             <label for="is_subscribed"
                                    class="label"><span><?= __('Sign Up for Newsletter') ?></span></label>
                         </div>
@@ -266,4 +266,3 @@
             <?php endif; ?>
         </div>
     </div>
-</div>

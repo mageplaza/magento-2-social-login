@@ -86,7 +86,6 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
             $customerModel
         );
         $this->_logger = $logger;
-
     }
 
     /**

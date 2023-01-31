@@ -2,14 +2,14 @@
   "name": "mageplaza/magento-2-social-login",
   "description": "Magento 2 Social Login extension is designed for quick login to your Magento 2 store without procesing complex register steps",
   "require": {
-    "mageplaza/module-core": "^1.5.0",
+    "mageplaza/module-core": "^1.5.1",
     "hybridauth/hybridauth": "^3.8.2"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
   },
   "type": "magento2-module",
-  "version": "4.1.7",
+  "version": "4.1.8",
   "license": "proprietary",
   "authors": [
     {
