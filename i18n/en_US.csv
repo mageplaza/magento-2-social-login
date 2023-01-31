@@ -49,6 +49,7 @@ None,None
 "Customer Authentication Popup","Customer Authentication Popup"
 "Always Require","Always Require"
 "If social account does not provide E-mail.","If social account does not provide E-mail."
+"Your data in our website has been deleted","Your data in our website has been deleted"
 "Login By %1","Login By %1"
 "Sign in with %1","Sign in with %1"
 "Sign In","Sign In"
@@ -80,7 +81,9 @@ Submit,Submit
 "Please complete your information below to login.","Please complete your information below to login."
 "Forgot Password","Forgot Password"
 "Please enter your email address below to receive a password reset link.","Please enter your email address below to receive a password reset link."
+Ok,Ok
 "Could not authenticate. Please try again later","Could not authenticate. Please try again later"
+"Proceed to Checkout","Proceed to Checkout"
 "Social Login","Social Login"
 General,General
 Enable,Enable
@@ -110,6 +113,7 @@ Facebook,Facebook
 "Facebook App ID","Facebook App ID"
 "Facebook App Secret","Facebook App Secret"
 "Valid OAuth redirect URIs","Valid OAuth redirect URIs"
+"Data Deletion Url","Data Deletion Url"
 "Sort Order","Sort Order"
 Google,Google
 "Create app <a href=""https://code.google.com/apis/console/"" target=""_bank"">here</a>","Create app <a href=""https://code.google.com/apis/console/"" target=""_bank"">here</a>"
