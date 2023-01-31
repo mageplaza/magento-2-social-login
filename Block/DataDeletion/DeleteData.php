@@ -101,5 +101,4 @@ class DeleteData extends Template
             return '';
         }
     }
-
 }
