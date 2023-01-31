@@ -46,8 +46,8 @@
                             <input type="checkbox" class="checkbox" name="is_subscribed"
                                    title="<?= __('Sign Up for Newsletter') ?>" value="1"
                                    id="is_subscribed"<?php if ($block->getFormData()->getIsSubscribed()):
-                                        ?> checked="checked"<?php
-                                                     endif; ?> />
+                                ?> checked="checked"<?php
+                            endif; ?> />
                             <label for="is_subscribed"
                                    class="label"><span><?= __('Sign Up for Newsletter') ?></span></label>
                         </div>
@@ -97,7 +97,7 @@
                                 <input type="text" name="company" id="company"
                                        value="<?= $block->escapeHtml($block->getFormData()->getCompany()) ?>"
                                        title="<?= __('Company') ?>"
-                                       class="input-text <?= $block->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('company') ?>"/>
+                                       class="input-text <?= $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('company') ?>"/>
                             </div>
                         </div>
                         <div class="field telephone">
@@ -106,11 +106,11 @@
                                 <input type="text" name="telephone" id="telephone"
                                        value="<?= $block->escapeHtml($block->getFormData()->getTelephone()) ?>"
                                        title="<?= __('Phone Number') ?>"
-                                       class="input-text <?= $block->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('telephone') ?>"/>
+                                       class="input-text <?= $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('telephone') ?>"/>
                             </div>
                         </div>
 
-                        <?php $_streetValidationClass = $block->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('street'); ?>
+                        <?php $_streetValidationClass = $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('street'); ?>
                         <div class="field street required">
                             <label for="street_1" class="label"><span><?= __('Street Address') ?></span></label>
                             <div class="control">
@@ -120,7 +120,7 @@
                                        class="input-text <?= $_streetValidationClass ?>"/>
                                 <div class="nested">
                                     <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
-                                    <?php for ($_i = 2, $_n = $block->helper('Magento\Customer\Helper\Address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                                    <?php for ($_i = 2, $_n = $this->helper('Magento\Customer\Helper\Address')->getStreetLines(); $_i <= $_n; $_i++): ?>
                                         <div class="field additional">
                                             <label class="label"
                                                    for="street_<?= $_i ?>"><span><?= __('Address') ?></span></label>
@@ -143,7 +143,7 @@
                                        value="<?= $block->escapeHtml($block->getFormData()->getCity()) ?>"
                                        id="city"
                                        title="<?= __('City') ?>"
-                                       class="input-text <?= $block->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('city') ?>"/>
+                                       class="input-text <?= $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('city') ?>"/>
                             </div>
                         </div>
                         <div class="field region required">
@@ -156,7 +156,7 @@
                                 <input type="text" id="region" name="region"
                                        value="<?= $block->escapeHtml($block->getRegion()) ?>"
                                        title="<?= __('State/Province') ?>"
-                                       class="input-text <?= $block->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('region') ?>"
+                                       class="input-text <?= $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('region') ?>"
                                        style="display:none;"/>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                                 <input type="text" name="postcode"
                                        value="<?= $block->escapeHtml($block->getFormData()->getPostcode()) ?>"
                                        title="<?= __('Zip/Postal Code') ?>" id="zip"
-                                       class="input-text validate-zip-international <?= $block->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('postcode') ?>">
+                                       class="input-text validate-zip-international <?= $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('postcode') ?>">
                             </div>
                         </div>
                         <div class="field country required">
@@ -255,9 +255,9 @@
                                 "regionInputId": "#region",
                                 "postcodeId": "#zip",
                                 "form": "#form-validate",
-                                "regionJson": <?= $block->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
+                                "regionJson": <?= $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
                                 "defaultRegion": "<?= $block->getFormData()->getRegionId() ?>",
-                                "countriesWithOptionalZip": <?= $block->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
+                                "countriesWithOptionalZip": <?= $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
                             }
                         }
                     }
@@ -266,4 +266,3 @@
             <?php endif; ?>
         </div>
     </div>
-</div>
