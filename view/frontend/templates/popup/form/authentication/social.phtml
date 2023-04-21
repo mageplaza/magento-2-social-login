@@ -55,6 +55,6 @@ use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 <?php $authenConfig = $block->getSocialButtonsConfig(); ?>
 <?php if ($block->canShow(Position::PAGE_AUTHEN) && sizeof($availableSocials)): ?>
     <script>
-        window.socialAuthenticationPopup = <?= Zend_Json::encode($authenConfig); ?>;
+        window.socialAuthenticationPopup = <?= \Laminas\Json\Json::encode($authenConfig); ?>;
     </script>
 <?php endif; ?>
