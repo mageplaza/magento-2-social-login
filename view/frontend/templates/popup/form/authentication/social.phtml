@@ -22,27 +22,42 @@
 use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 
 ?>
-<?php $availableSocials = $block->getAvailableSocials(); ?>
+<?php /** @var \Mageplaza\SocialLogin\Block\Popup\Social $block */
+$availableSocials = $block->getAvailableSocials(); ?>
 <?php if ($block->canShow(Position::PAGE_POPUP) && sizeof($availableSocials)): ?>
-    <div class="block social-login-authentication-channel col-mp mp-5">
-        <div class="block-title">
-            <?= __('Or Sign In With') ?>
-        </div>
-        <div class="block-content">
-            <?php foreach ($availableSocials as $key => $social): ?>
-                <div class="actions-toolbar social-btn <?= $key ?>-login">
-                    <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
-                       data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'>
-                        <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
-                        <?= __('Sign in with %1', $social['label']) ?>
-                    </a>
-                </div>
-            <?php endforeach; ?>
+    <div id="mp-popup-social-content" style="display: none">
+        <div class="block social-login-authentication-channel col-mp mp-5">
+            <div class="block-title">
+                <?= __('Or Sign In With') ?>
+            </div>
+            <div class="block-content">
+                <?php foreach ($availableSocials as $key => $social): ?>
+                    <div class="actions-toolbar social-btn <?= $key ?>-login">
+                        <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
+                           data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1',
+                               $social['label']) ?>"}}'>
+                            <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
+                            <?= __('Sign in with %1', $social['label']) ?>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
+
     <script type="text/javascript">
         require(['jquery'], function ($) {
-            $('#social-login-authentication').removeClass('mp-12').addClass('mp-7');
+            var authenticationSocial = $('#mp-popup-social-content'),
+                authenticationLogin  = $('.social-login.block-container.authentication'),
+                create               = $('.social-login.block-container.create'),
+                forgot               = $('.social-login.block-container.forgot');
+            create.append(authenticationSocial.html());
+            create.find('.mp-12').removeClass('mp-12').addClass('mp-7');
+            authenticationLogin.append(authenticationSocial.html());
+            authenticationLogin.find('.mp-12').removeClass('mp-12').addClass('mp-7');
+            forgot.append(authenticationSocial.html());
+            forgot.find('.mp-12').removeClass('mp-12').addClass('mp-7');
+
         });
     </script>
 <?php endif; ?>
