@@ -24,16 +24,34 @@ namespace Mageplaza\SocialLogin\Controller\Popup;
 use Exception;
 use Magento\Captcha\Helper\Data as CaptchaData;
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface as CustomerRepository;
+use Magento\Customer\Api\Data\AddressInterfaceFactory;
+use Magento\Customer\Api\Data\CustomerInterfaceFactory;
+use Magento\Customer\Api\Data\RegionInterfaceFactory;
 use Magento\Customer\Controller\Account\CreatePost;
+use Magento\Customer\Helper\Address;
+use Magento\Customer\Model\Account\Redirect as AccountRedirect;
+use Magento\Customer\Model\CustomerExtractor;
+use Magento\Customer\Model\Metadata\FormFactory;
+use Magento\Customer\Model\Registration;
+use Magento\Customer\Model\Session;
+use Magento\Customer\Model\Url as CustomerUrl;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\DataObject;
+use Magento\Framework\Escaper;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\StateException;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
+use Magento\Framework\UrlFactory;
+use Magento\Newsletter\Model\SubscriberFactory;
+use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Data;
 
 /**
@@ -69,14 +87,83 @@ class Create extends CreatePost
     private $cookieMetadataFactory;
 
     /**
-     * @return JsonFactory|mixed
+     * Create constructor.
+     *
+     * @param Context $context
+     * @param Session $customerSession
+     * @param ScopeConfigInterface $scopeConfig
+     * @param StoreManagerInterface $storeManager
+     * @param AccountManagementInterface $accountManagement
+     * @param Address $addressHelper
+     * @param UrlFactory $urlFactory
+     * @param FormFactory $formFactory
+     * @param SubscriberFactory $subscriberFactory
+     * @param RegionInterfaceFactory $regionDataFactory
+     * @param AddressInterfaceFactory $addressDataFactory
+     * @param CustomerInterfaceFactory $customerDataFactory
+     * @param CustomerUrl $customerUrl
+     * @param Registration $registration
+     * @param Escaper $escaper
+     * @param CustomerExtractor $customerExtractor
+     * @param DataObjectHelper $dataObjectHelper
+     * @param AccountRedirect $accountRedirect
+     * @param CustomerRepository $customerRepository
+     * @param JsonFactory $jsonFactory
+     * @param Validator|null $formKeyValidator
+     */
+    public function __construct(
+        Context $context,
+        Session $customerSession,
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager,
+        AccountManagementInterface $accountManagement,
+        Address $addressHelper,
+        UrlFactory $urlFactory,
+        FormFactory $formFactory,
+        SubscriberFactory $subscriberFactory,
+        RegionInterfaceFactory $regionDataFactory,
+        AddressInterfaceFactory $addressDataFactory,
+        CustomerInterfaceFactory $customerDataFactory,
+        CustomerUrl $customerUrl,
+        Registration $registration,
+        Escaper $escaper,
+        CustomerExtractor $customerExtractor,
+        DataObjectHelper $dataObjectHelper,
+        AccountRedirect $accountRedirect,
+        CustomerRepository $customerRepository,
+        JsonFactory $jsonFactory,
+        Validator $formKeyValidator = null
+    ) {
+        parent::__construct(
+            $context,
+            $customerSession,
+            $scopeConfig,
+            $storeManager,
+            $accountManagement,
+            $addressHelper,
+            $urlFactory,
+            $formFactory,
+            $subscriberFactory,
+            $regionDataFactory,
+            $addressDataFactory,
+            $customerDataFactory,
+            $customerUrl,
+            $registration,
+            $escaper,
+            $customerExtractor,
+            $dataObjectHelper,
+            $accountRedirect,
+            $customerRepository,
+            $formKeyValidator
+        );
+        $this->resultJsonFactory = $jsonFactory;
+    }
+
+    /**
+     * @return JsonFactory
      */
     protected function getJsonFactory()
     {
-        if (!$this->resultJsonFactory) {
-            $this->resultJsonFactory = ObjectManager::getInstance()->get(JsonFactory::class);
-        }
-
         return $this->resultJsonFactory;
     }
 
@@ -125,9 +212,6 @@ class Create extends CreatePost
      */
     public function execute()
     {
-        /**
-         * @var Json $resultJson
-         */
         $resultJson = $this->getJsonFactory()->create();
         $result     = [
             'success' => false,
