@@ -1737,3 +1737,14 @@
 .modal-popup.popup-authentication {
     z-index: 1000;
 }
+
+#social-login-popup .mfp-close {
+    padding-top: 15px;
+}
+
+#mp-popup-social-content {
+    padding-top: 75px;
+}
+#social-login-popup > div.mp-social-popup.col-mp.mp-7 div.social-login-title {
+    width: 200%;
+}

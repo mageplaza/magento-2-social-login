@@ -66,6 +66,10 @@ class Popup extends Template
      */
     public function isEnabled()
     {
+        if (str_contains($this->_request->getFullActionName(), 'customer_account')) {
+            return false;
+        }
+
         if ($this->helperData->isEnabled() && !$this->customerSession->isLoggedIn() && $this->helperData->getPopupLogin()) {
             return $this->helperData->getPopupLogin();
         }
@@ -165,7 +169,7 @@ class Popup extends Template
      */
     public function isSecure()
     {
-        return (bool)$this->helperData->isSecure();
+        return (bool) $this->helperData->isSecure();
     }
 
     /**
@@ -189,6 +193,6 @@ class Popup extends Template
      */
     public function isCheckMode()
     {
-        return (bool)$this->helperData->isCheckMode();
+        return (bool) $this->helperData->isCheckMode();
     }
 }

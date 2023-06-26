@@ -25,7 +25,7 @@ use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 <?php /** @var \Mageplaza\SocialLogin\Block\Popup\Social $block */
 $availableSocials = $block->getAvailableSocials(); ?>
 <?php if ($block->canShow(Position::PAGE_POPUP) && sizeof($availableSocials)): ?>
-    <div id="mp-popup-social-content" style="padding-top: 15px">
+    <div id="mp-popup-social-content">
         <div class="block social-login-authentication-channel col-mp mp-5">
             <div class="block-title">
                 <?= __('Or Sign In With') ?>
@@ -47,17 +47,6 @@ $availableSocials = $block->getAvailableSocials(); ?>
     <script type="text/javascript">
         require(['jquery'], function ($) {
             $('.mp-social-popup').addClass('col-mp mp-7');
-            // var authenticationSocial = $('#mp-popup-social-content'),
-            //     authenticationLogin      = $('.social-login.block-container.authentication'),
-            //     create                   = $('.social-login.block-container.create'),
-            //     forgot                   = $('.social-login.block-container.forgot');
-            // create.append($(authenticationSocial.clone().html()).addClass('mp-create')[0]);
-            // create.find('.mp-12').removeClass('mp-12').addClass('mp-7');
-            // authenticationLogin.append($(authenticationSocial.clone().html()).addClass('mp-authen')[0]);
-            // authenticationLogin.find('.mp-12').removeClass('mp-12').addClass('mp-7');
-            // forgot.append($(authenticationSocial.clone().html()).addClass('mp-forgot')[0]);
-            // forgot.find('.mp-12').removeClass('mp-12').addClass('mp-7');
-
         });
     </script>
 <?php endif; ?>
