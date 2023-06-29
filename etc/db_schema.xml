@@ -27,7 +27,7 @@
         <column xsi:type="int" name="social_customer_id" padding="11" unsigned="true" nullable="false"
                 comment="Social Customer ID" identity="true" />
         <column xsi:type="text" name="social_id" nullable="false" comment="Social Id"/>
-        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" comment="Customer Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" comment="Customer Id"/>
         <column xsi:type="int" name="is_send_password_email" padding="10" unsigned="true" nullable="false" default="0"
                 comment="Is Send Password Email"/>
         <column xsi:type="text" name="type" nullable="true" comment="Type"/>
