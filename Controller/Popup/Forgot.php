@@ -130,7 +130,7 @@ class Forgot extends Action
             'message' => []
         ];
 
-        if (!$this->checkCaptcha()) {
+        if (!$this->socialHelper->isEnabledGGRecaptcha() && !$this->checkCaptcha()) {
             $result['message'] = __('Incorrect CAPTCHA.');
 
             return $resultJson->setData($result);
