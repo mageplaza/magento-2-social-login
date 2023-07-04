@@ -35,7 +35,7 @@
                     referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_CUSTOMER_ENTITY_ENTITY_ID_CUSTOMER_ENTITY_ENTITY_ID"
                     table="mageplaza_social_customer" column="customer_id" referenceTable="customer_entity"
                     referenceColumn="entity_id" onDelete="CASCADE"/>
-        <index referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_SOCIAL_ID_INDEX" indexType="btree">
+        <index referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_SOCIAL_ID_INDEX" indexType="fulltext">
             <column name="social_id"/>
         </index>
         <index referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_ID_INDEX" indexType="btree">
