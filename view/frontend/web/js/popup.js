@@ -75,7 +75,8 @@ define(
                     popupLogin: false,
                     actionName: '',
                     firstName: '',
-                    lastName: ','
+                    lastName: ',',
+                    popupContent: '#mp-popup-social-content'
                 },
 
                 /**
@@ -101,9 +102,10 @@ define(
                  * Init object will be used
                  */
                 initObject: function () {
-                    this.loginForm  = $(this.options.loginForm);
-                    this.createForm = $(this.options.createForm);
-                    this.forgotForm = $(this.options.forgotForm);
+                    this.loginForm    = $(this.options.loginForm);
+                    this.popupContent = $(this.options.popupContent);
+                    this.createForm   = $(this.options.createForm);
+                    this.forgotForm   = $(this.options.forgotForm);
 
                     this.forgotFormContainer = $(this.options.forgotFormContainer);
                     this.createFormContainer = $(this.options.createFormContainer);
@@ -265,6 +267,7 @@ define(
                     this.forgotFormContainer.hide();
                     this.createFormContainer.hide();
                     this.emailFormContainer.hide();
+                    this.popupContent.show();
                 },
 
                 /**
@@ -300,6 +303,7 @@ define(
                     this.loginFormContainer.hide();
                     this.forgotFormContainer.hide();
                     this.createFormContainer.hide();
+                    this.popupContent.hide();
                 },
 
                 /**
@@ -317,6 +321,7 @@ define(
                     this.forgotFormContainer.hide();
                     this.createFormContainer.show();
                     this.emailFormContainer.hide();
+                    this.popupContent.show();
                 },
 
                 /**
@@ -328,6 +333,7 @@ define(
                     this.forgotFormContainer.show();
                     this.createFormContainer.hide();
                     this.emailFormContainer.hide();
+                    this.popupContent.show();
                 },
 
                 /**
@@ -699,7 +705,7 @@ define(
                                         elConfirm.remove();
                                         elField.remove();
                                     }
-                                    if(fieldName !== 'password') {
+                                    if (fieldName !== 'password') {
                                         elField.remove();
                                     }
                                 } else {

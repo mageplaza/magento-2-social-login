@@ -152,7 +152,7 @@ class Data extends CoreHelper
     /**
      * @param null $storeId
      *
-     * @return mixed
+     * @return bool
      */
     public function isCheckMode($storeId = null)
     {

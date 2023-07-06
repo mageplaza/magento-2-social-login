@@ -36,9 +36,9 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Escaper;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
+use Magento\Framework\Validator\ValidateException;
+use Magento\Framework\Validator\ValidatorChain;
 use Mageplaza\SocialLogin\Helper\Data;
-use Zend_Validate;
-use Zend_Validate_Exception;
 
 /**
  * Class Forgot
@@ -118,14 +118,11 @@ class Forgot extends Action
     }
 
     /**
-     * @return $this|ResponseInterface|ResultInterface
-     * @throws Zend_Validate_Exception
+     * @return ResponseInterface|Json|ResultInterface
+     * @throws ValidateException
      */
     public function execute()
     {
-        /**
-         * @var Json $resultJson
-         */
         $resultJson = $this->resultJsonFactory->create();
 
         $result = [
@@ -133,7 +130,7 @@ class Forgot extends Action
             'message' => []
         ];
 
-        if (!$this->checkCaptcha()) {
+        if (!$this->socialHelper->isEnabledGGRecaptcha() && !$this->checkCaptcha()) {
             $result['message'] = __('Incorrect CAPTCHA.');
 
             return $resultJson->setData($result);
@@ -142,10 +139,10 @@ class Forgot extends Action
         /**
          * @var Redirect $resultRedirect
          */
-        $email = (string)$this->getRequest()->getPost('email');
+        $email = (string) $this->getRequest()->getPost('email');
 
         if ($email) {
-            if (!Zend_Validate::is($email, 'EmailAddress')) {
+            if (!ValidatorChain::is($email, 'EmailAddress')) {
                 $this->session->setForgottenEmail($email);
                 $result['message'][] = __('Please correct the email address.');
             }

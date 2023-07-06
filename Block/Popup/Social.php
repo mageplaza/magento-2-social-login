@@ -114,12 +114,23 @@ class Social extends Template
     public function canShow($position = null)
     {
         $displayConfig = $this->socialHelper->getConfigGeneral('social_display');
-        $displayConfig = explode(',', $displayConfig);
+        $displayConfig = explode(',', $displayConfig ?? '');
 
         if (!$position) {
-            $position = $this->getRequest()->getFullActionName() === 'customer_account_login' ?
-                Position::PAGE_LOGIN :
-                Position::PAGE_CREATE;
+            $controllerName = $this->getRequest()->getFullActionName();
+            switch ($controllerName) {
+                case 'customer_account_login':
+                    $position = Position::PAGE_LOGIN;
+                    break;
+                case 'customer_account_forgotpassword':
+                    $position = Position::PAGE_FORGOT_PASS;
+                    break;
+                case 'customer_account_create':
+                    $position = Position::PAGE_CREATE;
+                    break;
+                default:
+                    return false;
+            }
         }
 
         return in_array($position, $displayConfig);

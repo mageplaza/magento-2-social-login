@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mageplaza_social_customer" resource="default" engine="innodb" comment="Social Customer Table">
+        <column xsi:type="int" name="social_customer_id" padding="11" unsigned="true" nullable="false"
+                comment="Social Customer ID" identity="true" />
+        <column xsi:type="text" name="social_id" nullable="true" comment="Social Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" comment="Customer Id"/>
+        <column xsi:type="int" name="is_send_password_email" padding="10" unsigned="true" nullable="false" default="0"
+                comment="Is Send Password Email"/>
+        <column xsi:type="text" name="type" nullable="true" comment="Type"/>
+        <constraint xsi:type="foreign"
+                    referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_CUSTOMER_ENTITY_ENTITY_ID_CUSTOMER_ENTITY_ENTITY_ID"
+                    table="mageplaza_social_customer" column="customer_id" referenceTable="customer_entity"
+                    referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_SOCIAL_ID_INDEX" indexType="fulltext">
+            <column name="social_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_ID_INDEX" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="MAGEPLAZA_SOCIAL_SOCIAL_CUSTOMER_ID_INDEX" indexType="btree">
+            <column name="social_customer_id"/>
+        </index>
+
+        <!-- Version 1.2.0 -->
+        <column xsi:type="timestamp" name="social_created_at" nullable="true" comment="Social Created At"/>
+        <column xsi:type="int" name="user_id" padding="10" unsigned="true" nullable="true" comment="User Id"/>
+        <column xsi:type="text" name="status" nullable="true" comment="Status"/>
+        <!-- Foreign key -->
+        <constraint xsi:type="foreign" referenceId="MAGEPLAZA_SOCIAL_CUSTOMER_USER_ID_ADMIN_USER_USER_ID"
+                    table="mageplaza_social_customer" column="user_id" referenceTable="admin_user"
+                    referenceColumn="user_id" onDelete="CASCADE"/>
+        <!-- Version 1.2.1 -->
+        <column xsi:type="int" name="website_id" comment="Website Id"/>
+    </table>
+</schema>
+

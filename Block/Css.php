@@ -67,7 +67,12 @@ class Css extends Template
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
             } elseif (in_array(
                 $this->_request->getFullActionName(),
-                ['customer_account_login', 'customer_account_create', 'customer_account_index']
+                [
+                    'customer_account_login',
+                    'customer_account_create',
+                    'customer_account_index',
+                    'customer_account_forgotpassword'
+                ]
             )
             ) {
                 $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
