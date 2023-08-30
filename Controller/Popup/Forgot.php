@@ -38,6 +38,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Validator\ValidateException;
 use Magento\Framework\Validator\ValidatorChain;
+use Magento\Framework\Validator\EmailAddress;
 use Mageplaza\SocialLogin\Helper\Data;
 
 /**
@@ -142,7 +143,7 @@ class Forgot extends Action
         $email = (string) $this->getRequest()->getPost('email');
 
         if ($email) {
-            if (!ValidatorChain::is($email, 'EmailAddress')) {
+            if (!ValidatorChain::is($email, EmailAddress::class)) {
                 $this->session->setForgottenEmail($email);
                 $result['message'][] = __('Please correct the email address.');
             }
