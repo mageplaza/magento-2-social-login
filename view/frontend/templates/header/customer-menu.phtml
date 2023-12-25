@@ -1,0 +1,57 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Customer\Block\Account\Customer;
+use Magento\Framework\Escaper;
+
+/** @var Customer $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+
+<div
+    class="relative inline-block ml-1 sm:ml-3"
+    x-data="{ open: false }"
+    @keyup.escape="open = false"
+>
+    <button
+        type="button"
+        id="customer-menu"
+        class="block hover:text-black"
+        @click="open = !open"
+        @click.outside="open = false"
+        :aria-expanded="open ? 'true' : 'false'"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('My Account')) ?>"
+        aria-haspopup="true"
+    >
+        <?= $heroicons->userHtml('md:h-6 md:w-6', 32, 32, ['aria-hidden' => 'true']); ?>
+    </button>
+    <nav
+        class="
+            absolute right-0 z-20 w-40 py-2 mt-2 -mr-4 px-1 overflow-auto origin-top-right rounded-sm
+            shadow-lg sm:w-48 lg:mt-3 bg-container-lighter
+        "
+        x-cloak
+        x-show="open"
+        aria-labelledby="customer-menu"
+        @click.outside="open = false"
+    >
+        <?php if ($block->customerLoggedIn()): ?>
+            <?= $block->getChildHtml('header.customer.logged.in.links') ?>
+        <?php else: ?>
+            <?= $block->getChildHtml('header.customer.logged.out.links') ?>
+        <?php endif; ?>
+    </nav>
+</div>

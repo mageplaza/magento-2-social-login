@@ -1,0 +1,41 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Block\SortableItem;
+use Magento\Framework\Escaper;
+use Magento\Customer\Model\Account\Redirect;
+
+/** @var SortableItem $block */
+/** @var Escaper $escaper */
+
+$label = $block->getLabel() ? $block->getLabel() : __('Login In');
+$modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
+
+?>
+
+<div>
+
+    <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
+       class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
+       onclick="onClick()"
+       href="#"
+       title="<?= $escaper->escapeHtmlAttr($label) ?>"
+    >
+        <?= $escaper->escapeHtml($label) ?>
+    </a>
+
+</div>
+
+<script type="text/javascript">
+
+    function onClick(e) {
+        openMyDialog();
+    }
+</script>

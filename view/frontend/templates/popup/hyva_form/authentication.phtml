@@ -1,0 +1,274 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Mageplaza\SocialLogin\Block\Form\Login $block */
+?>
+
+<div class="social-login block-container authentication">
+    <div class="social-login-title">
+        <h2 class="login-title"><?= __('Sign In') ?></h2>
+    </div>
+    <div class="block social-login-customer-authentication col-mp mp-12" id="social-login-authentication">
+        <div class="block-title">
+            <span id="block-customer-login-heading" role="heading"
+                  aria-level="2"><?= __('Registered Customers') ?></span>
+        </div>
+        <div class="block-content" aria-labelledby="block-customer-login-heading">
+            <form
+                    class="form-customer-login"
+                    id="social-form-login"
+                    x-data="Object.assign(hyva.formValidation($el), initCustomerLoginForm())"
+                    @submit.prevent="submitForm();"
+            >
+                <?= $block->getBlockHtml('formkey') ?>
+                <fieldset class="fieldset login" data-hasrequired="<?= __('* Required Fields') ?>">
+                    <?= $block->getChildHtml('form_before_login_fields') ?>
+                    <div class="field email required">
+                        <label class="label" for="social_login_email"><span><?= __('Email') ?></span></label>
+                        <div class="control">
+                            <input name="username" id="social_login_email" x-ref="customer-email" type="email"
+                                   class="input-text"
+                                   data-validate='{"required": true}'
+                                   value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()):
+                                ?> autocomplete="off"<?php endif; ?>
+                                   title="<?= __('Email') ?>" Email
+                            >
+                        </div>
+                    </div>
+                    <div class="field password required">
+                        <label for="pass" class="label"><span><?= __('Password') ?></span></label>
+                        <div class="control">
+                            <input name="password" id="social_login_pass" type="password" x-ref="customer-password"
+                                   data-validate='{"required": true}'
+                                   class="input-text"
+                                <?= $block->isAutocompleteDisabled() ? ' autocomplete="off"' : '' ?>
+                                   title="<?= __('Password') ?>"
+                            >
+                        </div>
+                    </div>
+                    <?= $block->getChildHtml('form_additional_info') ?>
+                    <div class="actions-toolbar md:flex-nowrap flex-wrap">
+                        <div class="primary md:w-auto w-full">
+                            <button type="submit" class="action login primary md:w-auto w-full " id="bnt-social-login-authentication">
+                                <span><?= __('Login') ?></span>
+                            </button>
+                        </div>
+                        <div class="ml-2 md:mt-0 mt-2 md:w-auto w-full md:text-left text-center">
+                            <a class="action remind" href="#" onclick="forgotBtn()"><span><?= __('Forgot Your Password?') ?></span></a>
+                        </div>
+                    </div>
+                    <div class="actions-toolbar clear-both ">
+                        <div class="primary md:w-auto md:text-left w-full text-center">
+                            <a class="action create" href="#" onclick="createBtn()"><span><?= __('Create New Account?') ?></span></a>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let socialPopupForm = {
+            "formLoginUrl":"",
+            "forgotFormUrl":""
+        };
+        var element = document.getElementById('social-login-popup');
+        if (element) {
+            var initData = element.getAttribute('data-mage-init');
+            var initObject = JSON.parse(initData);
+            socialPopupForm=initObject.socialPopupForm;
+        }
+
+        function appendLoading(blockSelector) {
+            var block = document.querySelector(blockSelector);
+            if (block) {
+                block.style.position = 'relative';
+                var loadingDiv = document.createElement('div');
+                loadingDiv.className = 'social-login-ajax-loading';
+                block.insertBefore(loadingDiv, block.firstChild);
+            }
+        }
+
+        function removeLoading(blockSelector) {
+            var block = document.querySelector(blockSelector);
+            if (block) {
+                block.style.position = '';
+                var loadingElement = block.querySelector('.' + 'social-login-ajax-loading');
+                if (loadingElement) {
+                    loadingElement.remove();
+                }
+            }
+        }
+
+        function removeMsg(block, messageClass) {
+            var blockSelector = document.querySelector(block);
+            var messagesToRemove = blockSelector.querySelectorAll('.' + messageClass.replace(/ /g, '.'));
+            messagesToRemove.forEach(function(message) {
+                message.remove();
+            });
+        }
+
+        function _appendMessage (block, message, messageClass) {
+
+            var blockSelector  = document.querySelector(block);
+            var currentMessage = null;
+            var messageSection = blockSelector.querySelectorAll("." + messageClass.replace(/ /g, '.'));
+
+            if (messageSection.length === 0) {
+                var divElement       = document.createElement('div');
+                divElement.className = messageClass;
+                blockSelector.insertBefore(divElement, blockSelector.firstChild);
+                currentMessage = blockSelector.firstChild;
+            } else {
+                currentMessage = messageSection[0];
+            }
+
+            var messageDiv         = document.createElement('div');
+            messageDiv.textContent = message;
+            currentMessage.appendChild(messageDiv);
+        }
+
+        function addMsg (block, response) {
+
+            var message      = response.message,
+                messageClass = "";
+            if(response.hasOwnProperty("success")) {
+                messageClass = response.success  ? "message-success success message inline-block" : "message-error error message inline-block";
+            }
+            if(response.hasOwnProperty("errors")) {
+                messageClass = !response.errors  ? "message-success success message inline-block" : "message-error error message inline-block";
+            }
+            if (Array.isArray(message) && message.length > 0) {
+                message.forEach(
+                    function (msg) {
+                        _appendMessage(block, msg, messageClass);
+                    }
+                );
+            } else if (typeof (message) === 'string') {
+                _appendMessage(block, message, messageClass);
+            }
+        }
+
+        function initCustomerLoginForm () {
+            return {
+                errors: 0,
+                hasCaptchaToken: 0,
+                showPassword: false,
+                displayErrorMessage: false,
+                errorMessages: [],
+                setErrorMessages (messages) {
+                    this.errorMessages       = [messages];
+                    this.displayErrorMessage = this.errorMessages.length
+                },
+                submitForm () {
+                    this.validate()
+                    .then(() => {
+                        // do not rename $form, the variable is the expected name in the recaptcha output
+                        const $form = document.querySelector('#social-form-login');
+                        if (this.errors === 0) {
+                            // $form.submit();
+                            removeMsg(".social-login.authentication .social-login-customer-authentication .block-content", "message-success success message");
+                            removeMsg(".social-login.authentication .social-login-customer-authentication .block-content", "message-error error message");
+                            this.dispatchLoginRequest($form);
+                        }
+                    })
+                    .catch((invalid) => {
+                        if (invalid.length > 0) {
+                            invalid[0].focus();
+                        }
+                    });
+                },
+                dispatchLoginRequest: function (form) {
+                    this.isLoading   = true;
+                    const username   = this.$refs['customer-email'].value;
+                    const password   = this.$refs['customer-password'].value;
+                    const formKey    = hyva.getFormKey();
+                    const bodyFields = {
+                        'username': username,
+                        'password': password,
+                        'formKey': formKey
+                    };
+                    appendLoading('.social-login.authentication .social-login-customer-authentication .block-content');
+
+                    fetch(socialPopupForm.formLoginUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(bodyFields)
+                        }
+                    ).then(response => {
+                            return response.json();
+                        }
+                    ).then(data => {
+                        this.isLoading = false;
+                        addMsg(".social-login.authentication .social-login-customer-authentication .block-content", data);
+                        if (data.errors) {
+
+                        } else {
+                            window.location.reload();
+                        }
+                    }).catch(error => {
+
+                    });
+                    removeLoading('.social-login.authentication .social-login-customer-authentication .block-content');
+
+                }
+            }
+        }
+
+        function forgotBtn () {
+            document.querySelector('.social-login.authentication').style.display = 'none';
+            document.querySelector('.social-login.forgot').style.display = 'block';
+            document.querySelector('.social-login.create').style.display = 'none'; // Assuming you want to show the createFormContainer
+            document.querySelector('.social-login.fake-email').style.display = 'none';
+        }
+
+        function createBtn () {
+            document.querySelector('.social-login.authentication').style.display = 'none';
+            document.querySelector('.social-login.forgot').style.display = 'none';
+            document.querySelector('.social-login.create').style.display = 'block'; // Assuming you want to show the createFormContainer
+            document.querySelector('.social-login.fake-email').style.display = 'none';
+        }
+        function showLogin() {
+            document.querySelector('.social-login.authentication').style.display = 'block';
+            document.querySelector('.social-login.forgot').style.display = 'none';
+            document.querySelector('.social-login.create').style.display = 'none'; // Assuming you want to show the createFormContainer
+            document.querySelector('.social-login.fake-email').style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Your code here
+            function showLogin() {
+                document.querySelector('.social-login.authentication').style.display = 'block';
+                document.querySelector('.social-login.forgot').style.display = 'none';
+                document.querySelector('.social-login.create').style.display = 'none';
+                document.querySelector('.social-login.fake-email').style.display = 'none';
+            }
+
+            document.querySelector('#social-form-password-forget .action.back').addEventListener("click", showLogin);
+            document.querySelector('#social-form-create .action.back').addEventListener("click", showLogin);
+        });
+
+    </script>
+</div>
+

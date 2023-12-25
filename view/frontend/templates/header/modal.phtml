@@ -1,0 +1,62 @@
+<?php
+
+/** @var \Mageplaza\SocialLogin\Block\Popup $block */
+
+$modal = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
+    ->createModal()
+    ->addDialogClass('p-3 w-full')
+    ->removeDialogClass('shadow-xl','inline-block','bg-white', 'rounded-lg', 'p-10', 'max-h-screen', 'overflow-auto', 'border border-10', 'border-blue-500')
+    ->withDialogRefName('my-dialog')
+    ->withContent('
+    <div id="popup_test">
+
+    </div>
+    ');
+?>
+
+<div x-data="{
+    ...hyva.modal(),
+    init() {
+        window.openMyDialog = function (event) {
+            this.show('my-dialog', event);
+        }.bind(this);
+        window.hideMyDialog = function (event) {
+            this.hide('my-dialog', event);
+        }.bind(this);
+    }
+}" x-init="init()">
+        <?= $modal ?>
+</div>
+<div id="test" style="display: none">
+    <div id="social-login-popup" data-df="" class="white-popup mfp-with-anim"
+         data-mage-init='{"socialPopupForm": <?= $block->getFormParams() ?>}'>
+        <?= $block->getChildHtml('popup.email') ?>
+        <div class="mp-social-popup col-mp mp-7" style="padding-top: 15px">
+            <?= $block->getChildHtml('popup.authentication') ?>
+            <?= $block->getChildHtml('popup.create') ?>
+            <?= $block->getChildHtml('popup.forgot') ?>
+        </div>
+        <?= $block->getChildHtml('popup.authentication.social') ?>
+        <?= $block->getChildHtml('popup.additional.info') ?>
+    </div>
+    <div style="clear: both"></div>
+</div>
+
+
+<script type="text/javascript">
+    let popup =``;
+    function handleAdd() {
+        let popup_test = document.getElementById("popup_test");
+        let test = document.getElementById("test");
+        test.style.display = 'block';
+        popup_test.append(test);
+        popup_test.onclick;
+        popup_test.addEventListener('click', function(e) {
+           if(e.target === test) {
+               hideMyDialog();
+           }
+        });
+
+    };
+    handleAdd();
+</script>

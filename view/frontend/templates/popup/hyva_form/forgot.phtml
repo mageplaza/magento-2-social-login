@@ -1,0 +1,157 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<div class="social-login block-container forgot" style="display:none">
+    <div class="social-login-title">
+        <h2 class="forgot-pass-title"><?= __('Forgot Password') ?></h2>
+    </div>
+    <div class="block col-mp mp-12">
+        <div class="block-content">
+            <form class="form-password-forget"
+                  x-data="Object.assign(hyva.formValidation($el), initCustomerForgotForm())"
+                  @submit.prevent="submitForm();" id="social-form-password-forget" data-mage-init='{"validation":{}}'>
+                <fieldset class="fieldset" data-hasrequired="<?= __('* Required Fields') ?>">
+                    <div class="field note"><?= __('Please enter your email address below to receive a password reset link.') ?></div>
+                    <div class="field email required">
+                        <label for="email_address" class="label"><span><?= __('Email') ?></span></label>
+                        <div class="control">
+                            <input type="email" name="email" alt="email" id="email_address_forgot" class="input-text"
+                                   value="<?= $block->escapeHtml($block->getEmailValue()) ?>"
+                                   data-validate='{"required": true}'
+                                   x-ref="customer-email-forgot"
+
+                            />
+                        </div>
+                    </div>
+                    <?= $block->getChildHtml('form_additional_info') ?>
+                </fieldset>
+                <div class="actions-toolbar md:flex-nowrap flex-wrap w-full">
+                    <div class="primary md:w-auto w-full">
+                        <button type="submit" id="bnt-social-login-forgot" class="action send primary md:w-auto w-full">
+                            <span><?= __('Submit') ?></span>
+                        </button>
+
+                    </div>
+                    <div class="ml-2 md:mt-0 mt-2 md:w-auto w-full md:text-left text-center">
+                        <a class="action back" href="#"><span><?= __('Back') ?></span></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+
+        let inputCaptcha = document.getElementById("captcha_user_forgotpassword");
+        inputCaptcha.setAttribute("data-validate", '{"required": true}');
+
+        document.addEventListener("DOMContentLoaded", function () {
+            function reloadCaptcha() {
+                let bodyFields = {
+                    formId: "user_forgotpassword"
+                };
+                fetch('<?= "https://m245.net/test1/captcha/refresh/" ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(bodyFields)
+                    }
+                ).then(response => {
+                        return response.json();
+                    }
+                ).then(data => {
+
+
+                    if (data.errors) {
+
+                    } else {
+                        document.querySelector(".captcha-img").src=data.imgSrc;
+                    }
+                })
+            }
+            document.querySelector('.action.reload.captcha-reload').addEventListener("click", reloadCaptcha);
+        });
+        function initCustomerForgotForm () {
+            return {
+                errors: 0,
+                hasCaptchaToken: 0,
+                showPassword: false,
+                displayErrorMessage: false,
+                errorMessages: [],
+                setErrorMessages (messages) {
+                    this.errorMessages       = [messages];
+                    this.displayErrorMessage = this.errorMessages.length
+                },
+                submitForm () {
+                    this.validate()
+                    .then(() => {
+                        // do not rename $form, the variable is the expected name in the recaptcha output
+                        removeMsg(".social-login.forgot .block-content", "message-success success message");
+                        removeMsg(".social-login.forgot .block-content", "message-error error message");
+                        if (this.errors === 0) {
+                            this.dispatchForgotRequest();
+                        }
+                    })
+                    .catch((invalid) => {
+                        if (invalid.length > 0) {
+                            invalid[0].focus();
+                        }
+                    });
+                },
+                dispatchForgotRequest: function () {
+                    appendLoading('.social-login.forgot .block-content');
+
+                    var createForm = document.querySelector('#social-form-password-forget');
+                    var formData = new FormData(createForm);
+                    var parameters = new URLSearchParams(formData).toString();
+
+                    fetch(socialPopupForm.forgotFormUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: parameters
+                        }
+                    ).then(response => {
+                            return response.json();
+                        }
+                    ).then(data => {
+                        addMsg(".social-login.forgot .block-content", data);
+                        if (data.errors) {
+
+                        } else {
+
+
+                        }
+
+                    }).catch(error => {
+
+                    });
+                    removeLoading('.social-login.forgot .block-content')
+                }
+
+            }
+        }
+
+    </script>
+</div>
