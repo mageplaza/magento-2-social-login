@@ -84,12 +84,15 @@
 
         </referenceContainer>
         <referenceBlock name="customer.header.sign.in.link">
-
             <action method="setTemplate">
                 <argument name="template" xsi:type="string">Mageplaza_SocialLogin::header/link/sign-in.phtml</argument>
             </action>
         </referenceBlock>
-
+        <referenceBlock name="customer.header.register.link">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::header/link/register.phtml</argument>
+            </action>
+        </referenceBlock>
         <referenceBlock name="authentication-popup">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">

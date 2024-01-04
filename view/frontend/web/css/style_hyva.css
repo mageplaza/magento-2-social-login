@@ -133,3 +133,38 @@ html {
 #popup_test .captcha-img {
     margin: 0 10px 10px 0;
 }
+
+#popup_test  .mfp-close {
+
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-decoration: none;
+    text-align: center;
+    opacity: 0.65;
+    font-style: normal;
+    font-size: 28px;
+}
+#popup_test button.mfp-close, button.mfp-arrow {
+    overflow: visible;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    display: block;
+    outline: none;
+    z-index: 1046;
+    box-shadow: none;
+}
+#social-login-popup .mfp-close {
+    color: #ffffff;
+    padding-top: 15px;
+}
+#social-login-popup  .mfp-close:hover, .mfp-close:focus {
+    opacity: 1;
+}
+.actions-toolbar.social-btn {
+    border-top: 0px !important;
+}

@@ -1,9 +1,22 @@
 <?php
 /**
- * Hyvä Themes - https://hyva.io
- * Copyright © Hyvä Themes 2020-present. All rights reserved.
- * This product is licensed per Magento install
- * See https://hyva.io/license
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 declare(strict_types=1);
@@ -15,27 +28,44 @@ use Magento\Customer\Model\Account\Redirect;
 /** @var SortableItem $block */
 /** @var Escaper $escaper */
 
-$label = $block->getLabel() ? $block->getLabel() : __('Login In');
+$label          = $block->getLabel() ? $block->getLabel() : __('Login In');
 $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
-
+$helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+$popupLogin = $helperData->getPopupLogin();
 ?>
+<?php
+if ($popupLogin === 'popup_login'): ?>
+    <div>
+        <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
+           class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
+           onclick="onClick()"
+           href="#"
+           title="<?= $escaper->escapeHtmlAttr($label) ?>"
+        >
+            <?= $escaper->escapeHtml($label) ?>
+        </a>
+    </div>
+<?php else: ?>
+    <div>
+        <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
+           class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
+           onclick="hyva.setCookie && hyva.setCookie(
+                   '<?= $escaper->escapeJs(Redirect::LOGIN_REDIRECT_URL) ?>',
+                   window.location.href,
+                   1
+                   )"
+           href="<?= $escaper->escapeUrl($block->getUrl('customer/account/index')) ?>"
+           title="<?= $escaper->escapeHtmlAttr($label) ?>"
+        >
+            <?= $escaper->escapeHtml($label) ?>
+        </a>
 
-<div>
-
-    <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
-       class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
-       onclick="onClick()"
-       href="#"
-       title="<?= $escaper->escapeHtmlAttr($label) ?>"
-    >
-        <?= $escaper->escapeHtml($label) ?>
-    </a>
-
-</div>
+    </div>
+<?php endif; ?>
 
 <script type="text/javascript">
-
-    function onClick(e) {
+    function onClick () {
         openMyDialog();
+        showLogin();
     }
 </script>
