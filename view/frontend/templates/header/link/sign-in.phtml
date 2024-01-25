@@ -28,9 +28,10 @@ use Magento\Customer\Model\Account\Redirect;
 /** @var SortableItem $block */
 /** @var Escaper $escaper */
 
-$label          = $block->getLabel() ? $block->getLabel() : __('Login In');
+$label          = $block->getLabel() ? $block->getLabel() : __('Sign In');
 $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
 $helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+$popupEffect = $helperData->getPopupEffect();
 $popupLogin = $helperData->getPopupLogin();
 ?>
 <?php
@@ -65,7 +66,10 @@ if ($popupLogin === 'popup_login'): ?>
 
 <script type="text/javascript">
     function onClick () {
-        openMyDialog();
         showLogin();
+        const modal = document.querySelector('.wrap-modal-login');
+        modal.classList.add('<?= $popupEffect ?>-appear');
+        openMyDialog();
+
     }
 </script>

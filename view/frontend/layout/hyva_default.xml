@@ -110,5 +110,17 @@
             </arguments>
         </referenceBlock>
 
+
+        <referenceBlock name="social-login-popup-authentication-social-login" >
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::form/hyva/social.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="social-login-popup-authentication-social-create" >
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::form/hyva/social.phtml</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>
