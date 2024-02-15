@@ -1,0 +1,283 @@
+<?php
+
+/** @var \Mageplaza\SocialLogin\Block\Popup $block */
+$helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+$popupEffect = $helperData->getPopupEffect();
+$modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
+    ->createModal()
+    ->addDialogClass("p-3 w-full wrap-modal-login transform origin-left opacity-0 scale-0" . " " . $popupEffect . "-appear")
+    ->removeDialogClass('shadow-xl', 'inline-block', 'bg-white', 'rounded-lg', 'p-10', 'max-h-screen', 'overflow-auto',
+        'border border-10', 'border-blue-500')
+    ->withDialogRefName('my-dialog')
+    ->withContent('
+    <div id="popup_test">
+
+    </div>
+    ');
+
+
+?>
+<style>
+    @keyframes newspaperAnimation {
+        0% {
+            opacity: 0;
+            transform: scale(0) rotate(360deg);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    .mfp-newspaper-appear {
+        animation: newspaperAnimation 0.5s ease-out forwards;
+    }
+
+    @keyframes newspaperAnimationOut {
+        0% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+
+
+        }
+        100% {
+            opacity: 0;
+            transform: scale(0) rotate(360deg);
+        }
+    }
+
+    .mfp-newspaper-disappear {
+        animation: newspaperAnimationOut 0.5s ease-out forwards;
+    }
+
+
+    @keyframes zoomInAnimation {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .mfp-zoom-in-appear {
+        animation: zoomInAnimation 0.5s ease-out forwards;
+    }
+
+
+    @keyframes zoomInAnimationOut {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+
+        }
+        100% {
+
+            opacity: 0;
+            transform: scale(0);
+        }
+    }
+
+    .mfp-zoom-in-disappear {
+        animation: zoomInAnimationOut 0.5s ease-out forwards;
+    }
+
+    @keyframes slideInLeftAnimation {
+        0% {
+            opacity: 0;
+            transform: translateX(-10%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .mfp-move-horizontal-appear {
+        animation: slideInLeftAnimation 0.5s ease-out forwards;
+    }
+
+    @keyframes slideInLeftAnimationOut {
+        0% {
+            opacity: 1;
+            transform: translateX(0);
+
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(20%);
+        }
+    }
+
+    .mfp-move-horizontal-disappear {
+        animation: slideInLeftAnimationOut 0.5s ease-out forwards;
+    }
+
+
+    @keyframes fadeInDownAnimation {
+        0% {
+            opacity: 0;
+            transform: translateY(-20%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .mfp-move-from-top-appear {
+        animation: fadeInDownAnimation 0.5s ease-out forwards;
+    }
+
+
+    @keyframes fadeInDownAnimationOut {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+
+        }
+        100% {
+
+            opacity: 0;
+            transform: translateY(20%);
+        }
+    }
+
+    .mfp-move-from-top-disappear {
+        animation: fadeInDownAnimationOut 0.5s ease-out forwards;
+    }
+
+
+    @keyframes flipInYAnimation {
+        0% {
+            opacity: 0;
+            transform: perspective(400px) rotateY(-90deg);
+        }
+        100% {
+            opacity: 1;
+            transform: perspective(400px) rotateY(0);
+        }
+    }
+
+    .mfp-3d-unfold-appear {
+        animation: flipInYAnimation 0.5s ease-out forwards;
+    }
+
+    @keyframes flipInYAnimationOut {
+        0% {
+            opacity: 1;
+            transform: perspective(400px) rotateY(0);
+
+        }
+        100% {
+
+            opacity: 0;
+            transform: perspective(400px) rotateY(90deg);
+        }
+    }
+
+    .mfp-3d-unfold-disappear {
+        animation: flipInYAnimationOut 0.5s ease-out forwards;
+    }
+
+    @keyframes zoomOutAnimation {
+        0% {
+            opacity: 0;
+            transform: scale(2);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .mfp-zoom-out-appear {
+        animation: zoomOutAnimation 0.5s ease-out forwards;
+    }
+
+    @keyframes zoomOutAnimationOut {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+
+        }
+        100% {
+
+            opacity: 0;
+            transform: scale(2);
+        }
+    }
+
+    .mfp-zoom-out-disappear {
+        animation: zoomOutAnimationOut 0.5s ease-out forwards;
+    }
+</style>
+
+<div x-data="{
+    ...hyva.modal(),
+    init() {
+        window.openMyDialog = function (event) {
+            this.show('my-dialog', event);
+        }.bind(this);
+        window.hideMyDialog = function (event) {
+         this.hide('my-dialog', event);
+        }.bind(this);
+    }
+}" x-init="init()">
+    <?= $modal ?>
+</div>
+<div id="test" style="display: none; height: 100vh">
+    <div id="social-login-popup" data-df="" style="transform: translateY(30%)" class="white-popup mfp-with-anim"
+         data-mage-init='{"socialPopupForm": <?= $block->getFormParams() ?>}'>
+        <button title="Close (Esc)" type="button" class="mfp-close" onclick="closeModal()">×</button>
+
+        <?= $block->getChildHtml('popup.email') ?>
+        <div class="mp-social-popup col-mp mp-7" style="padding-top: 15px">
+            <?= $block->getChildHtml('popup.authentication') ?>
+            <?= $block->getChildHtml('popup.create') ?>
+            <?= $block->getChildHtml('popup.forgot') ?>
+        </div>
+        <?= $block->getChildHtml('popup.authentication.social') ?>
+        <?= $block->getChildHtml('popup.additional.info') ?>
+    </div>
+    <div style="clear: both"></div>
+</div>
+
+
+<script type="text/javascript">
+    let popup = ``;
+
+    function handleHideModalClickOutSide() {
+        let popup_test     = document.getElementById("popup_test");
+        let test           = document.getElementById("test");
+        test.style.display = 'block';
+        popup_test.append(test);
+        popup_test.onclick;
+        popup_test.addEventListener('click', function (e) {
+            if (e.target === test) {
+                const modal = document.querySelector('.wrap-modal-login');
+                modal.classList.remove('<?= $popupEffect ?>-appear');
+                modal.classList.add('<?= $popupEffect ?>-disappear');
+                setTimeout(()=>{
+                    modal.classList.remove('<?= $popupEffect ?>-disappear');
+                    hideMyDialog();
+
+                },300);
+            }
+        });
+    };
+    handleHideModalClickOutSide();
+
+    function closeModal () {
+        const modal = document.querySelector('.wrap-modal-login');
+        modal.classList.remove('<?= $popupEffect ?>-appear');
+        modal.classList.add('<?= $popupEffect ?>-disappear');
+        setTimeout(()=>{
+            modal.classList.remove('<?= $popupEffect ?>-disappear');
+            hideMyDialog();
+        },300);
+    };
+
+</script>

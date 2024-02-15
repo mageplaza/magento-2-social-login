@@ -63,21 +63,7 @@
                             <label class="label" for="dob"><span><?= __('Date of Birth') ?></span></label>
                             <div class="control customer-dob">
                                 <input type="text" name="dob" id="mp_sociallogin_dob" value="" class="" />
-                                <script type="text/javascript">
-                                    require(["jquery", "mage/calendar"], function($){
-                                        $("#mp_sociallogin_dob").calendar({
-                                            showsTime: false,
-                                            dateFormat: "M/d/Y",
-                                            buttonImage: "<?= /* @noEscape */ $_dob->getViewFileUrl('Magento_Theme::calendar.png')?>",
-                                            yearRange: "-120y:c+nn",
-                                            buttonText: "Select Date",
-                                            maxDate: "-1d",
-                                            changeMonth: true,
-                                            changeYear: true,
-                                            showOn: "both"
-                                        })
-                                    });
-                                </script>
+
                             </div>
                         </div>
                     <?php endif ?>
@@ -223,28 +209,6 @@
                     </div>
                 </div>
             </form>
-            <script>
-
-            </script>
-            <?php if ($block->getShowAddressFields()): ?>
-                <script type="text/x-magento-init">
-                    {
-                        "#country": {
-                            "regionUpdater": {
-                                "optionalRegionAllowed": <?= $block->getConfig('general/region/display_all') ? 'true' : 'false' ?>,
-                                "regionListId": "#region_id",
-                                "regionInputId": "#region",
-                                "postcodeId": "#zip",
-                                "form": "#form-validate",
-                                "regionJson": <?= $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
-                                "defaultRegion": "<?= $block->getFormData()->getRegionId() ?>",
-                                "countriesWithOptionalZip": <?= $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
-                            }
-                        }
-                    }
-
-                </script>
-            <?php endif; ?>
         </div>
     </div>
 
