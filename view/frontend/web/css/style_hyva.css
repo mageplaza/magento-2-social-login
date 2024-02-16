@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+html {
+    /*font-size: 62.5%;*/
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+}
+
+#popup_test {
+    color: #333333;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.42857143;
+    font-size: 0.8rem;
+}
+
+
+#popup_test  .block-content > .actions-toolbar {
+    display: block;
+}
+
+#popup_test  .actions-toolbar {
+    border-top-width: 0;
+    --tw-border-opacity: 0;
+    border-color: unset;
+    padding-top: 0;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+#popup_test  .fieldset > .field > .label, .fieldset > .fields > .field > .label {
+    font-weight: 600;
+}
+
+#popup_test  .fieldset > .field > .label, .fieldset > .fields > .field > .label {
+    margin: 0 0 8px;
+    display: inline-block;
+}
+
+#popup_test  .action.primary, .action-primary {
+
+    border: 1px solid #1979c3;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    padding: 0px 15px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+#popup_test  .fieldset > .field.required > .label:after, .fieldset > .fields > .field.required > .label:after, .fieldset > .field._required > .label:after, .fieldset > .fields > .field._required > .label:after {
+    content: '*';
+    color: #e02b27;
+    font-size: 0.6rem;
+    margin: 0 0 0 5px;
+}
+#popup_test  .remind, .action.create, .back {
+    color: #006bb4 !important;
+    text-decoration: none !important;
+}
+
+#popup_test  .remind:hover, .back:hover, .action.create:hover {
+    color: #006bb4 !important;
+    text-decoration: underline !important;
+}
+
+#popup_test  .remind:active, .back:active, .action.create:active {
+    color: #ff5501 !important;
+    text-decoration: underline !important;
+}
+#popup_test  .messages {
+    color: #e02b27;
+    font-size: 0.8rem;
+}
+#popup_test  .control {
+    margin-bottom: 10px;
+}
+
+
+#popup_test  h2 {
+    font-weight: 300;
+    line-height: 1.1;
+    font-size: 1.6rem;
+
+}
+#popup_test .messages li {
+    margin-bottom: 20px;
+    margin-top: 7px;
+
+}
+#popup_test .primary button:focus {
+    --tw-ring-shadow: 0 0 #000 ;
+}
+#popup_test input[type="text"], input[type="password"], input[type="url"], input[type="tel"], input[type="search"], input[type="number"], input[type*="date"], input[type="email"] {
+    background: #ffffff;
+    background-clip: padding-box;
+    border: 1px solid #c2c2c2;
+    border-radius: 1px;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    height: 32px;
+    min-height: 32px;
+    line-height: 1.42857143;
+    padding: 0 9px;
+    vertical-align: baseline;
+    width: 100%;
+    box-sizing: border-box;
+}
+#popup_test fieldset .field.field-reserved, form .field.field-reserved {
+    margin-bottom: 0;
+}
+#popup_test button {
+    background-image: none;
+    background: #eeeeee;
+    border: 1px solid #cccccc;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    margin: 0;
+    padding: 0px 15px;
+    font-size: 0.8rem;
+    line-height: 1.6rem;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+#popup_test .captcha-img {
+    margin: 0 10px 10px 0;
+}
+
+#popup_test  .mfp-close {
+
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-decoration: none;
+    text-align: center;
+    opacity: 0.65;
+    font-style: normal;
+    font-size: 28px;
+}
+#popup_test button.mfp-close, button.mfp-arrow {
+    overflow: visible;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    display: block;
+    outline: none;
+    z-index: 1046;
+    box-shadow: none;
+}
+#social-login-popup .mfp-close {
+    color: #ffffff;
+    padding-top: 15px;
+}
+#social-login-popup  .mfp-close:hover, .mfp-close:focus {
+    opacity: 1;
+}
+.actions-toolbar.social-btn {
+    border-top: 0px !important;
+}

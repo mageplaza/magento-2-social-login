@@ -1,0 +1,75 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Block\SortableItem;
+use Magento\Framework\Escaper;
+use Magento\Customer\Model\Account\Redirect;
+
+/** @var SortableItem $block */
+/** @var Escaper $escaper */
+
+$label          = $block->getLabel() ? $block->getLabel() : __('Sign In');
+$modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
+$helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+$popupEffect = $helperData->getPopupEffect();
+$popupLogin = $helperData->getPopupLogin();
+?>
+<?php
+if ($popupLogin === 'popup_login'): ?>
+    <div>
+        <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
+           class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
+           onclick="onClick()"
+           href="#"
+           title="<?= $escaper->escapeHtmlAttr($label) ?>"
+        >
+            <?= $escaper->escapeHtml($label) ?>
+        </a>
+    </div>
+<?php else: ?>
+    <div>
+        <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
+           class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
+           onclick="hyva.setCookie && hyva.setCookie(
+                   '<?= $escaper->escapeJs(Redirect::LOGIN_REDIRECT_URL) ?>',
+                   window.location.href,
+                   1
+                   )"
+           href="<?= $escaper->escapeUrl($block->getUrl('customer/account/index')) ?>"
+           title="<?= $escaper->escapeHtmlAttr($label) ?>"
+        >
+            <?= $escaper->escapeHtml($label) ?>
+        </a>
+
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+    function onClick () {
+        showLogin();
+        const modal = document.querySelector('.wrap-modal-login');
+        modal.classList.add('<?= $popupEffect ?>-appear');
+        openMyDialog();
+
+    }
+</script>

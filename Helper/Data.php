@@ -158,4 +158,26 @@ class Data extends CoreHelper
     {
         return $this->getConfigGeneral('check_mode', $storeId) && $this->getPopupLogin();
     }
+
+    /**
+     * @param string $code
+     * @param null $storeId
+     *
+     * @return array|mixed
+     */
+    public function getConfigGoogleRecaptcha($code = '', $storeId = null)
+    {
+        return $this->getConfigValue('googlerecaptcha' . $code, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return bool
+     */
+    public function isEnabledGGRecaptcha($storeId = null)
+    {
+        return $this->getConfigGoogleRecaptcha('/general/enabled', $storeId)
+            && $this->getConfigGoogleRecaptcha('/frontend/enabled', $storeId);
+    }
 }

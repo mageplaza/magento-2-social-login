@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ProductLabels
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Mageplaza_SocialLogin::css/style_hyva.css" />
+    </head>
+
+    <update handle="hyva_modal"/>
+    <update handle="hyva_form_validation"/>
+    <body>
+        <referenceBlock name="head.additional">
+            <block class="Mageplaza\SocialLogin\Block\Css" name="social_login_custom_style" ifconfig="sociallogin/general/enabled" template="Mageplaza_SocialLogin::css.phtml"/>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Mageplaza\SocialLogin\Block\Popup" name="modal-dialog" template="Mageplaza_SocialLogin::hyva/header/modal.phtml">
+                <block class="Mageplaza\SocialLogin\Block\Popup\Social" name="social-login-popup-authentication-social" as="popup.authentication.social" template="Mageplaza_SocialLogin::hyva/popup/form/social_buttons.phtml"/>
+                <block class="Mageplaza\SocialLogin\Block\Popup" name="social-login-popup-email" before="-" as="popup.email" template="Mageplaza_SocialLogin::hyva/popup/form/email.phtml"/>
+                <block class="Mageplaza\SocialLogin\Block\Form\Login" name="social-login-popup-authentication" as="popup.authentication" template="Mageplaza_SocialLogin::hyva/popup/form/authentication.phtml">
+                    <container name="social.login.form.additional.info.login" as="form_additional_info">
+                        <block class="Magento\Captcha\Block\Captcha" name="social-login-captcha" as="login.captcha" after="-">
+                            <action method="setFormId">
+                                <argument name="formId" xsi:type="string">user_login</argument>
+                            </action>
+                            <action method="setImgWidth">
+                                <argument name="width" xsi:type="string">230</argument>
+                            </action>
+                            <action method="setImgHeight">
+                                <argument name="width" xsi:type="string">50</argument>
+                            </action>
+                        </block>
+                    </container>
+                </block>
+                <block class="Mageplaza\SocialLogin\Block\Form\Register" name="social-login-popup-create" as="popup.create" template="Mageplaza_SocialLogin::hyva/popup/form/create.phtml">
+                    <container name="social.login.form.additional.info.create" as="form_additional_info">
+                        <block class="Magento\Captcha\Block\Captcha" name="social-create-captcha" as="create.captcha" after="-">
+                            <action method="setFormId">
+                                <argument name="formId" xsi:type="string">user_create</argument>
+                            </action>
+                            <action method="setImgWidth">
+                                <argument name="width" xsi:type="string">230</argument>
+                            </action>
+                            <action method="setImgHeight">
+                                <argument name="width" xsi:type="string">50</argument>
+                            </action>
+                        </block>
+                    </container>
+                </block>
+                <block class="Magento\Framework\View\Element\Template" name="social-login-popup-forgot" as="popup.forgot" template="Mageplaza_SocialLogin::hyva/popup/form/forgot.phtml">
+                    <container name="social.login.form.additional.info.forgot" as="form_additional_info">
+                        <block class="Magento\Captcha\Block\Captcha" name="social-forgot-password-captcha" as="forgot.captcha" after="-">
+                            <action method="setFormId">
+                                <argument name="formId" xsi:type="string">user_forgotpassword</argument>
+                            </action>
+                            <action method="setImgWidth">
+                                <argument name="width" xsi:type="string">230</argument>
+                            </action>
+                            <action method="setImgHeight">
+                                <argument name="width" xsi:type="string">50</argument>
+                            </action>
+                        </block>
+                    </container>
+                </block>
+            </block>
+
+        </referenceContainer>
+        <referenceBlock name="customer.header.sign.in.link">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/header/link/sign-in.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="customer.header.register.link">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/header/link/register.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="authentication-popup">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="authenticationPopup" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="social-buttons" xsi:type="array">
+                                    <item name="component" xsi:type="string">Mageplaza_SocialLogin/js/view/social-buttons</item>
+                                    <item name="displayArea" xsi:type="string">before</item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+
+        <referenceBlock name="social-login-popup-authentication-social-login" >
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/form/social.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="social-login-popup-authentication-social-create" >
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin:hyva/form/social.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

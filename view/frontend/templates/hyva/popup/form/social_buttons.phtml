@@ -1,0 +1,87 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
+
+?>
+<?php /** @var \Mageplaza\SocialLogin\Block\Popup\Social $block */
+$availableSocials = $block->getAvailableSocials();
+?>
+<?php if ($block->canShow(Position::PAGE_POPUP) && sizeof($availableSocials)): ?>
+    <div id="mp-popup-social-content">
+        <div class="block social-login-authentication-channel mb-3 col-mp mp-5">
+            <div class="block-title">
+                <?= __('Or Sign In With') ?>
+            </div>
+            <div class="block-content">
+                <?php foreach ($availableSocials as $key => $social): ?>
+                    <div class="actions-toolbar social-btn <?= $key ?>-login">
+                        <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
+                           data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'
+                            onclick='clickLoginSocial("<?= $social['login_url'] ?>","<?= $social['label'] ?>")'
+                        >
+                            <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
+                            <?= __('Sign in with %1', $social['label']) ?>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function getPopupParams(w, h, l, t) {
+            var screenX = typeof window.screenX !== 'undefined' ? window.screenX : window.screenLeft;
+            var screenY = typeof window.screenY !== 'undefined' ? window.screenY : window.screenTop;
+            var outerWidth = typeof window.outerWidth !== 'undefined' ? window.outerWidth : document.body.clientWidth;
+            var outerHeight = typeof window.outerHeight !== 'undefined' ? window.outerHeight : (document.body.clientHeight - 22);
+            var width = w ? w : 500;
+            var height = h ? h : 420;
+            var left = l ? l : parseInt(screenX + ((outerWidth - width) / 2), 10);
+            var top = t ? t : parseInt(screenY + ((outerHeight - height) / 2.5), 10);
+
+            return (
+                'width=' + width +
+                ',height=' + height +
+                ',left=' + left +
+                ',top=' + top
+            );
+        }
+        function clickLoginSocial(login_url, label) {
+            var date = new Date();
+            var currentTime = date.getTime();
+            window.open(login_url + '?' + currentTime, label, getPopupParams());
+        }
+
+    </script>
+<?php endif; ?>
+
+<?php
+/**
+ * Add variable to show social buttons on customer authentication popup
+ */
+?>
+<?php $authenConfig = $block->getSocialButtonsConfig(); ?>
+<?php if ($block->canShow(Position::PAGE_AUTHEN) && sizeof($availableSocials)): ?>
+    <script>
+        window.socialAuthenticationPopup = <?= \Laminas\Json\Json::encode($authenConfig); ?>;
+    </script>
+<?php endif; ?>
