@@ -54,15 +54,17 @@ class Social extends Template
     }
 
     /**
+     * @param $storeId
+     *
      * @return array
      */
-    public function getAvailableSocials()
+    public function getAvailableSocials($storeId = null)
     {
         $availabelSocials = [];
 
         foreach ($this->socialHelper->getSocialTypes() as $socialKey => $socialLabel) {
             $this->socialHelper->setType($socialKey);
-            if ($this->socialHelper->isEnabled()) {
+            if ($this->socialHelper->isEnabled($storeId)) {
                 $availabelSocials[$socialKey] = [
                     'label'     => $socialLabel,
                     'login_url' => $this->getLoginUrl($socialKey),
