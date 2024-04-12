@@ -38,6 +38,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
+use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
@@ -101,6 +102,11 @@ abstract class AbstractSocial extends Action
     protected $customerModel;
 
     /**
+     * @var TokenFactory
+     */
+    protected $tokenModelFactory;
+
+    /**
      * Login constructor.
      *
      * @param Context $context
@@ -112,6 +118,7 @@ abstract class AbstractSocial extends Action
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
      * @param Customer $customerModel
+     * @param TokenFactory $tokenModelFactory
      */
     public function __construct(
         Context $context,
@@ -122,16 +129,18 @@ abstract class AbstractSocial extends Action
         Session $customerSession,
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
-        Customer $customerModel
+        Customer $customerModel,
+        TokenFactory $tokenModelFactory
     ) {
-        $this->storeManager     = $storeManager;
-        $this->accountManager   = $accountManager;
-        $this->apiHelper        = $apiHelper;
-        $this->apiObject        = $apiObject;
-        $this->session          = $customerSession;
-        $this->accountRedirect  = $accountRedirect;
-        $this->resultRawFactory = $resultRawFactory;
-        $this->customerModel    = $customerModel;
+        $this->storeManager      = $storeManager;
+        $this->accountManager    = $accountManager;
+        $this->apiHelper         = $apiHelper;
+        $this->apiObject         = $apiObject;
+        $this->session           = $customerSession;
+        $this->accountRedirect   = $accountRedirect;
+        $this->resultRawFactory  = $resultRawFactory;
+        $this->customerModel     = $customerModel;
+        $this->tokenModelFactory = $tokenModelFactory;
 
         parent::__construct($context);
     }
@@ -268,10 +277,11 @@ abstract class AbstractSocial extends Action
      * Return javascript to redirect when login success
      *
      * @param null $content
+     * @param null $customerToken
      *
      * @return Raw
      */
-    public function _appendJs($content = null)
+    public function _appendJs($content = null, $customerToken = null)
     {
         /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
@@ -288,6 +298,9 @@ abstract class AbstractSocial extends Action
                 "<script>
                     window.opener.location.reload(true);
                     window.close();
+                    if ('{$customerToken}') {
+                        window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
+                    }
                 </script>");
         }
 
@@ -372,8 +385,9 @@ abstract class AbstractSocial extends Action
             return;
         }
 
-        $customer     = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
-        $customerData = $this->customerModel->load($customer->getId());
+        $customer      = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+        $customerData  = $this->customerModel->load($customer->getId());
+        $customerToken = $this->getCustomerToken($customer->getId());
 
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
@@ -383,7 +397,11 @@ abstract class AbstractSocial extends Action
 
                 return $this->_appendJs(
                     sprintf(
-                        "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                        "<script>
+                                window.close();
+                                window.opener.fakeEmailCallback('%s','%s','%s');
+                                window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
+                        </script>",
                         $type,
                         $userProfile->firstName,
                         $userProfile->lastName
@@ -397,7 +415,11 @@ abstract class AbstractSocial extends Action
 
             return $this->_appendJs(
                 sprintf(
-                    "<script>window.close();window.opener.fakeEmailCallback('%s','%s','%s');</script>",
+                    "<script>
+                            window.close();
+                            window.opener.fakeEmailCallback('%s','%s','%s');
+                            window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
+                    </script>",
                     $type,
                     $userProfile->firstName,
                     $userProfile->lastName
@@ -407,7 +429,7 @@ abstract class AbstractSocial extends Action
         }
         $this->refresh($customer);
 
-        return $this->_appendJs();
+        return $this->_appendJs(null, $customerToken);
     }
 
     /**
@@ -462,5 +484,17 @@ abstract class AbstractSocial extends Action
 Style;
         $content .= '</body></html>';
         $this->getResponse()->setBody($content);
+    }
+
+    /**
+     * @param $customerId
+     *
+     * @return string
+     */
+    protected function getCustomerToken($customerId)
+    {
+        $customerToken = $this->tokenModelFactory->create();
+
+        return $customerToken->createCustomerToken($customerId)->getToken();
     }
 }
