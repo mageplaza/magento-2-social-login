@@ -85,7 +85,7 @@ class SocialUrls implements ResolverInterface
         $availableSocials = $this->Social->getAvailableSocials($args['storeId']);
         $items            = [];
         foreach ($availableSocials as $key => $social) {
-            $items = [
+            $items[] = [
                 'social_type' => $key,
                 'url'         => $social['login_url']
             ];
