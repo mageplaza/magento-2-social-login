@@ -38,7 +38,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
-use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
@@ -102,11 +101,6 @@ abstract class AbstractSocial extends Action
     protected $customerModel;
 
     /**
-     * @var TokenFactory
-     */
-    protected $tokenModelFactory;
-
-    /**
      * Login constructor.
      *
      * @param Context $context
@@ -118,7 +112,6 @@ abstract class AbstractSocial extends Action
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
      * @param Customer $customerModel
-     * @param TokenFactory $tokenModelFactory
      */
     public function __construct(
         Context $context,
@@ -129,8 +122,7 @@ abstract class AbstractSocial extends Action
         Session $customerSession,
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
-        Customer $customerModel,
-        TokenFactory $tokenModelFactory
+        Customer $customerModel
     ) {
         $this->storeManager      = $storeManager;
         $this->accountManager    = $accountManager;
@@ -140,7 +132,6 @@ abstract class AbstractSocial extends Action
         $this->accountRedirect   = $accountRedirect;
         $this->resultRawFactory  = $resultRawFactory;
         $this->customerModel     = $customerModel;
-        $this->tokenModelFactory = $tokenModelFactory;
 
         parent::__construct($context);
     }
@@ -493,8 +484,9 @@ Style;
      */
     protected function getCustomerToken($customerId)
     {
-        $customerToken = $this->tokenModelFactory->create();
+        $objectManager     = \Magento\Framework\App\ObjectManager::getInstance();
+        $tokenModelFactory = $objectManager->create(\Magento\Integration\Model\Oauth\TokenFactory::class)->create();
 
-        return $customerToken->createCustomerToken($customerId)->getToken();
+        return $tokenModelFactory->createCustomerToken($customerId)->getToken();
     }
 }
