@@ -25,7 +25,7 @@ type Query {
 }
 
 type UrlsOutput {
-    items: Social @doc(description: "An array of url that match the specified search criteria")
+    items: [Social] @doc(description: "An array of url that match the specified search criteria")
 }
 
 type Social {
