@@ -28,15 +28,15 @@ $availableSocials = $block->getAvailableSocials(); ?>
     <div id="mp-popup-social-content">
         <div class="block social-login-authentication-channel col-mp mp-5">
             <div class="block-title">
-                <?= __('Or Sign In With') ?>
+                <?= /* @noEscape */ __('Or Sign In With') ?>
             </div>
             <div class="block-content">
                 <?php foreach ($availableSocials as $key => $social): ?>
-                    <div class="actions-toolbar social-btn <?= $key ?>-login">
-                        <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
-                           data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'>
-                            <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
-                            <?= __('Sign in with %1', $social['label']) ?>
+                    <div class="actions-toolbar social-btn <?= /* @noEscape */ $key ?>-login">
+                        <a class="btn btn-block btn-social btn-<?= /* @noEscape */ $block->getBtnKey($key) ?>"
+                           data-mage-init='{"socialProvider": {"url": "<?= /* @noEscape */ $social['login_url'] ?>", "label": "<?= /* @noEscape */ __('Login By %1', $social['label']) ?>"}}'>
+                            <span class="fa fa-<?= /* @noEscape */ $block->getBtnKey($key) ?>"></span>
+                            <?= /* @noEscape */ __('Sign in with %1', $social['label']) ?>
                         </a>
                     </div>
                 <?php endforeach; ?>

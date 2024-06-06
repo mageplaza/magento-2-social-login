@@ -21,15 +21,15 @@
 ?>
 <div class="social-login block-container forgot" style="display:none">
     <div class="social-login-title">
-        <h2 class="forgot-pass-title"><?= __('Forgot Password') ?></h2>
+        <h2 class="forgot-pass-title"><?= /* @noEscape */ __('Forgot Password') ?></h2>
     </div>
     <div class="block col-mp mp-12">
         <div class="block-content">
             <form class="form-password-forget" id="social-form-password-forget" data-mage-init='{"validation":{}}'>
-                <fieldset class="fieldset" data-hasrequired="<?= __('* Required Fields') ?>">
-                    <div class="field note"><?= __('Please enter your email address below to receive a password reset link.') ?></div>
+                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
+                    <div class="field note"><?= /* @noEscape */ __('Please enter your email address below to receive a password reset link.') ?></div>
                     <div class="field email required">
-                        <label for="email_address" class="label"><span><?= __('Email') ?></span></label>
+                        <label for="email_address" class="label"><span><?= /* @noEscape */ __('Email') ?></span></label>
                         <div class="control">
                             <input type="email" name="email" alt="email" id="email_address_forgot" class="input-text"
                                    value="<?= $block->escapeHtml($block->getEmailValue()) ?>"
@@ -41,10 +41,10 @@
                 <div class="actions-toolbar">
                     <div class="primary">
                         <button type="button" id="bnt-social-login-forgot" class="action send primary">
-                            <span><?= __('Submit') ?></span>
+                            <span><?= /* @noEscape */ __('Submit') ?></span>
                         </button>
                         <div class="secondary">
-                            <a class="action back" href="#"><span><?= __('Back') ?></span></a>
+                            <a class="action back" href="#"><span><?= /* @noEscape */ __('Back') ?></span></a>
                         </div>
                     </div>
                 </div>

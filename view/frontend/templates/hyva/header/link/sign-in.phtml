@@ -68,7 +68,7 @@ if ($popupLogin === 'popup_login'): ?>
     function onClick () {
         showLogin();
         const modal = document.querySelector('.wrap-modal-login');
-        modal.classList.add('<?= $popupEffect ?>-appear');
+        modal.classList.add('<?= /* @noEscape */ $popupEffect ?>-appear');
         openMyDialog();
 
     }

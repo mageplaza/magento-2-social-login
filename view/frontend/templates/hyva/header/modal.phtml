@@ -226,11 +226,11 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
         }.bind(this);
     }
 }" x-init="init()">
-    <?= $modal ?>
+    <?= /* @noEscape */ $modal ?>
 </div>
 <div id="test" style="display: none; height: 100vh">
     <div id="social-login-popup" data-df="" style="transform: translateY(30%)" class="white-popup mfp-with-anim"
-         data-mage-init='{"socialPopupForm": <?= $block->getFormParams() ?>}'>
+         data-mage-init='{"socialPopupForm": <?= /* @noEscape */ $block->getFormParams() ?>}'>
         <button title="Close (Esc)" type="button" class="mfp-close" onclick="closeModal()">×</button>
 
         <?= $block->getChildHtml('popup.email') ?>
@@ -258,10 +258,10 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
         popup_test.addEventListener('click', function (e) {
             if (e.target === test) {
                 const modal = document.querySelector('.wrap-modal-login');
-                modal.classList.remove('<?= $popupEffect ?>-appear');
-                modal.classList.add('<?= $popupEffect ?>-disappear');
+                modal.classList.remove('<?= /* @noEscape */ $popupEffect ?>-appear');
+                modal.classList.add('<?= /* @noEscape */ $popupEffect ?>-disappear');
                 setTimeout(()=>{
-                    modal.classList.remove('<?= $popupEffect ?>-disappear');
+                    modal.classList.remove('<?= /* @noEscape */ $popupEffect ?>-disappear');
                     hideMyDialog();
 
                 },300);
@@ -272,10 +272,10 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
 
     function closeModal () {
         const modal = document.querySelector('.wrap-modal-login');
-        modal.classList.remove('<?= $popupEffect ?>-appear');
-        modal.classList.add('<?= $popupEffect ?>-disappear');
+        modal.classList.remove('<?= /* @noEscape */ $popupEffect ?>-appear');
+        modal.classList.add('<?= /* @noEscape */ $popupEffect ?>-disappear');
         setTimeout(()=>{
-            modal.classList.remove('<?= $popupEffect ?>-disappear');
+            modal.classList.remove('<?= /* @noEscape */ $popupEffect ?>-disappear');
             hideMyDialog();
         },300);
     };
