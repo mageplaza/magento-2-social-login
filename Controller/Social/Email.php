@@ -39,6 +39,7 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
+use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
@@ -88,6 +89,7 @@ class Email extends AbstractSocial
      * @param RawFactory $resultRawFactory
      * @param JsonFactory $resultJsonFactory
      * @param Customer $customerModel
+     * @param TokenFactory $tokenFactory
      * @param CustomerFactory $customerFactory
      * @param EncryptorInterface $encrypt
      * @param CustomerRepositoryInterface $_customerRepositoryInterface
@@ -104,6 +106,7 @@ class Email extends AbstractSocial
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
         Customer $customerModel,
+        TokenFactory $tokenFactory,
         CustomerFactory $customerFactory,
         EncryptorInterface $encrypt,
         CustomerRepositoryInterface $_customerRepositoryInterface,
@@ -124,7 +127,8 @@ class Email extends AbstractSocial
             $customerSession,
             $accountRedirect,
             $resultRawFactory,
-            $customerModel
+            $customerModel,
+            $tokenFactory
         );
     }
 

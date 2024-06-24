@@ -387,7 +387,11 @@ abstract class AbstractSocial extends Action
 
         $customer      = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         $customerData  = $this->customerModel->load($customer->getId());
-        $customerToken = $this->getCustomerToken($customer->getId());
+        if ($customer->getId()) {
+            $customerToken = $this->getCustomerToken($customer->getId());
+        } else {
+            $customerToken = '';
+        }
 
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
