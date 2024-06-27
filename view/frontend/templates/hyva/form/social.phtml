@@ -27,13 +27,13 @@ if ($block->canShow() && sizeof($availableSocials)):
     <div class="block social-login-authentication-channel account-social-login">
         <div class="block-content">
             <?php foreach ($availableSocials as $key => $social): ?>
-                <div class="actions-toolbar social-btn social-btn-actions-toolbar <?= $key ?>-login">
-                    <a class="btn btn-block btn-social btn-<?= $block->getBtnKey($key) ?>"
-                       data-mage-init='{"socialProvider": {"url": "<?= $social['login_url'] ?>", "label": "<?= __('Login By %1', $social['label']) ?>"}}'
-                       onclick='clickLoginSocial("<?= $social['login_url'] ?>","<?= $social['label'] ?>")'
+                <div class="actions-toolbar social-btn social-btn-actions-toolbar <?= /* @noEscape */ $key ?>-login">
+                    <a class="btn btn-block btn-social btn-<?= /* @noEscape */$block->getBtnKey($key) ?>"
+                       data-mage-init='{"socialProvider": {"url": "<?= /* @noEscape */$social['login_url'] ?>", "label": "<?= /* @noEscape */__('Login By %1', $social['label']) ?>"}}'
+                       onclick='clickLoginSocial("<?= /* @noEscape */$social['login_url'] ?>","<?= /* @noEscape */$social['label'] ?>")'
                     >
-                        <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
-                        <?= __('Sign in with %1', $social['label']) ?>
+                        <span class="fa fa-<?= /* @noEscape */ $block->getBtnKey($key) ?>"></span>
+                        <?= /* @noEscape */ __('Sign in with %1', $social['label']) ?>
                     </a>
                 </div>
             <?php endforeach; ?>
@@ -42,7 +42,7 @@ if ($block->canShow() && sizeof($availableSocials)):
 <?php endif; ?>
 <?php if ($childBlock && $childBlock->isRequireMoreInfo()): ?>
     <div id="social-login-popup" class="white-popup mfp-with-anim mfp-hide"
-         data-mage-init='{"Mageplaza_SocialLogin/js/popup":<?= $childBlock->getFormParams() ?>}'>
+         data-mage-init='{"Mageplaza_SocialLogin/js/popup":<?= /* @noEscape */ $childBlock->getFormParams() ?>}'>
         <?= $block->getChildHtml('request.info') ?>
     </div>
 <?php endif; ?>

@@ -24,12 +24,12 @@
 
 <div class="social-login block-container authentication">
     <div class="social-login-title">
-        <h2 class="login-title"><?= __('Sign In') ?></h2>
+        <h2 class="login-title"><?= /* @noEscape */ __('Sign In') ?></h2>
     </div>
     <div class="block social-login-customer-authentication col-mp mp-12" id="social-login-authentication">
         <div class="block-title">
             <span id="block-customer-login-heading" role="heading"
-                  aria-level="2"><?= __('Registered Customers') ?></span>
+                  aria-level="2"><?= /* @noEscape */ __('Registered Customers') ?></span>
         </div>
         <div class="block-content" aria-labelledby="block-customer-login-heading">
             <form
@@ -39,28 +39,28 @@
                     @submit.prevent="submitForm();"
             >
                 <?= $block->getBlockHtml('formkey') ?>
-                <fieldset class="fieldset login" data-hasrequired="<?= __('* Required Fields') ?>">
+                <fieldset class="fieldset login" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
                     <?= $block->getChildHtml('form_before_login_fields') ?>
                     <div class="field email required">
-                        <label class="label" for="social_login_email"><span><?= __('Email') ?></span></label>
+                        <label class="label" for="social_login_email"><span><?= /* @noEscape */ __('Email') ?></span></label>
                         <div class="control">
                             <input name="username" id="social_login_email" x-ref="customer-email" type="email"
                                    class="input-text"
                                    data-validate='{"required": true}'
                                    value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()):
                                 ?> autocomplete="off"<?php endif; ?>
-                                   title="<?= __('Email') ?>" Email
+                                   title="<?= /* @noEscape */ __('Email') ?>" Email
                             >
                         </div>
                     </div>
                     <div class="field password required">
-                        <label for="pass" class="label"><span><?= __('Password') ?></span></label>
+                        <label for="pass" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
                         <div class="control">
                             <input name="password" id="social_login_pass" type="password" x-ref="customer-password"
                                    data-validate='{"required": true}'
                                    class="input-text"
                                 <?= $block->isAutocompleteDisabled() ? ' autocomplete="off"' : '' ?>
-                                   title="<?= __('Password') ?>"
+                                   title="<?= /* @noEscape */ __('Password') ?>"
                             >
                         </div>
                     </div>
@@ -68,16 +68,16 @@
                     <div class="actions-toolbar md:flex-nowrap flex-wrap">
                         <div class="primary md:w-auto w-full">
                             <button type="submit" class="action login primary md:w-auto w-full " id="bnt-social-login-authentication">
-                                <span><?= __('Login') ?></span>
+                                <span><?= /* @noEscape */ __('Login') ?></span>
                             </button>
                         </div>
                         <div class="ml-2 md:mt-0 mt-2 md:w-auto w-full md:text-left text-center">
-                            <a class="action remind" href="#" onclick="forgotBtn()"><span><?= __('Forgot Your Password?') ?></span></a>
+                            <a class="action remind" href="#" onclick="forgotBtn()"><span><?= /* @noEscape */ __('Forgot Your Password?') ?></span></a>
                         </div>
                     </div>
                     <div class="actions-toolbar clear-both ">
                         <div class="primary md:w-auto md:text-left w-full text-center">
-                            <a class="action create" href="#" onclick="createBtn()"><span><?= __('Create New Account?') ?></span></a>
+                            <a class="action create" href="#" onclick="createBtn()"><span><?= /* @noEscape */ __('Create New Account?') ?></span></a>
                         </div>
                     </div>
                 </fieldset>
