@@ -108,7 +108,7 @@
                 </field>
                 <field id="custom_color" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Custom Color</label>
-                    <validate>jscolor {hash:true,refine:false}</validate>
+                    <frontend_model>Mageplaza\Core\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
                     <depends>
                         <field id="popup_login" separator=",">popup_login,quick_login,popup_slide</field>
                         <field id="style_management">custom</field>
