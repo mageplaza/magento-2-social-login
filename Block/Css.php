@@ -28,12 +28,12 @@ use Mageplaza\SocialLogin\Helper\Data as DataHelper;
 /**
  * Class Css
  *
- * @package Mageplaza\SocialLogin\Block
+ * Mageplaza\SocialLogin\Block
  */
 class Css extends Template
 {
     /**
-     * @type DataHelper
+     * @var DataHelper
      */
     protected $_helper;
 
@@ -55,7 +55,7 @@ class Css extends Template
     }
 
     /**
-     * @return $this
+     * @return $this|Css
      */
     protected function _prepareLayout()
     {
@@ -75,12 +75,26 @@ class Css extends Template
                 ]
             )
             ) {
-                $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
+                $this->pageConfig->addPageAsset($this->getStyleCss());
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
             }
         }
 
         return $this;
+    }
+
+    /**
+     * GetStyleCss
+     *
+     * @return string
+     */
+    public function getStyleCss()
+    {
+        if (!$this->helper()->checkHyvaTheme()) {
+            return 'Mageplaza_SocialLogin::css/style.css';
+        }
+
+        return 'Mageplaza_SocialLogin::css/style_hyva.css';
     }
 
     /**
