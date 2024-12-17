@@ -48,7 +48,9 @@ class Callback extends AbstractSocial
         if (isset($param['live.php'])) {
             $param = array_merge($param, ['hauth_done' => 'Live']);
         }
-
+        if (isset($param['instagram.php'])) {
+            $param = array_merge($param, ['hauth_done' => 'Instagram']);
+        }
         $type = $param['hauth_done'] ?? '';
 
         if ($this->checkRequest('hauth_start', false)
