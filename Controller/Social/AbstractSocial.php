@@ -297,10 +297,11 @@ abstract class AbstractSocial extends Action
             $raw = $resultRaw->setContents($content ?:
                 "<script>
                     window.opener.location.reload(true);
-                    window.close();
                     if ('{$customerToken}') {
+                        window.opener.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
                         window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
                     }
+                    window.close();
                 </script>");
         }
 
@@ -402,9 +403,10 @@ abstract class AbstractSocial extends Action
                 return $this->_appendJs(
                     sprintf(
                         "<script>
-                                window.close();
                                 window.opener.fakeEmailCallback('%s','%s','%s');
+                                window.opener.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
                                 window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
+                                window.close();
                         </script>",
                         $type,
                         $userProfile->firstName,
@@ -420,9 +422,10 @@ abstract class AbstractSocial extends Action
             return $this->_appendJs(
                 sprintf(
                     "<script>
-                            window.close();
                             window.opener.fakeEmailCallback('%s','%s','%s');
+                            window.opener.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
                             window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
+                            window.close();
                     </script>",
                     $type,
                     $userProfile->firstName,
