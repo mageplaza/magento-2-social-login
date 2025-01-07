@@ -132,15 +132,15 @@ abstract class AbstractSocial extends Action
         Customer $customerModel,
         TokenFactory $tokenFactory
     ) {
-        $this->storeManager      = $storeManager;
-        $this->accountManager    = $accountManager;
-        $this->apiHelper         = $apiHelper;
-        $this->apiObject         = $apiObject;
-        $this->session           = $customerSession;
-        $this->accountRedirect   = $accountRedirect;
-        $this->resultRawFactory  = $resultRawFactory;
-        $this->customerModel     = $customerModel;
-        $this->tokenFactory      = $tokenFactory;
+        $this->storeManager     = $storeManager;
+        $this->accountManager   = $accountManager;
+        $this->apiHelper        = $apiHelper;
+        $this->apiObject        = $apiObject;
+        $this->session          = $customerSession;
+        $this->accountRedirect  = $accountRedirect;
+        $this->resultRawFactory = $resultRawFactory;
+        $this->customerModel    = $customerModel;
+        $this->tokenFactory     = $tokenFactory;
 
         parent::__construct($context);
     }
@@ -283,30 +283,34 @@ abstract class AbstractSocial extends Action
      */
     public function _appendJs($content = null, $customerToken = null)
     {
-        /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
 
         if ($this->_loginPostRedirect()) {
-            $raw = $resultRaw->setContents(
-                $content ?: sprintf(
-                    "<script>window.opener.socialCallback('%s', window);</script>",
-                    $this->_loginPostRedirect()
-                )
-            );
+            $script = $this->apiHelper->generateBroadcastChannelScript('loginRedirect', [
+                'redirectUrl' => $this->_loginPostRedirect()
+            ]);
         } else {
-            $raw = $resultRaw->setContents($content ?:
-                "<script>
-                    window.opener.location.reload(true);
-                    if ('{$customerToken}') {
-                        window.opener.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
-                        window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
-                    }
-                    window.close();
-                </script>");
+            $event = $customerToken ? 'socialLoginSuccess' : 'windowClose';
+            $data  = $customerToken
+                ? [
+                    'customerToken' => $customerToken
+                ]
+                : [];
+
+            $script = $this->apiHelper->generateBroadcastChannelScript($event, $data);
+
+            if ($customerToken) {
+                $script .= "<script>
+                window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
+            </script>";
+            }
+
+            $script .= "<script>window.close();</script>";
         }
 
-        return $raw;
+        return $resultRaw->setContents($content ?: $script);
     }
+
 
     /**
      * @param $customer
@@ -388,11 +392,7 @@ abstract class AbstractSocial extends Action
 
         $customer      = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         $customerData  = $this->customerModel->load($customer->getId());
-        if ($customer->getId()) {
-            $customerToken = $this->getCustomerToken($customer->getId());
-        } else {
-            $customerToken = '';
-        }
+        $customerToken = $customer->getId() ? $this->getCustomerToken($customer->getId()) : '';
 
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
@@ -400,44 +400,35 @@ abstract class AbstractSocial extends Action
             if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
                 $this->session->setUserProfile($userProfile);
 
-                return $this->_appendJs(
-                    sprintf(
-                        "<script>
-                                window.opener.fakeEmailCallback('%s','%s','%s');
-                                window.opener.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
-                                window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
-                                window.close();
-                        </script>",
-                        $type,
-                        $userProfile->firstName,
-                        $userProfile->lastName
-                    )
-                );
+                $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
+                    'type'          => $type,
+                    'firstName'     => $userProfile->firstName,
+                    'lastName'      => $userProfile->lastName,
+                    'customerToken' => $customerToken
+                ]);
+
+                return $this->_appendJs($script);
             }
 
             $customer = $this->createCustomerProcess($userProfile, $type);
         } elseif ($this->apiHelper->isCheckMode() && $customerData->getData('password_hash') === null) {
             $this->session->setUserProfile($userProfile);
 
-            return $this->_appendJs(
-                sprintf(
-                    "<script>
-                            window.opener.fakeEmailCallback('%s','%s','%s');
-                            window.opener.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
-                            window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
-                            window.close();
-                    </script>",
-                    $type,
-                    $userProfile->firstName,
-                    $userProfile->lastName
-                )
-            );
-
+            $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
+                'type'          => $type,
+                'firstName'     => $userProfile->firstName,
+                'lastName'      => $userProfile->lastName,
+                'customerToken' => $customerToken
+            ]);
+            $script .= "<script>window.close();</script>";
+            return $this->_appendJs($script);
         }
+
         $this->refresh($customer);
 
         return $this->_appendJs(null, $customerToken);
     }
+
 
     /**
      * @param $key

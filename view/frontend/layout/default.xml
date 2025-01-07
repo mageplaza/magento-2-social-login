@@ -81,6 +81,7 @@
                     </container>
                 </block>
             </block>
+            <block class="Magento\Framework\View\Element\Template" name="broadcast-channel-block" template="Mageplaza_SocialLogin::broadcast_channel.phtml" before="-" />
         </referenceContainer>
         <referenceBlock name="authentication-popup">
             <arguments>

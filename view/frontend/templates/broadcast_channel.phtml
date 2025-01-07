@@ -1,0 +1,57 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+<script>
+    let channel = new BroadcastChannel('social-login-channel');
+
+    channel.onmessage = function (event) {
+        if (event.data.event === 'socialLoginSuccess') {
+            window.MP_ACCESS_TOKEN_KEY = event.data.customerToken;
+            window.location.reload();
+        }
+        if (event.data.event === 'loginRedirect') {
+            window.location.href = event.data.redirectUrl;
+        }
+        if (event.data.event === 'windowClose') {
+            window.close()
+        }
+        if (event.data.event === 'requiredMoreInfo') {
+            if (event.data.data.customerToken) {
+                window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
+            }
+            fakeEmailCallback(
+                event.data.data.type,
+                event.data.data.firstName,
+                event.data.data.lastName
+            );
+            window.close()
+        }
+    };
+
+    function openLoginPopup () {
+        let currentTime = new Date().toISOString();
+        channel.postMessage({
+            event: 'openPopup',
+            time: currentTime
+        });
+    }
+
+</script>
