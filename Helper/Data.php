@@ -202,4 +202,11 @@ class Data extends CoreHelper
             })();
         </script>";
     }
+
+    /**
+     * @return bool
+     */
+    public function isGDPRTaCEnabled(){
+        return $this->isModuleOutputEnabled("Mageplaza_GdprPro") && $this->getConfigValue('gdpr/general/allow_tac_register_customer');
+    }
 }

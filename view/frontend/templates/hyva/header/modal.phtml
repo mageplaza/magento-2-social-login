@@ -15,7 +15,8 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
     </div>
     ');
 
-
+$isGDPRTac = $helperData->isGDPRTaCEnabled();
+$translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 ?>
 <style>
     @keyframes newspaperAnimation {
@@ -229,7 +230,7 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
     <?= /* @noEscape */ $modal ?>
 </div>
 <div id="test" style="display: none; height: 100vh">
-    <div id="social-login-popup" data-df="" style="transform: translateY(30%)" class="white-popup mfp-with-anim"
+    <div id="social-login-popup" data-df="" style="transform: translateY(<?php echo $translateYvalue?>)" class="white-popup mfp-with-anim"
          data-mage-init='{"socialPopupForm": <?= /* @noEscape */ $block->getFormParams() ?>}'>
         <button title="Close (Esc)" type="button" class="mfp-close" onclick="closeModal()">×</button>
 
