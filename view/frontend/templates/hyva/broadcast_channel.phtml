@@ -25,33 +25,48 @@
     channel.onmessage = function (event) {
         if (event.data.event === 'socialLoginSuccess') {
             window.MP_ACCESS_TOKEN_KEY = event.data.customerToken;
-            if (event.data.redirectUrl){
-                window.location.href = event.data.redirectUrl;
-            } else {
-                window.location.reload();
-            }
+            window.location.reload();
         }
         if (event.data.event === 'loginRedirect') {
-            window.location.href = event.data.redirectUrl;
-        }
-        if (event.data.event === 'windowClose') {
-            window.close();
+            if(event.data.data.redirectUrl){
+                window.location.href = event.data.data.redirectUrl;
+            } else {
+                window.location.href = event.data.redirectUrl;
+            }
         }
         if (event.data.event === 'requiredMoreInfo') {
             if (event.data.data.customerToken) {
                 window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
             }
-            window.close();
+            document.querySelector('.social-login.authentication').style.display = 'none';
+            document.querySelector('.social-login.forgot').style.display = 'none';
+            document.querySelector('.social-login.create').style.display = 'none';
+            document.querySelector('.social-login.fake-email').style.display = 'block';
+            document.querySelector('#mp-popup-social-content').style.display = 'none';
+
+            const form = document.querySelector('#social-form-fake-email');
+            if (form) {
+                const typeInput = document.createElement('input');
+                typeInput.type = 'hidden';
+                typeInput.name = 'type';
+                typeInput.value = event.data.data.type;
+                form.appendChild(typeInput);
+
+                const firstNameInput = document.createElement('input');
+                firstNameInput.type = 'hidden';
+                firstNameInput.name = 'firstname';
+                firstNameInput.value = event.data.data.firstName;
+                form.appendChild(firstNameInput);
+
+                // Tạo input ẩn cho "lastname"
+                const lastNameInput = document.createElement('input');
+                lastNameInput.type = 'hidden';
+                lastNameInput.name = 'lastname';
+                lastNameInput.value = event.data.data.lastName;
+                form.appendChild(lastNameInput);
+            }
+
         }
     };
-
-    function openLoginPopup () {
-        let currentTime = new Date().toISOString();
-        channel.postMessage({
-            event: 'openPopup',
-            time: currentTime
-        });
-    }
-
 </script>
 

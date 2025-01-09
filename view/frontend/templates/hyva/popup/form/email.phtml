@@ -29,9 +29,11 @@
         <div class="block-content">
             <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
-                    <div class="field note"><?= /* @noEscape */ __('Please complete your information below to creat an account.') ?></div>
+                    <div class="field note">
+                        <?= /* @noEscape */ __('Please complete your information below to creat an account.') ?></div>
                     <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
-                            <label class="label" for="request-firstname" style="font-weight: 600"><span><?= /* @noEscape */ __('First Name') ?></span></label>
+                            <label class="label" for="request-firstname" style="font-weight: 600">
+                                <span><?= /* @noEscape */ __('First Name') ?></span></label>
                             <div class="control">
                                 <input type="text" id="request-firstname" name="firstname" title="<?= /* @noEscape */ __('First Name') ?>"
                                        class="input-text required-entry" data-validate="{required:true}"
@@ -90,7 +92,11 @@
     </div>
     <div class="block col-mp mp-12">
         <div class="block-content">
-            <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
+            <form class="form-fake-email"
+                  id="social-form-fake-email"
+                  x-data="{...hyva.formValidation($el), ...initMyForm()}"
+                  @submit.prevent="myFormSubmit"
+                 >
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
                     <div class="field note"><?= /* @noEscape */ __('Please complete your information below to login.') ?></div>
                     <div class="field field-password-social required">
@@ -98,7 +104,8 @@
                         <div class="control">
                             <input type="password" name="password" id="request-password-social"
                                    title="<?= /* @noEscape */ __('Password') ?>" class="input-text"
-                                   data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
+                                   data-validate='{"required": true, "password": true}'
+                                   autocomplete="off"/>
                         </div>
                     </div>
                     <div class="field field-confirmation-social required">
@@ -107,14 +114,15 @@
                         <div class="control">
                             <input type="password" name="password_confirmation"
                                    title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
-                                   class="input-text" data-validate="{required:true, equalTo:'#request-password-social'}"
+                                   data-validate='{"required": true,"equalTo": "password"}'
+                                   class="input-text"
                                    autocomplete="off"/>
                         </div>
                     </div>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
-                        <button type="button" id="bnt-social-login-fake-email" class="action send primary">
+                        <button type="submit" id="bnt-social-login-fake-email" class="action send primary">
                             <span><?= /* @noEscape */ __('Submit') ?></span>
                         </button>
                     </div>
@@ -123,4 +131,44 @@
         </div>
     </div>
 </div>
+<script>
+    function initMyForm() {
+        return {
+            myFormSubmit(event) {
+                event.preventDefault();
+
+                this.validate()
+                .then(() => {
+                    // all fields validated
+                    let form = event.target;
+                    const formData = new FormData(form);
+                    fetch('<?= /** @noEscape */ $block->getUrl('sociallogin/social/email') ?>', {
+                        method: 'POST',
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: formData
+                    }).then(res => {
+                        return res.json()
+                    }).then(response=>{
+                        if (!response.url) {
+                            window.location.reload();
+                        } else {
+                            window.location.href = response.url;
+                        }
+
+                    }).catch(e => {
+
+                    })
+                    // event.target.submit()
+                })
+                .catch((invalid) => {
+                    if (invalid.length > 0) {
+                        invalid[0].focus();
+                    }
+                });
+            }
+        }
+    }
+</script>
 <?php endif; ?>

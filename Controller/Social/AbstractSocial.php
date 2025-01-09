@@ -304,10 +304,8 @@ abstract class AbstractSocial extends Action
                 window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
             </script>";
             }
-
-            $script .= "<script>window.close();</script>";
         }
-
+        $script .= "<script>window.close();</script>";
         return $resultRaw->setContents($content ?: $script);
     }
 
@@ -392,7 +390,11 @@ abstract class AbstractSocial extends Action
 
         $customer      = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
         $customerData  = $this->customerModel->load($customer->getId());
-        $customerToken = $customer->getId() ? $this->getCustomerToken($customer->getId()) : '';
+        if ($customer->getId()) {
+            $customerToken = $this->getCustomerToken($customer->getId());
+        } else {
+            $customerToken = '';
+        }
 
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();

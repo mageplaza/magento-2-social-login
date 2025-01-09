@@ -28,10 +28,11 @@
             window.location.reload();
         }
         if (event.data.event === 'loginRedirect') {
-            window.location.href = event.data.redirectUrl;
-        }
-        if (event.data.event === 'windowClose') {
-            window.close()
+            if(event.data.data.redirectUrl){
+                window.location.href = event.data.data.redirectUrl;
+            } else {
+                window.location.href = event.data.redirectUrl;
+            }
         }
         if (event.data.event === 'requiredMoreInfo') {
             if (event.data.data.customerToken) {

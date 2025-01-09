@@ -141,12 +141,9 @@ class Email extends AbstractSocial
      */
     public function execute()
     {
-        /**
-         * @var Json $resultJson
-         */
         $resultJson = $this->resultJsonFactory->create();
         $params     = $this->getRequest()->getParams();
-        $type       = $this->apiHelper->setType($params['type'] ?? "");
+        $type       = $this->apiHelper->setType(strtolower($params['type'])?? "");
 
         if (!$type) {
             $this->_forward('noroute');
