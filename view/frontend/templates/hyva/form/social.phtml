@@ -19,10 +19,13 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-$availableSocials = $block->getAvailableSocials();
-$childBlock = $block->getChildBlock('request.info');
+/** @var Mageplaza\SocialLogin\Block\Popup\Social $block */
 
-if ($block->canShow() && sizeof($availableSocials)):
+$availableSocials = $block->getAvailableSocials();
+$childBlock       = $block->getChildBlock('request.info');
+$position         = $block->getData('position');
+
+if ($block->canShow($position) && sizeof($availableSocials)):
     ?>
     <div class="block social-login-authentication-channel account-social-login">
         <div class="block-content">

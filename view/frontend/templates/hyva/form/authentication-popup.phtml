@@ -1,0 +1,267 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Customer\LoginButton;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\ReCaptcha;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Magento\Framework\Escaper;
+use Magento\Customer\Block\Account\Customer;
+
+/** @var Escaper $escaper */
+/** @var Customer $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var ReCaptcha $recaptcha */
+/** @var HeroiconsOutline $heroicons */
+/** @var StoreConfig $storeConfig */
+
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$loginButtonViewModel = $viewModels->require(LoginButton::class);
+
+// Do not replace this with $viewModels->require(ReCaptcha::class); that might break the dependency
+// on the Magento_ReCaptchaCustomer module
+$recaptcha = $block->getData('viewModelRecaptcha');
+$storeConfig = $viewModels->require(StoreConfig::class);
+$isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocomplete_on_storefront');
+
+?>
+<script>
+    function initAuthentication() {
+        return {
+            open: false,
+            forceAuthentication: false,
+            checkoutUrl: '<?= $escaper->escapeUrl($block->getUrl('checkout/index')) ?>',
+            errors: 0,
+            hasCaptchaToken: 0,
+            displayErrorMessage: false,
+            errorMessages: [],
+            setErrorMessages: function setErrorMessages(messages) {
+                this.errorMessages = [messages];
+                this.displayErrorMessage = this.errorMessages.length;
+            },
+            submitForm: function () {
+                // Do not rename $form, the variable is expected to be declared in the recaptcha output
+                const $form = document.querySelector('#login-form');
+                <?= $recaptcha ? $recaptcha->getValidationJsHtml('customer_login', 'auth-popup') : '' ?>
+
+                if (this.errors === 0) {
+                    this.dispatchLoginRequest($form);
+                }
+            },
+            onPrivateContentLoaded: function (data) {
+                const isLoggedIn = data.customer && data.customer.firstname;
+                if (data.cart && !isLoggedIn) {
+                    this.forceAuthentication = !data.cart.isGuestCheckoutAllowed;
+                }
+            },
+            redirectIfAuthenticated: function (event) {
+                if (event.detail && event.detail.url) {
+                    this.checkoutUrl = event.detail.url;
+                }
+                if (!this.forceAuthentication) {
+                    window.location.href = this.checkoutUrl;
+                }
+            },
+            dispatchLoginRequest: function(form) {
+                this.isLoading = true;
+                const username = this.$refs['customer-email'].value;
+                const password = this.$refs['customer-password'].value;
+                const formKey = hyva.getFormKey();
+                const bodyFields = {
+                    'username': username,
+                    'password': password,
+                    'formKey': formKey
+                };
+                <?php // All recaptcha variants set a input field g-recaptcha-response value ?>
+                const fieldName = '<?= $recaptcha
+                    ? $escaper->escapeJs($recaptcha->getResultTokenFieldName('customer_login'))
+                    : '' ?>';
+                const recaptchaField = fieldName && form[fieldName];
+                if (recaptchaField) {
+                    bodyFields[fieldName] = recaptchaField.value;
+                }
+                fetch('<?= $escaper->escapeUrl($block->getUrl('customer/ajax/login')) ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(bodyFields)
+                    }
+                ).then(response => {
+                        return response.json()
+                    }
+                ).then(data=> {
+                    this.isLoading = false;
+                    if (data.errors) {
+                        dispatchMessages([{
+                            type: 'error',
+                            text: data.message
+                        }], 5000);
+                        this.errors = 1;
+                        this.hasCaptchaToken = 0;
+                    } else {
+                        window.location.href = this.checkoutUrl;
+                    }
+                });
+            }
+        }
+    }
+</script>
+<section id="authentication-popup"
+         x-data="initAuthentication()"
+         @private-content-loaded.window="onPrivateContentLoaded($event.detail.data)"
+         @toggle-authentication.window="open = forceAuthentication; redirectIfAuthenticated(event)"
+         @keydown.window.escape="open = false"
+>
+    <div
+            class="backdrop"
+            aria-hidden="true"
+            x-cloak
+            x-show="open"
+            x-transition:enter="ease-in-out duration-500"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="ease-in-out duration-500"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            @click="open = false"
+    ></div>
+    <div role="dialog"
+         aria-modal="true"
+         @click.outside="open = false"
+         class="inset-y-0 right-0 z-30 flex max-w-full fixed"
+         x-cloak
+         x-show="open"
+    >
+        <div class="relative w-screen max-w-md pt-16 bg-container-lighter"
+             x-show="open"
+             x-cloak=""
+             x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+        >
+            <div
+                    x-show="open"
+                    x-cloak=""
+                    x-transition:enter="ease-in-out duration-500"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in-out duration-500"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0" class="absolute top-0 right-2 flex p-2 mt-2">
+                <button
+                        type="button"
+                        @click="open = false;"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Close panel')) ?>"
+                        class="p-2 text-gray-300 transition duration-150 ease-in-out hover:text-black"
+                >
+                    <?= $heroicons->xHtml('', 24, 24, ['title' => __('Close panel')]); ?>
+                </button>
+            </div>
+            <template x-if="open">
+                <div class="flex flex-col h-full py-6 space-y-6 bg-white shadow-xl overflow-y-auto">
+                    <div class="block-customer-login bg-container border border-container mx-4 p-4 shadow-sm">
+                        <p id="authenticate-customer-login" class="text-lg leading-7 text-gray-900">
+                            <strong class="font-medium"><?= $escaper->escapeHtml(__('Checkout using your account')) ?></strong>
+                        </p>
+
+                        <form class="form form-login"
+                              method="post"
+                              @submit.prevent="submitForm();"
+                              id="login-form"
+                        >
+                            <?= $recaptcha ? $recaptcha->getInputHtml('customer_login', 'auth-popup') : '' ?>
+                            <div class="fieldset login">
+                                <div class="field email required">
+                                    <label class="label" for="form-login-username" form="login-form" >
+                                        <span><?= $escaper->escapeHtml(__('Email Address')) ?></span>
+                                    </label>
+                                    <div class="control">
+                                        <input name="username"
+                                               id="form-login-username"
+                                               x-ref="customer-email"
+                                               @change="errors = 0"
+                                               type="email"
+                                               required
+                                               autocomplete="<?= $isAutocompleteEnabled ? 'username' : 'off' ?>"
+                                               class="form-input input-text"
+                                        >
+                                    </div>
+                                </div>
+                                <div class="field password required">
+                                    <label for="form-login-password" class="label" form="login-form">
+                                        <span><?= $escaper->escapeHtml(__('Password')) ?></span>
+                                    </label>
+                                    <div class="control">
+                                        <input name="password"
+                                               id="form-login-password"
+                                               type="password"
+                                               class="form-input input-text"
+                                               required
+                                               x-ref="customer-password"
+                                               autocomplete="<?= $isAutocompleteEnabled ? 'current-password' : 'off' ?>"
+                                               @change="errors = 0"
+                                        >
+                                    </div>
+                                </div>
+
+                                <input name="context" type="hidden" value="checkout" />
+                                <div class="actions-toolbar flex justify-between pt-6 pb-2 items-center">
+                                    <button type="submit"<?php if ($loginButtonViewModel->disabled()): ?> disabled data-recaptcha-btn<?php endif; ?>
+                                            class="inline-flex btn btn-primary disabled:opacity-75"
+                                    >
+                                        <?= $escaper->escapeHtml(__('Sign In')) ?>
+                                    </button>
+                                    <a href="<?= $escaper
+                                        ->escapeUrl($block->getUrl('customer/account/forgotpassword')) ?>"
+                                    >
+                                        <?= $escaper->escapeHtml(__('Forgot Your Password?')) ?>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mx-4">
+                        <?= $recaptcha ? $recaptcha->getLegalNoticeHtml('customer_login') : '' ?>
+                        <?php echo $this->getChildHtml('social.form'); ?>
+                    </div>
+                    <div class="block-new-customer bg-container border border-container mx-4 p-4 shadow-sm">
+                        <p id="authenticate-new-customer" class="text-lg mb-2 leading-7 text-gray-900">
+                            <strong class="font-medium"><?= $escaper->escapeHtml(__('Checkout as a new customer')) ?></strong>
+                        </p>
+
+                        <div class="block-content">
+                            <p class="mb-1">
+                                <?= $escaper->escapeHtml(__('Creating an account has many benefits:')) ?>
+                            </p>
+                            <ul class="list-disc pl-5">
+                                <li> <?= $escaper->escapeHtml(__('See order and shipping status')) ?></li>
+                                <li> <?= $escaper->escapeHtml(__('Track order history')) ?></li>
+                                <li> <?= $escaper->escapeHtml(__('Check out faster')) ?></li>
+                            </ul>
+                            <div class="actions-toolbar flex justify-between mt-6 mb-2 items-center">
+                                <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>"
+                                   class="inline-flex btn btn-primary">
+                                    <?= $escaper->escapeHtml(__('Create an Account')) ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</section>

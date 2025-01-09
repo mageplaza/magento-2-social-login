@@ -123,5 +123,16 @@
                 <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/form/social.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="authentication-popup" >
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/form/authentication-popup.phtml</argument>
+            </action>
+            <block class="Mageplaza\SocialLogin\Block\Popup\Social" name="social.form" template="Mageplaza_SocialLogin::hyva/form/social.phtml">
+                <action method="setData">
+                    <argument name="key" xsi:type="string">position</argument>
+                    <argument name="value" xsi:type="number">4</argument>
+                </action>
+            </block>
+        </referenceBlock>
     </body>
 </page>
