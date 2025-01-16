@@ -17,18 +17,8 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
-
-html {
-    /*font-size: 62.5%;*/
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-
-}
-
 #popup_test {
     color: #333333;
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
     line-height: 1.42857143;
@@ -64,7 +54,6 @@ html {
     color: #ffffff;
     cursor: pointer;
     display: inline-block;
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 600;
     padding: 0px 15px;
     font-size: 0.8rem;
@@ -127,7 +116,6 @@ html {
     background-clip: padding-box;
     border: 1px solid #c2c2c2;
     border-radius: 1px;
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
     height: 32px;
     min-height: 32px;
@@ -148,7 +136,6 @@ html {
     color: #333333;
     cursor: pointer;
     display: inline-block;
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 600;
     margin: 0;
     padding: 0px 15px;
@@ -217,7 +204,6 @@ html {
     border: 1px solid transparent;
     border-radius: 4px;
     padding: 6px 12px 6px 44px;
-    font-family: 'Roboto', sans-serif;
 }
 
 .btn-social {
