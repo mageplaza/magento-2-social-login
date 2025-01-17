@@ -1573,3 +1573,9 @@
     color: #ff0084;
     background-color: #fff
 }
+.account-social-login .actions-toolbar.social-btn {
+    width: 215px;
+}
+.social-btn-actions-toolbar {
+    display: inline-block;
+}
