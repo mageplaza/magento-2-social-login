@@ -65,16 +65,7 @@ class Css extends Template
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
-            } elseif (in_array(
-                $this->_request->getFullActionName(),
-                [
-                    'customer_account_login',
-                    'customer_account_create',
-                    'customer_account_index',
-                    'customer_account_forgotpassword'
-                ]
-            )
-            ) {
+            } else {
                 $this->pageConfig->addPageAsset($this->getStyleCss());
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
             }
