@@ -408,7 +408,7 @@ abstract class AbstractSocial extends Action
                     'lastName'      => $userProfile->lastName,
                     'customerToken' => $customerToken
                 ]);
-
+                $script .= "<script>window.close();</script>";
                 return $this->_appendJs($script);
             }
 

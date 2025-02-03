@@ -58,14 +58,12 @@
                 firstNameInput.value = event.data.data.firstName;
                 form.appendChild(firstNameInput);
 
-                // Tạo input ẩn cho "lastname"
                 const lastNameInput = document.createElement('input');
                 lastNameInput.type = 'hidden';
                 lastNameInput.name = 'lastname';
                 lastNameInput.value = event.data.data.lastName;
                 form.appendChild(lastNameInput);
             }
-
         }
     };
 </script>

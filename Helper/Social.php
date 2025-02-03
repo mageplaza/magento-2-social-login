@@ -207,9 +207,9 @@ class Social extends HelperData
     public function getDeleteDataUrl($type)
     {
         $authUrl = $this->getBaseDelete();
-        $type    = $this->setType($type);
+        $type    = $this->setType(strtolower($type));
 
-        return $authUrl . 'type/' . strtolower($type);
+        return $authUrl . 'type/' . $type;
     }
 
     /**
