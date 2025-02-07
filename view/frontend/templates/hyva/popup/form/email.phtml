@@ -27,10 +27,13 @@
     </div>
     <div class="block col-mp mp-12">
         <div class="block-content">
-            <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
+            <form class="form-fake-email" id="social-form-fake-email"
+                  x-data="{...hyva.formValidation($el), ...initMyForm()}"
+                  @submit.prevent="myFormSubmit">
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
                     <div class="field note">
                         <?= /* @noEscape */ __('Please complete your information below to creat an account.') ?></div>
+                    <?php if (strpos($block->getFieldCanShow(), 'name') !== false):?>
                     <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
                             <label class="label" for="request-firstname" style="font-weight: 600">
                                 <span><?= /* @noEscape */ __('First Name') ?></span></label>
@@ -48,6 +51,8 @@
                                        aria-required="true">
                             </div>
                     </div>
+                    <?php endif; ?>
+                    <?php if (strpos($block->getFieldCanShow(), 'email') !== false):?>
                     <div class="field field-email-social required">
                         <label for="request-email" class="label"><span><?= /* @noEscape */ __('Email') ?></span></label>
                         <div class="control">
@@ -55,6 +60,8 @@
                                    data-validate="{required:true, 'validate-email':true}"/>
                         </div>
                     </div>
+                    <?php endif; ?>
+                    <?php if (strpos($block->getFieldCanShow(), 'password') !== false):?>
                     <div class="field field-password-social required">
                         <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
                         <div class="control">
@@ -63,20 +70,21 @@
                                    data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
                         </div>
                     </div>
-                    <div class="field field-confirmation-social required">
-                        <label for="request-password-confirmation"
-                               class="label"><span><?= /* @noEscape */ __('Confirm Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password_confirmation"
-                                   title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
-                                   class="input-text" data-validate="{required:true, equalTo:'#request-password-social'}"
-                                   autocomplete="off"/>
+                        <div class="field field-confirmation-social required">
+                            <label for="request-password-confirmation"
+                                   class="label"><span><?= /* @noEscape */ __('Confirm Password') ?></span></label>
+                            <div class="control">
+                                <input type="password" name="password_confirmation"
+                                       title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
+                                       class="input-text" data-validate="{required:true, equalTo:'#request-password-social'}"
+                                       autocomplete="off"/>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
-                        <button type="button" id="bnt-social-login-fake-email" class="action send primary">
+                        <button type="submit" id="bnt-social-login-fake-email" class="action send primary">
                             <span><?= /* @noEscape */ __('Submit') ?></span>
                         </button>
                     </div>
@@ -95,7 +103,7 @@
             <form class="form-fake-email"
                   id="social-form-fake-email"
                   x-data="{...hyva.formValidation($el), ...initMyForm()}"
-                  @submit.prevent="myFormSubmit"
+                  @submit.prevent="myFormSubmit()"
                  >
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
                     <div class="field note"><?= /* @noEscape */ __('Please complete your information below to login.') ?></div>
@@ -131,6 +139,7 @@
         </div>
     </div>
 </div>
+<?php endif; ?>
 <script>
     function initMyForm() {
         return {
@@ -171,4 +180,3 @@
         }
     }
 </script>
-<?php endif; ?>
