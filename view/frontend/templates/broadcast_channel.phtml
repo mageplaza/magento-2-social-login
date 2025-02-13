@@ -34,6 +34,9 @@
                 window.location.href = event.data.redirectUrl;
             }
         }
+        if (event.data.event === 'windowClose') {
+            window.location.reload();
+        }
         if (event.data.event === 'requiredMoreInfo') {
             if (event.data.data.customerToken) {
                 window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
