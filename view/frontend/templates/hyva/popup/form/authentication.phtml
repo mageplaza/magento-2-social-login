@@ -254,7 +254,11 @@
             document.querySelector('.social-login.forgot').style.display = 'none';
             document.querySelector('.social-login.create').style.display = 'none'; // Assuming you want to show the createFormContainer
             document.querySelector('.social-login.fake-email').style.display = 'none';
-            document.querySelector('#mp-popup-social-content').style.display = 'block';
+            const content = document.querySelector('#mp-popup-social-content');
+            if (content) {
+                content.style.display = 'block';
+            }
+
         }
 
         document.addEventListener("DOMContentLoaded", function () {
