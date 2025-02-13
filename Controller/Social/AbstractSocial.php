@@ -303,12 +303,13 @@ abstract class AbstractSocial extends Action
                 $script .= "<script>
                 window.MP_ACCESS_TOKEN_KEY = '{$customerToken}';
             </script>";
+            } else {
+                $script .= "<script>window.location.reload();</script>";
             }
         }
         $script .= "<script>window.close();</script>";
         return $resultRaw->setContents($content ?: $script);
     }
-
 
     /**
      * @param $customer
