@@ -385,7 +385,8 @@ class Social extends AbstractModel
             'zalo'      => 'Zalo',
             'vkontakte' => 'Vkontakte',
             'live'      => 'MicrosoftGraph',
-            'instagram' => 'InstagramBusiness'
+            'instagram' => 'InstagramBusiness',
+            'facebook' => 'Facebook',
         ];
         if (isset($adapters[$type])) {
             return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
@@ -483,7 +484,7 @@ class Social extends AbstractModel
      */
     public function getProviderConnected()
     {
-        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest', 'instagram'];
+        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest', 'instagram','facebook'];
         foreach ($providers as $provider) {
             $state = $this->_hybridAuthSession->get($provider . '.request_token');
             if (!$state) {
