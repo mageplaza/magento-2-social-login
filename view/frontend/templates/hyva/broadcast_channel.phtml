@@ -43,6 +43,13 @@
             document.querySelector('.social-login.create').style.display = 'none';
             document.querySelector('.social-login.fake-email').style.display = 'block';
             const content = document.querySelector('#mp-popup-social-content');
+            if(event.data.data.typeEmail)
+            {
+                document.querySelectorAll('.social-login.fake-email .field-name-social').forEach(element => {
+                    element.style.display = 'none';
+                });
+                document.querySelector('.field-email-social').style.display = 'none';
+            }
             if (content) {
                 content.style.display = 'none';
             }

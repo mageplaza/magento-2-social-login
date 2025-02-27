@@ -415,13 +415,15 @@ abstract class AbstractSocial extends Action
 
             $customer = $this->createCustomerProcess($userProfile, $type);
         } elseif ($this->apiHelper->isCheckMode() && $customerData->getData('password_hash') === null) {
+            $userProfile->email = $customer->getEmail();
             $this->session->setUserProfile($userProfile);
 
             $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
                 'type'          => $type,
                 'firstName'     => $userProfile->firstName,
                 'lastName'      => $userProfile->lastName,
-                'customerToken' => $customerToken
+                'customerToken' => $customerToken,
+                'typeEmail'     => 'requirePassword'
             ]);
             $script .= "<script>window.close();</script>";
             return $this->_appendJs($script);

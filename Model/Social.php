@@ -236,7 +236,7 @@ class Social extends AbstractModel
             ->setCreatedIn($store->getName());
 
         try {
-            if ($data['password'] !== null) {
+            if ($data['password'] !== null && $this->apiHelper->canSendPassword($store)) {
                 $customer = $this->customerRepository->save($customer, $data['password']);
                 $this->getEmailNotification()->newAccount(
                     $customer,

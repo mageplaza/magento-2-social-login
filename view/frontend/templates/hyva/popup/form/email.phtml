@@ -61,7 +61,7 @@
                         </div>
                     </div>
                     <?php endif; ?>
-                    <?php if (strpos($block->getFieldCanShow(), 'password') !== false):?>
+                    <?php if ($block->isCheckMode() || strpos($block->getFieldCanShow(), 'password') !== false):?>
                     <div class="field field-password-social required">
                         <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
                         <div class="control">
@@ -81,52 +81,6 @@
                             </div>
                         </div>
                     <?php endif; ?>
-                </fieldset>
-                <div class="actions-toolbar">
-                    <div class="primary">
-                        <button type="submit" id="bnt-social-login-fake-email" class="action send primary">
-                            <span><?= /* @noEscape */ __('Submit') ?></span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<?php else: ?>
-<div class="social-login block-container fake-email" style="display: none">
-    <div class="social-login-title">
-        <h2 class="forgot-pass-title"><?= /* @noEscape */ __('Validate your login') ?></h2>
-    </div>
-    <div class="block col-mp mp-12">
-        <div class="block-content">
-            <form class="form-fake-email"
-                  id="social-form-fake-email"
-                  x-data="{...hyva.formValidation($el), ...initMyForm()}"
-                  @submit.prevent="myFormSubmit()"
-                 >
-                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
-                    <div class="field note"><?= /* @noEscape */ __('Please complete your information below to login.') ?></div>
-                    <div class="field field-password-social required">
-                        <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password" id="request-password-social"
-                                   title="<?= /* @noEscape */ __('Password') ?>" class="input-text"
-                                   data-validate='{"required": true, "password": true}'
-                                   autocomplete="off"/>
-                        </div>
-                    </div>
-                    <div class="field field-confirmation-social required">
-                        <label for="request-password-confirmation"
-                               class="label"><span><?= /* @noEscape */ __('Confirm Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password_confirmation"
-                                   title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
-                                   data-validate='{"required": true,"equalTo": "password"}'
-                                   class="input-text"
-                                   autocomplete="off"/>
-                        </div>
-                    </div>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
@@ -160,10 +114,12 @@
                     }).then(res => {
                         return res.json()
                     }).then(response=>{
-                        if (!response.url) {
-                            window.location.reload();
-                        } else {
+                        if (response.url) {
                             window.location.href = response.url;
+                        } else if (response.success === false) {
+                            showErrorMessage(form.querySelector('.field-email-social'), response.message);
+                        }else {
+                            window.location.reload();
                         }
 
                     }).catch(e => {
@@ -179,4 +135,27 @@
             }
         }
     }
+
+    function showErrorMessage(inputElement, message) {
+        if (!inputElement) return;
+
+        let existingError = inputElement.parentNode.querySelector('.error-message-email');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        let errorSpan = document.createElement("span");
+        errorSpan.classList.add("error-message-email");
+        errorSpan.innerText = message;
+
+        inputElement.parentNode.appendChild(errorSpan);
+    }
 </script>
+<style>
+    .error-message-email{
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>

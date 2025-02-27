@@ -143,7 +143,7 @@ class Email extends AbstractSocial
     {
         $resultJson = $this->resultJsonFactory->create();
         $params     = $this->getRequest()->getParams();
-        $type       = $this->apiHelper->setType(strtolower($params['type'])?? "");
+        $type       = $this->apiHelper->setType(strtolower($params['type']) ?? "");
 
         if (!$type) {
             $this->_forward('noroute');
@@ -190,6 +190,11 @@ class Email extends AbstractSocial
         } else {
             $customer = $this->createCustomerProcess($userProfile, $type);
             $this->refresh($customer);
+            if (!$customer) {
+                $result['success'] = false;
+                $result['message'] = __('False to login!');
+                return $resultJson->setData($result);
+            }
         }
 
         $result['success'] = true;

@@ -48,7 +48,7 @@ define(
                     createBtn: '#social-form-login .action.create',
                     formLoginUrl: '',
                     /*Email*/
-                    emailFormContainer: '.social-login.fake-email',
+                    emailFormContainer: '.social-login.fake-email.email',
                     fakeEmailSendBtn: '#social-form-fake-email .action.send',
                     fakeEmailType: '',
                     fakeEmailFrom: '#social-form-fake-email',
@@ -76,6 +76,7 @@ define(
                     actionName: '',
                     firstName: '',
                     lastName: ',',
+                    typeEmail: '',
                     popupContent: '#mp-popup-social-content'
                 },
 
@@ -90,10 +91,11 @@ define(
                     this.initObserve();
                     this.replaceAuthModal();
                     this.hideFieldOnPopup();
-                    window.fakeEmailCallback = function (type, firstname, lastname) {
+                    window.fakeEmailCallback = function (type, firstname, lastname, typeEmail) {
                         self.options.fakeEmailType = type;
                         self.options.firstName     = firstname;
                         self.options.lastName      = lastname;
+                        self.options.typeEmail      = typeEmail;
                         self.showEmail();
                     };
                 },
@@ -299,6 +301,10 @@ define(
 
                     $('#request-firstname').val(this.options.firstName);
                     $('#request-lastname').val(this.options.lastName);
+                    if (this.options.typeEmail  === 'requirePassword'){
+                        $('.field-name-social').hide();
+                        $('.field-email-social').hide();
+                    }
                     this.emailFormContainer.show();
                     this.loginFormContainer.hide();
                     this.forgotFormContainer.hide();
