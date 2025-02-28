@@ -20,7 +20,6 @@
  */
 /** @var \Mageplaza\SocialLogin\Block\Popup $block */
 ?>
-<?php if (!$block->isCheckMode() || $block->isRequireMoreInfo()): ?>
 <div class="social-login block-container fake-email" style="display: none">
     <div class="social-login-title">
         <h2 class="forgot-pass-title"><?= /* @noEscape */ __('The information below is required for social login') ?></h2>
@@ -33,7 +32,7 @@
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
                     <div class="field note">
                         <?= /* @noEscape */ __('Please complete your information below to creat an account.') ?></div>
-                    <?php if (strpos($block->getFieldCanShow(), 'name') !== false):?>
+                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'name') !== false):?>
                     <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
                             <label class="label" for="request-firstname" style="font-weight: 600">
                                 <span><?= /* @noEscape */ __('First Name') ?></span></label>
@@ -52,7 +51,7 @@
                             </div>
                     </div>
                     <?php endif; ?>
-                    <?php if (strpos($block->getFieldCanShow(), 'email') !== false):?>
+                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'email') !== false):?>
                     <div class="field field-email-social required">
                         <label for="request-email" class="label"><span><?= /* @noEscape */ __('Email') ?></span></label>
                         <div class="control">
@@ -61,7 +60,7 @@
                         </div>
                     </div>
                     <?php endif; ?>
-                    <?php if ($block->isCheckMode() || strpos($block->getFieldCanShow(), 'password') !== false):?>
+                    <?php if ($block->isCheckMode() || $block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'password') !== false):?>
                     <div class="field field-password-social required">
                         <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
                         <div class="control">
@@ -93,7 +92,6 @@
         </div>
     </div>
 </div>
-<?php endif; ?>
 <script>
     function initMyForm() {
         return {
