@@ -59,10 +59,11 @@
         </div>
     </div>
     <script>
-
         let inputCaptcha = document.getElementById("captcha_user_forgotpassword");
-        inputCaptcha.setAttribute("data-validate", '{"required": true}');
 
+        if (inputCaptcha) {
+            inputCaptcha.setAttribute("data-validate", '{"required": true}');
+        }
         document.addEventListener("DOMContentLoaded", function () {
             function reloadCaptcha() {
                 let bodyFields = {
@@ -89,7 +90,10 @@
                     }
                 })
             }
-            document.querySelector('.action.reload.captcha-reload').addEventListener("click", reloadCaptcha);
+            let captchaReload = document.querySelector('.action.reload.captcha-reload');
+            if (captchaReload) {
+                captchaReload.addEventListener("click", reloadCaptcha);
+            }
         });
         function initCustomerForgotForm () {
             return {
