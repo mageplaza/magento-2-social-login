@@ -45,10 +45,14 @@
             const content = document.querySelector('#mp-popup-social-content');
             if(event.data.data.typeEmail)
             {
-                document.querySelectorAll('.social-login.fake-email .field-name-social').forEach(element => {
-                    element.style.display = 'none';
-                });
-                document.querySelector('.field-email-social').style.display = 'none';
+                if (document.querySelectorAll('.social-login.fake-email .field-name-social')){
+                    document.querySelectorAll('.social-login.fake-email .field-name-social').forEach(element => {
+                        element.style.display = 'none';
+                    });
+                }
+                if (document.querySelector('.field-email-social')){
+                    document.querySelector('.field-email-social').style.display = 'none';
+                }
             }
             if (content) {
                 content.style.display = 'none';
