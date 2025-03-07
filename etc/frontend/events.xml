@@ -22,6 +22,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="hyva_config_generate_before">
-        <observer name="mageplaza_social_login_hvya_config" instance="Mageplaza\SocialLogin\Observer\RegisterModuleForHyvaConfig"/>
+        <observer name="mageplaza_sociallogin_hvya_config" instance="Mageplaza\SocialLogin\Observer\RegisterModuleForHyvaConfig"/>
     </event>
 </config>
