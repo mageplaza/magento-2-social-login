@@ -182,10 +182,6 @@
 .actions-toolbar.social-btn {
     border-top: 0px !important;
 }
-.main .social-login-authentication-channel .block-content {
-    display: flex;
-    justify-content: flex-end;
-}
 .main .social-login-authentication-channel .block-content .social-btn {
     margin-left: 15px;
 }

@@ -61,7 +61,7 @@
                         </block>
                     </container>
                 </block>
-                <block class="Magento\Framework\View\Element\Template" name="social-login-popup-forgot" as="popup.forgot" template="Mageplaza_SocialLogin::hyva/popup/form/forgot.phtml">
+                <block class="Mageplaza\SocialLogin\Block\Popup" name="social-login-popup-forgot" as="popup.forgot" template="Mageplaza_SocialLogin::hyva/popup/form/forgot.phtml">
                     <container name="social.login.form.additional.info.forgot" as="form_additional_info">
                         <block class="Magento\Captcha\Block\Captcha" name="social-forgot-password-captcha" as="forgot.captcha" after="-">
                             <action method="setFormId">
@@ -104,13 +104,6 @@
                     </item>
                 </argument>
             </arguments>
-        </referenceBlock>
-
-
-        <referenceBlock name="broadcast-channel-block" >
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/broadcast_channel.phtml</argument>
-            </action>
         </referenceBlock>
         <referenceBlock name="social-login-popup-authentication-social-login" >
             <action method="setTemplate">
