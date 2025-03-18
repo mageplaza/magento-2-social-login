@@ -47,7 +47,7 @@
 
 #social-login-popup .block-container .block,
 #request-popup .block-container .block {
-    padding: 20px 25px;
+    padding: 20px 25px!important;
     margin: 0;
 }
 
@@ -82,6 +82,13 @@
 #social-login-popup .actions-toolbar > .secondary .action.back,
 #request-popup .actions-toolbar > .secondary .action.back {
     display: block;
+}
+
+#social-login-popup .social-login .fieldset .field {
+    display: block;
+}
+#social-login-popup .social-login .fieldset .field label{
+    padding: 0 !important;
 }
 
 .social-login-title h2 {
@@ -1782,6 +1789,7 @@
 }
 
 #social-login-popup .mfp-close {
+    right: 15px;
     padding-top: 15px;
 }
 
@@ -1789,5 +1797,5 @@
     padding-top: 75px;
 }
 #social-login-popup > div.mp-social-popup.col-mp.mp-7 div.social-login-title {
-    width: 200%;
+    width: 157%;
 }
