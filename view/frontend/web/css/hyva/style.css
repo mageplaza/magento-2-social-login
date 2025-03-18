@@ -25,7 +25,6 @@
     font-size: 0.8rem;
 }
 
-
 #popup_test  .block-content > .actions-toolbar {
     display: block;
 }
@@ -49,7 +48,6 @@
 }
 
 #popup_test  .action.primary, .action-primary {
-
     border: 1px solid #1979c3;
     color: #ffffff;
     cursor: pointer;
@@ -67,6 +65,7 @@
     font-size: 0.6rem;
     margin: 0 0 0 5px;
 }
+
 #popup_test  .remind, .action.create, .back {
     color: #006bb4 !important;
     text-decoration: none !important;
@@ -85,10 +84,10 @@
     color: #e02b27;
     font-size: 0.8rem;
 }
+
 #popup_test  .control {
     margin-bottom: 10px;
 }
-
 
 #popup_test  h2 {
     font-weight: 300;
@@ -96,14 +95,17 @@
     font-size: 1.6rem;
 
 }
+
 #popup_test .messages li {
     margin-bottom: 20px;
     margin-top: 7px;
 
 }
+
 #popup_test .primary button:focus {
     --tw-ring-shadow: 0 0 #000 ;
 }
+
 #popup_test input[type="text"],
 #popup_test input[type="password"],
 #popup_test input[type="url"],
@@ -129,6 +131,7 @@
 #popup_test fieldset .field.field-reserved, form .field.field-reserved {
     margin-bottom: 0;
 }
+
 #popup_test button {
     background-image: none;
     background: #eeeeee;
@@ -144,6 +147,7 @@
     box-sizing: border-box;
     vertical-align: middle;
 }
+
 #popup_test .captcha-img {
     margin: 0 10px 10px 0;
 }
@@ -172,19 +176,24 @@
     z-index: 1046;
     box-shadow: none;
 }
+
 #social-login-popup .mfp-close {
     color: #ffffff;
     padding-top: 15px;
 }
-#social-login-popup  .mfp-close:hover, .mfp-close:focus {
+
+#socia l-login-popup  .mfp-close:hover, .mfp-close:focus {
     opacity: 1;
 }
+
 .actions-toolbar.social-btn {
     border-top: 0px !important;
 }
+
 .main .social-login-authentication-channel .block-content .social-btn {
     margin-left: 15px;
 }
+
 .social-btn .btn-social {
     display: block;
     text-decoration: none;
