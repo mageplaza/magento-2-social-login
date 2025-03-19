@@ -240,14 +240,23 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
     init() {
         window.openMyDialog = function (event) {
             this.show('my-dialog', event);
+            setTimeout(() => {
+                this.onOpenPopup();
+            }, 50);
         }.bind(this);
+
         window.hideMyDialog = function (event) {
-         this.hide('my-dialog', event);
+            this.hide('my-dialog', event);
         }.bind(this);
+    },
+    onOpenPopup() {
+        scrollButtonContent()
     }
 }" x-init="init()">
     <?= /* @noEscape */ $modal ?>
 </div>
+
+
 <div id="test" style="display: none; height: 100vh">
     <div id="social-login-popup" data-df="" style="transform: translateY(<?php /* @escapeNotVerified */ echo $translateYvalue?>)" class="white-popup mfp-with-anim"
          data-mage-init='{"socialPopupForm": <?= /* @noEscape */ $block->getFormParams() ?>}'>

@@ -241,6 +241,7 @@
             document.querySelector('.social-login.forgot').style.display = 'block';
             document.querySelector('.social-login.create').style.display = 'none'; // Assuming you want to show the createFormContainer
             document.querySelector('.social-login.fake-email').style.display = 'none';
+            scrollButtonContent();
         }
 
         function createBtn () {
@@ -248,6 +249,7 @@
             document.querySelector('.social-login.forgot').style.display = 'none';
             document.querySelector('.social-login.create').style.display = 'block'; // Assuming you want to show the createFormContainer
             document.querySelector('.social-login.fake-email').style.display = 'none';
+            scrollButtonContent();
         }
         function showLogin() {
             document.querySelector('.social-login.authentication').style.display = 'block';
@@ -258,7 +260,26 @@
             if (content) {
                 content.style.display = 'block';
             }
+        }
+        function scrollButtonContent() {
+            console.log('test');
+            const blockContainers = document.querySelectorAll('.social-login.block-container');
 
+            blockContainers.forEach(container => {
+                if (window.getComputedStyle(container).display !== 'none') {
+                    const blockContent = container.querySelector('.block-content');
+                    const popupContent = document.querySelector('#mp-popup-social-content .block-content');
+
+                    if (blockContent && popupContent) {
+                        let blockContentHeight = blockContent.offsetHeight || blockContent.scrollHeight;
+
+                        if (blockContentHeight > 25) {
+                            popupContent.style.maxHeight = `${blockContentHeight - 25}px`;
+                            popupContent.style.overflow = 'auto';
+                        }
+                    }
+                }
+            });
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -268,6 +289,7 @@
                 document.querySelector('.social-login.forgot').style.display = 'none';
                 document.querySelector('.social-login.create').style.display = 'none';
                 document.querySelector('.social-login.fake-email').style.display = 'none';
+                scrollButtonContent();
             }
 
             document.querySelector('#social-form-password-forget .action.back').addEventListener("click", showLogin);

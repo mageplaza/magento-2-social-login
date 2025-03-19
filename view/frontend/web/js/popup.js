@@ -95,7 +95,7 @@ define(
                         self.options.fakeEmailType = type;
                         self.options.firstName     = firstname;
                         self.options.lastName      = lastname;
-                        self.options.typeEmail      = typeEmail;
+                        self.options.typeEmail     = typeEmail;
                         self.showEmail();
                     };
                 },
@@ -144,7 +144,6 @@ define(
                                             } else {
                                                 self.showLogin();
                                             }
-
                                             event.preventDefault();
                                         }
                                     );
@@ -190,6 +189,7 @@ define(
                     $(this.options.forgotBtn).on('click', this.showForgot.bind(this));
                     $(this.options.createBackBtn).on('click', this.showLogin.bind(this));
                     $(this.options.forgotBackBtn).on('click', this.showLogin.bind(this));
+                    $(this.options.popup).on('click', 'a', this.scrollButtonContent.bind(this));
                 },
 
                 /**
@@ -301,7 +301,7 @@ define(
 
                     $('#request-firstname').val(this.options.firstName);
                     $('#request-lastname').val(this.options.lastName);
-                    if (this.options.typeEmail  === 'requirePassword'){
+                    if (this.options.typeEmail === 'requirePassword') {
                         $('.field-name-social').hide();
                         $('.field-email-social').hide();
                     }
@@ -682,19 +682,22 @@ define(
                  * @param child_selector
                  */
                 enablePopup: function (parent_selector = null, child_selector = null) {
-                    parent_selector.magnificPopup(
-                        {
-                            delegate: child_selector,
-                            removalDelay: 500,
-                            callbacks: {
-                                beforeOpen: function () {
-                                    this.st.mainClass = this.st.el.attr('data-effect');
-                                }
+                    const self = this;
+                    parent_selector.magnificPopup({
+                        delegate: child_selector,
+                        removalDelay: 500,
+                        callbacks: {
+                            beforeOpen: function () {
+                                this.st.mainClass = this.st.el.attr('data-effect');
                             },
-                            midClick: true
-                        }
-                    );
+                            open: function () {
+                                self.scrollButtonContent();
+                            }
+                        },
+                        midClick: true
+                    });
                 },
+
 
                 /**
                  * function hide field not allow show on require more information popup
@@ -720,6 +723,26 @@ define(
                             }
                         }
                     );
+                },
+
+                /**
+                 * function scroll button in the popup when have a lot of button social
+                 */
+                scrollButtonContent: function () {
+                    const self = this;
+                    $(self.options.popup).find('.social-login.block-container').each(function () {
+                        if ($(this).css('display') !== 'none') {
+                            const blockContentHeight = $(this).find('.block-content').outerHeight(),
+                                  popupContent       = $(self.options.popup)
+                                  .find('#mp-popup-social-content')
+                                  .find('.block-content');
+
+                            popupContent.css({
+                                'max-height': (blockContentHeight - 25) + 'px',
+                                'overflow': 'auto'
+                            });
+                        }
+                    });
                 }
             }
         );
