@@ -22,69 +22,108 @@
 ?>
 <div class="social-login block-container fake-email" style="display: none">
     <div class="social-login-title">
-        <h2 class="forgot-pass-title"><?= /* @noEscape */ __('The information below is required for social login') ?></h2>
+        <h2 class="forgot-pass-title"><?= /* @noEscape */
+            __('The information below is required for social login') ?></h2>
     </div>
     <div class="block col-mp mp-12">
         <div class="block-content">
             <form class="form-fake-email" id="social-form-fake-email"
                   x-data="{...hyva.formValidation($el), ...initMyForm()}"
                   @submit.prevent="myFormSubmit">
-                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
+                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */
+                __('* Required Fields') ?>">
                     <div class="field note">
-                        <?= /* @noEscape */ __('Please complete your information below to creat an account.') ?></div>
-                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'name') !== false):?>
-                    <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
+                        <?= /* @noEscape */
+                        __('Please complete your information below to creat an account.') ?></div>
+                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'name') !== false): ?>
+                        <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
                             <label class="label" for="request-firstname" style="font-weight: 600">
-                                <span><?= /* @noEscape */ __('First Name') ?></span></label>
+                                <span><?= /* @noEscape */
+                                    __('First Name') ?></span></label>
                             <div class="control">
-                                <input type="text" id="request-firstname" name="firstname" title="<?= /* @noEscape */ __('First Name') ?>"
-                                       class="input-text required-entry" data-validate="{required:true}"
+                                <input type="text" id="request-firstname" name="firstname"
+                                       title="<?= /* @noEscape */ __('First Name') ?>"
+                                       class="input-text"
+                                       x-model="firstname"
+                                       :class="{'border-red-500': firstnameError}"
                                        aria-required="true">
+                                <p x-show="firstnameError" class="text-red-500 text-sm mt-1">This is a required field.</p>
                             </div>
-                    </div>
-                    <div class="field field-name-social required col-mp mp-6" style="padding: 0">
-                            <label class="label" for="request-lastname" style="font-weight: 600"><span><?= /* @noEscape */ __('Last Name') ?></span></label>
+                        </div>
+                        <div class="field field-name-social required col-mp mp-6" style="padding: 0">
+                            <label class="label" for="request-lastname"
+                                   style="font-weight: 600"><span><?= /* @noEscape */
+                                    __('Last Name') ?></span></label>
                             <div class="control">
-                                <input type="text" id="request-lastname" name="lastname" title="<?= /* @noEscape */ __('Last Name') ?>"
-                                       class="input-text required-entry" data-validate="{required:true}"
+                                <input type="text" id="request-lastname" name="lastname"
+                                       title="<?= /* @noEscape */ __('Last Name') ?>"
+                                       class="input-text"
+                                       x-model="lastname"
+                                       :class="{'border-red-500': lastnameError}"
                                        aria-required="true">
+                                <p x-show="lastnameError" class="text-red-500 text-sm mt-1">This is a required field.</p>
                             </div>
-                    </div>
-                    <?php endif; ?>
-                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'email') !== false):?>
-                    <div class="field field-email-social required">
-                        <label for="request-email" class="label"><span><?= /* @noEscape */ __('Email') ?></span></label>
-                        <div class="control">
-                            <input type="email" name="realEmail" alt="email" id="request-email" class="input-text"
-                                   data-validate="{required:true, 'validate-email':true}"/>
                         </div>
-                    </div>
                     <?php endif; ?>
-                    <?php if ($block->isCheckMode() || $block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'password') !== false):?>
-                    <div class="field field-password-social required">
-                        <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password" id="request-password-social"
-                                   title="<?= /* @noEscape */ __('Password') ?>" class="input-text"
-                                   data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
+                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'email') !== false): ?>
+                        <div class="field field-email-social required">
+                            <label for="request-email" class="label"><span><?= /* @noEscape */
+                                    __('Email') ?></span></label>
+                            <div class="control">
+                                <input type="email" name="realEmail" alt="email" id="request-email"
+                                       class="input-text"
+                                       x-model="email"
+                                       :class="{'border-red-500': emailError}"
+                                       @blur="validateEmail()">
+                                <p x-show="emailError" class="text-red-500 text-sm mt-1">This is a required field.</p>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
+                    <?php if ($block->isCheckMode() || $block->getFieldCanShow() && strpos($block->getFieldCanShow(),
+                            'password') !== false): ?>
+                        <div class="field field-password-social required">
+                            <label for="request-password-social" class="label">
+                                <span><?= /* @noEscape */
+                                    __('Password') ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="password" name="password" id="request-password-social"
+                                       title="<?= /* @noEscape */
+                                       __('Password') ?>"
+                                       class="input-text"
+                                       x-model="password"
+                                       :class="{'border-red-500': passwordError}"
+                                       autocomplete="off"/>
+                                <p x-show="passwordError" class="text-red-500 text-sm mt-1">Password is required.</p>
+                            </div>
+                        </div>
+
                         <div class="field field-confirmation-social required">
-                            <label for="request-password-confirmation"
-                                   class="label"><span><?= /* @noEscape */ __('Confirm Password') ?></span></label>
+                            <label for="request-password-confirmation" class="label">
+                                <span><?= /* @noEscape */
+                                    __('Confirm Password') ?></span>
+                            </label>
                             <div class="control">
                                 <input type="password" name="password_confirmation"
-                                       title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
-                                       class="input-text" data-validate="{required:true, equalTo:'#request-password-social'}"
+                                       title="<?= /* @noEscape */
+                                       __('Confirm Password') ?>"
+                                       id="request-password-confirmation"
+                                       class="input-text"
+                                       x-model="passwordConfirm"
+                                       :class="{'border-red-500': confirmPasswordError}"
                                        autocomplete="off"/>
+                                <p x-show="confirmPasswordError" class="text-red-500 text-sm mt-1">Passwords do not
+                                    match.</p>
                             </div>
                         </div>
+
                     <?php endif; ?>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
                         <button type="submit" id="bnt-social-login-fake-email" class="action send primary">
-                            <span><?= /* @noEscape */ __('Submit') ?></span>
+                            <span><?= /* @noEscape */
+                                __('Submit') ?></span>
                         </button>
                     </div>
                 </div>
@@ -93,48 +132,122 @@
     </div>
 </div>
 <script>
-    function initMyForm() {
+
+    /**
+     *
+     * @returns
+     * {{password: string,
+     * myFormSubmit(*): void,
+     * passwordConfirm: string,
+     * passwordError: boolean,
+     * confirmPasswordError: boolean
+     * }}
+     */
+    function initMyForm () {
         return {
-            myFormSubmit(event) {
+            password: '',
+            passwordConfirm: '',
+            email: '',
+            firstname: '',
+            lastname: '',
+
+            passwordError: false,
+            passwordErrorMessage: '',
+            confirmPasswordError: false,
+            emailError: false,
+            firstnameError: false,
+            lastnameError: false,
+
+            myFormSubmit (event) {
                 event.preventDefault();
 
-                this.validate()
-                .then(() => {
-                    // all fields validated
-                    let form = event.target;
-                    const formData = new FormData(form);
-                    fetch('<?= /** @noEscape */ $block->getUrl('sociallogin/social/email') ?>', {
-                        method: 'POST',
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest"
-                        },
-                        body: formData
-                    }).then(res => {
-                        return res.json()
-                    }).then(response=>{
-                        if (response.url) {
-                            window.location.href = response.url;
-                        } else if (response.success === false) {
-                            showErrorMessage(form.querySelector('.field-email-social'), response.message);
-                        }else {
-                            window.location.reload();
-                        }
+                // Reset error states
+                this.passwordError        = false;
+                this.confirmPasswordError = false;
+                this.emailError           = false;
+                this.firstnameError       = false;
+                this.lastnameError        = false;
+                this.passwordErrorMessage = '';
 
-                    }).catch(e => {
+                let hasError = false;
 
-                    })
-                    // event.target.submit()
-                })
-                .catch((invalid) => {
-                    if (invalid.length > 0) {
-                        invalid[0].focus();
+                <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'email') !== false): ?>
+                    this.email = document.getElementById('request-email').value;
+                    if (!this.email.trim() || !this.validateEmail(this.email)) {
+                        this.emailError = true;
+                        hasError        = true;
                     }
+                <?php endif; ?>
+
+                <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'name') !== false): ?>
+                    this.firstname = document.getElementById('request-firstname').value;
+                    if (!this.firstname.trim()) {
+                        this.firstnameError = true;
+                        hasError            = true;
+                    }
+                    this.lastname = document.getElementById('request-lastname').value;
+                    if (!this.lastname.trim()) {
+                        this.lastnameError = true;
+                        hasError           = true;
+                    }
+                <?php endif; ?>
+
+                <?php if ($block->isCheckMode() || $block->getFieldCanShow() && strpos($block->getFieldCanShow(),
+                'password') !== false): ?>
+                if (!this.password.trim()) {
+                    this.passwordError        = true;
+                    this.passwordErrorMessage = "Password is required.";
+                    hasError                  = true;
+                } else if (this.password.length < 6) {
+                    this.passwordError        = true;
+                    this.passwordErrorMessage = "Please enter 6 or more characters. Leading and trailing spaces will" +
+                        " be ignored.";
+                    hasError                  = true;
+                }
+                <?php endif; ?>
+
+                if (this.passwordConfirm !== this.password) {
+                    this.confirmPasswordError = true;
+                    hasError                  = true;
+                }
+
+                if (hasError) {
+                    return;
+                }
+
+                let form       = event.target;
+                const formData = new FormData(form);
+
+                fetch('<?= /** @noEscape */ $block->getUrl('sociallogin/social/email') ?>', {
+                    method: 'POST',
+                    headers: {"X-Requested-With": "XMLHttpRequest"},
+                    body: formData
+                }).then(res => res.json())
+                .then(response => {
+                    if (response.url) {
+                        window.location.href = response.url;
+                    } else if (response.success === false) {
+                        alert(response.message);
+                    } else {
+                        window.location.reload();
+                    }
+                }).catch(e => {
+                    console.error("AJAX error:", e);
                 });
+            },
+
+            validateEmail (email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             }
         }
     }
 
-    function showErrorMessage(inputElement, message) {
+    /**
+     *
+     * @param inputElement
+     * @param message
+     */
+    function showErrorMessage (inputElement, message) {
         if (!inputElement) return;
 
         let existingError = inputElement.parentNode.querySelector('.error-message-email');
@@ -150,7 +263,7 @@
     }
 </script>
 <style>
-    .error-message-email{
+    .error-message-email {
         color: red;
         font-size: 12px;
         margin-top: 5px;

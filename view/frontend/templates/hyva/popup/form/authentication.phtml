@@ -241,6 +241,10 @@
             document.querySelector('.social-login.forgot').style.display = 'block';
             document.querySelector('.social-login.create').style.display = 'none'; // Assuming you want to show the createFormContainer
             document.querySelector('.social-login.fake-email').style.display = 'none';
+            const content = document.querySelector('#mp-popup-social-content');
+            if (content) {
+                content.style.display = 'block';
+            }
             scrollButtonContent();
         }
 
@@ -249,6 +253,10 @@
             document.querySelector('.social-login.forgot').style.display = 'none';
             document.querySelector('.social-login.create').style.display = 'block'; // Assuming you want to show the createFormContainer
             document.querySelector('.social-login.fake-email').style.display = 'none';
+            const content = document.querySelector('#mp-popup-social-content');
+            if (content) {
+                content.style.display = 'block';
+            }
             scrollButtonContent();
         }
         function showLogin() {
@@ -289,6 +297,10 @@
                 document.querySelector('.social-login.forgot').style.display = 'none';
                 document.querySelector('.social-login.create').style.display = 'none';
                 document.querySelector('.social-login.fake-email').style.display = 'none';
+                const content = document.querySelector('#mp-popup-social-content');
+                if (content) {
+                    content.style.display = 'block';
+                }
                 scrollButtonContent();
             }
 
