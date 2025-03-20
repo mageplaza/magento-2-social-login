@@ -51,10 +51,6 @@
     margin: 0;
 }
 
-#social-login-popup .block-container .block.login-bottom {
-    padding: 80% 0 0 25px !important;
-}
-
 .social-login-ajax-loading {
     width: 100%;
     height: 100%;
