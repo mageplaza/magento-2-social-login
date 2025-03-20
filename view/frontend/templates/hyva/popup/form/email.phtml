@@ -215,13 +215,19 @@
                     return;
                 }
 
-                let form       = event.target;
+                let form = event.target;
                 const formData = new FormData(form);
+                let filteredFormData = new FormData();
+                for (let [key, value] of formData.entries()) {
+                    if (value.trim() !== "") {
+                        filteredFormData.append(key, value);
+                    }
+                }
 
                 fetch('<?= /** @noEscape */ $block->getUrl('sociallogin/social/email') ?>', {
                     method: 'POST',
                     headers: {"X-Requested-With": "XMLHttpRequest"},
-                    body: formData
+                    body: filteredFormData
                 }).then(res => res.json())
                 .then(response => {
                     if (response.url) {
