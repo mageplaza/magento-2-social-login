@@ -269,26 +269,6 @@
                 content.style.display = 'block';
             }
         }
-        function scrollButtonContent() {
-            const blockContainers = document.querySelectorAll('.social-login.block-container');
-
-            blockContainers.forEach(container => {
-                if (window.getComputedStyle(container).display !== 'none') {
-                    const blockContent = container.querySelector('.block-content');
-                    const popupContent = document.querySelector('#mp-popup-social-content .block-content');
-
-                    if (blockContent && popupContent) {
-                        let blockContentHeight = blockContent.offsetHeight || blockContent.scrollHeight;
-
-                        if (blockContentHeight > 25) {
-                            popupContent.style.maxHeight = `${blockContentHeight - 25}px`;
-                            popupContent.style.overflow = 'auto';
-                        }
-                    }
-                }
-            });
-        }
-
         document.addEventListener("DOMContentLoaded", function () {
             // Your code here
             function showLogin() {

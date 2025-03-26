@@ -309,4 +309,27 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
         },300);
     };
 
+    function scrollButtonContent() {
+        const blockContainers = document.querySelectorAll('.social-login.block-container');
+
+        blockContainers.forEach(container => {
+            if (window.getComputedStyle(container).display !== 'none') {
+                const blockContent = container.querySelector('.block-content');
+                const popupContent = document.querySelector('#mp-popup-social-content .block-content');
+
+                if (blockContent && popupContent) {
+                    let blockContentHeight = blockContent.offsetHeight || blockContent.scrollHeight;
+                    if(window.innerWidth <= 768){
+                        blockContentHeight = Math.min(blockContentHeight, 180);
+                    }
+
+                    if (blockContentHeight > 25) {
+                        popupContent.style.maxHeight = `${blockContentHeight - 25}px`;
+                        popupContent.style.overflow = 'auto';
+                    }
+                }
+            }
+        });
+    }
+
 </script>

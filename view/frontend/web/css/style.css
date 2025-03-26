@@ -1799,3 +1799,8 @@
 #social-login-popup > div.mp-social-popup.col-mp.mp-7 div.social-login-title {
     width: 200%;
 }
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .mfp-content {
+        bottom: 20%;
+    }
+}
