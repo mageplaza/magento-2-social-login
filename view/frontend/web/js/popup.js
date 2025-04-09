@@ -726,14 +726,21 @@ define(
                 },
 
                 /**
+                 * Create reCaptcha
+                 */
+                loadApi: function () {
+
+                },
+
+                /**
                  * function scroll button in the popup when have a lot of button social
                  */
                 scrollButtonContent: function () {
                     const self = this;
                     $(self.options.popup).find('.social-login.block-container').each(function () {
                         if ($(this).css('display') !== 'none') {
-                            const blockContentHeight = $(this).find('.block-content').outerHeight(),
-                                  popupContent       = $(self.options.popup)
+                            let blockContentHeight = $(this).find('.block-content').outerHeight(),
+                                popupContent       = $(self.options.popup)
                                   .find('#mp-popup-social-content')
                                   .find('.block-content');
 
