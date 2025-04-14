@@ -46,13 +46,15 @@ $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
                 window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
             }
             <?php if(!$helperData->checkHyvaTheme()): ?>
-            fakeEmailCallback(
-                event.data.data.type,
-                event.data.data.firstName,
-                event.data.data.lastName,
-                event.data.data.typeEmail ?? ''
-            );
-            window.close()
+            if (typeof window.fakeEmailCallback !== 'undefined') {
+                fakeEmailCallback(
+                    event.data.data.type,
+                    event.data.data.firstName,
+                    event.data.data.lastName,
+                    event.data.data.typeEmail ?? ''
+                );
+            }
+            window.close();
             <?php else: ?>
             document.querySelector('.social-login.authentication').style.display = 'none';
             document.querySelector('.social-login.forgot').style.display         = 'none';
