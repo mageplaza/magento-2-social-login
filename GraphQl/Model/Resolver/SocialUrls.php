@@ -72,7 +72,7 @@ class SocialUrls implements ResolverInterface
     /**
      * @inheritdoc
      */
-    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
+    public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
     {
         if (!$this->helperData->isEnabled()) {
             throw new GraphQlNoSuchEntityException(__('Module is disabled.'));
