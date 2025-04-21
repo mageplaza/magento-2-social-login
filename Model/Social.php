@@ -51,11 +51,6 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
 
-/**
- * Class Social
- *
- * @package Mageplaza\SocialLogin\Model
- */
 class Social extends AbstractModel
 {
     const STATUS_PROCESS = 'processing';
@@ -113,9 +108,8 @@ class Social extends AbstractModel
      */
     protected $_request;
 
+
     /**
-     * Social constructor.
-     *
      * @param Context $context
      * @param Registry $registry
      * @param CustomerFactory $customerFactory
@@ -130,6 +124,7 @@ class Social extends AbstractModel
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
+     * @throws LocalizedException
      */
     public function __construct(
         Context $context,
@@ -143,8 +138,8 @@ class Social extends AbstractModel
         DateTime $dateTime,
         HybridAuthSession $hybridAuthSession,
         RequestInterface $request,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->customerFactory     = $customerFactory;
