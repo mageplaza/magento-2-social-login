@@ -132,7 +132,7 @@ class Create extends CreatePost
         AccountRedirect $accountRedirect,
         CustomerRepository $customerRepository,
         JsonFactory $jsonFactory,
-        Validator $formKeyValidator = null
+        ?Validator $formKeyValidator = null
     ) {
         parent::__construct(
             $context,
