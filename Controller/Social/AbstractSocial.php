@@ -410,9 +410,7 @@ abstract class AbstractSocial extends Action
                     'customerToken' => $customerToken
                 ]);
                 $script .= "<script>window.close();</script>";
-                if ($customerToken){
-                    return $this->_appendJs($script);
-                }
+                return $this->_appendJs($script);
             }
 
             $customer = $this->createCustomerProcess($userProfile, $type);
