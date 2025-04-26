@@ -180,4 +180,33 @@ class Data extends CoreHelper
         return $this->getConfigGoogleRecaptcha('/general/enabled', $storeId)
             && $this->getConfigGoogleRecaptcha('/frontend/enabled', $storeId);
     }
+
+    /**
+     * @param $channelName
+     * @param $event
+     * @param $data
+     *
+     * @return string
+     */
+    public function generateBroadcastChannelScript($event, $data)
+    {
+        $jsonData = json_encode($data);
+        $channelName = 'social-login-channel';
+        return "<script>
+            (function() {
+                const channel = new BroadcastChannel('$channelName');
+                channel.postMessage({
+                    event: '$event',
+                    data: $jsonData
+                })
+            })();
+        </script>";
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGDPRTaCEnabled(){
+        return $this->isModuleOutputEnabled("Mageplaza_GdprPro") && $this->getConfigValue('gdpr/general/allow_tac_register_customer');
+    }
 }

@@ -1,0 +1,84 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Checkout\ViewModel\Breadcrumbs\SigninRegister;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var SigninRegister $viewModel */
+
+$viewModel      = $viewModels->require(SigninRegister::class);
+$modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
+$helperData     = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+$popupEffect    = $helperData->getPopupEffect();
+$popupLogin     = $helperData->getPopupLogin();
+?>
+<?php if ($viewModel->getCustomerSession()->isLoggedIn() === false): ?>
+    <div class="text-base leading-8">
+    <?php if ($popupLogin === 'popup_login' && $helperData->isEnabled()): ?>
+        <a onclick="onClickLogin()" href="#">
+            <?= $escaper->escapeHtml(__('Sign in')) ?>
+        </a>
+
+        <span class="separator mx-2">
+            &frasl;
+        </span>
+
+        <a href="#" onclick="onClickRegister()">
+            <?= $escaper->escapeHtml(__('Create an Account')) ?>
+        </a>
+    <?php else: ?>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login', ['referer' => base64_encode($block->getUrl('checkout'))])) ?>">
+            <?= $escaper->escapeHtml(__('Sign in')) ?>
+        </a>
+
+        <span class="separator mx-2">
+            &frasl;
+        </span>
+
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create', ['referer' => base64_encode($block->getUrl('checkout'))])) ?>">
+            <?= $escaper->escapeHtml(__('Create an Account')) ?>
+        </a>
+    <?php endif; ?>
+    </div>
+
+    <script type="text/javascript">
+        function onClickLogin () {
+            showLogin();
+            const modal = document.querySelector('.wrap-modal-login');
+            modal.classList.add('<?= /* @noEscape */ $popupEffect ?>-appear');
+            openMyDialog();
+        }
+
+        function onClickRegister () {
+            createBtn();
+            const modal = document.querySelector('.wrap-modal-login');
+            modal.classList.add('<?= /* @noEscape */ $popupEffect ?>-appear');
+            openMyDialog();
+        }
+    </script>
+<?php endif ?>

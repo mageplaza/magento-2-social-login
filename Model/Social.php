@@ -231,7 +231,7 @@ class Social extends AbstractModel
             ->setCreatedIn($store->getName());
 
         try {
-            if ($data['password'] !== null) {
+            if ($data['password'] !== null && $this->apiHelper->canSendPassword($store)) {
                 $customer = $this->customerRepository->save($customer, $data['password']);
                 $this->getEmailNotification()->newAccount(
                     $customer,
@@ -379,7 +379,9 @@ class Social extends AbstractModel
         $adapters = [
             'zalo'      => 'Zalo',
             'vkontakte' => 'Vkontakte',
-            'live'      => 'MicrosoftGraph'
+            'live'      => 'MicrosoftGraph',
+            'instagram' => 'InstagramBusiness',
+            'facebook' => 'Facebook',
         ];
         if (isset($adapters[$type])) {
             return 'Mageplaza\SocialLogin\Model\Providers' . "\\" . $adapters[$type];
@@ -477,7 +479,7 @@ class Social extends AbstractModel
      */
     public function getProviderConnected()
     {
-        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest'];
+        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest', 'instagram','facebook'];
         foreach ($providers as $provider) {
             $state = $this->_hybridAuthSession->get($provider . '.request_token');
             if (!$state) {

@@ -182,13 +182,16 @@ class Social extends HelperData
                 break;
             case 'Yahoo':
             case 'Twitter':
+            case 'Instagram':
+                $param = 'instagram.php';
+                break;
             case 'Vkontakte':
             case 'Zalo':
                 return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
         }
-        if ($type === 'Live') {
+        if ($type === 'Live' || $type === 'Instagram') {
             return $authUrl . $param;
         }
 
@@ -204,9 +207,9 @@ class Social extends HelperData
     public function getDeleteDataUrl($type)
     {
         $authUrl = $this->getBaseDelete();
-        $type    = $this->setType($type);
+        $type    = $this->setType(strtolower($type));
 
-        return $authUrl . 'type/' . strtolower($type);
+        return $authUrl . 'type/' . $type;
     }
 
     /**
@@ -274,6 +277,7 @@ class Social extends HelperData
             'yahoo'      => 'Yahoo',
             'foursquare' => 'Foursquare',
             'vkontakte'  => 'Vkontakte',
+            'instagram'  => 'Instagram',
             'github'     => 'Github',
             'live'       => 'Live',
             'zalo'       => 'Zalo',

@@ -20,62 +20,96 @@
  */
 /** @var \Mageplaza\SocialLogin\Block\Popup $block */
 ?>
-<?php if (!$block->isCheckMode() || $block->isRequireMoreInfo()): ?>
 <div class="social-login block-container fake-email" style="display: none">
     <div class="social-login-title">
-        <h2 class="forgot-pass-title"><?= /* @noEscape */ __('The information below is required for social login') ?></h2>
+        <h2 class="forgot-pass-title"><?= /* @noEscape */
+            __('The information below is required for social login') ?></h2>
     </div>
     <div class="block col-mp mp-12">
         <div class="block-content">
-            <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
-                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
-                    <div class="field note"><?= /* @noEscape */ __('Please complete your information below to creat an account.') ?></div>
-                    <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
-                            <label class="label" for="request-firstname" style="font-weight: 600"><span><?= /* @noEscape */ __('First Name') ?></span></label>
+            <form class="form-fake-email" id="social-form-fake-email"
+                  x-data="{...hyva.formValidation($el), ...initMyForm()}"
+                  @submit.prevent="myFormSubmit">
+                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */
+                __('* Required Fields') ?>">
+                    <div class="field note">
+                        <?= /* @noEscape */
+                        __('Please complete your information below to creat an account.') ?></div>
+                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'name') !== false): ?>
+                        <div class="field field-name-social col-mp mp-6 required" style="padding: 0 10px 0px 0px;">
+                            <label class="label" for="request-firstname" style="font-weight: 600">
+                                <span><?= /* @noEscape */
+                                    __('First Name') ?></span></label>
                             <div class="control">
-                                <input type="text" id="request-firstname" name="firstname" title="<?= /* @noEscape */ __('First Name') ?>"
-                                       class="input-text required-entry" data-validate="{required:true}"
+                                <input type="text" id="request-firstname" name="firstname"
+                                       title="<?= /* @noEscape */ __('First Name') ?>"
+                                       class="input-text"
                                        aria-required="true">
                             </div>
-                    </div>
-                    <div class="field field-name-social required col-mp mp-6" style="padding: 0">
-                            <label class="label" for="request-lastname" style="font-weight: 600"><span><?= /* @noEscape */ __('Last Name') ?></span></label>
+                        </div>
+                        <div class="field field-name-social required col-mp mp-6" style="padding: 0">
+                            <label class="label" for="request-lastname"
+                                   style="font-weight: 600"><span><?= /* @noEscape */
+                                    __('Last Name') ?></span></label>
                             <div class="control">
-                                <input type="text" id="request-lastname" name="lastname" title="<?= /* @noEscape */ __('Last Name') ?>"
-                                       class="input-text required-entry" data-validate="{required:true}"
+                                <input type="text" id="request-lastname" name="lastname"
+                                       title="<?= /* @noEscape */ __('Last Name') ?>"
+                                       class="input-text"
                                        aria-required="true">
                             </div>
-                    </div>
-                    <div class="field field-email-social required">
-                        <label for="request-email" class="label"><span><?= /* @noEscape */ __('Email') ?></span></label>
-                        <div class="control">
-                            <input type="email" name="realEmail" alt="email" id="request-email" class="input-text"
-                                   data-validate="{required:true, 'validate-email':true}"/>
                         </div>
-                    </div>
-                    <div class="field field-password-social required">
-                        <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password" id="request-password-social"
-                                   title="<?= /* @noEscape */ __('Password') ?>" class="input-text"
-                                   data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
+                    <?php endif; ?>
+                    <?php if ($block->getFieldCanShow() && strpos($block->getFieldCanShow(), 'email') !== false): ?>
+                        <div class="field field-email-social required">
+                            <label for="request-email" class="label"><span><?= /* @noEscape */
+                                    __('Email') ?></span></label>
+                            <div class="control">
+                                <input type="email" name="realEmail" alt="email" id="request-email"
+                                       class="input-text"
+                                       data-validate='{"required": true, "email": true}'>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field field-confirmation-social required">
-                        <label for="request-password-confirmation"
-                               class="label"><span><?= /* @noEscape */ __('Confirm Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password_confirmation"
-                                   title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
-                                   class="input-text" data-validate="{required:true, equalTo:'#request-password-social'}"
-                                   autocomplete="off"/>
+                    <?php endif; ?>
+                    <?php if ($block->isCheckMode() || $block->getFieldCanShow() && strpos($block->getFieldCanShow(),
+                            'password') !== false): ?>
+                        <div class="field field-password-social required">
+                            <label for="request-password-social" class="label">
+                                <span><?= /* @noEscape */
+                                    __('Password') ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="password" name="password" id="request-password-social"
+                                       title="<?= /* @noEscape */
+                                       __('Password') ?>"
+                                       class="input-text"
+                                       data-validate='{"required": true , "password": true}'
+                                       autocomplete="off"/>
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="field field-confirmation-social required">
+                            <label for="request-password-confirmation" class="label">
+                                <span><?= /* @noEscape */
+                                    __('Confirm Password') ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="password" name="password_confirmation"
+                                       title="<?= /* @noEscape */
+                                       __('Confirm Password') ?>"
+                                       id="request-password-confirmation"
+                                       class="input-text"
+                                       data-validate='{"required": true , "equalTo": "password"}'
+                                       autocomplete="off"/>
+                            </div>
+                        </div>
+
+                    <?php endif; ?>
                 </fieldset>
                 <div class="actions-toolbar">
                     <div class="primary">
-                        <button type="button" id="bnt-social-login-fake-email" class="action send primary">
-                            <span><?= /* @noEscape */ __('Submit') ?></span>
+                        <button type="submit" id="bnt-social-login-fake-email" class="action send primary">
+                            <span><?= /* @noEscape */
+                                __('Submit') ?></span>
                         </button>
                     </div>
                 </div>
@@ -83,44 +117,82 @@
         </div>
     </div>
 </div>
-<?php else: ?>
-<div class="social-login block-container fake-email" style="display: none">
-    <div class="social-login-title">
-        <h2 class="forgot-pass-title"><?= /* @noEscape */ __('Validate your login') ?></h2>
-    </div>
-    <div class="block col-mp mp-12">
-        <div class="block-content">
-            <form class="form-fake-email" id="social-form-fake-email" data-mage-init='{"validation":{}}'>
-                <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
-                    <div class="field note"><?= /* @noEscape */ __('Please complete your information below to login.') ?></div>
-                    <div class="field field-password-social required">
-                        <label for="request-password-social" class="label"><span><?= /* @noEscape */ __('Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password" id="request-password-social"
-                                   title="<?= /* @noEscape */ __('Password') ?>" class="input-text"
-                                   data-validate="{required:true, 'validate-password':true}" autocomplete="off"/>
-                        </div>
-                    </div>
-                    <div class="field field-confirmation-social required">
-                        <label for="request-password-confirmation"
-                               class="label"><span><?= /* @noEscape */ __('Confirm Password') ?></span></label>
-                        <div class="control">
-                            <input type="password" name="password_confirmation"
-                                   title="<?= /* @noEscape */ __('Confirm Password') ?>" id="request-password-confirmation"
-                                   class="input-text" data-validate="{required:true, equalTo:'#request-password-social'}"
-                                   autocomplete="off"/>
-                        </div>
-                    </div>
-                </fieldset>
-                <div class="actions-toolbar">
-                    <div class="primary">
-                        <button type="button" id="bnt-social-login-fake-email" class="action send primary">
-                            <span><?= /* @noEscape */ __('Submit') ?></span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+<script>
+
+    /**
+     *
+     * @returns
+     * {{password: string,
+     * myFormSubmit(*): void,
+     * passwordConfirm: string,
+     * passwordError: boolean,
+     * confirmPasswordError: boolean
+     * }}
+     */
+    function initMyForm () {
+        return {
+            errors: 0,
+            hasCaptchaToken: 0,
+            showPassword: false,
+            displayErrorMessage: false,
+            errorMessages: [],
+            setErrorMessages (messages) {
+                this.errorMessages       = [messages];
+                this.displayErrorMessage = this.errorMessages.length
+            },
+            myFormSubmit () {
+                event.preventDefault();
+                this.validate()
+                    .then(() => {
+                        removeMsg(".social-login.fake-email .block-content", "message-success success message");
+
+                        removeMsg(".social-login.fake-email .block-content", "message-error error message");
+                        // do not rename $form, the variable is the expected name in the recaptcha output
+                        if (this.errors === 0) {
+                            this.dispatchRequireRequest();
+                        }
+                    })
+                    .catch((invalid) => {
+                        if (invalid.length > 0) {
+                            invalid[0].focus();
+                        }
+                    });
+            },
+            dispatchRequireRequest: function () {
+                appendLoading(".social-login.create .block-content");
+                var createForm = document.querySelector('#social-form-fake-email');
+                var formData = new FormData(createForm);
+                var parameters = new URLSearchParams(formData).toString();
+
+                fetch('<?= /** @noEscape */ $block->getUrl('sociallogin/social/email') ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: parameters
+                }).then(res => res.json())
+                    .then(response => {
+                        if (response.url) {
+                            window.location.href = response.url;
+                        } else if (response.success === false) {
+                            addMsg(".social-login.fake-email .block-content", response);
+                        } else {
+                            window.location.reload();
+                        }
+                    }).catch(e => {
+                    console.error("AJAX error:", e);
+                });
+            }
+        }
+    }
+
+</script>
+<style>
+    .error-message-email {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>

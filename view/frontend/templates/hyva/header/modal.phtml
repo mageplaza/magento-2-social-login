@@ -1,4 +1,23 @@
 <?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
 
 /** @var \Mageplaza\SocialLogin\Block\Popup $block */
 $helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
@@ -15,7 +34,8 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
     </div>
     ');
 
-
+$isGDPRTac = $helperData->isGDPRTaCEnabled();
+$translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 ?>
 <style>
     @keyframes newspaperAnimation {
@@ -220,16 +240,25 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
     init() {
         window.openMyDialog = function (event) {
             this.show('my-dialog', event);
+            setTimeout(() => {
+                this.onOpenPopup();
+            }, 50);
         }.bind(this);
+
         window.hideMyDialog = function (event) {
-         this.hide('my-dialog', event);
+            this.hide('my-dialog', event);
         }.bind(this);
+    },
+    onOpenPopup() {
+        scrollButtonContent()
     }
 }" x-init="init()">
     <?= /* @noEscape */ $modal ?>
 </div>
+
+
 <div id="test" style="display: none; height: 100vh">
-    <div id="social-login-popup" data-df="" style="transform: translateY(30%)" class="white-popup mfp-with-anim"
+    <div id="social-login-popup" data-df="" style="transform: translateY(<?php /* @escapeNotVerified */ echo $translateYvalue?>)" class="white-popup mfp-with-anim"
          data-mage-init='{"socialPopupForm": <?= /* @noEscape */ $block->getFormParams() ?>}'>
         <button title="Close (Esc)" type="button" class="mfp-close" onclick="closeModal()">×</button>
 
@@ -279,5 +308,28 @@ $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
             hideMyDialog();
         },300);
     };
+
+    function scrollButtonContent() {
+        const blockContainers = document.querySelectorAll('.social-login.block-container');
+
+        blockContainers.forEach(container => {
+            if (window.getComputedStyle(container).display !== 'none') {
+                const blockContent = container.querySelector('.block-content');
+                const popupContent = document.querySelector('#mp-popup-social-content .block-content');
+
+                if (blockContent && popupContent) {
+                    let blockContentHeight = blockContent.offsetHeight || blockContent.scrollHeight;
+                    if(window.innerWidth <= 768){
+                        blockContentHeight = Math.min(blockContentHeight, 180);
+                    }
+
+                    if (blockContentHeight > 25) {
+                        popupContent.style.maxHeight = `${blockContentHeight - 25}px`;
+                        popupContent.style.overflow = 'auto';
+                    }
+                }
+            }
+        });
+    }
 
 </script>

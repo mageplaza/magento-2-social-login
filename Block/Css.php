@@ -65,36 +65,15 @@ class Css extends Template
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/grid-mageplaza.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/magnific-popup.css');
-            } elseif (in_array(
-                $this->_request->getFullActionName(),
-                [
-                    'customer_account_login',
-                    'customer_account_create',
-                    'customer_account_index',
-                    'customer_account_forgotpassword'
-                ]
-            )
-            ) {
-                $this->pageConfig->addPageAsset($this->getStyleCss());
+            } else {
+                if (!$this->helper()->checkHyvaTheme()) {
+                    $this->pageConfig->addPageAsset('Mageplaza_SocialLogin::css/style.css');
+                }
                 $this->pageConfig->addPageAsset('Mageplaza_Core::css/font-awesome.min.css');
             }
         }
 
         return $this;
-    }
-
-    /**
-     * GetStyleCss
-     *
-     * @return string
-     */
-    public function getStyleCss()
-    {
-        if (!$this->helper()->checkHyvaTheme()) {
-            return 'Mageplaza_SocialLogin::css/style.css';
-        }
-
-        return 'Mageplaza_SocialLogin::css/style_hyva.css';
     }
 
     /**

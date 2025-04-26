@@ -67,6 +67,27 @@ define(
                                 el.on('click', function () {
                                     self.popup.socialpopup('showLogin');
                                     self.popup.socialpopup('loadApi');
+                                    var channel = self.popup.find('.social-login-authentication-channel');
+
+                                    if (channel.length && channel.hasClass('mp-5')) {
+                                        channel.removeClass('mp-5').addClass('mp-12');
+                                    }
+                                    const socialButtons = channel.find('.actions-toolbar.social-btn');
+                                    if (socialButtons.length) {
+                                        socialButtons.css('margin-right', '15px');
+                                    }
+                                    $(self.popup).find('.social-login.block-container').each(function () {
+                                        if ($(this).css('display') !== 'none') {
+                                            const popupContent       = $(self.popup)
+                                                  .find('#mp-popup-social-content')
+                                                  .find('.block-content');
+
+                                            popupContent.css({
+                                                'max-height': '250' + 'px',
+                                                'overflow': 'auto'
+                                            });
+                                        }
+                                    });
                                 });
 
                                 $('.authentication-wrapper').magnificPopup(

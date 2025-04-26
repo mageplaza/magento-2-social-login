@@ -30,12 +30,11 @@ use Magento\Customer\Model\Account\Redirect;
 
 $label          = $block->getLabel() ? $block->getLabel() : __('Sign In');
 $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
-$helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
-$popupEffect = $helperData->getPopupEffect();
-$popupLogin = $helperData->getPopupLogin();
+$helperData     = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+$popupEffect    = $helperData->getPopupEffect();
+$popupLogin     = $helperData->getPopupLogin();
 ?>
-<?php
-if ($popupLogin === 'popup_login'): ?>
+<?php if ($popupLogin === 'popup_login' && $helperData->isEnabled()): ?>
     <div>
         <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
            class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"

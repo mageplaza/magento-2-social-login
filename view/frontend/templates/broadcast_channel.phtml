@@ -1,0 +1,110 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_SocialLogin
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+$helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
+?>
+<script>
+    let channel = new BroadcastChannel('social-login-channel');
+
+    channel.onmessage = function (event) {
+        if (event.data.event === 'socialLoginSuccess') {
+            window.MP_ACCESS_TOKEN_KEY = event.data.customerToken;
+            window.location.reload();
+        }
+
+        if (event.data.event === 'loginRedirect') {
+            if (event.data.data.redirectUrl) {
+                window.location.href = event.data.data.redirectUrl;
+            } else {
+                window.location.href = event.data.redirectUrl;
+            }
+        }
+
+        if (event.data.event === 'windowClose') {
+            window.location.reload();
+        }
+
+        if (event.data.event === 'requiredMoreInfo') {
+            if (event.data.data.customerToken) {
+                window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
+            }
+            <?php if(!$helperData->checkHyvaTheme()): ?>
+            if (typeof window.fakeEmailCallback !== 'undefined') {
+                fakeEmailCallback(
+                    event.data.data.type,
+                    event.data.data.firstName,
+                    event.data.data.lastName,
+                    event.data.data.typeEmail ?? ''
+                );
+            }
+            window.close();
+            <?php else: ?>
+            document.querySelector('.social-login.authentication').style.display = 'none';
+            document.querySelector('.social-login.forgot').style.display         = 'none';
+            document.querySelector('.social-login.create').style.display         = 'none';
+            document.querySelector('.social-login.fake-email').style.display     = 'block';
+            const content                                                        = document.querySelector('#mp-popup-social-content');
+            if (event.data.data.typeEmail) {
+                if (document.querySelectorAll('.social-login.fake-email .field-name-social')) {
+                    document.querySelectorAll('.social-login.fake-email .field-name-social').forEach(element => {
+                        element.style.display = 'none';
+                    });
+                }
+                if (document.querySelector('.field-email-social')) {
+                    document.querySelector('.field-email-social').style.display = 'none';
+                }
+            }
+            if (content) {
+                content.style.display = 'none';
+            }
+
+            const form = document.querySelector('#social-form-fake-email');
+            if (form) {
+                const typeInput = document.createElement('input');
+                typeInput.type  = 'hidden';
+                typeInput.name  = 'type';
+                typeInput.value = event.data.data.type;
+                form.appendChild(typeInput);
+
+                const firstNameInput = document.createElement('input');
+                firstNameInput.type  = 'hidden';
+                firstNameInput.name  = 'firstname';
+                firstNameInput.value = event.data.data.firstName;
+                form.appendChild(firstNameInput);
+
+                const lastNameInput = document.createElement('input');
+                lastNameInput.type  = 'hidden';
+                lastNameInput.name  = 'lastname';
+                lastNameInput.value = event.data.data.lastName;
+                form.appendChild(lastNameInput);
+            }
+            <?php endif;?>
+        }
+    };
+    <?php if(!$helperData->checkHyvaTheme()): ?>
+    function openLoginPopup () {
+        let currentTime = new Date().toISOString();
+        channel.postMessage({
+            event: 'openPopup',
+            time: currentTime
+        });
+    }
+    <?php endif;?>
+</script>
