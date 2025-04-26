@@ -35,6 +35,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Escaper;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -94,6 +95,7 @@ class Email extends AbstractSocial
      * @param EncryptorInterface $encrypt
      * @param CustomerRepositoryInterface $_customerRepositoryInterface
      * @param CustomerRegistry $_customerRegistry
+     * @param Escaper $escaper
      */
     public function __construct(
         Context $context,
@@ -110,7 +112,8 @@ class Email extends AbstractSocial
         CustomerFactory $customerFactory,
         EncryptorInterface $encrypt,
         CustomerRepositoryInterface $_customerRepositoryInterface,
-        CustomerRegistry $_customerRegistry
+        CustomerRegistry $_customerRegistry,
+        \Magento\Framework\Escaper $escaper
     ) {
         $this->resultJsonFactory            = $resultJsonFactory;
         $this->customerFactory              = $customerFactory;
@@ -128,7 +131,8 @@ class Email extends AbstractSocial
             $accountRedirect,
             $resultRawFactory,
             $customerModel,
-            $tokenFactory
+            $tokenFactory,
+            $escaper
         );
     }
 

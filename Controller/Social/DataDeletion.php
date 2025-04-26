@@ -33,6 +33,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Escaper;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
@@ -62,6 +63,9 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
      * @param AccountRedirect $accountRedirect
      * @param RawFactory $resultRawFactory
      * @param Customer $customerModel
+     * @param TokenFactory $tokenFactory
+     * @param LoggerInterface $logger
+     * @param Escaper $escaper
      */
     public function __construct(
         Context $context,
@@ -74,7 +78,8 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
         RawFactory $resultRawFactory,
         Customer $customerModel,
         TokenFactory $tokenFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        \Magento\Framework\Escaper $escaper
     ) {
         parent::__construct(
             $context,
@@ -86,7 +91,8 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
             $accountRedirect,
             $resultRawFactory,
             $customerModel,
-            $tokenFactory
+            $tokenFactory,
+            $escaper
         );
         $this->_logger = $logger;
     }
