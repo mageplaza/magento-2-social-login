@@ -32,6 +32,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Escaper;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -107,6 +108,11 @@ abstract class AbstractSocial extends Action
     protected $tokenFactory;
 
     /**
+     * @var Escaper
+     */
+    protected $_escaper;
+
+    /**
      * Login constructor.
      *
      * @param Context $context
@@ -119,6 +125,7 @@ abstract class AbstractSocial extends Action
      * @param RawFactory $resultRawFactory
      * @param Customer $customerModel
      * @param TokenFactory $tokenFactory
+     * @param Escaper $escaper
      */
     public function __construct(
         Context $context,
@@ -130,7 +137,8 @@ abstract class AbstractSocial extends Action
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
         Customer $customerModel,
-        TokenFactory $tokenFactory
+        TokenFactory $tokenFactory,
+        Escaper $escaper
     ) {
         $this->storeManager     = $storeManager;
         $this->accountManager   = $accountManager;
@@ -141,6 +149,7 @@ abstract class AbstractSocial extends Action
         $this->resultRawFactory = $resultRawFactory;
         $this->customerModel    = $customerModel;
         $this->tokenFactory     = $tokenFactory;
+        $this->_escaper         = $escaper;
 
         parent::__construct($context);
     }
@@ -434,7 +443,6 @@ abstract class AbstractSocial extends Action
         return $this->_appendJs(null, $customerToken);
     }
 
-
     /**
      * @param $key
      * @param null $value
@@ -465,8 +473,10 @@ abstract class AbstractSocial extends Action
      */
     protected function setBodyResponse($message)
     {
+        // Xss Security Malicious code can be injected into $message by an attacker.
         $content = '<html><head></head><body>';
-        $content .= '<div class="message message-error">' . __('Ooophs, we got an error: %1', $message) . '</div>';
+        $content .= '<div class="message message-error">'
+            . __('Ooophs, we got an error: %1', $this->_escaper->escapeHtml($message)) . '</div>';
         $content .= <<<Style
 <style type="text/css">
     .message{
@@ -501,3 +511,4 @@ Style;
         return $tokenModelFactory->createCustomerToken($customerId)->getToken();
     }
 }
+
