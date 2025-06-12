@@ -18,44 +18,54 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
+/**
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
 $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
 ?>
-<script>
-    let channel = new BroadcastChannel('social-login-channel');
 
-    channel.onmessage = function (event) {
-        if (event.data.event === 'socialLoginSuccess') {
-            window.MP_ACCESS_TOKEN_KEY = event.data.customerToken;
-            window.location.reload();
-        }
+<?php
+$scriptString = <<<script
+            let channel = new BroadcastChannel('social-login-channel');
 
-        if (event.data.event === 'loginRedirect') {
-            if (event.data.data.redirectUrl) {
-                window.location.href = event.data.data.redirectUrl;
-            } else {
-                window.location.href = event.data.redirectUrl;
-            }
-        }
+            channel.onmessage = function (event) {
+                if (event.data.event === 'socialLoginSuccess') {
+                    window.MP_ACCESS_TOKEN_KEY = event.data.customerToken;
+                    window.location.reload();
+                }
 
-        if (event.data.event === 'windowClose') {
-            window.location.reload();
-        }
+                if (event.data.event === 'loginRedirect') {
+                    if (event.data.data.redirectUrl) {
+                        window.location.href = event.data.data.redirectUrl;
+                    } else {
+                        window.location.href = event.data.redirectUrl;
+                    }
+                }
 
-        if (event.data.event === 'requiredMoreInfo') {
-            if (event.data.data.customerToken) {
-                window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
-            }
-            <?php if(!$helperData->checkHyvaTheme()): ?>
-            if (typeof window.fakeEmailCallback !== 'undefined') {
-                fakeEmailCallback(
-                    event.data.data.type,
-                    event.data.data.firstName,
-                    event.data.data.lastName,
-                    event.data.data.typeEmail ?? ''
-                );
-            }
-            window.close();
-            <?php else: ?>
+                if (event.data.event === 'windowClose') {
+                    window.location.reload();
+                }
+
+                if (event.data.event === 'requiredMoreInfo') {
+                    if (event.data.data.customerToken) {
+                        window.MP_ACCESS_TOKEN_KEY = event.data.data.customerToken;
+                    } 
+            script;
+            if(!$helperData->checkHyvaTheme()):
+                $scriptString .= <<<script
+                if (typeof window.fakeEmailCallback !== 'undefined') {
+                    fakeEmailCallback(
+                        event.data.data.type,
+                        event.data.data.firstName,
+                        event.data.data.lastName,
+                        event.data.data.typeEmail ?? ''
+                    );
+                }
+                window.close();
+                script;
+            else:
+                $scriptString .= <<<script
             document.querySelector('.social-login.authentication').style.display = 'none';
             document.querySelector('.social-login.forgot').style.display         = 'none';
             document.querySelector('.social-login.create').style.display         = 'none';
@@ -95,16 +105,22 @@ $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
                 lastNameInput.value = event.data.data.lastName;
                 form.appendChild(lastNameInput);
             }
-            <?php endif;?>
+            script;
+            endif;
+            $scriptString .= <<<script
         }
     };
-    <?php if(!$helperData->checkHyvaTheme()): ?>
-    function openLoginPopup () {
-        let currentTime = new Date().toISOString();
-        channel.postMessage({
-            event: 'openPopup',
-            time: currentTime
-        });
-    }
-    <?php endif;?>
-</script>
+    script;
+    if(!$helperData->checkHyvaTheme()):
+        $scriptString .= <<<script
+            function openLoginPopup () {
+                let currentTime = new Date().toISOString();
+                channel.postMessage({
+                    event: 'openPopup',
+                    time: currentTime
+                });
+            }
+        script;
+    endif;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

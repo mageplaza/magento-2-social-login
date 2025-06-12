@@ -19,6 +19,10 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
+/**
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+
 use Mageplaza\SocialLogin\Model\System\Config\Source\Position;
 
 ?>
@@ -43,12 +47,15 @@ $availableSocials = $block->getAvailableSocials(); ?>
             </div>
         </div>
     </div>
-
-    <script type="text/javascript">
-        require(['jquery'], function ($) {
-            $('.mp-social-popup').addClass('col-mp mp-7');
-        });
-    </script>
+    
+    <?php 
+        $scriptString = <<<script
+                    require(['jquery'], function ($) {
+                $('.mp-social-popup').addClass('col-mp mp-7');
+            });
+        script; 
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 <?php endif; ?>
 
 <?php
@@ -58,7 +65,8 @@ $availableSocials = $block->getAvailableSocials(); ?>
 ?>
 <?php $authenConfig = $block->getSocialButtonsConfig(); ?>
 <?php if ($block->canShow(Position::PAGE_AUTHEN) && sizeof($availableSocials)): ?>
-    <script>
-        window.socialAuthenticationPopup = <?= \Laminas\Json\Json::encode($authenConfig); ?>;
-    </script>
+    <?php
+        $authScript = 'window.socialAuthenticationPopup = ' . \Laminas\Json\Json::encode($authenConfig) . ';';
+        echo $secureRenderer->renderTag('script', [], $authScript, false);
+    ?>
 <?php endif; ?>

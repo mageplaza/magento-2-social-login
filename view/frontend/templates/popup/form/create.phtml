@@ -18,7 +18,9 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-/** @var \Mageplaza\SocialLogin\Block\Form\Register $block */
+/** @var \Mageplaza\SocialLogin\Block\Form\Register $block
+ ** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
 ?>
 <div class="social-login block-container create" style="display: none">
     <div class="social-login-title">
@@ -218,34 +220,44 @@
                     </div>
                 </div>
             </form>
-            <script>
-                require([
-                    'jquery',
-                    'mage/mage'
-                ], function ($) {
-                    var dataForm = $('#social-form-create'),
-                        ignore = <?= $_dob->isEnabled() ? '\'input[id$="full"]\'' : 'null' ?>;
+            <?php
+                $ignore = /* @noEscape */ $_dob->isEnabled() ? "'input[id$=\"full\"]'" : 'null';
+                $scriptString = <<<script
+                    require([
+                        'jquery',
+                        'mage/mage'
+                    ], function($) {
+                        var dataForm = $('#social-form-create'),
+                            ignore = {$ignore};
 
-                    dataForm.mage('validation', {
-                        <?php if ($_dob->isEnabled()): ?>
-                        errorPlacement: function (error, element) {
-                            if (element.prop('id').search('full') !== -1) {
-                                var dobElement = $(element).parents('.customer-dob'),
-                                    errorClass = error.prop('class');
-                                error.insertAfter(element.parent());
-                                dobElement.find('.validate-custom').addClass(errorClass)
-                                    .after('<div class="' + errorClass + '"></div>');
-                            } else {
-                                error.insertAfter(element);
-                            }
-                        },
-                        ignore: ':hidden:not(' + ignore + ')'
-                        <?php else: ?>
-                        ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
-                        <?php endif ?>
+                        dataForm.mage('validation', {
+                    script;
+                    if ($_dob->isEnabled()) {
+                        $scriptString .= <<<script
+                            errorPlacement: function(error, element) {
+                                if (element.prop('id').search('full') !== -1) {
+                                    var dobElement = $(element).parents('.customer-dob'),
+                                        errorClass = error.prop('class');
+                                    error.insertAfter(element.parent());
+                                    dobElement.find('.validate-custom').addClass(errorClass)
+                                        .after('<div class="' + errorClass + '"></div>');
+                                } else {
+                                    error.insertAfter(element);
+                                }
+                            },
+                            ignore: ':hidden:not(' + ignore + ')'
+                    script;
+                    } else {
+                        $scriptString .= <<<script
+                            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+                    script;
+                    }
+                    $scriptString .= <<<script
+                        });
                     });
-                });
-            </script>
+                    script;
+            ?>
+            <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
             <?php if ($block->getShowAddressFields()): ?>
                 <script type="text/x-magento-init">
                     {
