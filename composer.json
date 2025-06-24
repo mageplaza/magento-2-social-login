@@ -1,5 +1,5 @@
 {
-  "name": "chonny/magento-2-social-login",
+  "name": "mageplaza/magento-2-social-login",
   "description": "Magento 2 Social Login extension is designed for quick login to your Magento 2 store without procesing complex register steps",
   "require": {
     "mageplaza/module-core": "^1.5.13",
