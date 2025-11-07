@@ -21,7 +21,7 @@
 $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
 ?>
 <script>
-    let channel = new BroadcastChannel('social-login-channel');
+    var channel = new BroadcastChannel('social-login-channel');
 
     channel.onmessage = function (event) {
         if (event.data.event === 'socialLoginSuccess') {
