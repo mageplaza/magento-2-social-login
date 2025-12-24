@@ -62,6 +62,35 @@ use Mageplaza\SocialLogin\Block\Css;
             padding: 0 15px;
         }
     }
+
+    @media (max-width: 768px) {
+        .fieldset.create.info .field-dob,
+        .social-login .field-dob {
+            width: 100%;
+            clear: both;
+        }
+
+        .fieldset.create.info .field.date .control,
+        .fieldset.create.info .field-dob .control,
+        .fieldset.create.info .field-dob .control.customer-dob,
+        .social-login .field-dob .control,
+        .social-login .field-dob .control.customer-dob {
+            width: 100% ;
+            max-width: none;
+            clear: both;
+        }
+
+        .fieldset.create.info .field.date input,
+        .fieldset.create.info .field-dob input,
+        .social-login .field-dob input,
+        input[type="text"]#mp_sociallogin_dob {
+            width: 100%;
+            max-width: 100%;
+            min-width: 100%;
+            clear: both;
+            margin: 0;
+        }
+    }
 </style>
 
 <?= $block->getChildHtml() ?>
