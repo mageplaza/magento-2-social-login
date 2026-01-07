@@ -35,8 +35,8 @@
             <form
                     class="form-customer-login"
                     id="social-form-login"
-                    x-data="Object.assign(hyva.formValidation($el), initCustomerLoginForm())"
-                    @submit.prevent="submitForm();"
+                    x-data="initCustomerLoginFormWithValidation($el)"
+                    @submit.prevent="mpSubmitForm()"
             >
                 <?= $block->getBlockHtml('formkey') ?>
                 <fieldset class="fieldset login" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
@@ -47,8 +47,10 @@
                             <input name="username" id="social_login_email" x-ref="customer-email" type="email"
                                    class="input-text"
                                    data-validate='{"required": true}'
-                                   value="<?= $block->escapeHtml($block->getUsername()) ?>"<?php if ($block->isAutocompleteDisabled()):
-                                ?> autocomplete="off"<?php endif; ?>
+                                   value="<?= $block->escapeHtml($block->getUsername()) ?>"
+                                   <?php if ($block->isAutocompleteDisabled()): ?>
+                                       autocomplete="off"
+                                   <?php endif; ?>
                                    title="<?= /* @noEscape */ __('Email') ?>" Email
                             >
                         </div>
@@ -167,6 +169,76 @@
             }
         }
 
+        function initCustomerLoginFormWithValidation (el) {
+            const validationData = hyva.formValidation(el);
+            const loginData = {
+                errors: 0,
+                hasCaptchaToken: 0,
+                showPassword: false,
+                displayErrorMessage: false,
+                errorMessages: [],
+                setErrorMessages (messages) {
+                    this.errorMessages       = [messages];
+                    this.displayErrorMessage = this.errorMessages.length
+                },
+                mpSubmitForm () {
+                    this.validate()
+                    .then(() => {
+                        const $form = document.querySelector('#social-form-login');
+                        if (this.errors === 0) {
+                            removeMsg(".social-login.authentication .social-login-customer-authentication .block-content", "message-success success message");
+                            removeMsg(".social-login.authentication .social-login-customer-authentication .block-content", "message-error error message");
+                            this.dispatchLoginRequest($form);
+                        }
+                    })
+                    .catch((invalid) => {
+                        if (invalid.length > 0) {
+                            invalid[0].focus();
+                        }
+                    });
+                },
+                dispatchLoginRequest: function (form) {
+                    this.isLoading   = true;
+                    const username   = this.$refs['customer-email'].value;
+                    const password   = this.$refs['customer-password'].value;
+                    const formKey    = hyva.getFormKey();
+                    const bodyFields = {
+                        'username': username,
+                        'password': password,
+                        'formKey': formKey
+
+                    };
+                    appendLoading('.social-login.authentication .social-login-customer-authentication .block-content');
+
+                    fetch(socialPopupForm.formLoginUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(bodyFields)
+                        }
+                    ).then(response => {
+                            return response.json();
+                        }
+                    ).then(data => {
+                        this.isLoading = false;
+                        addMsg(".social-login.authentication .social-login-customer-authentication .block-content", data);
+                        if (data.errors) {
+
+                        } else {
+                            window.location.reload();
+                        }
+                    }).catch(error => {
+
+                    });
+                    removeLoading('.social-login.authentication .social-login-customer-authentication .block-content');
+
+                }
+            };
+            return Object.assign({}, validationData, loginData);
+        }
+
         function initCustomerLoginForm () {
             return {
                 errors: 0,
@@ -178,13 +250,11 @@
                     this.errorMessages       = [messages];
                     this.displayErrorMessage = this.errorMessages.length
                 },
-                submitForm () {
+                mpSubmitForm () {
                     this.validate()
                     .then(() => {
-                        // do not rename $form, the variable is the expected name in the recaptcha output
                         const $form = document.querySelector('#social-form-login');
                         if (this.errors === 0) {
-                            // $form.submit();
                             removeMsg(".social-login.authentication .social-login-customer-authentication .block-content", "message-success success message");
                             removeMsg(".social-login.authentication .social-login-customer-authentication .block-content", "message-error error message");
                             this.dispatchLoginRequest($form);
