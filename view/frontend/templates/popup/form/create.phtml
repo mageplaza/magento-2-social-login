@@ -59,20 +59,115 @@
                         <div class="field date field-dob">
                             <label class="label" for="dob"><span><?= /* @noEscape */ __('Date of Birth') ?></span></label>
                             <div class="control customer-dob">
-                                <input type="text" name="dob" id="mp_sociallogin_dob" value="" class="" />
+                                <input id="mp_sociallogin_dob_display" type="text" class="input-text" style="display:none;"/>
+                                <input id="mp_sociallogin_dob" type="hidden" name="dob"/>
                                 <script type="text/javascript">
-                                    require(["jquery", "mage/calendar"], function($){
-                                        $("#mp_sociallogin_dob").calendar({
-                                            showsTime: false,
-                                            dateFormat: "M/d/Y",
-                                            buttonImage: "<?= /* @noEscape */ $_dob->getViewFileUrl('Magento_Theme::calendar.png')?>",
-                                            yearRange: "-120y:c+nn",
-                                            buttonText: "Select Date",
-                                            maxDate: "-1d",
-                                            changeMonth: true,
-                                            changeYear: true,
-                                            showOn: "both"
-                                        })
+                                    require([
+                                        "jquery",
+                                        "mage/calendar"
+                                    ], function ($) {
+                                        var $dobDisplay = $('#mp_sociallogin_dob_display');
+                                        var $dobHidden  = $('#mp_sociallogin_dob');
+                                        var isMobile    = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+                                        function toMagentoFormat(isoDate) {
+                                            if (!isoDate) return '';
+                                            var parts = isoDate.split('-');
+                                            if (parts.length === 3) {
+
+                                                return parseInt(parts[1], 10) + '/' + parseInt(parts[2], 10) + '/' + parts[0];
+                                            }
+
+                                            return isoDate;
+                                        }
+
+                                        function toISOFormat(magentoDate) {
+                                            if (!magentoDate) return '';
+                                            var parts = magentoDate.split('/');
+                                            if (parts.length === 3) {
+                                                var month = parts[0].padStart(2, '0');
+                                                var day   = parts[1].padStart(2, '0');
+                                                var year  = parts[2];
+
+                                                return year + '-' + month + '-' + day;
+                                            }
+
+                                            return magentoDate;
+                                        }
+
+                                        if (isMobile) {
+                                            $dobDisplay.attr('type', 'date').show();
+
+                                            var today = new Date();
+                                            today.setDate(today.getDate() - 1);
+                                            $dobDisplay.attr('max', today.toISOString().split('T')[0]);
+
+                                            var minDate = new Date();
+                                            minDate.setFullYear(minDate.getFullYear() - 120);
+                                            $dobDisplay.attr('min', minDate.toISOString().split('T')[0]);
+
+                                            $dobDisplay.on('change', function() {
+                                                var isoDate = $(this).val();
+                                                var magentoDate = toMagentoFormat(isoDate);
+                                                $dobHidden.val(magentoDate);
+
+                                                $dobHidden.trigger('change').removeClass('mage-error');
+                                                $dobDisplay.removeClass('mage-error').siblings('.mage-error').remove();
+
+                                                console.log('DoB updated - ISO:', isoDate, '-> Magento:', magentoDate);
+                                            });
+
+                                            if ($dobHidden.val()) {
+                                                $dobDisplay.val(toISOFormat($dobHidden.val()));
+                                            }
+                                        } else {
+                                            $dobDisplay.attr('type', 'text').show();
+
+                                            $dobDisplay.calendar({
+                                                showsTime: false,
+                                                dateFormat: "M/d/Y",
+                                                buttonImage: "<?= /* @noEscape */ $_dob->getViewFileUrl('Magento_Theme::calendar.png')?>",
+                                                yearRange: "-120y:c+nn",
+                                                buttonText: "Select Date",
+                                                maxDate: "-1d",
+                                                changeMonth: true,
+                                                changeYear: true,
+                                                showOn: "both",
+
+                                                onSelect: function(dateText) {
+                                                    var parts = dateText.split('/');
+                                                    if (parts.length === 3) {
+                                                        var magentoDate = parseInt(parts[0], 10) + '/' +
+                                                            parseInt(parts[1], 10) + '/' +
+                                                            parts[2];
+                                                        $dobHidden.val(magentoDate);
+                                                        $dobHidden.trigger('change');
+                                                    }
+                                                }
+                                            });
+                                            $dobDisplay.on('change blur', function() {
+                                                var val = $(this).val();
+                                                if (val) {
+                                                    var parts = val.split('/');
+                                                    if (parts.length === 3) {
+                                                        var magentoDate = parseInt(parts[0], 10) + '/' +
+                                                            parseInt(parts[1], 10) + '/' +
+                                                            parts[2];
+                                                        $dobHidden.val(magentoDate);
+                                                    }
+                                                }
+                                            });
+
+                                            if ($dobHidden.val()) {
+                                                var parts = $dobHidden.val().split('/');
+                                                if (parts.length === 3) {
+                                                    var displayDate = parts[0].padStart(2, '0') + '/' +
+                                                        parts[1].padStart(2, '0') + '/' +
+                                                        parts[2];
+                                                    $dobDisplay.val(displayDate);
+                                                }
+                                            }
+                                        }
                                     });
                                 </script>
                             </div>
