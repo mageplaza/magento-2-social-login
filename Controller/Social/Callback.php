@@ -44,14 +44,27 @@ class Callback extends AbstractSocial
      */
     public function execute()
     {
-        $param = $this->getRequest()->getParams();
-        if (isset($param['live.php'])) {
-            $param = array_merge($param, ['hauth_done' => 'Live']);
+        $request = $this->getRequest();
+
+        $params = $request->getParams();
+
+        if ($request->isPost()) {
+            $params = array_merge($params, $request->getPostValue());
         }
-        if (isset($param['instagram.php'])) {
-            $param = array_merge($param, ['hauth_done' => 'Instagram']);
+
+        if (isset($params['live.php'])) {
+            $params = array_merge($params, ['hauth_done' => 'Live']);
         }
-        $type = $param['hauth_done'] ?? '';
+
+        if (isset($params['instagram.php'])) {
+            $params = array_merge($params, ['hauth_done' => 'Instagram']);
+        }
+
+        $type = $params['hauth_done'] ?? '';
+
+        if ($request->isPost() && isset($params['id_token'])) {
+            $type = 'apple';
+        }
 
         if ($this->checkRequest('hauth_start', false)
             && (($this->checkRequest('error_reason', 'user_denied')
@@ -60,7 +73,7 @@ class Callback extends AbstractSocial
                     && $this->checkRequest('hauth_done', 'Facebook'))
                 || ($this->checkRequest('hauth_done', 'Twitter') && $this->checkRequest('denied')))
         ) {
-            return $this->_appendJs(sprintf('<script>window.close();</script>'));
+            return $this->_appendJs('<script>window.close();</script>');
         }
 
         return $this->login($type);
