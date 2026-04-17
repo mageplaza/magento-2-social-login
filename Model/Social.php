@@ -355,34 +355,17 @@ class Social extends AbstractModel
         if (!$this->apiHelper->getType()) {
             $this->apiHelper->setType($apiName);
         }
-        if ($apiName === 'apple') {
-            $data = [
-                'enabled' => $this->apiHelper->isEnabled(),
-                'keys'    => [
-                    'id'          => $this->apiHelper->getConfigValue('sociallogin/apple/client_id'),
-                    'team_id'     => $this->apiHelper->getConfigValue('sociallogin/apple/team_id'),
-                    'secret' => 'anything',
-                    'key_id'      => $this->apiHelper->getConfigValue('sociallogin/apple/key_id'),
-                    'key_content' => $this->apiHelper->getConfigValue('sociallogin/apple/private_key'),
-                ],
-                'adapter' => \Mageplaza\SocialLoginPro\Model\Providers\Apple::class
-            ];
+        $data = [
+            'enabled' => $this->apiHelper->isEnabled(),
+            'keys'    => [
+                'id'         => $this->apiHelper->getAppId(),
+                'key'        => $this->apiHelper->getAppId(),
+                'secret'     => $apiName !== 'steam' ? $this->apiHelper->getAppSecret() : '',
+                'public_key' => $apiName === 'odnoklassniki' ? $this->apiHelper->getAppPublicKey() : ''
+            ],
+            'adapter' => $this->getAdapter($apiName)
+        ];
 
-            $socialConfig = $this->apiHelper->getSocialConfig($apiName);
-
-            return array_merge($data, $socialConfig);
-        } else {
-            $data = [
-                'enabled' => $this->apiHelper->isEnabled(),
-                'keys'    => [
-                    'id'         => $this->apiHelper->getAppId(),
-                    'key'        => $this->apiHelper->getAppId(),
-                    'secret'     => $apiName !== 'steam' ? $this->apiHelper->getAppSecret() : '',
-                    'public_key' => $apiName === 'odnoklassniki' ? $this->apiHelper->getAppPublicKey() : ''
-                ],
-                'adapter' => $this->getAdapter($apiName)
-            ];
-        }
         return array_merge($data, $this->apiHelper->getSocialConfig($apiName));
     }
 
@@ -406,8 +389,7 @@ class Social extends AbstractModel
         $adaptersPro = [
             'pinterest'     => 'Pinterest',
             'odnoklassniki' => 'Odnoklassniki',
-            'mailru'        => 'Mailru',
-            'apple'         => 'Apple'
+            'mailru'        => 'Mailru'
         ];
         if (isset($adaptersPro[$type])) {
             return 'Mageplaza\SocialLoginPro\Model\Providers' . "\\" . $adaptersPro[$type];
@@ -497,7 +479,7 @@ class Social extends AbstractModel
      */
     public function getProviderConnected()
     {
-        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest', 'instagram','facebook', 'apple'];
+        $providers = ['twitter', 'yahoo', 'vkontakte', 'zalo', 'pinterest', 'instagram','facebook'];
         foreach ($providers as $provider) {
             $state = $this->_hybridAuthSession->get($provider . '.request_token');
             if (!$state) {

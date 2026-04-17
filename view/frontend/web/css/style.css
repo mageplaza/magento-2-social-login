@@ -1784,46 +1784,6 @@
     background-color: #fff
 }
 
-.btn-apple {
-    color: #fff;
-    background-color: #000;
-    border-color: rgba(0, 0, 0, 0.2);
-}
-
-.btn-apple:hover,
-.btn-apple:focus,
-.btn-apple.focus {
-    color: #fff;
-    background-color: #222;
-    border-color: rgba(0, 0, 0, 0.2);
-}
-
-.btn-apple:active,
-.btn-apple.active,
-.open > .dropdown-toggle.btn-apple {
-    color: #fff;
-    background-color: #222;
-    border-color: rgba(0, 0, 0, 0.2);
-}
-
-.btn-apple:active:hover,
-.btn-apple.active:hover,
-.open > .dropdown-toggle.btn-apple:hover,
-.btn-apple:active:focus,
-.btn-apple.active:focus {
-    background-color: #333;
-}
-
-.btn-apple.disabled,
-.btn-apple[disabled] {
-    background-color: #000;
-    opacity: 0.65;
-}
-
-.btn-apple .fa-apple {
-    font-size: 16px;
-}
-
 .modal-popup.popup-authentication {
     z-index: 1000;
 }
