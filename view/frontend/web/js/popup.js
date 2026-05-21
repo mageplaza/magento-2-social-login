@@ -393,11 +393,11 @@ define(
                         function (entry) {
                             loginData[entry.name] = entry.value;
                             if (entry.name.includes('user_login')) {
-                                loginData['captcha_string']  = entry.value;
-                                loginData['captcha_form_id'] = 'user_login';
+                                loginData['captcha_string'] = entry.value;
                             }
                         }
                     );
+                    loginData['captcha_form_id'] = loginData['captcha_form_id'] || 'user_login';
 
                     this.appendLoading(this.loginFormContent);
                     this.removeMsg(this.loginFormContent, options.errorMsgClass);
