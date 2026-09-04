@@ -18,6 +18,7 @@ use Magento\Customer\Block\Account\Customer;
 
 /** @var Escaper $escaper */
 /** @var Customer $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 /** @var ViewModelRegistry $viewModels */
 /** @var ReCaptcha $recaptcha */
 /** @var HeroiconsOutline $heroicons */
@@ -33,7 +34,7 @@ $storeConfig = $viewModels->require(StoreConfig::class);
 $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocomplete_on_storefront');
 
 ?>
-<script>
+<?php ob_start(); ?>
     function initAuthentication() {
         return {
             open: false,
@@ -115,7 +116,8 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
             }
         }
     }
-</script>
+<?php $scriptString = ob_get_clean(); ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 <section id="authentication-popup"
          x-data="initAuthentication()"
          @private-content-loaded.window="onPrivateContentLoaded($event.detail.data)"

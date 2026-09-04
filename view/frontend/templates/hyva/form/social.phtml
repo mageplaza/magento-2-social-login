@@ -20,6 +20,7 @@
  */
 
 /** @var Mageplaza\SocialLogin\Block\Popup\Social $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 
 $availableSocials = $block->getAvailableSocials();
 $childBlock       = $block->getChildBlock('request.info');
@@ -32,15 +33,25 @@ if ($block->canShow($position) && sizeof($availableSocials) && $helperData->isEn
     <div class="block social-login-authentication-channel account-social-login">
         <div class="block-content">
             <?php foreach ($availableSocials as $key => $social): ?>
+                <?php $btnId = 'mp-social-form-btn-' . $block->escapeHtmlAttr($key); ?>
                 <div class="actions-toolbar social-btn social-btn-actions-toolbar <?= /* @noEscape */ $key ?>-login">
-                    <a class="btn btn-block btn-social btn-<?= /* @noEscape */$block->getBtnKey($key) ?>"
+                    <a id="<?= /* @noEscape */ $btnId ?>"
+                       class="btn btn-block btn-social btn-<?= /* @noEscape */$block->getBtnKey($key) ?>"
                        data-mage-init='{"socialProvider": {"url": "<?= /* @noEscape */$social['login_url'] ?>", "label": "<?= /* @noEscape */__('Login By %1', $social['label']) ?>"}}'
-                       onclick='clickLoginSocial("<?= /* @noEscape */$social['login_url'] ?>","<?= /* @noEscape */$social['label'] ?>")'
                     >
                         <span class="fa fa-<?= /* @noEscape */ $block->getBtnKey($key) ?>"></span>
                         <?= /* @noEscape */ __('Sign in with %1', $social['label']) ?>
                     </a>
                 </div>
+                <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+                    'onclick',
+                    sprintf(
+                        'clickLoginSocial("%s","%s")',
+                        $block->escapeJs($social['login_url']),
+                        $block->escapeJs($social['label'])
+                    ),
+                    '#' . $btnId
+                ) ?>
             <?php endforeach; ?>
         </div>
     </div>
@@ -68,7 +79,7 @@ if ($block->canShow($position) && sizeof($availableSocials) && $helperData->isEn
         padding: 0;
     }
 </style>
-<script type="text/javascript">
+<?php ob_start(); ?>
     function getPopupParams(w, h, l, t) {
         var screenX = typeof window.screenX !== 'undefined' ? window.screenX : window.screenLeft;
         var screenY = typeof window.screenY !== 'undefined' ? window.screenY : window.screenTop;
@@ -92,4 +103,5 @@ if ($block->canShow($position) && sizeof($availableSocials) && $helperData->isEn
         window.open(login_url + '?' + currentTime, label, getPopupParams());
     }
 
-</script>
+<?php $scriptString = ob_get_clean(); ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

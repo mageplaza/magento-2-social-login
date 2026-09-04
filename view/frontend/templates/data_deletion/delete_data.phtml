@@ -20,11 +20,12 @@
  */
 ?>
 <?php /** @var \Mageplaza\SocialLogin\Block\DataDeletion\DeleteData $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 if ($block->isShowConfirm()): ?>
     <div id="popup-modal" style="display:none;">
         <h3> <?= /* @noEscape */ __("Your data in our website has been deleted"); ?></h3>
     </div>
-    <script type="text/javascript">
+    <?php ob_start(); ?>
         require(['jquery', 'Magento_Ui/js/modal/modal'], function ($, modal) {
                 var storeName = '<?= /** @noEscape  */ $block->getStoreName(); ?>';
                 var options   = {
@@ -44,5 +45,6 @@ if ($block->isShowConfirm()): ?>
                 $("#popup-modal").modal("openModal");
             }
         );
-    </script>
+    <?php $scriptString = ob_get_clean(); ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 <?php endif; ?>

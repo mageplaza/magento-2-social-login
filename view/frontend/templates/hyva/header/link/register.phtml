@@ -28,6 +28,7 @@ use Hyva\Theme\ViewModel\CustomerRegistration;
 use Magento\Framework\Escaper;
 
 /** @var SortableItem $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 /** @var Escaper $escaper */
 /** @var ViewModelRegistry $viewModels */
 /** @var CustomerRegistration $customerRegistration */
@@ -48,10 +49,14 @@ $popupLogin  = $helperData->getPopupLogin();
                class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
                href="#"
                title="<?= $escaper->escapeHtmlAttr($label) ?>"
-               onclick="onClickRegister()"
             >
                 <?= $escaper->escapeHtml($label) ?>
             </a>
+            <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+                'onclick',
+                'onClickRegister()',
+                '#' . $escaper->escapeHtmlAttr($block->getNameInLayout())
+            ) ?>
         </div>
     <?php else: ?>
         <div>
@@ -66,7 +71,7 @@ $popupLogin  = $helperData->getPopupLogin();
     <?php endif; ?>
 <?php endif; ?>
 
-<script type="text/javascript">
+<?php ob_start(); ?>
     function onClickRegister () {
         createBtn();
         const modal = document.querySelector('.wrap-modal-login');
@@ -75,4 +80,5 @@ $popupLogin  = $helperData->getPopupLogin();
 
 
     }
-</script>
+<?php $scriptString = ob_get_clean(); ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

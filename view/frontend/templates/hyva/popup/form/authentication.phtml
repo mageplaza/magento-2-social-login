@@ -20,6 +20,7 @@
  */
 
 /** @var \Mageplaza\SocialLogin\Block\Form\Login $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 ?>
 
 <div class="social-login block-container authentication">
@@ -74,12 +75,22 @@
                             </button>
                         </div>
                         <div class="ml-2 md:mt-0 mt-2 md:w-auto w-full md:text-left text-center">
-                            <a class="action remind" href="#" onclick="forgotBtn()"><span><?= /* @noEscape */ __('Forgot Your Password?') ?></span></a>
+                            <a id="mp-social-forgot-link" class="action remind" href="#"><span><?= /* @noEscape */ __('Forgot Your Password?') ?></span></a>
+                            <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+                                'onclick',
+                                'forgotBtn()',
+                                '#mp-social-forgot-link'
+                            ) ?>
                         </div>
                     </div>
                     <div class="actions-toolbar clear-both ">
                         <div class="primary md:w-auto md:text-left w-full text-center">
-                            <a class="action create" href="#" onclick="createBtn()"><span><?= /* @noEscape */ __('Create New Account?') ?></span></a>
+                            <a id="mp-social-create-link" class="action create" href="#"><span><?= /* @noEscape */ __('Create New Account?') ?></span></a>
+                            <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+                                'onclick',
+                                'createBtn()',
+                                '#mp-social-create-link'
+                            ) ?>
                         </div>
                     </div>
                 </fieldset>
@@ -87,7 +98,7 @@
         </div>
     </div>
 
-    <script>
+    <?php ob_start(); ?>
         var socialPopupForm = {
             "formLoginUrl":"",
             "forgotFormUrl":""
@@ -357,6 +368,7 @@
             document.querySelector('#social-form-create .action.back').addEventListener("click", showLogin);
         });
 
-    </script>
+    <?php $scriptString = ob_get_clean(); ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 </div>
 

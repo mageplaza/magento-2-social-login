@@ -18,9 +18,10 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
 ?>
-<script>
+<?php ob_start(); ?>
     var channel = new BroadcastChannel('social-login-channel');
 
     channel.onmessage = function (event) {
@@ -107,4 +108,5 @@ $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
         });
     }
     <?php endif;?>
-</script>
+<?php $scriptString = ob_get_clean(); ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

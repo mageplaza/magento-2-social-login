@@ -27,6 +27,7 @@ use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 /** @var ViewModelRegistry $viewModels */
 /** @var Escaper $escaper */
 /** @var SigninRegister $viewModel */
@@ -40,17 +41,27 @@ $popupLogin     = $helperData->getPopupLogin();
 <?php if ($viewModel->getCustomerSession()->isLoggedIn() === false): ?>
     <div class="text-base leading-8">
     <?php if ($popupLogin === 'popup_login' && $helperData->isEnabled()): ?>
-        <a onclick="onClickLogin()" href="#">
+        <a id="mp-social-checkout-signin" href="#">
             <?= $escaper->escapeHtml(__('Sign in')) ?>
         </a>
+        <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+            'onclick',
+            'onClickLogin()',
+            '#mp-social-checkout-signin'
+        ) ?>
 
         <span class="separator mx-2">
             &frasl;
         </span>
 
-        <a href="#" onclick="onClickRegister()">
+        <a id="mp-social-checkout-register" href="#">
             <?= $escaper->escapeHtml(__('Create an Account')) ?>
         </a>
+        <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+            'onclick',
+            'onClickRegister()',
+            '#mp-social-checkout-register'
+        ) ?>
     <?php else: ?>
         <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login', ['referer' => base64_encode($block->getUrl('checkout'))])) ?>">
             <?= $escaper->escapeHtml(__('Sign in')) ?>
@@ -66,7 +77,7 @@ $popupLogin     = $helperData->getPopupLogin();
     <?php endif; ?>
     </div>
 
-    <script type="text/javascript">
+    <?php ob_start(); ?>
         function onClickLogin () {
             showLogin();
             const modal = document.querySelector('.wrap-modal-login');
@@ -80,5 +91,6 @@ $popupLogin     = $helperData->getPopupLogin();
             modal.classList.add('<?= /* @noEscape */ $popupEffect ?>-appear');
             openMyDialog();
         }
-    </script>
+    <?php $scriptString = ob_get_clean(); ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 <?php endif ?>

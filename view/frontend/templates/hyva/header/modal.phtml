@@ -20,6 +20,7 @@
  */
 
 /** @var \Mageplaza\SocialLogin\Block\Popup $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 $helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
 $popupEffect = $helperData->getPopupEffect();
 $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
@@ -260,7 +261,12 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 <div id="test" style="display: none; height: 100vh">
     <div id="social-login-popup" data-df="" style="transform: translateY(<?php /* @escapeNotVerified */ echo $translateYvalue?>)" class="white-popup mfp-with-anim"
          data-mage-init='{"socialPopupForm": <?= /* @noEscape */ $block->getFormParams() ?>}'>
-        <button title="Close (Esc)" type="button" class="mfp-close" onclick="closeModal()">×</button>
+        <button id="mp-social-modal-close" title="Close (Esc)" type="button" class="mfp-close">×</button>
+        <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+            'onclick',
+            'closeModal()',
+            '#mp-social-modal-close'
+        ) ?>
 
         <?= $block->getChildHtml('popup.email') ?>
         <div class="mp-social-popup col-mp mp-7" style="padding-top: 15px">
@@ -275,7 +281,7 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 </div>
 
 
-<script type="text/javascript">
+<?php ob_start(); ?>
     let popup = ``;
 
     function handleHideModalClickOutSide() {
@@ -332,4 +338,5 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
         });
     }
 
-</script>
+<?php $scriptString = ob_get_clean(); ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
