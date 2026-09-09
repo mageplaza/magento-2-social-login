@@ -27,7 +27,6 @@ use Hybridauth\Storage\Session as HybridAuthSession;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
@@ -258,13 +257,4 @@ class SocialTest extends TestCase
             'type'       => 'facebook',
         ], $store);
     }
-}
-
-/**
- * Declared-method double: Customer::setWebsiteId() is a magic setter (no real method),
- * so it must be declared to be mockable under PHPUnit 12 (no addMethods()).
- */
-abstract class CustomerEmailDouble extends Customer
-{
-    abstract public function setWebsiteId($websiteId);
 }
