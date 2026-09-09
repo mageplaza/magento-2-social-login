@@ -26,6 +26,7 @@ use Magento\Framework\Escaper;
 use Magento\Customer\Model\Account\Redirect;
 
 /** @var SortableItem $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 /** @var Escaper $escaper */
 
 $label          = $block->getLabel() ? $block->getLabel() : __('Sign In');
@@ -38,32 +39,38 @@ $popupLogin     = $helperData->getPopupLogin();
     <div>
         <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
            class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
-           onclick="onClick()"
            href="#"
            title="<?= $escaper->escapeHtmlAttr($label) ?>"
         >
             <?= $escaper->escapeHtml($label) ?>
         </a>
+        <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+            'onclick',
+            'onClick()',
+            '#' . $escaper->escapeHtmlAttr($block->getNameInLayout())
+        ) ?>
     </div>
 <?php else: ?>
     <div>
         <a id="<?= $escaper->escapeHtmlAttr($block->getNameInLayout()) ?>"
            class="block px-4 py-2 lg:px-5 lg:py-2 hover:bg-gray-100"
-           onclick="hyva.setCookie && hyva.setCookie(
-                   '<?= $escaper->escapeJs(Redirect::LOGIN_REDIRECT_URL) ?>',
-                   window.location.href,
-                   1
-                   )"
            href="<?= $escaper->escapeUrl($block->getUrl('customer/account/index')) ?>"
            title="<?= $escaper->escapeHtmlAttr($label) ?>"
         >
             <?= $escaper->escapeHtml($label) ?>
         </a>
-
+        <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+            'onclick',
+            sprintf(
+                "hyva.setCookie && hyva.setCookie('%s', window.location.href, 1)",
+                $escaper->escapeJs(Redirect::LOGIN_REDIRECT_URL)
+            ),
+            '#' . $escaper->escapeHtmlAttr($block->getNameInLayout())
+        ) ?>
     </div>
 <?php endif; ?>
 
-<script type="text/javascript">
+<?php ob_start(); ?>
     function onClick () {
         showLogin();
         const modal = document.querySelector('.wrap-modal-login');
@@ -71,4 +78,5 @@ $popupLogin     = $helperData->getPopupLogin();
         openMyDialog();
 
     }
-</script>
+<?php $scriptString = ob_get_clean(); ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
