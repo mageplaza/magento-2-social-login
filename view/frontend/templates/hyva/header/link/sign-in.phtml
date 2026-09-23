@@ -47,7 +47,7 @@ $popupLogin     = $helperData->getPopupLogin();
         <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
             'onclick',
             'onClick()',
-            '#' . $escaper->escapeHtmlAttr($block->getNameInLayout())
+            "[id='" . $escaper->escapeHtmlAttr($block->getNameInLayout()) . "']"
         ) ?>
     </div>
 <?php else: ?>
@@ -65,7 +65,7 @@ $popupLogin     = $helperData->getPopupLogin();
                 "hyva.setCookie && hyva.setCookie('%s', window.location.href, 1)",
                 $escaper->escapeJs(Redirect::LOGIN_REDIRECT_URL)
             ),
-            '#' . $escaper->escapeHtmlAttr($block->getNameInLayout())
+            "[id='" . $escaper->escapeHtmlAttr($block->getNameInLayout()) . "']"
         ) ?>
     </div>
 <?php endif; ?>
