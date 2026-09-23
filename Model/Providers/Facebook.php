@@ -20,8 +20,9 @@
  */
 
 namespace Mageplaza\SocialLogin\Model\Providers;
+
 /**
- * Class InstagramBusiness
+ * Class Facebook
  * @package Mageplaza\SocialLogin\Model\Providers
  */
 class Facebook extends \Hybridauth\Provider\Facebook
@@ -34,5 +35,5 @@ class Facebook extends \Hybridauth\Provider\Facebook
     /**
      * {@inheritdoc}
      */
-    protected $apiBaseUrl = 'https://graph.facebook.com/v19.0/';
+    protected $apiBaseUrl = 'https://graph.facebook.com/v26.0/';
 }

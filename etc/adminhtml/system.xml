@@ -395,7 +395,7 @@
                 <field id="is_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[Create app <a href="http://instagram.com/developer/clients/manage/" target="_bank">here</a>]]></comment>
+                    <comment><![CDATA[Create app <a href="https://developers.facebook.com/apps" target="_blank">here</a> (use the "Instagram API with Instagram Login" setup). A Business or Creator Instagram account is required.]]></comment>
                 </field>
                 <field id="app_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>

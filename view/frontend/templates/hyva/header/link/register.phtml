@@ -55,7 +55,7 @@ $popupLogin  = $helperData->getPopupLogin();
             <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
                 'onclick',
                 'onClickRegister()',
-                '#' . $escaper->escapeHtmlAttr($block->getNameInLayout())
+                "[id='" . $escaper->escapeHtmlAttr($block->getNameInLayout()) . "']"
             ) ?>
         </div>
     <?php else: ?>

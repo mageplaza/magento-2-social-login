@@ -182,16 +182,17 @@ class Social extends HelperData
                 break;
             case 'Yahoo':
             case 'Twitter':
-            case 'Instagram':
                 $param = 'instagram.php';
                 break;
+            case 'Instagram':
+                return $authUrl . 'type/instagram';
             case 'Vkontakte':
             case 'Zalo':
                 return $authUrl;
             default:
                 $param = 'hauth.done=' . $type;
         }
-        if ($type === 'Live' || $type === 'Instagram') {
+        if ($type === 'Live') {
             return $authUrl . $param;
         }
 

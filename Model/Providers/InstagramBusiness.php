@@ -33,4 +33,9 @@ class InstagramBusiness extends Instagram
      * {@inheritdoc}
      */
     protected $scope = 'instagram_business_basic';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $authorizeUrl = 'https://www.instagram.com/oauth/authorize';
 }

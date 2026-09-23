@@ -25,7 +25,7 @@ $helperData  = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
 $popupEffect = $helperData->getPopupEffect();
 $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
     ->createModal()
-    ->addDialogClass("p-3 w-full wrap-modal-login transform origin-left opacity-0 scale-0" . " " . $popupEffect . "-appear")
+    ->addDialogClass("p-3 w-full wrap-modal-login transform origin-left opacity-0" . " " . $popupEffect . "-appear")
     ->removeDialogClass('shadow-xl', 'inline-block', 'bg-white', 'rounded-lg', 'p-10', 'max-h-screen', 'overflow-auto',
         'border border-10', 'border-blue-500')
     ->withDialogRefName('my-dialog')
