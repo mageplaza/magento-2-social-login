@@ -52,7 +52,6 @@ class SocialTest extends TestCase
     private function setType(Social $social, string $type): void
     {
         $ref = new \ReflectionProperty(Social::class, '_type');
-        $ref->setAccessible(true);
         $ref->setValue($social, $type);
     }
 
