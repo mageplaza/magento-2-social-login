@@ -209,6 +209,14 @@ abstract class AbstractSocial extends Action
     {
         $customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
         if ($customer->getId()) {
+            if (!$this->session->isLoggedIn() || (int) $this->session->getCustomerId() !== (int) $customer->getId()) {
+                $this->emailRedirect(
+                    __('An account with this email already exists. Please sign in with your password first.'),
+                    false
+                );
+
+                return false;
+            }
             $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
         } else {
             try {
