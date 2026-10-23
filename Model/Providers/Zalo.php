@@ -105,7 +105,6 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
             "OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/"
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $header = [
             "secret_key: {$this->clientSecret}",
             "Content-Type: application/x-www-form-urlencoded",
