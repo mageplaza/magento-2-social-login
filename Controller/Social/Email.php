@@ -181,14 +181,25 @@ class Email extends AbstractSocial
             ->loadByEmail($userProfile->email);
 
         if ($checkCustomer->getId()) {
+            $linkedCustomer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+            if ((int) $linkedCustomer->getId() !== (int) $checkCustomer->getId()) {
+                $result['message'] = __(
+                    'An account with this email already exists. Please sign in with your password first.'
+                );
+
+                return $resultJson->setData($result);
+            }
+
             $session                     = $this->session;
             $customerRepositoryInterface = $this->_customerRepositoryInterface;
-            $customerId                  = $customerRepositoryInterface->get($userProfile->email)->getId();
+            $customerId                  = $checkCustomer->getId();
             $customer                    = $customerRepositoryInterface->getById($customerId);
             $customerRegistry            = $this->_customerRegistry;
             $customerSecure              = $customerRegistry->retrieveSecureData($customerId);
-            $customerSecure->setPasswordHash($password);
-            $customerRepositoryInterface->save($customer);
+            if ($password && !$customerSecure->getPasswordHash()) {
+                $customerSecure->setPasswordHash($password);
+                $customerRepositoryInterface->save($customer);
+            }
             $session->setCustomerDataAsLoggedIn($customer);
             $session->regenerateId();
         } else {
