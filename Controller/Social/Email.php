@@ -176,6 +176,12 @@ class Email extends AbstractSocial
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
         $userProfile->lastName  = $lastname ?: $userProfile->lastName;
 
+        if (!$userProfile->email) {
+            $result['message'] = __('Please enter your email address.');
+
+            return $resultJson->setData($result);
+        }
+
         $checkCustomer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
             ->loadByEmail($userProfile->email);

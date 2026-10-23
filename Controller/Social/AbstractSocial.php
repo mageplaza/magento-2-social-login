@@ -175,13 +175,19 @@ abstract class AbstractSocial extends Action
      */
     public function createCustomerProcess($userProfile, $type)
     {
+        if (!$userProfile->email) {
+            $this->emailRedirect($type);
+
+            return false;
+        }
+
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
         if (strtolower($type) === 'steam') {
             $userProfile->identifier = trim($userProfile->identifier, "https://steamcommunity.com/openid/id/");
         }
         $user = array_merge(
             [
-                'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+                'email'      => $userProfile->email,
                 'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
                 'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
                 'identifier' => $userProfile->identifier,
@@ -417,7 +423,7 @@ abstract class AbstractSocial extends Action
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
 
-            if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
+            if (!$userProfile->email || $requiredMoreInfo === 1) {
                 $this->session->setUserProfile($userProfile);
 
                 $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
