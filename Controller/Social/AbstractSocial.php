@@ -44,6 +44,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AbstractSocial
@@ -228,7 +229,7 @@ abstract class AbstractSocial extends Action
             try {
                 $customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
             } catch (Exception $e) {
-                $this->emailRedirect($e->getMessage(), false);
+                $this->emailRedirect($this->getClientMessage($e), false);
 
                 return false;
             }
@@ -407,7 +408,7 @@ abstract class AbstractSocial extends Action
                 return $this->emailRedirect($type);
             }
         } catch (Exception $e) {
-            $this->setBodyResponse($e->getMessage());
+            $this->setBodyResponse($this->getClientMessage($e));
 
             return;
         }
@@ -480,6 +481,22 @@ abstract class AbstractSocial extends Action
     public function checkCustomerLogin()
     {
         return true;
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return string
+     */
+    protected function getClientMessage(Exception $e)
+    {
+        if ($e instanceof LocalizedException) {
+            return $e->getMessage();
+        }
+
+        ObjectManager::getInstance()->get(LoggerInterface::class)->critical($e);
+
+        return (string) __('Unable to complete social login. Please try again.');
     }
 
     /**
