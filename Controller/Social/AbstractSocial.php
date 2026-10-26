@@ -22,6 +22,7 @@
 namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Exception;
+use Hybridauth\Exception\ExceptionInterface;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Customer;
@@ -541,7 +542,12 @@ abstract class AbstractSocial extends Action
             return $e->getMessage();
         }
 
-        ObjectManager::getInstance()->get(LoggerInterface::class)->critical($e);
+        $logger = ObjectManager::getInstance()->get(LoggerInterface::class);
+        if ($e instanceof ExceptionInterface) {
+            $logger->warning($e);
+        } else {
+            $logger->critical($e);
+        }
 
         return (string) __('Unable to complete social login. Please try again.');
     }

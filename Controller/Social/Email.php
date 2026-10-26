@@ -78,6 +78,11 @@ class Email extends AbstractSocial
     protected $_customerRegistry;
 
     /**
+     * @var string|null
+     */
+    protected $redirectMessage;
+
+    /**
      * Email constructor.
      *
      * @param Context $context
@@ -134,6 +139,21 @@ class Email extends AbstractSocial
             $tokenFactory,
             $escaper
         );
+    }
+
+    /**
+     * @param $apiLabel
+     * @param bool $needTranslate
+     *
+     * @return $this
+     */
+    public function emailRedirect($apiLabel, $needTranslate = true)
+    {
+        $this->redirectMessage = $needTranslate
+            ? __('Email is Null, Please enter email in your %1 profile', $apiLabel)
+            : $apiLabel;
+
+        return $this;
     }
 
     /**
@@ -233,7 +253,7 @@ class Email extends AbstractSocial
             $this->refresh($customer);
             if (!$customer) {
                 $result['success'] = false;
-                $result['message'] = __('False to login!');
+                $result['message'] = $this->redirectMessage ?: __('False to login!');
                 return $resultJson->setData($result);
             }
         }
