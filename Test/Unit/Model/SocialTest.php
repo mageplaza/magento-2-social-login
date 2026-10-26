@@ -197,6 +197,39 @@ class SocialTest extends TestCase
         $this->model->getProviderConnected();
     }
 
+    public function testGetProviderConnectedThrowsWhenNoStateOnEitherSide(): void
+    {
+        $this->hybridAuthSession->method('get')->willReturn(null);
+        $this->request->method('getParam')->willReturn(null);
+
+        $this->expectException(NoSuchEntityException::class);
+        $this->expectExceptionMessage('Unknown Provider');
+
+        $this->model->getProviderConnected();
+    }
+
+    public function testGetProviderConnectedThrowsWhenBothStatesAreEmptyStrings(): void
+    {
+        $this->hybridAuthSession->method('get')->willReturn('');
+        $this->request->method('getParam')->willReturn('');
+
+        $this->expectException(NoSuchEntityException::class);
+
+        $this->model->getProviderConnected();
+    }
+
+    public function testGetProviderConnectedMatchesZaloState(): void
+    {
+        $this->hybridAuthSession->method('get')->willReturnCallback(static function ($key) {
+            return $key === 'zalo.authorization_state' ? 'HA-abc123' : null;
+        });
+        $this->request->method('getParam')->willReturnCallback(static function ($key) {
+            return $key === 'state' ? 'HA-abc123' : null;
+        });
+
+        $this->assertSame('zalo', $this->model->getProviderConnected());
+    }
+
     // ----------------------------------------------------------------- getCustomerByEmail
 
     public function testGetCustomerByEmailUsesProvidedWebsiteId(): void

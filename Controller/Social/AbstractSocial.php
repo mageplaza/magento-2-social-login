@@ -184,8 +184,9 @@ abstract class AbstractSocial extends Action
                 'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
                 'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
                 'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
-                'identifier' => $userProfile->identifier,
-                'type'       => $type,
+                'identifier'     => $userProfile->identifier,
+                'email_verified' => $userProfile->emailVerified ?? null,
+                'type'           => $type,
                 'password'   => isset($userProfile->password) ? $userProfile->password :
                     $this->getRequest()->getParam('password')
             ],
@@ -209,6 +210,13 @@ abstract class AbstractSocial extends Action
     {
         $customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
         if ($customer->getId()) {
+            if (!$this->isEmailVerified($user)) {
+                $this->messageManager->addErrorMessage(
+                    __('An account with this email already exists. Please sign in with your email and password.')
+                );
+
+                return false;
+            }
             $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
         } else {
             try {
@@ -221,6 +229,29 @@ abstract class AbstractSocial extends Action
         }
 
         return $customer;
+    }
+
+    /**
+     * @param array $user
+     *
+     * @return bool
+     */
+    protected function isEmailVerified($user)
+    {
+        $verified = $user['email_verified'] ?? null;
+        if (empty($verified)) {
+            return false;
+        }
+
+        if (is_string($verified)) {
+            if (strpos($verified, '@') === false) {
+                return filter_var($verified, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            return strcasecmp(trim($verified), trim((string) $user['email'])) === 0;
+        }
+
+        return (bool) $verified;
     }
 
     /**

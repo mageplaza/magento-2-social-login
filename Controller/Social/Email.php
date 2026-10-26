@@ -171,7 +171,12 @@ class Email extends AbstractSocial
             }
         }
 
-        $userProfile            = $this->session->getUserProfile();
+        $userProfile = $this->session->getUserProfile();
+        if (!$userProfile || empty($userProfile->identifier)) {
+            $result['message'] = __('False to login!');
+
+            return $resultJson->setData($result);
+        }
         $userProfile->email     = $realEmail ?: $userProfile->email;
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
         $userProfile->lastName  = $lastname ?: $userProfile->lastName;
@@ -183,10 +188,18 @@ class Email extends AbstractSocial
         if ($checkCustomer->getId()) {
             $session                     = $this->session;
             $customerRepositoryInterface = $this->_customerRepositoryInterface;
-            $customerId                  = $customerRepositoryInterface->get($userProfile->email)->getId();
-            $customer                    = $customerRepositoryInterface->getById($customerId);
+            $customerId                  = $checkCustomer->getId();
             $customerRegistry            = $this->_customerRegistry;
             $customerSecure              = $customerRegistry->retrieveSecureData($customerId);
+
+            $linkedCustomer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+            if ((int) $linkedCustomer->getId() !== (int) $customerId || $customerSecure->getPasswordHash()) {
+                $result['message'] = __('Email already exists');
+
+                return $resultJson->setData($result);
+            }
+
+            $customer = $customerRepositoryInterface->getById($customerId);
             $customerSecure->setPasswordHash($password);
             $customerRepositoryInterface->save($customer);
             $session->setCustomerDataAsLoggedIn($customer);
