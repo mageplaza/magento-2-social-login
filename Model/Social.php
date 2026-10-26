@@ -39,6 +39,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -267,14 +268,18 @@ class Social extends AbstractModel
             ->setCreatedIn($store->getName());
 
         try {
-            if ($data['password'] !== null && $this->apiHelper->canSendPassword($store)) {
-                $customer = $this->customerRepository->save($customer, $data['password']);
-                $this->getEmailNotification()->newAccount(
-                    $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,
-                    '',
-                    $store->getId()
-                );
+            if ($data['password'] !== null) {
+                $passwordHash = ObjectManager::getInstance()->get(EncryptorInterface::class)
+                    ->getHash($data['password'], true);
+                $customer     = $this->customerRepository->save($customer, $passwordHash);
+                if ($this->apiHelper->canSendPassword($store)) {
+                    $this->getEmailNotification()->newAccount(
+                        $customer,
+                        EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,
+                        '',
+                        $store->getId()
+                    );
+                }
             } else {
                 // If customer exists existing hash will be used by Repository
                 $customer = $this->customerRepository->save($customer);
