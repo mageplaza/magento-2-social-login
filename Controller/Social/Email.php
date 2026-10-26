@@ -29,6 +29,7 @@ use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
@@ -50,7 +51,7 @@ use Mageplaza\SocialLogin\Model\Social;
  *
  * @package Mageplaza\SocialLogin\Controller
  */
-class Email extends AbstractSocial
+class Email extends AbstractSocial implements HttpPostActionInterface
 {
     /**
      * @type JsonFactory
@@ -176,7 +177,13 @@ class Email extends AbstractSocial
         }
 
         $result    = ['success' => false];
-        if ($this->session->isLoggedIn() && $this->session->getUserProfile()) {
+        if (!$this->session->getUserProfile()) {
+            $result['message'] = __('Your session has expired. Please try again.');
+
+            return $resultJson->setData($result);
+        }
+
+        if ($this->session->isLoggedIn()) {
             try {
                 $this->apiObject->linkToCustomer(
                     $this->session->getUserProfile()->identifier,
