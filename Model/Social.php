@@ -32,6 +32,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Config\Share;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\ObjectManager;
@@ -172,15 +173,16 @@ class Social extends AbstractModel
      */
     public function getCustomerBySocial($identify, $type)
     {
-        $websiteId = $this->storeManager->getWebsite()->getId();
-        $customer  = $this->customerFactory->create();
+        $customer = $this->customerFactory->create();
 
-        $socialCustomer = $this->getCollection()
+        $collection = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
-            ->addFieldToFilter('status', ['null' => 'true'])
-            ->addFieldToFilter('website_id', $websiteId)
-            ->getFirstItem();
+            ->addFieldToFilter('status', ['null' => 'true']);
+        if (!ObjectManager::getInstance()->get(Share::class)->isGlobalScope()) {
+            $collection->addFieldToFilter('website_id', $this->storeManager->getWebsite()->getId());
+        }
+        $socialCustomer = $collection->getFirstItem();
 
         if ($socialCustomer && $socialCustomer->getId()) {
             $customer->load($socialCustomer->getCustomerId());
