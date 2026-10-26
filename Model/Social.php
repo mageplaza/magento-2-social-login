@@ -173,8 +173,25 @@ class Social extends AbstractModel
      */
     public function getCustomerBySocial($identify, $type)
     {
-        $customer = $this->customerFactory->create();
+        $customer   = $this->customerFactory->create();
+        $customerId = $this->getLinkedCustomerId($identify, $type);
 
+        if ($customerId) {
+            $customer->load($customerId);
+        }
+
+        return $customer;
+    }
+
+    /**
+     * @param $identify
+     * @param $type
+     *
+     * @return int|null
+     * @throws LocalizedException
+     */
+    public function getLinkedCustomerId($identify, $type)
+    {
         $collection = $this->getCollection()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
@@ -184,11 +201,28 @@ class Social extends AbstractModel
         }
         $socialCustomer = $collection->getFirstItem();
 
-        if ($socialCustomer && $socialCustomer->getId()) {
-            $customer->load($socialCustomer->getCustomerId());
+        return $socialCustomer && $socialCustomer->getId() ? (int) $socialCustomer->getCustomerId() : null;
+    }
+
+    /**
+     * @param $identify
+     * @param $customerId
+     * @param $type
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function linkToCustomer($identify, $customerId, $type)
+    {
+        $linkedId = $this->getLinkedCustomerId($identify, $type);
+        if ($linkedId && $linkedId !== (int) $customerId) {
+            throw new LocalizedException(__('This social account is already linked to another account.'));
+        }
+        if (!$linkedId) {
+            $this->setAuthorCustomer($identify, $customerId, $type);
         }
 
-        return $customer;
+        return $this;
     }
 
     /**

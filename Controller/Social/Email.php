@@ -156,6 +156,26 @@ class Email extends AbstractSocial
         }
 
         $result    = ['success' => false];
+        if ($this->session->isLoggedIn() && $this->session->getUserProfile()) {
+            try {
+                $this->apiObject->linkToCustomer(
+                    $this->session->getUserProfile()->identifier,
+                    $this->session->getCustomerId(),
+                    $type
+                );
+            } catch (LocalizedException $e) {
+                $result['message'] = $e->getMessage();
+
+                return $resultJson->setData($result);
+            }
+
+            return $resultJson->setData([
+                'success' => true,
+                'message' => __('Success!'),
+                'url'     => $this->_loginPostRedirect()
+            ]);
+        }
+
         $realEmail = isset($params['realEmail']) ? $params['realEmail'] : null;
         $firstname = isset($params['firstname']) ? $params['firstname'] : null;
         $lastname  = isset($params['lastname']) ? $params['lastname'] : null;

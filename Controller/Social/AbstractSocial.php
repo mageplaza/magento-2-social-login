@@ -176,6 +176,10 @@ abstract class AbstractSocial extends Action
      */
     public function createCustomerProcess($userProfile, $type)
     {
+        if ($this->session->isLoggedIn()) {
+            return $this->linkLoggedInCustomer($userProfile->identifier, $type);
+        }
+
         if (!$userProfile->email) {
             $this->emailRedirect($type);
 
@@ -236,6 +240,25 @@ abstract class AbstractSocial extends Action
         }
 
         return $customer;
+    }
+
+    /**
+     * @param $identifier
+     * @param $type
+     *
+     * @return bool|Customer
+     */
+    public function linkLoggedInCustomer($identifier, $type)
+    {
+        try {
+            $this->apiObject->linkToCustomer($identifier, $this->session->getCustomerId(), $type);
+        } catch (Exception $e) {
+            $this->emailRedirect($this->getClientMessage($e), false);
+
+            return false;
+        }
+
+        return $this->session->getCustomer();
     }
 
     /**
@@ -414,6 +437,15 @@ abstract class AbstractSocial extends Action
         }
 
         $customer      = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+        if ($this->session->isLoggedIn()
+            && $customer->getId()
+            && (int) $customer->getId() !== (int) $this->session->getCustomerId()
+        ) {
+            $this->messageManager->addErrorMessage(__('This social account is already linked to another account.'));
+
+            return $this->_appendJs();
+        }
+
         $customerData  = $this->customerModel->load($customer->getId());
         if ($customer->getId()) {
             $customerToken = $this->getCustomerToken($customer->getId());
@@ -424,7 +456,7 @@ abstract class AbstractSocial extends Action
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
 
-            if (!$userProfile->email || $requiredMoreInfo === 1) {
+            if (!$this->session->isLoggedIn() && (!$userProfile->email || $requiredMoreInfo === 1)) {
                 $this->session->setUserProfile($userProfile);
 
                 $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
