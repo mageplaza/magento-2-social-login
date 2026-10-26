@@ -289,15 +289,15 @@ class Social extends AbstractModel
                 $newPasswordToken  = $mathRandom->getUniqueHash();
                 $accountManagement = $objectManager->get(AccountManagementInterface::class);
                 $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
-            }
 
-            if ($this->apiHelper->canSendPassword($store)) {
-                $this->getEmailNotification()->newAccount(
-                    $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
-                    '',
-                    $store->getId()
-                );
+                if ($this->apiHelper->canSendPassword($store)) {
+                    $this->getEmailNotification()->newAccount(
+                        $customer,
+                        EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
+                        '',
+                        $store->getId()
+                    );
+                }
             }
 
             $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);
