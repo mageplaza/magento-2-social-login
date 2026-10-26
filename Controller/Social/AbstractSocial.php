@@ -456,7 +456,22 @@ abstract class AbstractSocial extends Action
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
 
-            if (!$this->session->isLoggedIn() && (!$userProfile->email || $requiredMoreInfo === 1)) {
+            if (!$userProfile->email && !$this->session->isLoggedIn() && !$this->apiHelper->getPopupLogin()) {
+                $this->messageManager->addErrorMessage(
+                    __('Email is Null, Please enter email in your %1 profile', $type)
+                );
+                $script = $this->apiHelper->generateBroadcastChannelScript('loginRedirect', [
+                    'redirectUrl' => $this->_url->getUrl('customer/account/login')
+                ]);
+                $script .= "<script>window.close();</script>";
+
+                return $this->_appendJs($script);
+            }
+
+            if ($this->apiHelper->getPopupLogin()
+                && !$this->session->isLoggedIn()
+                && (!$userProfile->email || $requiredMoreInfo === 1)
+            ) {
                 $this->session->setUserProfile($userProfile);
 
                 $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
