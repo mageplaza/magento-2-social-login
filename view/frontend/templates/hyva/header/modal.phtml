@@ -39,7 +39,7 @@ $isGDPRTac = $helperData->isGDPRTaCEnabled();
 $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 ?>
 <style>
-    .wrap-modal-login:not(.hidden) {
+    .wrap-modal-login[open] {
         display: flex;
         flex-direction: column;
         height: 100%;
