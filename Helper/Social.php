@@ -133,7 +133,7 @@ class Social extends HelperData
      */
     public function getAppId($storeId = null)
     {
-        $appId = trim($this->getConfigValue("sociallogin/{$this->_type}/app_id", $storeId));
+        $appId = trim((string) $this->getConfigValue("sociallogin/{$this->_type}/app_id", $storeId));
 
         return $appId;
     }
@@ -145,7 +145,7 @@ class Social extends HelperData
      */
     public function getAppSecret($storeId = null)
     {
-        $appSecret = trim($this->getConfigValue("sociallogin/{$this->_type}/app_secret", $storeId));
+        $appSecret = trim((string) $this->getConfigValue("sociallogin/{$this->_type}/app_secret", $storeId));
 
         return $appSecret;
     }
@@ -157,7 +157,7 @@ class Social extends HelperData
      */
     public function getAppPublicKey($storeId = null)
     {
-        $appSecret = trim($this->getConfigValue("sociallogin/{$this->_type}/public_key", $storeId));
+        $appSecret = trim((string) $this->getConfigValue("sociallogin/{$this->_type}/public_key", $storeId));
 
         return $appSecret;
     }
