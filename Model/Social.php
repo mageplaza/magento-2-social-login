@@ -110,6 +110,11 @@ class Social extends AbstractModel
      */
     protected $_request;
 
+    /**
+     * @var EncryptorInterface
+     */
+    protected $encryptor;
+
 
     /**
      * @param Context $context
@@ -126,6 +131,7 @@ class Social extends AbstractModel
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
+     * @param EncryptorInterface|null $encryptor
      * @throws LocalizedException
      */
     public function __construct(
@@ -142,8 +148,10 @@ class Social extends AbstractModel
         RequestInterface $request,
         ?AbstractResource $resource = null,
         ?AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        ?EncryptorInterface $encryptor = null
     ) {
+        $this->encryptor           = $encryptor ?: ObjectManager::getInstance()->get(EncryptorInterface::class);
         $this->customerFactory     = $customerFactory;
         $this->customerRepository  = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
@@ -269,7 +277,7 @@ class Social extends AbstractModel
 
         try {
             if ($data['password'] !== null) {
-                $passwordHash = ObjectManager::getInstance()->get(EncryptorInterface::class)
+                $passwordHash = $this->encryptor
                     ->getHash($data['password'], true);
                 $customer     = $this->customerRepository->save($customer, $passwordHash);
                 if ($this->apiHelper->canSendPassword($store)) {
