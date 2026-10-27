@@ -531,7 +531,9 @@ class Social extends AbstractModel
                 $stateRemote = $this->_request->getParam('state');
 
             }
-            if ($state === $stateRemote) {
+            if (is_string($state) && $state !== '' && is_string($stateRemote) && $stateRemote !== ''
+                && hash_equals($state, $stateRemote)
+            ) {
                 return $provider;
             }
         }

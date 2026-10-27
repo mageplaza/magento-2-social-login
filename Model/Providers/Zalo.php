@@ -70,7 +70,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         unset($this->AuthorizeUrlParameters['client_id']);
         if ($this->supportRequestState) {
             if (!isset($this->AuthorizeUrlParameters['state'])) {
-                $this->AuthorizeUrlParameters['state'] = 'HA-' . str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
+                $this->AuthorizeUrlParameters['state'] = 'HA-' . bin2hex(random_bytes(16));
             }
             $this->storeData('authorization_state', $this->AuthorizeUrlParameters['state']);
         }
@@ -105,6 +105,8 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
             "OAuth/2 Simple PHP Client v0.1.1; HybridAuth http://hybridauth.sourceforge.net/"
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $header = [
             "secret_key: {$this->clientSecret}",
             "Content-Type: application/x-www-form-urlencoded",
@@ -145,7 +147,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
 
         if (!isset($response)) {
             throw new RuntimeException(
-                "User profile request failed! 
+                "User profile request failed!
                 {$this->providerId} returned an invalid response: " . $this->setLogger($response),
                 6
             );
