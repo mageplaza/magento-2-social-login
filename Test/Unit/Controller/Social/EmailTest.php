@@ -119,11 +119,11 @@ class EmailTest extends TestCase
 
         $this->session = $this->getMockBuilder(CustomerSessionDouble::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getUserProfile', 'setCustomerDataAsLoggedIn', 'regenerateId'])
+            ->onlyMethods(['getUserProfile', 'isLoggedIn', 'getCustomerId', 'setCustomerDataAsLoggedIn', 'regenerateId'])
             ->getMock();
 
         $this->apiObject = $this->getMockBuilder(Social::class)
-            ->disableOriginalConstructor()->onlyMethods(['getCustomerBySocial'])->getMock();
+            ->disableOriginalConstructor()->onlyMethods(['getCustomerBySocial', 'linkToCustomer'])->getMock();
 
         $existing = $this->getMockBuilder(CustomerEmailDouble::class)
             ->disableOriginalConstructor()->onlyMethods(['setWebsiteId', 'loadByEmail', 'getId'])->getMock();
@@ -189,6 +189,22 @@ class EmailTest extends TestCase
         $this->apiObject->method('getCustomerBySocial')->with('social-123', 'Google')->willReturn($linked);
     }
 
+    public function testLoggedInCustomerLinksProfileWithoutChangingPassword(): void
+    {
+        $this->givenProfile();
+        $this->session->method('isLoggedIn')->willReturn(true);
+        $this->session->method('getCustomerId')->willReturn(self::CUSTOMER_ID);
+        $this->customerSecure->setPasswordHash('original-hash');
+        $this->apiObject->expects($this->once())->method('linkToCustomer')
+            ->with('social-123', self::CUSTOMER_ID, 'Google');
+        $this->customerRepository->expects($this->never())->method('save');
+
+        $this->controller->execute();
+
+        $this->assertTrue($this->resultData['success']);
+        $this->assertSame('original-hash', $this->customerSecure->getPasswordHash());
+    }
+
     public function testPasswordIsNotChangedWhenAccountIsNotLinkedToSocialIdentity(): void
     {
         $this->givenProfile();
@@ -200,6 +216,10 @@ class EmailTest extends TestCase
         $this->controller->execute();
 
         $this->assertFalse($this->resultData['success']);
+        $this->assertSame(
+            'An account with this email already exists. Please sign in with your password first.',
+            (string) $this->resultData['message']
+        );
         $this->assertSame('original-hash', $this->customerSecure->getPasswordHash());
     }
 
@@ -222,11 +242,11 @@ class EmailTest extends TestCase
         $this->givenLinkedCustomer(self::CUSTOMER_ID);
         $this->customerSecure->setPasswordHash('original-hash');
         $this->customerRepository->expects($this->never())->method('save');
-        $this->session->expects($this->never())->method('setCustomerDataAsLoggedIn');
+        $this->session->expects($this->once())->method('setCustomerDataAsLoggedIn');
 
         $this->controller->execute();
 
-        $this->assertFalse($this->resultData['success']);
+        $this->assertTrue($this->resultData['success']);
         $this->assertSame('original-hash', $this->customerSecure->getPasswordHash());
     }
 
