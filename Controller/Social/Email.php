@@ -257,6 +257,16 @@ class Email extends AbstractSocial implements HttpPostActionInterface
             $session->regenerateId();
         } else {
             $customer = $this->createCustomerProcess($userProfile, $type);
+            if ($customer && $realEmail) {
+                $message = __('Please check your email to confirm your account.');
+                $this->messageManager->addSuccessMessage($message);
+
+                return $resultJson->setData([
+                    'success' => true,
+                    'message' => $message,
+                    'url'     => $this->_url->getUrl('customer/account/login')
+                ]);
+            }
             $this->refresh($customer);
             if (!$customer) {
                 $result['success'] = false;

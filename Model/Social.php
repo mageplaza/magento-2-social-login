@@ -275,12 +275,17 @@ class Social extends AbstractModel
             ->setWebsiteId($store->getWebsiteId())
             ->setCreatedIn($store->getName());
 
+        $needConfirm = !empty($data['confirm']);
+        if ($needConfirm) {
+            $customer->setConfirmation(bin2hex(random_bytes(16)));
+        }
+
         try {
             if ($data['password'] !== null) {
                 $passwordHash = $this->encryptor
                     ->getHash($data['password'], true);
                 $customer     = $this->customerRepository->save($customer, $passwordHash);
-                if ($this->apiHelper->canSendPassword($store)) {
+                if (!$needConfirm && $this->apiHelper->canSendPassword($store)) {
                     $this->getEmailNotification()->newAccount(
                         $customer,
                         EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,
@@ -298,7 +303,7 @@ class Social extends AbstractModel
                 $accountManagement = $objectManager->get(AccountManagementInterface::class);
                 $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
 
-                if ($this->apiHelper->canSendPassword($store)) {
+                if (!$needConfirm && $this->apiHelper->canSendPassword($store)) {
                     $this->getEmailNotification()->newAccount(
                         $customer,
                         EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
@@ -306,6 +311,15 @@ class Social extends AbstractModel
                         $store->getId()
                     );
                 }
+            }
+
+            if ($needConfirm) {
+                $this->getEmailNotification()->newAccount(
+                    $customer,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_CONFIRMATION,
+                    '',
+                    $store->getId()
+                );
             }
 
             $this->setAuthorCustomer($data['identifier'], $customer->getId(), $data['type']);

@@ -32,10 +32,13 @@ use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Data\CustomerSecure;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\AbstractAction;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Controller\Social\AbstractSocial;
 use Mageplaza\SocialLogin\Controller\Social\Email;
@@ -261,6 +264,44 @@ class EmailTest extends TestCase
 
         $this->assertTrue($this->resultData['success']);
         $this->assertSame('hash:NewPass123', $this->customerSecure->getPasswordHash());
+    }
+
+    public function testUserTypedEmailCreatesAccountWithoutLoggingIn(): void
+    {
+        $profile             = new Profile();
+        $profile->identifier = 'social-123';
+        $profile->email      = null;
+        $this->session->method('getUserProfile')->willReturn($profile);
+        $this->session->method('isLoggedIn')->willReturn(false);
+        $this->request->method('getParams')->willReturn(['type' => 'google', 'realEmail' => 'victim@example.com']);
+
+        $unknown = $this->getMockBuilder(CustomerEmailDouble::class)
+            ->disableOriginalConstructor()->onlyMethods(['setWebsiteId', 'loadByEmail', 'getId'])->getMock();
+        $unknown->method('setWebsiteId')->willReturnSelf();
+        $unknown->method('loadByEmail')->willReturnSelf();
+        $unknown->method('getId')->willReturn(null);
+        $factory = $this->getMockBuilder(CustomerFactory::class)
+            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
+        $factory->method('create')->willReturn($unknown);
+        $this->setProperty(Email::class, 'customerFactory', $factory);
+
+        $messageManager = $this->createMock(ManagerInterface::class);
+        $messageManager->expects($this->once())->method('addSuccessMessage');
+        $this->setProperty(Action::class, 'messageManager', $messageManager);
+        $url = $this->createMock(UrlInterface::class);
+        $url->method('getUrl')->with('customer/account/login')->willReturn('http://example.test/customer/account/login');
+        $this->setProperty(Action::class, '_url', $url);
+
+        $this->controller->expects($this->once())->method('createCustomerProcess')
+            ->willReturn($this->createMock(Customer::class));
+        $this->controller->expects($this->never())->method('refresh');
+        $this->session->expects($this->never())->method('setCustomerDataAsLoggedIn');
+
+        $this->controller->execute();
+
+        $this->assertTrue($this->resultData['success']);
+        $this->assertSame('http://example.test/customer/account/login', $this->resultData['url']);
+        $this->assertSame('victim@example.com', $profile->email);
     }
 
     public function testMissingSocialProfileInSessionIsRejected(): void

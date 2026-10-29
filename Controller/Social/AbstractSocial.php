@@ -198,6 +198,7 @@ abstract class AbstractSocial extends Action
                 'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
                 'identifier' => $userProfile->identifier,
                 'type'       => $type,
+                'confirm'    => (bool) $this->getRequest()->getParam('realEmail'),
                 'password'   => isset($userProfile->password) ? $userProfile->password :
                     $this->getRequest()->getParam('password')
             ],
@@ -443,6 +444,12 @@ abstract class AbstractSocial extends Action
             && (int) $customer->getId() !== (int) $this->session->getCustomerId()
         ) {
             $this->messageManager->addErrorMessage(__('This social account is already linked to another account.'));
+
+            return $this->_appendJs();
+        }
+
+        if ($customer->getId() && $customer->getData('confirmation')) {
+            $this->messageManager->addNoticeMessage(__('Please check your email to confirm your account.'));
 
             return $this->_appendJs();
         }

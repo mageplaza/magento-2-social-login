@@ -28,6 +28,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -41,6 +42,24 @@ use Mageplaza\SocialLogin\Model\Social;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+
+class SocialConfirmDouble extends Social
+{
+    public $notification;
+    public $linked = [];
+
+    protected function getEmailNotification()
+    {
+        return $this->notification;
+    }
+
+    public function setAuthorCustomer($identifier, $customerId, $type)
+    {
+        $this->linked[] = [$identifier, $customerId, $type];
+
+        return $this;
+    }
+}
 
 #[CoversClass(Social::class)]
 class SocialTest extends TestCase
@@ -288,6 +307,103 @@ class SocialTest extends TestCase
             'password'   => 'secret-pw',
             'identifier' => 'social-id',
             'type'       => 'facebook',
+        ], $store);
+    }
+
+    public function testCreateCustomerSocialWithConfirmSetsKeySendsConfirmationAndLinks(): void
+    {
+        $customerData = $this->createMock(CustomerInterface::class);
+        foreach (['setFirstname', 'setLastname', 'setEmail', 'setStoreId', 'setWebsiteId', 'setCreatedIn'] as $setter) {
+            $customerData->method($setter)->willReturnSelf();
+        }
+        $customerData->method('getId')->willReturn(9);
+        $customerData->expects($this->once())->method('setConfirmation')
+            ->with($this->matchesRegularExpression('/^[0-9a-f]{32}$/'))->willReturnSelf();
+        $this->customerDataFactory->method('create')->willReturn($customerData);
+        $this->customerRepository->method('save')->willReturn($customerData);
+        $this->customerFactory->method('create')->willReturn(
+            $this->getMockBuilder(\Magento\Customer\Model\Customer::class)
+                ->disableOriginalConstructor()->onlyMethods(['load'])->getMock()
+        );
+
+        $store = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $store->method('getId')->willReturn(1);
+        $store->method('getWebsiteId')->willReturn(1);
+        $store->method('getName')->willReturn('Default Store');
+
+        $this->apiHelper->method('canSendPassword')->willReturn(true);
+        $notification = $this->createMock(EmailNotificationInterface::class);
+        $notification->expects($this->once())->method('newAccount')
+            ->with($customerData, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_CONFIRMATION, '', 1);
+
+        $model = (new ObjectManager($this))->getObject(SocialConfirmDouble::class, [
+            'customerFactory'     => $this->customerFactory,
+            'customerDataFactory' => $this->customerDataFactory,
+            'customerRepository'  => $this->customerRepository,
+            'storeManager'        => $this->storeManager,
+            'apiHelper'           => $this->apiHelper,
+            'hybridAuthSession'   => $this->hybridAuthSession,
+            'request'             => $this->request,
+        ]);
+        $model->notification = $notification;
+
+        $model->createCustomerSocial([
+            'firstname'  => 'Jane',
+            'lastname'   => 'Doe',
+            'email'      => 'jane@example.com',
+            'password'   => 'secret-pw',
+            'identifier' => 'social-id',
+            'type'       => 'twitter',
+            'confirm'    => true,
+        ], $store);
+
+        $this->assertSame([['social-id', 9, 'twitter']], $model->linked);
+    }
+
+    public function testCreateCustomerSocialWithoutConfirmKeepsRegisteredEmail(): void
+    {
+        $customerData = $this->createMock(CustomerInterface::class);
+        foreach (['setFirstname', 'setLastname', 'setEmail', 'setStoreId', 'setWebsiteId', 'setCreatedIn'] as $setter) {
+            $customerData->method($setter)->willReturnSelf();
+        }
+        $customerData->method('getId')->willReturn(9);
+        $customerData->expects($this->never())->method('setConfirmation');
+        $this->customerDataFactory->method('create')->willReturn($customerData);
+        $this->customerRepository->method('save')->willReturn($customerData);
+        $this->customerFactory->method('create')->willReturn(
+            $this->getMockBuilder(\Magento\Customer\Model\Customer::class)
+                ->disableOriginalConstructor()->onlyMethods(['load'])->getMock()
+        );
+
+        $store = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $store->method('getId')->willReturn(1);
+        $store->method('getWebsiteId')->willReturn(1);
+        $store->method('getName')->willReturn('Default Store');
+
+        $this->apiHelper->method('canSendPassword')->willReturn(true);
+        $notification = $this->createMock(EmailNotificationInterface::class);
+        $notification->expects($this->once())->method('newAccount')
+            ->with($customerData, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED, '', 1);
+
+        $model = (new ObjectManager($this))->getObject(SocialConfirmDouble::class, [
+            'customerFactory'     => $this->customerFactory,
+            'customerDataFactory' => $this->customerDataFactory,
+            'customerRepository'  => $this->customerRepository,
+            'storeManager'        => $this->storeManager,
+            'apiHelper'           => $this->apiHelper,
+            'hybridAuthSession'   => $this->hybridAuthSession,
+            'request'             => $this->request,
+        ]);
+        $model->notification = $notification;
+
+        $model->createCustomerSocial([
+            'firstname'  => 'Jane',
+            'lastname'   => 'Doe',
+            'email'      => 'jane@example.com',
+            'password'   => 'secret-pw',
+            'identifier' => 'social-id',
+            'type'       => 'twitter',
+            'confirm'    => false,
         ], $store);
     }
 }
