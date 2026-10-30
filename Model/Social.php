@@ -32,12 +32,14 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Config\Share;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\EmailNotificationInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -108,6 +110,11 @@ class Social extends AbstractModel
      */
     protected $_request;
 
+    /**
+     * @var EncryptorInterface
+     */
+    protected $encryptor;
+
 
     /**
      * @param Context $context
@@ -124,6 +131,7 @@ class Social extends AbstractModel
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
+     * @param EncryptorInterface|null $encryptor
      * @throws LocalizedException
      */
     public function __construct(
@@ -140,8 +148,10 @@ class Social extends AbstractModel
         RequestInterface $request,
         ?AbstractResource $resource = null,
         ?AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        ?EncryptorInterface $encryptor = null
     ) {
+        $this->encryptor           = $encryptor ?: ObjectManager::getInstance()->get(EncryptorInterface::class);
         $this->customerFactory     = $customerFactory;
         $this->customerRepository  = $customerRepository;
         $this->customerDataFactory = $customerDataFactory;
@@ -172,21 +182,56 @@ class Social extends AbstractModel
      */
     public function getCustomerBySocial($identify, $type)
     {
-        $websiteId = $this->storeManager->getWebsite()->getId();
-        $customer  = $this->customerFactory->create();
+        $customer   = $this->customerFactory->create();
+        $customerId = $this->getLinkedCustomerId($identify, $type);
 
-        $socialCustomer = $this->getCollection()
-            ->addFieldToFilter('social_id', $identify)
-            ->addFieldToFilter('type', $type)
-            ->addFieldToFilter('status', ['null' => 'true'])
-            ->addFieldToFilter('website_id', $websiteId)
-            ->getFirstItem();
-
-        if ($socialCustomer && $socialCustomer->getId()) {
-            $customer->load($socialCustomer->getCustomerId());
+        if ($customerId) {
+            $customer->load($customerId);
         }
 
         return $customer;
+    }
+
+    /**
+     * @param $identify
+     * @param $type
+     *
+     * @return int|null
+     * @throws LocalizedException
+     */
+    public function getLinkedCustomerId($identify, $type)
+    {
+        $collection = $this->getCollection()
+            ->addFieldToFilter('social_id', $identify)
+            ->addFieldToFilter('type', $type)
+            ->addFieldToFilter('status', ['null' => 'true']);
+        if (!ObjectManager::getInstance()->get(Share::class)->isGlobalScope()) {
+            $collection->addFieldToFilter('website_id', $this->storeManager->getWebsite()->getId());
+        }
+        $socialCustomer = $collection->getFirstItem();
+
+        return $socialCustomer && $socialCustomer->getId() ? (int) $socialCustomer->getCustomerId() : null;
+    }
+
+    /**
+     * @param $identify
+     * @param $customerId
+     * @param $type
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function linkToCustomer($identify, $customerId, $type)
+    {
+        $linkedId = $this->getLinkedCustomerId($identify, $type);
+        if ($linkedId && $linkedId !== (int) $customerId) {
+            throw new LocalizedException(__('This social account is already linked to another account.'));
+        }
+        if (!$linkedId) {
+            $this->setAuthorCustomer($identify, $customerId, $type);
+        }
+
+        return $this;
     }
 
     /**
@@ -230,15 +275,24 @@ class Social extends AbstractModel
             ->setWebsiteId($store->getWebsiteId())
             ->setCreatedIn($store->getName());
 
+        $needConfirm = !empty($data['confirm']);
+        if ($needConfirm) {
+            $customer->setConfirmation(bin2hex(random_bytes(16)));
+        }
+
         try {
-            if ($data['password'] !== null && $this->apiHelper->canSendPassword($store)) {
-                $customer = $this->customerRepository->save($customer, $data['password']);
-                $this->getEmailNotification()->newAccount(
-                    $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,
-                    '',
-                    $store->getId()
-                );
+            if ($data['password'] !== null) {
+                $passwordHash = $this->encryptor
+                    ->getHash($data['password'], true);
+                $customer     = $this->customerRepository->save($customer, $passwordHash);
+                if (!$needConfirm && $this->apiHelper->canSendPassword($store)) {
+                    $this->getEmailNotification()->newAccount(
+                        $customer,
+                        EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED,
+                        '',
+                        $store->getId()
+                    );
+                }
             } else {
                 // If customer exists existing hash will be used by Repository
                 $customer = $this->customerRepository->save($customer);
@@ -248,12 +302,21 @@ class Social extends AbstractModel
                 $newPasswordToken  = $mathRandom->getUniqueHash();
                 $accountManagement = $objectManager->get(AccountManagementInterface::class);
                 $accountManagement->changeResetPasswordLinkToken($customer, $newPasswordToken);
+
+                if (!$needConfirm && $this->apiHelper->canSendPassword($store)) {
+                    $this->getEmailNotification()->newAccount(
+                        $customer,
+                        EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
+                        '',
+                        $store->getId()
+                    );
+                }
             }
 
-            if ($this->apiHelper->canSendPassword($store)) {
+            if ($needConfirm) {
                 $this->getEmailNotification()->newAccount(
                     $customer,
-                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED_NO_PASSWORD,
+                    EmailNotificationInterface::NEW_ACCOUNT_EMAIL_CONFIRMATION,
                     '',
                     $store->getId()
                 );

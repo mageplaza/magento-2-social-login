@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Mageplaza\SocialLogin\Test\Unit\Controller\Social;
 
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Session;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Controller\Social\AbstractSocial;
@@ -53,13 +54,22 @@ class AbstractSocialTest extends TestCase
      */
     private $controller;
 
+    /**
+     * @var Session|MockObject
+     */
+    private $session;
+
     protected function setUp(): void
     {
         $this->apiObject = $this->getMockBuilder(Social::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getCustomerByEmail', 'setAuthorCustomer', 'createCustomerSocial'])
+            ->onlyMethods(['getCustomerByEmail', 'setAuthorCustomer', 'createCustomerSocial', 'linkToCustomer'])
             ->getMock();
         $this->messageManager = $this->createMock(ManagerInterface::class);
+        $this->session        = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['isLoggedIn', 'getCustomerId', 'getCustomer'])
+            ->getMock();
 
         $store = $this->getMockBuilder(Store::class)
             ->disableOriginalConstructor()->onlyMethods(['getWebsiteId'])->getMock();
@@ -67,11 +77,12 @@ class AbstractSocialTest extends TestCase
 
         $this->controller = $this->getMockBuilder(Login::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getStore'])
+            ->onlyMethods(['getStore', '_redirect'])
             ->getMock();
         $this->controller->method('getStore')->willReturn($store);
 
         (new ReflectionProperty(AbstractSocial::class, 'apiObject'))->setValue($this->controller, $this->apiObject);
+        (new ReflectionProperty(AbstractSocial::class, 'session'))->setValue($this->controller, $this->session);
         (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
             ->setValue($this->controller, $this->messageManager);
     }
@@ -90,7 +101,7 @@ class AbstractSocialTest extends TestCase
         return $customer;
     }
 
-    private function user($emailVerified): array
+    private function user($emailVerified = null): array
     {
         return [
             'email'          => 'jane@example.com',
@@ -100,80 +111,79 @@ class AbstractSocialTest extends TestCase
         ];
     }
 
-    public static function unverifiedProvider(): array
+    public static function emailVerifiedProvider(): array
     {
         return [
-            'not set'             => [null],
-            'empty string'        => [''],
-            'false flag'          => [false],
-            'false string'        => ['false'],
-            'other email address' => ['someone-else@example.com'],
+            'not set'      => [null],
+            'false flag'   => [false],
+            'true flag'    => [true],
+            'true string'  => ['true'],
+            'same email'   => ['jane@example.com'],
+            'other case'   => ['Jane@Example.com'],
         ];
     }
 
-    #[DataProvider('unverifiedProvider')]
-    public function testExistingAccountIsNotLinkedWhenEmailIsNotVerified($emailVerified): void
+    #[DataProvider('emailVerifiedProvider')]
+    public function testGuestIsNeverLinkedToExistingAccountByEmail($emailVerified): void
     {
+        $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7));
         $this->apiObject->expects($this->never())->method('setAuthorCustomer');
         $this->apiObject->expects($this->never())->method('createCustomerSocial');
-        $this->messageManager->expects($this->once())->method('addErrorMessage');
+        $this->messageManager->expects($this->once())->method('addErrorMessage')
+            ->with($this->callback(static function ($message) {
+                return (string) $message
+                    === 'An account with this email already exists. Please sign in with your password first.';
+            }));
 
         $this->assertFalse($this->controller->createCustomer($this->user($emailVerified), 'Google'));
     }
 
-    public static function verifiedProvider(): array
+    public function testLoggedInOtherCustomerIsNotLinkedToExistingAccountByEmail(): void
     {
-        return [
-            'same email'               => ['jane@example.com'],
-            'same email, other case'   => ['Jane@Example.com'],
-            'boolean flag'             => [true],
-            'string flag'              => ['true'],
-        ];
+        $this->session->method('isLoggedIn')->willReturn(true);
+        $this->session->method('getCustomerId')->willReturn(9);
+        $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7));
+        $this->apiObject->expects($this->never())->method('setAuthorCustomer');
+        $this->messageManager->expects($this->once())->method('addErrorMessage');
+
+        $this->assertFalse($this->controller->createCustomer($this->user(), 'Google'));
     }
 
-    #[DataProvider('verifiedProvider')]
-    public function testExistingAccountIsLinkedWhenEmailIsVerified($emailVerified): void
+    public function testLoggedInOwnerIsLinkedToTheirAccountByEmail(): void
     {
         $customer = $this->customer(7);
+        $this->session->method('isLoggedIn')->willReturn(true);
+        $this->session->method('getCustomerId')->willReturn(7);
         $this->apiObject->method('getCustomerByEmail')->willReturn($customer);
         $this->apiObject->expects($this->once())->method('setAuthorCustomer')->with('social-123', 7, 'Google');
         $this->messageManager->expects($this->never())->method('addErrorMessage');
 
-        $this->assertSame($customer, $this->controller->createCustomer($this->user($emailVerified), 'Google'));
+        $this->assertSame($customer, $this->controller->createCustomer($this->user(), 'Google'));
     }
 
-    public function testNewAccountIsCreatedWithoutVerifiedEmail(): void
+    public function testNewAccountIsCreatedForGuestWithUnusedEmail(): void
     {
         $newCustomer = $this->customer(8);
+        $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(null));
         $this->apiObject->expects($this->never())->method('setAuthorCustomer');
         $this->apiObject->expects($this->once())->method('createCustomerSocial')->willReturn($newCustomer);
 
-        $this->assertSame($newCustomer, $this->controller->createCustomer($this->user(null), 'Vkontakte'));
+        $this->assertSame($newCustomer, $this->controller->createCustomer($this->user(), 'Vkontakte'));
     }
 
-    public function testCreateCustomerProcessPassesEmailVerifiedFlag(): void
+    public function testLoggedInCustomerProcessLinksIdentityToCurrentCustomer(): void
     {
-        $controller = $this->getMockBuilder(Login::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['createCustomer'])
-            ->getMock();
-        (new ReflectionProperty(\Magento\Framework\App\Action\AbstractAction::class, '_request'))
-            ->setValue($controller, $this->createMock(\Magento\Framework\App\RequestInterface::class));
+        $this->session->method('isLoggedIn')->willReturn(true);
+        $this->session->method('getCustomerId')->willReturn(7);
+        $this->apiObject->expects($this->once())->method('linkToCustomer')->with('social-123', 7, 'Google');
+        $this->apiObject->expects($this->never())->method('getCustomerByEmail');
 
-        $profile                = new \Hybridauth\User\Profile();
-        $profile->identifier    = 'social-123';
-        $profile->email         = 'jane@example.com';
-        $profile->emailVerified = 'jane@example.com';
-        $profile->displayName   = 'Jane Doe';
+        $profile             = new \Hybridauth\User\Profile();
+        $profile->identifier = 'social-123';
+        $profile->email      = 'someone-else@example.com';
 
-        $controller->expects($this->once())->method('createCustomer')
-            ->with($this->callback(static function ($user) {
-                return $user['email_verified'] === 'jane@example.com' && $user['email'] === 'jane@example.com';
-            }), 'Google')
-            ->willReturn(false);
-
-        $controller->createCustomerProcess($profile, 'Google');
+        $this->controller->createCustomerProcess($profile, 'Google');
     }
 }

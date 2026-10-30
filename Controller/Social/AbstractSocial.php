@@ -22,6 +22,7 @@
 namespace Mageplaza\SocialLogin\Controller\Social;
 
 use Exception;
+use Hybridauth\Exception\ExceptionInterface;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Customer;
@@ -44,6 +45,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AbstractSocial
@@ -175,18 +177,28 @@ abstract class AbstractSocial extends Action
      */
     public function createCustomerProcess($userProfile, $type)
     {
+        if ($this->session->isLoggedIn()) {
+            return $this->linkLoggedInCustomer($userProfile->identifier, $type);
+        }
+
+        if (!$userProfile->email) {
+            $this->emailRedirect($type);
+
+            return false;
+        }
+
         $name = explode(' ', $userProfile->displayName ?: __('New User'));
         if (strtolower($type) === 'steam') {
             $userProfile->identifier = trim($userProfile->identifier, "https://steamcommunity.com/openid/id/");
         }
         $user = array_merge(
             [
-                'email'      => $userProfile->email ?: $userProfile->identifier . '@' . strtolower($type) . '.com',
+                'email'      => $userProfile->email,
                 'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
                 'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
-                'identifier'     => $userProfile->identifier,
-                'email_verified' => $userProfile->emailVerified ?? null,
-                'type'           => $type,
+                'identifier' => $userProfile->identifier,
+                'type'       => $type,
+                'confirm'    => (bool) $this->getRequest()->getParam('realEmail'),
                 'password'   => isset($userProfile->password) ? $userProfile->password :
                     $this->getRequest()->getParam('password')
             ],
@@ -210,9 +222,10 @@ abstract class AbstractSocial extends Action
     {
         $customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
         if ($customer->getId()) {
-            if (!$this->isEmailVerified($user)) {
-                $this->messageManager->addErrorMessage(
-                    __('An account with this email already exists. Please sign in with your email and password.')
+            if (!$this->session->isLoggedIn() || (int) $this->session->getCustomerId() !== (int) $customer->getId()) {
+                $this->emailRedirect(
+                    __('An account with this email already exists. Please sign in with your password first.'),
+                    false
                 );
 
                 return false;
@@ -222,7 +235,7 @@ abstract class AbstractSocial extends Action
             try {
                 $customer = $this->apiObject->createCustomerSocial($user, $this->getStore());
             } catch (Exception $e) {
-                $this->emailRedirect($e->getMessage(), false);
+                $this->emailRedirect($this->getClientMessage($e), false);
 
                 return false;
             }
@@ -232,26 +245,22 @@ abstract class AbstractSocial extends Action
     }
 
     /**
-     * @param array $user
+     * @param $identifier
+     * @param $type
      *
-     * @return bool
+     * @return bool|Customer
      */
-    protected function isEmailVerified($user)
+    public function linkLoggedInCustomer($identifier, $type)
     {
-        $verified = $user['email_verified'] ?? null;
-        if (empty($verified)) {
+        try {
+            $this->apiObject->linkToCustomer($identifier, $this->session->getCustomerId(), $type);
+        } catch (Exception $e) {
+            $this->emailRedirect($this->getClientMessage($e), false);
+
             return false;
         }
 
-        if (is_string($verified)) {
-            if (strpos($verified, '@') === false) {
-                return filter_var($verified, FILTER_VALIDATE_BOOLEAN);
-            }
-
-            return strcasecmp(trim($verified), trim((string) $user['email'])) === 0;
-        }
-
-        return (bool) $verified;
+        return $this->session->getCustomer();
     }
 
     /**
@@ -424,12 +433,27 @@ abstract class AbstractSocial extends Action
                 return $this->emailRedirect($type);
             }
         } catch (Exception $e) {
-            $this->setBodyResponse($e->getMessage());
+            $this->setBodyResponse($this->getClientMessage($e));
 
             return;
         }
 
         $customer      = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
+        if ($this->session->isLoggedIn()
+            && $customer->getId()
+            && (int) $customer->getId() !== (int) $this->session->getCustomerId()
+        ) {
+            $this->messageManager->addErrorMessage(__('This social account is already linked to another account.'));
+
+            return $this->_appendJs();
+        }
+
+        if ($customer->getId() && $customer->getData('confirmation')) {
+            $this->messageManager->addNoticeMessage(__('Please check your email to confirm your account.'));
+
+            return $this->_appendJs();
+        }
+
         $customerData  = $this->customerModel->load($customer->getId());
         if ($customer->getId()) {
             $customerToken = $this->getCustomerToken($customer->getId());
@@ -440,7 +464,22 @@ abstract class AbstractSocial extends Action
         if (!$customer->getId()) {
             $requiredMoreInfo = (int) $this->apiHelper->requiredMoreInfo();
 
-            if ((!$userProfile->email && $requiredMoreInfo === 2) || $requiredMoreInfo === 1) {
+            if (!$userProfile->email && !$this->session->isLoggedIn() && !$this->apiHelper->getPopupLogin()) {
+                $this->messageManager->addErrorMessage(
+                    __('Email is Null, Please enter email in your %1 profile', $type)
+                );
+                $script = $this->apiHelper->generateBroadcastChannelScript('loginRedirect', [
+                    'redirectUrl' => $this->_url->getUrl('customer/account/login')
+                ]);
+                $script .= "<script>window.close();</script>";
+
+                return $this->_appendJs($script);
+            }
+
+            if ($this->apiHelper->getPopupLogin()
+                && !$this->session->isLoggedIn()
+                && (!$userProfile->email || $requiredMoreInfo === 1)
+            ) {
                 $this->session->setUserProfile($userProfile);
 
                 $script = $this->apiHelper->generateBroadcastChannelScript('requiredMoreInfo', [
@@ -497,6 +536,27 @@ abstract class AbstractSocial extends Action
     public function checkCustomerLogin()
     {
         return true;
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return string
+     */
+    protected function getClientMessage(Exception $e)
+    {
+        if ($e instanceof LocalizedException) {
+            return $e->getMessage();
+        }
+
+        $logger = ObjectManager::getInstance()->get(LoggerInterface::class);
+        if ($e instanceof ExceptionInterface) {
+            $logger->warning($e);
+        } else {
+            $logger->critical($e);
+        }
+
+        return (string) __('Unable to complete social login. Please try again.');
     }
 
     /**

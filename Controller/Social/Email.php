@@ -29,6 +29,7 @@ use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
@@ -50,7 +51,7 @@ use Mageplaza\SocialLogin\Model\Social;
  *
  * @package Mageplaza\SocialLogin\Controller
  */
-class Email extends AbstractSocial
+class Email extends AbstractSocial implements HttpPostActionInterface
 {
     /**
      * @type JsonFactory
@@ -76,6 +77,11 @@ class Email extends AbstractSocial
      * @var CustomerRegistry
      */
     protected $_customerRegistry;
+
+    /**
+     * @var string|null
+     */
+    protected $redirectMessage;
 
     /**
      * Email constructor.
@@ -137,6 +143,21 @@ class Email extends AbstractSocial
     }
 
     /**
+     * @param $apiLabel
+     * @param bool $needTranslate
+     *
+     * @return $this
+     */
+    public function emailRedirect($apiLabel, $needTranslate = true)
+    {
+        $this->redirectMessage = $needTranslate
+            ? __('Email is Null, Please enter email in your %1 profile', $apiLabel)
+            : $apiLabel;
+
+        return $this;
+    }
+
+    /**
      * @return ResponseInterface|Json|ResultInterface|void
      * @throws FailureToSendException
      * @throws InputException
@@ -147,7 +168,7 @@ class Email extends AbstractSocial
     {
         $resultJson = $this->resultJsonFactory->create();
         $params     = $this->getRequest()->getParams();
-        $type       = $this->apiHelper->setType(strtolower($params['type']) ?? "");
+        $type       = $this->apiHelper->setType(strtolower(is_string($params['type'] ?? null) ? $params['type'] : ''));
 
         if (!$type) {
             $this->_forward('noroute');
@@ -156,6 +177,32 @@ class Email extends AbstractSocial
         }
 
         $result    = ['success' => false];
+        if (!$this->session->getUserProfile()) {
+            $result['message'] = __('Your session has expired. Please try again.');
+
+            return $resultJson->setData($result);
+        }
+
+        if ($this->session->isLoggedIn()) {
+            try {
+                $this->apiObject->linkToCustomer(
+                    $this->session->getUserProfile()->identifier,
+                    $this->session->getCustomerId(),
+                    $type
+                );
+            } catch (LocalizedException $e) {
+                $result['message'] = $e->getMessage();
+
+                return $resultJson->setData($result);
+            }
+
+            return $resultJson->setData([
+                'success' => true,
+                'message' => __('Success!'),
+                'url'     => $this->_loginPostRedirect()
+            ]);
+        }
+
         $realEmail = isset($params['realEmail']) ? $params['realEmail'] : null;
         $firstname = isset($params['firstname']) ? $params['firstname'] : null;
         $lastname  = isset($params['lastname']) ? $params['lastname'] : null;
@@ -171,45 +218,59 @@ class Email extends AbstractSocial
             }
         }
 
-        $userProfile = $this->session->getUserProfile();
-        if (!$userProfile || empty($userProfile->identifier)) {
-            $result['message'] = __('False to login!');
-
-            return $resultJson->setData($result);
-        }
+        $userProfile            = $this->session->getUserProfile();
         $userProfile->email     = $realEmail ?: $userProfile->email;
         $userProfile->firstName = $firstname ?: $userProfile->firstName;
         $userProfile->lastName  = $lastname ?: $userProfile->lastName;
+
+        if (!$userProfile->email) {
+            $result['message'] = __('Please enter your email address.');
+
+            return $resultJson->setData($result);
+        }
 
         $checkCustomer = $this->customerFactory->create()
             ->setWebsiteId($this->getStore()->getWebsiteId())
             ->loadByEmail($userProfile->email);
 
         if ($checkCustomer->getId()) {
-            $session                     = $this->session;
-            $customerRepositoryInterface = $this->_customerRepositoryInterface;
-            $customerId                  = $checkCustomer->getId();
-            $customerRegistry            = $this->_customerRegistry;
-            $customerSecure              = $customerRegistry->retrieveSecureData($customerId);
-
             $linkedCustomer = $this->apiObject->getCustomerBySocial($userProfile->identifier, $type);
-            if ((int) $linkedCustomer->getId() !== (int) $customerId || $customerSecure->getPasswordHash()) {
-                $result['message'] = __('Email already exists');
+            if ((int) $linkedCustomer->getId() !== (int) $checkCustomer->getId()) {
+                $result['message'] = __(
+                    'An account with this email already exists. Please sign in with your password first.'
+                );
 
                 return $resultJson->setData($result);
             }
 
-            $customer = $customerRepositoryInterface->getById($customerId);
-            $customerSecure->setPasswordHash($password);
-            $customerRepositoryInterface->save($customer);
+            $session                     = $this->session;
+            $customerRepositoryInterface = $this->_customerRepositoryInterface;
+            $customerId                  = $checkCustomer->getId();
+            $customer                    = $customerRepositoryInterface->getById($customerId);
+            $customerRegistry            = $this->_customerRegistry;
+            $customerSecure              = $customerRegistry->retrieveSecureData($customerId);
+            if ($password && !$customerSecure->getPasswordHash()) {
+                $customerSecure->setPasswordHash($password);
+                $customerRepositoryInterface->save($customer);
+            }
             $session->setCustomerDataAsLoggedIn($customer);
             $session->regenerateId();
         } else {
             $customer = $this->createCustomerProcess($userProfile, $type);
+            if ($customer && $realEmail) {
+                $message = __('Please check your email to confirm your account.');
+                $this->messageManager->addSuccessMessage($message);
+
+                return $resultJson->setData([
+                    'success' => true,
+                    'message' => $message,
+                    'url'     => $this->_url->getUrl('customer/account/login')
+                ]);
+            }
             $this->refresh($customer);
             if (!$customer) {
                 $result['success'] = false;
-                $result['message'] = __('False to login!');
+                $result['message'] = $this->redirectMessage ?: __('False to login!');
                 return $resultJson->setData($result);
             }
         }

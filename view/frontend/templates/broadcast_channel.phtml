@@ -57,10 +57,16 @@ $helperData = $this->helper(\Mageplaza\SocialLogin\Helper\Data::class);
             }
             window.close();
             <?php else: ?>
-            document.querySelector('.social-login.authentication').style.display = 'none';
-            document.querySelector('.social-login.forgot').style.display         = 'none';
-            document.querySelector('.social-login.create').style.display         = 'none';
-            document.querySelector('.social-login.fake-email').style.display     = 'block';
+            const hideSocialBlock = function (selector, display) {
+                const block = document.querySelector(selector);
+                if (block) {
+                    block.style.display = display;
+                }
+            };
+            hideSocialBlock('.social-login.authentication', 'none');
+            hideSocialBlock('.social-login.forgot', 'none');
+            hideSocialBlock('.social-login.create', 'none');
+            hideSocialBlock('.social-login.fake-email', 'block');
             const content                                                        = document.querySelector('#mp-popup-social-content');
             if (event.data.data.typeEmail) {
                 if (document.querySelectorAll('.social-login.fake-email .field-name-social')) {
