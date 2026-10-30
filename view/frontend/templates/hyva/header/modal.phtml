@@ -236,24 +236,7 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
     }
 </style>
 
-<div id="my-dialog-social-login" x-data="{
-    ...hyva.modal(),
-    init() {
-        window.openMyDialog = function (event) {
-            this.show('my-dialog', event);
-            setTimeout(() => {
-                this.onOpenPopup();
-            }, 50);
-        }.bind(this);
-
-        window.hideMyDialog = function (event) {
-            this.hide('my-dialog', event);
-        }.bind(this);
-    },
-    onOpenPopup() {
-        scrollButtonContent()
-    }
-}" x-init="init()">
+<div id="my-dialog-social-login" x-data="mpSocialLoginModal">
     <?= /* @noEscape */ $modal ?>
 </div>
 
@@ -282,6 +265,28 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 
 
 <?php ob_start(); ?>
+    function mpSocialLoginModal () {
+        return Object.assign(hyva.modal.call(this), {
+            init() {
+                window.openMyDialog = function (event) {
+                    this.show('my-dialog', event);
+                    setTimeout(() => {
+                        this.onOpenPopup();
+                    }, 50);
+                }.bind(this);
+
+                window.hideMyDialog = function (event) {
+                    this.hide('my-dialog', event);
+                }.bind(this);
+            },
+            onOpenPopup() {
+                scrollButtonContent()
+            }
+        });
+    }
+
+    window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginModal', mpSocialLoginModal), {once: true});
+
     let popup = ``;
 
     function handleHideModalClickOutSide() {

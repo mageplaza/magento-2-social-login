@@ -36,8 +36,8 @@
             <form
                     class="form-customer-login"
                     id="social-form-login"
-                    x-data="initCustomerLoginFormWithValidation($el)"
-                    @submit.prevent="mpSubmitForm()"
+                    x-data="mpSocialLoginForm"
+                    @submit.prevent="mpSubmitForm"
             >
                 <?= $block->getBlockHtml('formkey') ?>
                 <fieldset class="fieldset login" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
@@ -249,6 +249,12 @@
             };
             return Object.assign({}, validationData, loginData);
         }
+
+        function mpSocialLoginForm () {
+            return initCustomerLoginFormWithValidation(this.$el);
+        }
+
+        window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginForm', mpSocialLoginForm), {once: true});
 
         function initCustomerLoginForm () {
             return {
