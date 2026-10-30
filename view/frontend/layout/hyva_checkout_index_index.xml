@@ -29,5 +29,10 @@
                 <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/header/link/hyva-checkout-signin-register.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="additional.signin-register">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_SocialLogin::hyva/header/link/hyva-checkout-signin-register.phtml</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>
