@@ -43,24 +43,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class SocialConfirmDouble extends Social
-{
-    public $notification;
-    public $linked = [];
-
-    protected function getEmailNotification()
-    {
-        return $this->notification;
-    }
-
-    public function setAuthorCustomer($identifier, $customerId, $type)
-    {
-        $this->linked[] = [$identifier, $customerId, $type];
-
-        return $this;
-    }
-}
-
 #[CoversClass(Social::class)]
 class SocialTest extends TestCase
 {

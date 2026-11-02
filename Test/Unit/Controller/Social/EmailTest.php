@@ -30,7 +30,6 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Data\CustomerSecure;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\AbstractAction;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
@@ -49,14 +48,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-
-/**
- * Declared-method double: Session::getUserProfile() is a magic getter
- */
-abstract class CustomerSessionDouble extends Session
-{
-    abstract public function getUserProfile();
-}
 
 #[CoversClass(Email::class)]
 class EmailTest extends TestCase
