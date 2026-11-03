@@ -88,12 +88,10 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         $url              = $this->accessTokenUrl;
         $params           = [
             'app_id'     => $this->clientId,
-            'secret_key' => $this->clientSecret,
             'grant_type' => 'authorization_code',
             'code'       => $code,
         ];
         $urlEncodedParams = http_build_query($params, '', '&');
-        $url              = $url . (strpos($url, '?') ? '&' : '?') . $urlEncodedParams;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -113,6 +111,7 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         ];
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $urlEncodedParams);
         $response = curl_exec($ch);
         curl_close($ch);
 

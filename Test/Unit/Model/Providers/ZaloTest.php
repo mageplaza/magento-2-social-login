@@ -84,4 +84,21 @@ class ZaloTest extends TestCase
         $this->assertTrue($GLOBALS['mp_curl_setopt_calls'][CURLOPT_SSL_VERIFYPEER]);
         $this->assertSame(2, $GLOBALS['mp_curl_setopt_calls'][CURLOPT_SSL_VERIFYHOST]);
     }
+
+    public function testExchangeCodeSendsSecretOnlyInHeaderAndParamsInBody(): void
+    {
+        $provider = $this->provider();
+        (new ReflectionProperty(Zalo::class, 'accessTokenUrl'))->setValue($provider, 'https://127.0.0.1:1/token');
+        (new ReflectionProperty(Zalo::class, 'clientId'))->setValue($provider, 'app-1');
+        (new ReflectionProperty(Zalo::class, 'clientSecret'))->setValue($provider, 'secret');
+        $GLOBALS['mp_curl_setopt_calls'] = [];
+
+        (new ReflectionMethod(Zalo::class, 'exchangeCodeForAccessToken'))->invoke($provider, 'auth-code');
+
+        $calls = $GLOBALS['mp_curl_setopt_calls'];
+        $this->assertSame('https://127.0.0.1:1/token', $calls[CURLOPT_URL]);
+        parse_str($calls[CURLOPT_POSTFIELDS], $body);
+        $this->assertSame(['app_id' => 'app-1', 'grant_type' => 'authorization_code', 'code' => 'auth-code'], $body);
+        $this->assertContains('secret_key: secret', $calls[CURLOPT_HTTPHEADER]);
+    }
 }
