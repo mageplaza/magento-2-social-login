@@ -193,13 +193,15 @@ abstract class AbstractSocial extends Action
         }
         $user = array_merge(
             [
-                'email'      => $userProfile->email,
-                'firstname'  => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
-                'lastname'   => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
-                'identifier' => $userProfile->identifier,
-                'type'       => $type,
-                'confirm'    => (bool) $this->getRequest()->getParam('realEmail'),
-                'password'   => isset($userProfile->password) ? $userProfile->password :
+                'email'          => $userProfile->email,
+                'firstname'      => $userProfile->firstName ?: (array_shift($name) ?: $userProfile->identifier),
+                'lastname'       => $userProfile->lastName ?: (array_shift($name) ?: $userProfile->identifier),
+                'identifier'     => $userProfile->identifier,
+                'type'           => $type,
+                'confirm'        => (bool) $this->getRequest()->getParam('realEmail'),
+                'email_verified' => $this->getRequest()->getParam('realEmail') ? '' :
+                    (string) ($userProfile->emailVerified ?? ''),
+                'password'       => isset($userProfile->password) ? $userProfile->password :
                     $this->getRequest()->getParam('password')
             ],
             $this->getUserData($userProfile)
@@ -223,6 +225,11 @@ abstract class AbstractSocial extends Action
         $customer = $this->apiObject->getCustomerByEmail($user['email'], $this->getStore()->getWebsiteId());
         if ($customer->getId()) {
             if (!$this->session->isLoggedIn() || (int) $this->session->getCustomerId() !== (int) $customer->getId()) {
+                if ($this->isProviderVerifiedOwner($user, $customer)) {
+                    $this->apiObject->setAuthorCustomer($user['identifier'], $customer->getId(), $type);
+
+                    return $customer;
+                }
                 $this->emailRedirect(
                     __('An account with this email already exists. Please sign in with your password first.'),
                     false
@@ -242,6 +249,21 @@ abstract class AbstractSocial extends Action
         }
 
         return $customer;
+    }
+
+    /**
+     * @param array $user
+     * @param Customer $customer
+     *
+     * @return bool
+     */
+    protected function isProviderVerifiedOwner($user, $customer)
+    {
+        $verified = trim((string) ($user['email_verified'] ?? ''));
+
+        return $verified !== ''
+            && !$customer->getData('confirmation')
+            && strcasecmp($verified, trim((string) $user['email'])) === 0;
     }
 
     /**

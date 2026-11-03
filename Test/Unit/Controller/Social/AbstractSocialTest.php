@@ -89,14 +89,16 @@ class AbstractSocialTest extends TestCase
 
     /**
      * @param int|null $id
+     * @param string|null $confirmation
      *
      * @return Customer|MockObject
      */
-    private function customer($id)
+    private function customer($id, $confirmation = null)
     {
         $customer = $this->getMockBuilder(Customer::class)
-            ->disableOriginalConstructor()->onlyMethods(['getId'])->getMock();
+            ->disableOriginalConstructor()->onlyMethods(['getId', 'getData'])->getMock();
         $customer->method('getId')->willReturn($id);
+        $customer->method('getData')->willReturn($confirmation);
 
         return $customer;
     }
@@ -111,20 +113,19 @@ class AbstractSocialTest extends TestCase
         ];
     }
 
-    public static function emailVerifiedProvider(): array
+    public static function unverifiedProvider(): array
     {
         return [
-            'not set'      => [null],
-            'false flag'   => [false],
-            'true flag'    => [true],
-            'true string'  => ['true'],
-            'same email'   => ['jane@example.com'],
-            'other case'   => ['Jane@Example.com'],
+            'not set'     => [null],
+            'empty'       => [''],
+            'false flag'  => [false],
+            'true flag'   => [true],
+            'other email' => ['other@example.com'],
         ];
     }
 
-    #[DataProvider('emailVerifiedProvider')]
-    public function testGuestIsNeverLinkedToExistingAccountByEmail($emailVerified): void
+    #[DataProvider('unverifiedProvider')]
+    public function testGuestWithUnverifiedEmailIsNotLinkedToExistingAccount($emailVerified): void
     {
         $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7));
@@ -137,6 +138,38 @@ class AbstractSocialTest extends TestCase
             }));
 
         $this->assertFalse($this->controller->createCustomer($this->user($emailVerified), 'Google'));
+    }
+
+    public static function verifiedProvider(): array
+    {
+        return [
+            'same email' => ['jane@example.com'],
+            'other case' => ['Jane@Example.com'],
+            'padded'     => [' jane@example.com '],
+        ];
+    }
+
+    #[DataProvider('verifiedProvider')]
+    public function testGuestWithProviderVerifiedEmailIsLinkedAndLoggedIn($emailVerified): void
+    {
+        $customer = $this->customer(7);
+        $this->session->method('isLoggedIn')->willReturn(false);
+        $this->apiObject->method('getCustomerByEmail')->willReturn($customer);
+        $this->apiObject->expects($this->once())->method('setAuthorCustomer')->with('social-123', 7, 'Google');
+        $this->apiObject->expects($this->never())->method('createCustomerSocial');
+        $this->messageManager->expects($this->never())->method('addErrorMessage');
+
+        $this->assertSame($customer, $this->controller->createCustomer($this->user($emailVerified), 'Google'));
+    }
+
+    public function testGuestWithVerifiedEmailIsBlockedWhenCustomerAwaitsConfirmation(): void
+    {
+        $this->session->method('isLoggedIn')->willReturn(false);
+        $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7, 'abc123'));
+        $this->apiObject->expects($this->never())->method('setAuthorCustomer');
+        $this->messageManager->expects($this->once())->method('addErrorMessage');
+
+        $this->assertFalse($this->controller->createCustomer($this->user('jane@example.com'), 'Google'));
     }
 
     public function testLoggedInOtherCustomerIsNotLinkedToExistingAccountByEmail(): void
