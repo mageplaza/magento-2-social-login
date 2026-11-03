@@ -25,10 +25,14 @@ namespace Mageplaza\SocialLogin\Test\Unit\Controller\Social;
 
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
+use Magento\Framework\Controller\Result\Raw;
+use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\Store;
 use Mageplaza\SocialLogin\Controller\Social\AbstractSocial;
 use Mageplaza\SocialLogin\Controller\Social\Login;
+use Mageplaza\SocialLogin\Helper\Data as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -218,5 +222,37 @@ class AbstractSocialTest extends TestCase
         $profile->email      = 'someone-else@example.com';
 
         $this->controller->createCustomerProcess($profile, 'Google');
+    }
+
+    public function testEmailRedirectOnlyAddsMessageAndDoesNotRedirectThePopup(): void
+    {
+        $this->controller->expects($this->never())->method('_redirect');
+        $this->messageManager->expects($this->once())->method('addErrorMessage')->with('Refused');
+
+        $this->assertSame($this->controller, $this->controller->emailRedirect('Refused', false));
+    }
+
+    public function testLoginRefusedResultClosesPopupAndSendsOpenerToLoginPage(): void
+    {
+        $url = $this->createMock(UrlInterface::class);
+        $url->method('getUrl')->with('customer/account/login')->willReturn('https://shop.test/customer/account/login');
+        $helper = $this->getMockBuilder(SocialHelper::class)
+            ->disableOriginalConstructor()->onlyMethods(['generateBroadcastChannelScript'])->getMock();
+        $helper->expects($this->once())->method('generateBroadcastChannelScript')
+            ->with('loginRedirect', ['redirectUrl' => 'https://shop.test/customer/account/login'])
+            ->willReturn('<script>broadcast</script>');
+        $raw = $this->getMockBuilder(Raw::class)->disableOriginalConstructor()->onlyMethods(['setContents'])->getMock();
+        $raw->expects($this->once())->method('setContents')
+            ->with('<script>broadcast</script><script>window.close();</script>')->willReturnSelf();
+        $factory = $this->getMockBuilder(RawFactory::class)->disableOriginalConstructor()->onlyMethods(['create'])
+            ->getMock();
+        $factory->method('create')->willReturn($raw);
+
+        (new ReflectionProperty(AbstractSocial::class, 'apiHelper'))->setValue($this->controller, $helper);
+        (new ReflectionProperty(AbstractSocial::class, 'resultRawFactory'))->setValue($this->controller, $factory);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, '_url'))
+            ->setValue($this->controller, $url);
+
+        $this->assertSame($raw, $this->controller->loginRefusedResult());
     }
 }

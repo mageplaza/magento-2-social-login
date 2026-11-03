@@ -307,9 +307,22 @@ abstract class AbstractSocial extends Action
     {
         $message = $needTranslate ? __('Email is Null, Please enter email in your %1 profile', $apiLabel) : $apiLabel;
         $this->messageManager->addErrorMessage($message);
-        $this->_redirect('customer/account/login');
 
         return $this;
+    }
+
+    /**
+     * Close the social popup and send the opener window to the login page
+     *
+     * @return Raw
+     */
+    public function loginRefusedResult()
+    {
+        $loginUrl = $this->_url->getUrl('customer/account/login');
+        $script   = $this->apiHelper->generateBroadcastChannelScript('loginRedirect', ['redirectUrl' => $loginUrl]);
+        $script  .= "<script>window.close();</script>";
+
+        return $this->resultRawFactory->create()->setContents($script);
     }
 
     /**
@@ -452,7 +465,9 @@ abstract class AbstractSocial extends Action
             }
             $userProfile = $this->apiObject->getUserProfile($type);
             if (!$userProfile->identifier) {
-                return $this->emailRedirect($type);
+                $this->emailRedirect($type);
+
+                return $this->loginRefusedResult();
             }
         } catch (Exception $e) {
             $this->setBodyResponse($this->getClientMessage($e));
@@ -515,6 +530,9 @@ abstract class AbstractSocial extends Action
             }
 
             $customer = $this->createCustomerProcess($userProfile, $type);
+            if (!$customer) {
+                return $this->loginRefusedResult();
+            }
         } elseif ($this->apiHelper->isCheckMode() && $customerData->getData('password_hash') === null) {
             $userProfile->email = $customer->getEmail();
             $this->session->setUserProfile($userProfile);
