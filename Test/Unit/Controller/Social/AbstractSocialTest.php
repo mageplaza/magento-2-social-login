@@ -25,6 +25,8 @@ namespace Mageplaza\SocialLogin\Test\Unit\Controller\Social;
 
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Action\AbstractAction;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Message\ManagerInterface;
@@ -208,6 +210,69 @@ class AbstractSocialTest extends TestCase
         $this->apiObject->expects($this->once())->method('createCustomerSocial')->willReturn($newCustomer);
 
         $this->assertSame($newCustomer, $this->controller->createCustomer($this->user(), 'Vkontakte'));
+    }
+
+    /**
+     * @param string|null $realEmail
+     *
+     * @return Login|MockObject
+     */
+    private function controllerWithRealEmail($realEmail)
+    {
+        $request = $this->createMock(RequestInterface::class);
+        $request->method('getParam')->willReturnCallback(
+            static fn($key) => $key === 'realEmail' ? $realEmail : null
+        );
+        $store = $this->getMockBuilder(Store::class)
+            ->disableOriginalConstructor()->onlyMethods(['getWebsiteId'])->getMock();
+        $controller = $this->getMockBuilder(Login::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getStore', 'createCustomer'])
+            ->getMock();
+        $controller->method('getStore')->willReturn($store);
+        (new ReflectionProperty(AbstractAction::class, '_request'))->setValue($controller, $request);
+        (new ReflectionProperty(AbstractSocial::class, 'session'))->setValue($controller, $this->session);
+
+        return $controller;
+    }
+
+    private function profileWithVerifiedEmail(): \Hybridauth\User\Profile
+    {
+        $profile                = new \Hybridauth\User\Profile();
+        $profile->identifier    = 'social-123';
+        $profile->email         = 'typed@example.com';
+        $profile->emailVerified = 'typed@example.com';
+        $profile->displayName   = 'Jane Doe';
+
+        return $profile;
+    }
+
+    public function testRealEmailNeverCarriesProviderVerifiedFlagAndRequiresConfirmation(): void
+    {
+        $this->session->method('isLoggedIn')->willReturn(false);
+        $controller = $this->controllerWithRealEmail('typed@example.com');
+        $controller->expects($this->once())->method('createCustomer')->with(
+            $this->callback(static function ($user) {
+                return $user['email_verified'] === '' && $user['confirm'] === true;
+            }),
+            'Google'
+        )->willReturn($this->customer(8));
+
+        $controller->createCustomerProcess($this->profileWithVerifiedEmail(), 'Google');
+    }
+
+    public function testProviderVerifiedFlagIsKeptWhenEmailComesFromProvider(): void
+    {
+        $this->session->method('isLoggedIn')->willReturn(false);
+        $controller = $this->controllerWithRealEmail(null);
+        $controller->expects($this->once())->method('createCustomer')->with(
+            $this->callback(static function ($user) {
+                return $user['email_verified'] === 'typed@example.com' && $user['confirm'] === false;
+            }),
+            'Google'
+        )->willReturn($this->customer(8));
+
+        $controller->createCustomerProcess($this->profileWithVerifiedEmail(), 'Google');
     }
 
     public function testLoggedInCustomerProcessLinksIdentityToCurrentCustomer(): void

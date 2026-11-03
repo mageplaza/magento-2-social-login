@@ -295,6 +295,26 @@ class EmailTest extends TestCase
         $this->assertSame('victim@example.com', $profile->email);
     }
 
+    public function testRealEmailOfExistingCustomerIsRejectedBeforeAnyAccountWork(): void
+    {
+        $profile             = new Profile();
+        $profile->identifier = 'social-123';
+        $profile->email      = null;
+        $this->session->method('getUserProfile')->willReturn($profile);
+        $this->session->method('isLoggedIn')->willReturn(false);
+        $this->request->method('getParams')->willReturn(['type' => 'google', 'realEmail' => 'victim@example.com']);
+
+        $this->controller->expects($this->never())->method('createCustomerProcess');
+        $this->session->expects($this->never())->method('setCustomerDataAsLoggedIn');
+        $this->customerRepository->expects($this->never())->method('save');
+
+        $this->controller->execute();
+
+        $this->assertFalse($this->resultData['success']);
+        $this->assertSame('Email already exists', (string) $this->resultData['message']);
+        $this->assertNull($profile->email);
+    }
+
     public function testMissingSocialProfileInSessionIsRejected(): void
     {
         $this->session->method('getUserProfile')->willReturn(null);
