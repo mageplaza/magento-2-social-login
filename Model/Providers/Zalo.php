@@ -113,7 +113,6 @@ class Zalo extends Hybrid_Provider_Model_OAuth2
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $urlEncodedParams);
         $response = curl_exec($ch);
-        curl_close($ch);
 
         return $response;
     }
