@@ -24,4 +24,10 @@
     <type name="Magento\Customer\Controller\Ajax\Login">
         <plugin name="social_login_fix_null_captcha_form_id" type="Mageplaza\SocialLogin\Plugin\Captcha\FixNullFormId" sortOrder="10"/>
     </type>
+    <type name="Magento\Customer\Api\AccountManagementInterface">
+        <plugin name="social_login_unlink_on_password_reset" type="Mageplaza\SocialLogin\Plugin\Customer\UnlinkSocialOnPasswordReset"/>
+    </type>
+    <type name="Magento\Customer\Model\ForgotPasswordToken\ConfirmCustomerByToken">
+        <plugin name="social_login_unlink_on_reset_link_confirm" type="Mageplaza\SocialLogin\Plugin\Customer\UnlinkSocialOnPasswordReset"/>
+    </type>
 </config>

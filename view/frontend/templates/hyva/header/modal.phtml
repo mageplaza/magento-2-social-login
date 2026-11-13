@@ -26,7 +26,8 @@ $popupEffect = $helperData->getPopupEffect();
 $modal       = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class)
     ->createModal()
     ->addDialogClass("p-3 w-full wrap-modal-login transform origin-left opacity-0" . " " . $popupEffect . "-appear")
-    ->removeDialogClass('shadow-xl', 'inline-block', 'bg-white', 'rounded-lg', 'p-10', 'max-h-screen', 'overflow-auto',
+    ->addDialogClass('bg-transparent', 'shadow-none')
+    ->removeDialogClass('shadow-xl', 'inline-block', 'bg-white', 'rounded-lg', 'p-10', 'max-h-screen',
         'border border-10', 'border-blue-500')
     ->withDialogRefName('my-dialog')
     ->withContent('
@@ -39,6 +40,11 @@ $isGDPRTac = $helperData->isGDPRTaCEnabled();
 $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 ?>
 <style>
+    .wrap-modal-login[open] {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
     @keyframes newspaperAnimation {
         0% {
             opacity: 0;
@@ -236,29 +242,12 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
     }
 </style>
 
-<div id="my-dialog-social-login" x-data="{
-    ...hyva.modal(),
-    init() {
-        window.openMyDialog = function (event) {
-            this.show('my-dialog', event);
-            setTimeout(() => {
-                this.onOpenPopup();
-            }, 50);
-        }.bind(this);
-
-        window.hideMyDialog = function (event) {
-            this.hide('my-dialog', event);
-        }.bind(this);
-    },
-    onOpenPopup() {
-        scrollButtonContent()
-    }
-}" x-init="init()">
+<div id="my-dialog-social-login" x-data="mpSocialLoginModal">
     <?= /* @noEscape */ $modal ?>
 </div>
 
 
-<div id="test" style="display: none; height: 100vh">
+<div id="test" style="display: none; flex: 1 1 0; min-height: 0">
     <div id="social-login-popup" data-df="" style="transform: translateY(<?php /* @escapeNotVerified */ echo $translateYvalue?>)" class="white-popup mfp-with-anim"
          data-mage-init='{"socialPopupForm": <?= /* @noEscape */ $block->getFormParams() ?>}'>
         <button id="mp-social-modal-close" title="Close (Esc)" type="button" class="mfp-close">×</button>
@@ -282,6 +271,28 @@ $translateYvalue = $isGDPRTac ? '5%' : '30%' ;
 
 
 <?php ob_start(); ?>
+    function mpSocialLoginModal () {
+        return Object.assign(hyva.modal.call(this), {
+            init() {
+                window.openMyDialog = function (event) {
+                    this.show('my-dialog', event);
+                    setTimeout(() => {
+                        this.onOpenPopup();
+                    }, 50);
+                }.bind(this);
+
+                window.hideMyDialog = function (event) {
+                    this.hide('my-dialog', event);
+                }.bind(this);
+            },
+            onOpenPopup() {
+                scrollButtonContent()
+            }
+        });
+    }
+
+    window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginModal', mpSocialLoginModal), {once: true});
+
     let popup = ``;
 
     function handleHideModalClickOutSide() {

@@ -29,7 +29,7 @@
     <div class="block col-mp mp-12">
         <div class="block-content">
             <form class="form-fake-email" id="social-form-fake-email"
-                  x-data="{...hyva.formValidation($el), ...initMyForm()}"
+                  x-data="mpSocialLoginEmailForm"
                   @submit.prevent="myFormSubmit">
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */
                 __('* Required Fields') ?>">
@@ -187,6 +187,12 @@
             }
         }
     }
+
+    function mpSocialLoginEmailForm () {
+        return Object.assign({}, hyva.formValidation(this.$el), initMyForm());
+    }
+
+    window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginEmailForm', mpSocialLoginEmailForm), {once: true});
 
 <?php $scriptString = ob_get_clean(); ?>
 <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

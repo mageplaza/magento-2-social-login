@@ -28,8 +28,8 @@
     <div class="block col-mp mp-12">
         <div class="block-content">
             <form class="form-password-forget"
-                  x-data="Object.assign(hyva.formValidation($el), initCustomerForgotForm())"
-                  @submit.prevent="submitForm();" id="social-form-password-forget" data-mage-init='{"validation":{}}'>
+                  x-data="mpSocialLoginForgotForm"
+                  @submit.prevent="submitForm" id="social-form-password-forget" data-mage-init='{"validation":{}}'>
                 <fieldset class="fieldset" data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
                     <div class="field note"><?= /* @noEscape */ __('Please enter your email address below to receive a password reset link.') ?></div>
                     <div class="field email required">
@@ -158,6 +158,12 @@
 
             }
         }
+
+        function mpSocialLoginForgotForm () {
+            return Object.assign(hyva.formValidation(this.$el), initCustomerForgotForm());
+        }
+
+        window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginForgotForm', mpSocialLoginForgotForm), {once: true});
 
     <?php $scriptString = ob_get_clean(); ?>
     <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

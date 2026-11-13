@@ -30,8 +30,8 @@
         <div class="block-content">
             <?= $block->getChildHtml('form_fields_before') ?>
             <?= $block->getChildHtml('customer.form.register.extra') ?>
-            <form class="form-customer-create" id="social-form-create"  x-data="Object.assign(hyva.formValidation($el), initCustomerCreateForm())"
-                  @submit.prevent="submitForm();">
+            <form class="form-customer-create" id="social-form-create"  x-data="mpSocialLoginCreateForm"
+                  @submit.prevent="submitForm">
                 <fieldset class="fieldset create info">
                     <input type="hidden" name="success_url" value="<?= /* @noEscape */ $block->getSuccessUrl() ?>"/>
                     <input type="hidden" name="error_url" value="<?= /* @noEscape */ $block->getErrorUrl() ?>"/>
@@ -282,6 +282,12 @@
 
             }
         }
+
+        function mpSocialLoginCreateForm () {
+            return Object.assign(hyva.formValidation(this.$el), initCustomerCreateForm());
+        }
+
+        window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginCreateForm', mpSocialLoginCreateForm), {once: true});
 
     <?php $scriptString = ob_get_clean(); ?>
     <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

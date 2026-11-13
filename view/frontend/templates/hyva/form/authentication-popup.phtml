@@ -38,6 +38,12 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
     function initAuthentication() {
         return {
             open: false,
+            close() {
+                this.open = false;
+            },
+            resetErrors() {
+                this.errors = 0;
+            },
             forceAuthentication: false,
             checkoutUrl: '<?= $escaper->escapeUrl($block->getUrl('checkout/index')) ?>',
             errors: 0,
@@ -113,16 +119,28 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
                         window.location.href = this.checkoutUrl;
                     }
                 });
+            },
+            eventListeners: {
+                ['@private-content-loaded.window'](event) {
+                    this.onPrivateContentLoaded(event.detail.data);
+                },
+                ['@toggle-authentication.window'](event) {
+                    this.open = this.forceAuthentication;
+                    this.redirectIfAuthenticated(event);
+                },
+                ['@keydown.window.escape']() {
+                    this.close();
+                }
             }
         }
     }
+
+    window.addEventListener('alpine:init', () => Alpine.data('mpSocialLoginAuthentication', initAuthentication), {once: true});
 <?php $scriptString = ob_get_clean(); ?>
 <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 <section id="authentication-popup"
-         x-data="initAuthentication()"
-         @private-content-loaded.window="onPrivateContentLoaded($event.detail.data)"
-         @toggle-authentication.window="open = forceAuthentication; redirectIfAuthenticated(event)"
-         @keydown.window.escape="open = false"
+         x-data="mpSocialLoginAuthentication"
+         x-bind="eventListeners"
 >
     <div
             class="backdrop"
@@ -135,11 +153,11 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
             x-transition:leave="ease-in-out duration-500"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            @click="open = false"
+            @click="close"
     ></div>
     <div role="dialog"
          aria-modal="true"
-         @click.outside="open = false"
+         @click.outside="close"
          class="inset-y-0 right-0 z-30 flex max-w-full fixed"
          x-cloak
          x-show="open"
@@ -165,7 +183,7 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
                     x-transition:leave-end="opacity-0" class="absolute top-0 right-2 flex p-2 mt-2">
                 <button
                         type="button"
-                        @click="open = false;"
+                        @click="close"
                         aria-label="<?= $escaper->escapeHtmlAttr(__('Close panel')) ?>"
                         class="p-2 text-gray-300 transition duration-150 ease-in-out hover:text-black"
                 >
@@ -181,7 +199,7 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
 
                         <form class="form form-login"
                               method="post"
-                              @submit.prevent="submitForm();"
+                              @submit.prevent="submitForm"
                               id="login-form"
                         >
                             <?= $recaptcha ? $recaptcha->getInputHtml('customer_login', 'auth-popup') : '' ?>
@@ -194,7 +212,7 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
                                         <input name="username"
                                                id="form-login-username"
                                                x-ref="customer-email"
-                                               @change="errors = 0"
+                                               @change="resetErrors"
                                                type="email"
                                                required
                                                autocomplete="<?= $isAutocompleteEnabled ? 'username' : 'off' ?>"
@@ -214,7 +232,7 @@ $isAutocompleteEnabled = $storeConfig->getStoreConfig('customer/password/autocom
                                                required
                                                x-ref="customer-password"
                                                autocomplete="<?= $isAutocompleteEnabled ? 'current-password' : 'off' ?>"
-                                               @change="errors = 0"
+                                               @change="resetErrors"
                                         >
                                     </div>
                                 </div>

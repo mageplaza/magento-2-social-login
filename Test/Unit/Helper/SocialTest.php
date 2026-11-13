@@ -52,7 +52,6 @@ class SocialTest extends TestCase
     private function setType(Social $social, string $type): void
     {
         $ref = new \ReflectionProperty(Social::class, '_type');
-        $ref->setAccessible(true);
         $ref->setValue($social, $type);
     }
 
@@ -133,6 +132,24 @@ class SocialTest extends TestCase
         $social->method('getConfigValue')->with('sociallogin/facebook/app_id', null)->willReturn('  app-123  ');
 
         $this->assertSame('app-123', $social->getAppId());
+    }
+
+    public function testGetAppSecretTrimsConfiguredValue(): void
+    {
+        $social = $this->social(['getConfigValue']);
+        $this->setType($social, 'facebook');
+        $social->method('getConfigValue')->with('sociallogin/facebook/app_secret', null)->willReturn('  secret-1  ');
+
+        $this->assertSame('secret-1', $social->getAppSecret());
+    }
+
+    public function testGetAppSecretReturnsEmptyStringWhenConfigIsNull(): void
+    {
+        $social = $this->social(['getConfigValue']);
+        $this->setType($social, 'facebook');
+        $social->method('getConfigValue')->willReturn(null);
+
+        $this->assertSame('', $social->getAppSecret());
     }
 
     public function testIsEnabledReadsProviderConfig(): void
