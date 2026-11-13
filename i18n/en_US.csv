@@ -162,3 +162,9 @@ Sign in,Sign in
 Track order history,Track order history
 exists,exists
 "An account with this email already exists. Please sign in with your email and password.","An account with this email already exists. Please sign in with your email and password."
+"An account with this email already exists. Please sign in with your password first.","An account with this email already exists. Please sign in with your password first."
+"Please check your email to confirm your account.","Please check your email to confirm your account."
+"Please enter your email address.","Please enter your email address."
+"This social account is already linked to another account.","This social account is already linked to another account."
+"Unable to complete social login. Please try again.","Unable to complete social login. Please try again."
+"Your session has expired. Please try again.","Your session has expired. Please try again."
