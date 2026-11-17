@@ -6,7 +6,11 @@
     "hybridauth/hybridauth": "^3.13"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "magento/magento-coding-standard": "^41",
+    "phpstan/phpstan": "^2.1",
+    "bitexpert/phpstan-magento": "^0.44",
+    "phpstan/extension-installer": "^1.4"
   },
   "type": "magento2-module",
   "version": "4.1.25",
@@ -44,6 +48,12 @@
     ],
     "psr-4": {
       "Mageplaza\\SocialLogin\\": ""
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
     }
   }
 }
