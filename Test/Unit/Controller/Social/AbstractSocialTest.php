@@ -130,6 +130,9 @@ class AbstractSocialTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider unverifiedProvider
+     */
     #[DataProvider('unverifiedProvider')]
     public function testGuestWithUnverifiedEmailIsNotLinkedToExistingAccount($emailVerified): void
     {
@@ -155,6 +158,9 @@ class AbstractSocialTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider verifiedProvider
+     */
     #[DataProvider('verifiedProvider')]
     public function testGuestWithProviderVerifiedEmailIsLinkedAndLoggedIn($emailVerified): void
     {

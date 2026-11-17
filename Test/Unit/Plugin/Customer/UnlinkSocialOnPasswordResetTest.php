@@ -71,6 +71,9 @@ class UnlinkSocialOnPasswordResetTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider confirmationProvider
+     */
     #[DataProvider('confirmationProvider')]
     public function testResetLinkUnlinksOnlyPendingCustomer($confirmation, $expectedDeletes)
     {

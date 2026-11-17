@@ -25,6 +25,7 @@ use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -38,6 +39,7 @@ use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
+use Mageplaza\SocialLogin\Model\ResourceModel\Social as SocialResource;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -50,6 +52,11 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
      * @var LoggerInterface
      */
     protected $_logger;
+
+    /**
+     * @var SocialResource
+     */
+    protected $socialResource;
 
     /**
      * DataDeletion constructor.
@@ -66,6 +73,8 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
      * @param TokenFactory $tokenFactory
      * @param LoggerInterface $logger
      * @param Escaper $escaper
+     * @param CustomerResource $customerResource
+     * @param SocialResource $socialResource
      */
     public function __construct(
         Context $context,
@@ -79,7 +88,9 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
         Customer $customerModel,
         TokenFactory $tokenFactory,
         LoggerInterface $logger,
-        \Magento\Framework\Escaper $escaper
+        \Magento\Framework\Escaper $escaper,
+        CustomerResource $customerResource,
+        SocialResource $socialResource
     ) {
         parent::__construct(
             $context,
@@ -92,9 +103,11 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
             $resultRawFactory,
             $customerModel,
             $tokenFactory,
-            $escaper
+            $escaper,
+            $customerResource
         );
         $this->_logger = $logger;
+        $this->socialResource = $socialResource;
     }
 
     /**
@@ -108,9 +121,9 @@ class DataDeletion extends AbstractSocial implements CsrfAwareActionInterface
             $signed_request = $param['signed_request'];
             $data           = $this->parseSignedRequest($signed_request);
             if ($data && $data['user_id']) {
-                $this->apiObject->load($data['user_id'], 'social_id');
+                $this->socialResource->load($this->apiObject, $data['user_id'], 'social_id');
                 try {
-                    $this->apiObject->delete();
+                    $this->socialResource->delete($this->apiObject);
                 } catch (Exception $e) {
                     $this->_logger->warning($e->getMessage());
 

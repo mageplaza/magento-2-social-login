@@ -35,6 +35,8 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Config\Share;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\EmailNotificationInterface;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
@@ -52,6 +54,9 @@ use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
+use Magento\User\Model\ResourceModel\User as UserResource;
+use Mageplaza\SocialLogin\Model\ResourceModel\Social as SocialResource;
+use Mageplaza\SocialLogin\Model\ResourceModel\Social\CollectionFactory;
 
 class Social extends AbstractModel
 {
@@ -117,6 +122,31 @@ class Social extends AbstractModel
 
 
     /**
+     * @var CustomerResource
+     */
+    protected $customerResource;
+
+    /**
+     * @var UserResource
+     */
+    protected $userResource;
+
+    /**
+     * @var SocialResource
+     */
+    protected $socialResource;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $socialCollectionFactory;
+
+    /**
+     * @var DirectoryList
+     */
+    protected $directoryList;
+
+    /**
      * @param Context $context
      * @param Registry $registry
      * @param CustomerFactory $customerFactory
@@ -128,6 +158,11 @@ class Social extends AbstractModel
      * @param DateTime $dateTime
      * @param HybridAuthSession $hybridAuthSession
      * @param RequestInterface $request
+     * @param CustomerResource $customerResource
+     * @param UserResource $userResource
+     * @param SocialResource $socialResource
+     * @param CollectionFactory $socialCollectionFactory
+     * @param DirectoryList $directoryList
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -146,6 +181,11 @@ class Social extends AbstractModel
         DateTime $dateTime,
         HybridAuthSession $hybridAuthSession,
         RequestInterface $request,
+        CustomerResource $customerResource,
+        UserResource $userResource,
+        SocialResource $socialResource,
+        CollectionFactory $socialCollectionFactory,
+        DirectoryList $directoryList,
         ?AbstractResource $resource = null,
         ?AbstractDb $resourceCollection = null,
         array $data = [],
@@ -161,6 +201,11 @@ class Social extends AbstractModel
         $this->_dateTime           = $dateTime;
         $this->_hybridAuthSession  = $hybridAuthSession;
         $this->_request            = $request;
+        $this->customerResource        = $customerResource;
+        $this->userResource            = $userResource;
+        $this->socialResource          = $socialResource;
+        $this->socialCollectionFactory = $socialCollectionFactory;
+        $this->directoryList           = $directoryList;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -186,7 +231,7 @@ class Social extends AbstractModel
         $customerId = $this->getLinkedCustomerId($identify, $type);
 
         if ($customerId) {
-            $customer->load($customerId);
+            $this->customerResource->load($customer, $customerId);
         }
 
         return $customer;
@@ -201,7 +246,7 @@ class Social extends AbstractModel
      */
     public function getLinkedCustomerId($identify, $type)
     {
-        $collection = $this->getCollection()
+        $collection = $this->socialCollectionFactory->create()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)
             ->addFieldToFilter('status', ['null' => 'true']);
@@ -336,9 +381,12 @@ class Social extends AbstractModel
         }
 
         /**
-         * @var Customer $customer
+         * @var Customer $customerModel
          */
-        return $this->customerFactory->create()->load($customer->getId());
+        $customerModel = $this->customerFactory->create();
+        $this->customerResource->load($customerModel, $customer->getId());
+
+        return $customerModel;
     }
 
     /**
@@ -371,7 +419,8 @@ class Social extends AbstractModel
                 'website_id'             => $this->storeManager->getWebsite()->getId()
             ]
         )
-            ->setId(null)->save();
+            ->setId(null);
+        $this->socialResource->save($this);
 
         return $this;
     }
@@ -394,7 +443,7 @@ class Social extends AbstractModel
                 $apiName => $this->getProviderData($apiName)
             ],
             'debug_mode' => false,
-            'debug_file' => BP . '/var/log/social.log'
+            'debug_file' => $this->directoryList->getRoot() . '/var/log/social.log'
         ];
         $auth    = new Hybrid_Auth($config);
         try {
@@ -471,13 +520,13 @@ class Social extends AbstractModel
     {
         $user = $this->_userModel;
 
-        $socialCustomer = $this->getCollection()
+        $socialCustomer = $this->socialCollectionFactory->create()
             ->addFieldToFilter('social_id', $identify)
             ->addFieldToFilter('type', $type)->addFieldToFilter('user_id', ['notnull' => true])
             ->getFirstItem();
 
         if ($socialCustomer && $socialCustomer->getId()) {
-            $user->load($socialCustomer->getUserId());
+            $this->userResource->load($user, $socialCustomer->getUserId());
         }
 
         return $user;
@@ -491,7 +540,7 @@ class Social extends AbstractModel
      */
     public function getUser($type, $identifier)
     {
-        return $this->getCollection()
+        return $this->socialCollectionFactory->create()
             ->addFieldToSelect('user_id')
             ->addFieldToSelect('social_customer_id')
             ->addFieldToFilter('type', $type)
@@ -509,14 +558,14 @@ class Social extends AbstractModel
      */
     public function updateAuthCustomer($socialCustomerId, $identifier)
     {
-        $social = $this->load($socialCustomerId);
-        $social->addData(
+        $this->socialResource->load($this, $socialCustomerId);
+        $this->addData(
             [
                 'social_id' => $identifier,
                 'status'    => self::STATUS_CONNECT
             ]
         );
-        $social->save();
+        $this->socialResource->save($this);
 
         return $this;
     }
@@ -530,8 +579,9 @@ class Social extends AbstractModel
      */
     public function updateStatus($socialCustomerId, $status)
     {
-        $social = $this->load($socialCustomerId);
-        $social->addData(['status' => $status])->save();
+        $this->socialResource->load($this, $socialCustomerId);
+        $this->addData(['status' => $status]);
+        $this->socialResource->save($this);
 
         return $this;
     }
