@@ -37,10 +37,12 @@ class DataTest extends TestCase
      */
     private function helper(array $onlyMethods = [])
     {
+        if (!$onlyMethods) {
+            return (new \ReflectionClass(Data::class))->newInstanceWithoutConstructor();
+        }
+
         return $this->getMockBuilder(Data::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods($onlyMethods)
-            ->getMock();
+            ->disableOriginalConstructor()->onlyMethods($onlyMethods)->getMock();
     }
 
     public function testGenerateBroadcastChannelScriptEmbedsEventAndJsonData(): void
@@ -56,7 +58,7 @@ class DataTest extends TestCase
     public function testIsEnabledGGRecaptchaTrueWhenGeneralAndFrontendEnabled(): void
     {
         $helper = $this->helper(['getConfigValue']);
-        $helper->method('getConfigValue')->willReturnCallback(static function ($path) {
+        $helper->expects($this->atLeastOnce())->method('getConfigValue')->willReturnCallback(static function ($path) {
             return in_array($path, [
                 'googlerecaptcha/general/enabled',
                 'googlerecaptcha/frontend/enabled',
@@ -69,7 +71,7 @@ class DataTest extends TestCase
     public function testIsEnabledGGRecaptchaFalseWhenFrontendDisabled(): void
     {
         $helper = $this->helper(['getConfigValue']);
-        $helper->method('getConfigValue')->willReturnCallback(static function ($path) {
+        $helper->expects($this->atLeastOnce())->method('getConfigValue')->willReturnCallback(static function ($path) {
             return $path === 'googlerecaptcha/general/enabled'; // frontend returns false
         });
 

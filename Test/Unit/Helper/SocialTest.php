@@ -39,10 +39,12 @@ class SocialTest extends TestCase
      */
     private function social(array $onlyMethods = [])
     {
+        if (!$onlyMethods) {
+            return (new \ReflectionClass(Social::class))->newInstanceWithoutConstructor();
+        }
+
         return $this->getMockBuilder(Social::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods($onlyMethods)
-            ->getMock();
+            ->disableOriginalConstructor()->onlyMethods($onlyMethods)->getMock();
     }
 
     /**
@@ -83,7 +85,7 @@ class SocialTest extends TestCase
     public function testSetTypeValidTypeReturnsLabelAndStoresType(): void
     {
         $social = $this->social(['getConfigValue']);
-        $social->method('getConfigValue')->willReturn(0);
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->willReturn(0);
 
         $this->assertSame('Facebook', $social->setType('facebook'));
         $this->assertSame('facebook', $social->getType());
@@ -92,7 +94,7 @@ class SocialTest extends TestCase
     public function testSetTypeInvalidTypeReturnsNull(): void
     {
         $social = $this->social(['getConfigValue']);
-        $social->method('getConfigValue')->willReturn(0);
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->willReturn(0);
 
         $this->assertNull($social->setType('not_a_provider'));
         $this->assertNull($social->getType());
@@ -101,6 +103,7 @@ class SocialTest extends TestCase
     public function testSetTypeEmptyTypeReturnsNull(): void
     {
         $social = $this->social(['getConfigValue']);
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->willReturn(0);
 
         $this->assertNull($social->setType(''));
     }
@@ -108,7 +111,7 @@ class SocialTest extends TestCase
     public function testGetSocialTypesIsSortedByConfiguredSortOrder(): void
     {
         $social = $this->social(['getConfigValue']);
-        $social->method('getConfigValue')->willReturnCallback(static function ($path) {
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->willReturnCallback(static function ($path) {
             // Put google first, facebook last; everything else keeps insertion order (0).
             if ($path === 'sociallogin/google/sort_order') {
                 return -10;
@@ -129,7 +132,7 @@ class SocialTest extends TestCase
     {
         $social = $this->social(['getConfigValue']);
         $this->setType($social, 'facebook');
-        $social->method('getConfigValue')->with('sociallogin/facebook/app_id', null)->willReturn('  app-123  ');
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->with('sociallogin/facebook/app_id', null)->willReturn('  app-123  ');
 
         $this->assertSame('app-123', $social->getAppId());
     }
@@ -138,7 +141,7 @@ class SocialTest extends TestCase
     {
         $social = $this->social(['getConfigValue']);
         $this->setType($social, 'facebook');
-        $social->method('getConfigValue')->with('sociallogin/facebook/app_secret', null)->willReturn('  secret-1  ');
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->with('sociallogin/facebook/app_secret', null)->willReturn('  secret-1  ');
 
         $this->assertSame('secret-1', $social->getAppSecret());
     }
@@ -147,7 +150,7 @@ class SocialTest extends TestCase
     {
         $social = $this->social(['getConfigValue']);
         $this->setType($social, 'facebook');
-        $social->method('getConfigValue')->willReturn(null);
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->willReturn(null);
 
         $this->assertSame('', $social->getAppSecret());
     }
@@ -156,7 +159,7 @@ class SocialTest extends TestCase
     {
         $social = $this->social(['getConfigValue']);
         $this->setType($social, 'google');
-        $social->method('getConfigValue')->with('sociallogin/google/is_enabled', null)->willReturn(true);
+        $social->expects($this->atLeastOnce())->method('getConfigValue')->with('sociallogin/google/is_enabled', null)->willReturn(true);
 
         $this->assertTrue($social->isEnabled());
     }
@@ -164,8 +167,8 @@ class SocialTest extends TestCase
     public function testGetAuthUrlFacebookAppendsHauthDoneQueryParam(): void
     {
         $social = $this->social(['getBaseAuthUrl', 'setType']);
-        $social->method('getBaseAuthUrl')->willReturn('https://shop/callback');
-        $social->method('setType')->with('facebook')->willReturn('Facebook');
+        $social->expects($this->once())->method('getBaseAuthUrl')->willReturn('https://shop/callback');
+        $social->expects($this->once())->method('setType')->with('facebook')->willReturn('Facebook');
 
         $this->assertSame('https://shop/callback?hauth_done=Facebook', $social->getAuthUrl('facebook'));
     }
@@ -173,8 +176,8 @@ class SocialTest extends TestCase
     public function testGetAuthUrlDefaultProviderAppendsHauthDoneParam(): void
     {
         $social = $this->social(['getBaseAuthUrl', 'setType']);
-        $social->method('getBaseAuthUrl')->willReturn('https://shop/callback');
-        $social->method('setType')->with('google')->willReturn('Google');
+        $social->expects($this->once())->method('getBaseAuthUrl')->willReturn('https://shop/callback');
+        $social->expects($this->once())->method('setType')->with('google')->willReturn('Google');
 
         $this->assertSame('https://shop/callback?hauth.done=Google', $social->getAuthUrl('google'));
     }
@@ -182,8 +185,8 @@ class SocialTest extends TestCase
     public function testGetAuthUrlVkontakteReturnsBaseUrlUnchanged(): void
     {
         $social = $this->social(['getBaseAuthUrl', 'setType']);
-        $social->method('getBaseAuthUrl')->willReturn('https://shop/callback');
-        $social->method('setType')->with('vkontakte')->willReturn('Vkontakte');
+        $social->expects($this->once())->method('getBaseAuthUrl')->willReturn('https://shop/callback');
+        $social->expects($this->once())->method('setType')->with('vkontakte')->willReturn('Vkontakte');
 
         $this->assertSame('https://shop/callback', $social->getAuthUrl('vkontakte'));
     }
@@ -191,8 +194,8 @@ class SocialTest extends TestCase
     public function testGetAuthUrlLiveConcatenatesLivePhp(): void
     {
         $social = $this->social(['getBaseAuthUrl', 'setType']);
-        $social->method('getBaseAuthUrl')->willReturn('https://shop/callback/');
-        $social->method('setType')->with('live')->willReturn('Live');
+        $social->expects($this->once())->method('getBaseAuthUrl')->willReturn('https://shop/callback/');
+        $social->expects($this->once())->method('setType')->with('live')->willReturn('Live');
 
         $this->assertSame('https://shop/callback/live.php', $social->getAuthUrl('live'));
     }
@@ -200,8 +203,8 @@ class SocialTest extends TestCase
     public function testGetDeleteDataUrlAppendsLowercasedType(): void
     {
         $social = $this->social(['getBaseDelete', 'setType']);
-        $social->method('getBaseDelete')->willReturn('https://shop/datadeletion/');
-        $social->method('setType')->with('facebook')->willReturn('Facebook');
+        $social->expects($this->once())->method('getBaseDelete')->willReturn('https://shop/datadeletion/');
+        $social->expects($this->once())->method('setType')->with('facebook')->willReturn('Facebook');
 
         $this->assertSame('https://shop/datadeletion/type/Facebook', $social->getDeleteDataUrl('FaceBook'));
     }

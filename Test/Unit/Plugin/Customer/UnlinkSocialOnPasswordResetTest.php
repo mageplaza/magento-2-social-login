@@ -35,7 +35,7 @@ class UnlinkSocialOnPasswordResetTest extends TestCase
 {
     public function testDeletesLinksOfResetCustomer()
     {
-        $customer = $this->createMock(CustomerInterface::class);
+        $customer = $this->createStub(CustomerInterface::class);
         $customer->method('getId')->willReturn('7');
         $repository = $this->createMock(CustomerRepositoryInterface::class);
         $repository->expects($this->once())->method('get')->with('victim@example.com')->willReturn($customer);
@@ -43,14 +43,14 @@ class UnlinkSocialOnPasswordResetTest extends TestCase
         $connection->expects($this->once())->method('delete')
             ->with('mageplaza_social_customer', ['customer_id = ?' => 7]);
         $resource = $this->createMock(Social::class);
-        $resource->method('getConnection')->willReturn($connection);
+        $resource->expects($this->once())->method('getConnection')->willReturn($connection);
         $resource->method('getMainTable')->willReturn('mageplaza_social_customer');
 
         $plugin = new UnlinkSocialOnPasswordReset($repository, $resource);
 
         $this->assertTrue(
             $plugin->afterResetPassword(
-                $this->createMock(AccountManagementInterface::class),
+                $this->createStub(AccountManagementInterface::class),
                 true,
                 'victim@example.com'
             )
@@ -67,7 +67,7 @@ class UnlinkSocialOnPasswordResetTest extends TestCase
         $plugin = new UnlinkSocialOnPasswordReset($repository, $resource);
 
         $this->assertFalse(
-            $plugin->afterResetPassword($this->createMock(AccountManagementInterface::class), false, 'a@b.c')
+            $plugin->afterResetPassword($this->createStub(AccountManagementInterface::class), false, 'a@b.c')
         );
     }
 
@@ -77,21 +77,21 @@ class UnlinkSocialOnPasswordResetTest extends TestCase
     #[DataProvider('confirmationProvider')]
     public function testResetLinkUnlinksOnlyPendingCustomer($confirmation, $expectedDeletes)
     {
-        $customer = $this->createMock(CustomerInterface::class);
+        $customer = $this->createStub(CustomerInterface::class);
         $customer->method('getConfirmation')->willReturn($confirmation);
         $repository = $this->createMock(CustomerRepositoryInterface::class);
-        $repository->method('getById')->with(7)->willReturn($customer);
+        $repository->expects($this->once())->method('getById')->with(7)->willReturn($customer);
         $connection = $this->createMock(AdapterInterface::class);
         $connection->expects($this->exactly($expectedDeletes))->method('delete')
             ->with('mageplaza_social_customer', ['customer_id = ?' => 7]);
         $resource = $this->createMock(Social::class);
-        $resource->method('getConnection')->willReturn($connection);
+        $resource->expects($this->exactly($expectedDeletes))->method('getConnection')->willReturn($connection);
         $resource->method('getMainTable')->willReturn('mageplaza_social_customer');
         $called = 0;
 
         $plugin = new UnlinkSocialOnPasswordReset($repository, $resource);
         $plugin->aroundResetCustomerConfirmation(
-            $this->createMock(ConfirmCustomerByToken::class),
+            $this->createStub(ConfirmCustomerByToken::class),
             function ($id) use (&$called) {
                 $called = $id;
             },
