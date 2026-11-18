@@ -96,19 +96,18 @@ class EmailTest extends TestCase
             ->onlyMethods(['getStore', '_loginPostRedirect', 'createCustomerProcess', 'refresh'])
             ->getMock();
 
-        $store = $this->getMockBuilder(Store::class)
-            ->disableOriginalConstructor()->onlyMethods(['getWebsiteId'])->getMock();
+        $store = $this->createStub(Store::class);
         $store->method('getWebsiteId')->willReturn(1);
         $this->controller->method('getStore')->willReturn($store);
         $this->controller->method('_loginPostRedirect')->willReturn('http://example.test/customer/account');
+        $this->controller->expects($this->never())->method('refresh');
 
-        $this->request = $this->createMock(RequestInterface::class);
+        $this->request = $this->createStub(RequestInterface::class);
 
-        $apiHelper = $this->getMockBuilder(SocialHelper::class)
-            ->disableOriginalConstructor()->onlyMethods(['setType'])->getMock();
+        $apiHelper = $this->createStub(SocialHelper::class);
         $apiHelper->method('setType')->willReturn('Google');
 
-        $encryptor = $this->createMock(EncryptorInterface::class);
+        $encryptor = $this->createStub(EncryptorInterface::class);
         $encryptor->method('getHash')->willReturnCallback(static fn($password) => 'hash:' . $password);
 
         $this->session = $this->getMockBuilder(CustomerSessionDouble::class)
@@ -116,35 +115,33 @@ class EmailTest extends TestCase
             ->onlyMethods(['getUserProfile', 'isLoggedIn', 'getCustomerId', 'setCustomerDataAsLoggedIn', 'regenerateId'])
             ->getMock();
 
-        $this->apiObject = $this->getMockBuilder(Social::class)
-            ->disableOriginalConstructor()->onlyMethods(['getCustomerBySocial', 'linkToCustomer'])->getMock();
+        $this->apiObject = $this->createStub(Social::class);
 
-        $existing = $this->getMockBuilder(CustomerEmailDouble::class)
-            ->disableOriginalConstructor()->onlyMethods(['setWebsiteId', 'loadByEmail', 'getId'])->getMock();
+        $existing = $this->createStub(CustomerEmailDouble::class);
         $existing->method('setWebsiteId')->willReturnSelf();
         $existing->method('loadByEmail')->willReturnSelf();
         $existing->method('getId')->willReturn(self::CUSTOMER_ID);
-        $customerFactory = $this->getMockBuilder(CustomerFactory::class)
-            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
+        $customerFactory = $this->createStub(CustomerFactory::class);
         $customerFactory->method('create')->willReturn($existing);
 
         $this->customerSecure = new CustomerSecure();
-        $registry = $this->getMockBuilder(CustomerRegistry::class)
-            ->disableOriginalConstructor()->onlyMethods(['retrieveSecureData'])->getMock();
-        $registry->method('retrieveSecureData')->with(self::CUSTOMER_ID)->willReturn($this->customerSecure);
+        $registry = $this->createStub(CustomerRegistry::class);
+        $registry->method('retrieveSecureData')->willReturnCallback(function ($customerId) {
+            $this->assertEquals(self::CUSTOMER_ID, $customerId);
+
+            return $this->customerSecure;
+        });
 
         $this->customerRepository = $this->createMock(CustomerRepositoryInterface::class);
-        $this->customerRepository->method('getById')->willReturn($this->createMock(CustomerInterface::class));
+        $this->customerRepository->method('getById')->willReturn($this->createStub(CustomerInterface::class));
 
-        $json = $this->getMockBuilder(Json::class)
-            ->disableOriginalConstructor()->onlyMethods(['setData'])->getMock();
+        $json = $this->createStub(Json::class);
         $json->method('setData')->willReturnCallback(function ($data) use ($json) {
             $this->resultData = $data;
 
             return $json;
         });
-        $jsonFactory = $this->getMockBuilder(JsonFactory::class)
-            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
+        $jsonFactory = $this->createStub(JsonFactory::class);
         $jsonFactory->method('create')->willReturn($json);
 
         $this->setProperty(AbstractAction::class, '_request', $this->request);
@@ -177,16 +174,21 @@ class EmailTest extends TestCase
      */
     private function givenLinkedCustomer($id): void
     {
-        $linked = $this->getMockBuilder(Customer::class)
-            ->disableOriginalConstructor()->onlyMethods(['getId'])->getMock();
+        $linked = $this->createStub(Customer::class);
         $linked->method('getId')->willReturn($id);
-        $this->apiObject->method('getCustomerBySocial')->with('social-123', 'Google')->willReturn($linked);
+        $this->apiObject = $this->createMock(Social::class);
+        $this->setProperty(AbstractSocial::class, 'apiObject', $this->apiObject);
+        $this->apiObject->expects($this->once())->method('getCustomerBySocial')
+            ->with('social-123', 'Google')->willReturn($linked);
     }
 
     public function testLoggedInCustomerLinksProfileWithoutChangingPassword(): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        $this->setProperty(AbstractSocial::class, 'apiObject', $this->apiObject);
+        $this->controller->expects($this->once())->method('_loginPostRedirect');
         $this->givenProfile();
-        $this->session->method('isLoggedIn')->willReturn(true);
+        $this->session->expects($this->once())->method('isLoggedIn')->willReturn(true);
         $this->session->method('getCustomerId')->willReturn(self::CUSTOMER_ID);
         $this->customerSecure->setPasswordHash('original-hash');
         $this->apiObject->expects($this->once())->method('linkToCustomer')
@@ -201,6 +203,7 @@ class EmailTest extends TestCase
 
     public function testPasswordIsNotChangedWhenAccountIsNotLinkedToSocialIdentity(): void
     {
+        $this->controller->expects($this->never())->method('_loginPostRedirect');
         $this->givenProfile();
         $this->givenLinkedCustomer(null);
         $this->customerSecure->setPasswordHash('original-hash');
@@ -219,6 +222,7 @@ class EmailTest extends TestCase
 
     public function testPasswordIsNotChangedWhenLinkedToAnotherAccount(): void
     {
+        $this->controller->expects($this->never())->method('_loginPostRedirect');
         $this->givenProfile();
         $this->givenLinkedCustomer(99);
         $this->customerRepository->expects($this->never())->method('save');
@@ -232,6 +236,7 @@ class EmailTest extends TestCase
 
     public function testPasswordIsNotChangedWhenLinkedAccountAlreadyHasPassword(): void
     {
+        $this->controller->expects($this->once())->method('_loginPostRedirect');
         $this->givenProfile();
         $this->givenLinkedCustomer(self::CUSTOMER_ID);
         $this->customerSecure->setPasswordHash('original-hash');
@@ -246,6 +251,7 @@ class EmailTest extends TestCase
 
     public function testLinkedPasswordlessAccountCanSetPassword(): void
     {
+        $this->controller->expects($this->once())->method('_loginPostRedirect');
         $this->givenProfile();
         $this->givenLinkedCustomer(self::CUSTOMER_ID);
         $this->customerRepository->expects($this->once())->method('save');
@@ -259,6 +265,7 @@ class EmailTest extends TestCase
 
     public function testUserTypedEmailCreatesAccountWithoutLoggingIn(): void
     {
+        $this->customerRepository->expects($this->never())->method('save');
         $profile             = new Profile();
         $profile->identifier = 'social-123';
         $profile->email      = null;
@@ -266,13 +273,11 @@ class EmailTest extends TestCase
         $this->session->method('isLoggedIn')->willReturn(false);
         $this->request->method('getParams')->willReturn(['type' => 'google', 'realEmail' => 'victim@example.com']);
 
-        $unknown = $this->getMockBuilder(CustomerEmailDouble::class)
-            ->disableOriginalConstructor()->onlyMethods(['setWebsiteId', 'loadByEmail', 'getId'])->getMock();
+        $unknown = $this->createStub(CustomerEmailDouble::class);
         $unknown->method('setWebsiteId')->willReturnSelf();
         $unknown->method('loadByEmail')->willReturnSelf();
         $unknown->method('getId')->willReturn(null);
-        $factory = $this->getMockBuilder(CustomerFactory::class)
-            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
+        $factory = $this->createStub(CustomerFactory::class);
         $factory->method('create')->willReturn($unknown);
         $this->setProperty(Email::class, 'customerFactory', $factory);
 
@@ -280,11 +285,11 @@ class EmailTest extends TestCase
         $messageManager->expects($this->once())->method('addSuccessMessage');
         $this->setProperty(Action::class, 'messageManager', $messageManager);
         $url = $this->createMock(UrlInterface::class);
-        $url->method('getUrl')->with('customer/account/login')->willReturn('http://example.test/customer/account/login');
+        $url->expects($this->once())->method('getUrl')->with('customer/account/login')->willReturn('http://example.test/customer/account/login');
         $this->setProperty(Action::class, '_url', $url);
 
         $this->controller->expects($this->once())->method('createCustomerProcess')
-            ->willReturn($this->createMock(Customer::class));
+            ->willReturn($this->createStub(Customer::class));
         $this->controller->expects($this->never())->method('refresh');
         $this->session->expects($this->never())->method('setCustomerDataAsLoggedIn');
 
@@ -317,7 +322,8 @@ class EmailTest extends TestCase
 
     public function testMissingSocialProfileInSessionIsRejected(): void
     {
-        $this->session->method('getUserProfile')->willReturn(null);
+        $this->controller->expects($this->never())->method('_loginPostRedirect');
+        $this->session->expects($this->once())->method('getUserProfile')->willReturn(null);
         $this->request->method('getParams')->willReturn(['type' => 'google', 'password' => 'NewPass123']);
         $this->customerRepository->expects($this->never())->method('save');
 

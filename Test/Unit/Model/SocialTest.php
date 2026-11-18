@@ -33,7 +33,6 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\InputMismatchException;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\Website;
@@ -88,38 +87,48 @@ class SocialTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->customerFactory = $this->getMockBuilder(CustomerFactory::class)
-            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
-        $this->customerDataFactory = $this->getMockBuilder(CustomerInterfaceFactory::class)
-            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
-        $this->customerRepository = $this->getMockBuilder(CustomerRepositoryInterface::class)->getMock();
-        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
-        $this->apiHelper = $this->getMockBuilder(SocialHelper::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods([
-                'getType', 'setType', 'isEnabled', 'getAppId', 'getAppSecret',
-                'getAppPublicKey', 'getSocialConfig', 'canSendPassword',
-            ])
-            ->getMock();
-        $this->hybridAuthSession = $this->getMockBuilder(HybridAuthSession::class)
-            ->disableOriginalConstructor()->onlyMethods(['get'])->getMock();
-        $this->request = $this->getMockBuilder(RequestInterface::class)->getMock();
+        $this->customerFactory = $this->createStub(CustomerFactory::class);
+        $this->customerDataFactory = $this->createStub(CustomerInterfaceFactory::class);
+        $this->customerRepository = $this->createStub(CustomerRepositoryInterface::class);
+        $this->storeManager = $this->createStub(StoreManagerInterface::class);
+        $this->apiHelper = $this->createStub(SocialHelper::class);
+        $this->hybridAuthSession = $this->createStub(HybridAuthSession::class);
+        $this->request = $this->createStub(RequestInterface::class);
+        $this->model = $this->model();
+    }
 
-        $this->model = (new ObjectManager($this))->getObject(Social::class, [
-            'customerFactory'     => $this->customerFactory,
+    /**
+     * @template T of Social
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function model($class = Social::class)
+    {
+        $model = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
+        $dependencies = [
+            'customerFactory' => $this->customerFactory,
             'customerDataFactory' => $this->customerDataFactory,
-            'customerRepository'  => $this->customerRepository,
-            'storeManager'        => $this->storeManager,
-            'apiHelper'           => $this->apiHelper,
-            'hybridAuthSession'   => $this->hybridAuthSession,
-            'request'             => $this->request,
-        ]);
+            'customerRepository' => $this->customerRepository,
+            'storeManager' => $this->storeManager,
+            'apiHelper' => $this->apiHelper,
+            '_hybridAuthSession' => $this->hybridAuthSession,
+            '_request' => $this->request,
+            'customerResource' => $this->createStub(\Magento\Customer\Model\ResourceModel\Customer::class),
+            'encryptor' => $this->createStub(\Magento\Framework\Encryption\EncryptorInterface::class),
+        ];
+        foreach ($dependencies as $property => $dependency) {
+            (new \ReflectionProperty(Social::class, $property))->setValue($model, $dependency);
+        }
+
+        return $model;
     }
 
     // ----------------------------------------------------------------- getProviderData
 
     public function testGetProviderDataBuildsFacebookKeysAndAdapter(): void
     {
+        $this->apiHelper = $this->createMock(SocialHelper::class);
+        $this->model = $this->model();
         $this->apiHelper->method('getType')->willReturn(null);
         $this->apiHelper->expects($this->once())->method('setType')->with('facebook');
         $this->apiHelper->method('isEnabled')->willReturn(true);
@@ -141,6 +150,8 @@ class SocialTest extends TestCase
 
     public function testGetProviderDataSteamHasEmptySecretAndNoAdapter(): void
     {
+        $this->apiHelper = $this->createMock(SocialHelper::class);
+        $this->model = $this->model();
         $this->apiHelper->method('getType')->willReturn('steam'); // already set -> setType skipped
         $this->apiHelper->expects($this->never())->method('setType');
         $this->apiHelper->method('isEnabled')->willReturn(false);
@@ -235,6 +246,8 @@ class SocialTest extends TestCase
 
     public function testGetCustomerByEmailUsesProvidedWebsiteId(): void
     {
+        $this->storeManager = $this->createMock(StoreManagerInterface::class);
+        $this->model = $this->model();
         $customer = $this->getMockBuilder(CustomerEmailDouble::class)
             ->disableOriginalConstructor()->onlyMethods(['setWebsiteId', 'loadByEmail'])->getMock();
         $customer->expects($this->once())->method('setWebsiteId')->with(5);
@@ -252,8 +265,7 @@ class SocialTest extends TestCase
         $customer->expects($this->once())->method('setWebsiteId')->with(1);
         $this->customerFactory->method('create')->willReturn($customer);
 
-        $website = $this->getMockBuilder(Website::class)
-            ->disableOriginalConstructor()->onlyMethods(['getId'])->getMock();
+        $website = $this->createStub(Website::class);
         $website->method('getId')->willReturn(1);
         $this->storeManager->method('getWebsite')->willReturn($website);
 
@@ -264,13 +276,13 @@ class SocialTest extends TestCase
 
     public function testCreateCustomerSocialMapsAlreadyExistsToInputMismatch(): void
     {
-        $customerData = $this->createMock(CustomerInterface::class);
+        $customerData = $this->createStub(CustomerInterface::class);
         foreach (['setFirstname', 'setLastname', 'setEmail', 'setStoreId', 'setWebsiteId', 'setCreatedIn'] as $setter) {
             $customerData->method($setter)->willReturnSelf();
         }
         $this->customerDataFactory->method('create')->willReturn($customerData);
 
-        $store = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $store = $this->createStub(StoreInterface::class);
         $store->method('getId')->willReturn(1);
         $store->method('getWebsiteId')->willReturn(1);
         $store->method('getName')->willReturn('Default Store');
@@ -304,11 +316,10 @@ class SocialTest extends TestCase
         $this->customerDataFactory->method('create')->willReturn($customerData);
         $this->customerRepository->method('save')->willReturn($customerData);
         $this->customerFactory->method('create')->willReturn(
-            $this->getMockBuilder(\Magento\Customer\Model\Customer::class)
-                ->disableOriginalConstructor()->onlyMethods(['load'])->getMock()
+            $this->createStub(\Magento\Customer\Model\Customer::class)
         );
 
-        $store = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $store = $this->createStub(StoreInterface::class);
         $store->method('getId')->willReturn(1);
         $store->method('getWebsiteId')->willReturn(1);
         $store->method('getName')->willReturn('Default Store');
@@ -318,15 +329,7 @@ class SocialTest extends TestCase
         $notification->expects($this->once())->method('newAccount')
             ->with($customerData, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_CONFIRMATION, '', 1);
 
-        $model = (new ObjectManager($this))->getObject(SocialConfirmDouble::class, [
-            'customerFactory'     => $this->customerFactory,
-            'customerDataFactory' => $this->customerDataFactory,
-            'customerRepository'  => $this->customerRepository,
-            'storeManager'        => $this->storeManager,
-            'apiHelper'           => $this->apiHelper,
-            'hybridAuthSession'   => $this->hybridAuthSession,
-            'request'             => $this->request,
-        ]);
+        $model = $this->model(SocialConfirmDouble::class);
         $model->notification = $notification;
 
         $model->createCustomerSocial([
@@ -353,11 +356,10 @@ class SocialTest extends TestCase
         $this->customerDataFactory->method('create')->willReturn($customerData);
         $this->customerRepository->method('save')->willReturn($customerData);
         $this->customerFactory->method('create')->willReturn(
-            $this->getMockBuilder(\Magento\Customer\Model\Customer::class)
-                ->disableOriginalConstructor()->onlyMethods(['load'])->getMock()
+            $this->createStub(\Magento\Customer\Model\Customer::class)
         );
 
-        $store = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $store = $this->createStub(StoreInterface::class);
         $store->method('getId')->willReturn(1);
         $store->method('getWebsiteId')->willReturn(1);
         $store->method('getName')->willReturn('Default Store');
@@ -367,15 +369,7 @@ class SocialTest extends TestCase
         $notification->expects($this->once())->method('newAccount')
             ->with($customerData, EmailNotificationInterface::NEW_ACCOUNT_EMAIL_REGISTERED, '', 1);
 
-        $model = (new ObjectManager($this))->getObject(SocialConfirmDouble::class, [
-            'customerFactory'     => $this->customerFactory,
-            'customerDataFactory' => $this->customerDataFactory,
-            'customerRepository'  => $this->customerRepository,
-            'storeManager'        => $this->storeManager,
-            'apiHelper'           => $this->apiHelper,
-            'hybridAuthSession'   => $this->hybridAuthSession,
-            'request'             => $this->request,
-        ]);
+        $model = $this->model(SocialConfirmDouble::class);
         $model->notification = $notification;
 
         $model->createCustomerSocial([

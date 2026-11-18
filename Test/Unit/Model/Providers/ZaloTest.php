@@ -65,7 +65,9 @@ class ZaloTest extends TestCase
     {
         $states = [];
         for ($i = 0; $i < 5; $i++) {
-            $states[] = $this->queryOf($this->authorizeUrl($this->provider()))['state'];
+            $provider = $this->provider();
+            $provider->expects($this->once())->method('storeData');
+            $states[] = $this->queryOf($this->authorizeUrl($provider))['state'];
         }
 
         $this->assertCount(5, array_unique($states));
@@ -74,6 +76,7 @@ class ZaloTest extends TestCase
     public function testExchangeCodeVerifiesTlsPeerAndHost(): void
     {
         $provider = $this->provider();
+        $provider->expects($this->never())->method('storeData');
         (new ReflectionProperty(Zalo::class, 'accessTokenUrl'))->setValue($provider, 'https://127.0.0.1:1/token');
         (new ReflectionProperty(Zalo::class, 'clientId'))->setValue($provider, 'app-1');
         (new ReflectionProperty(Zalo::class, 'clientSecret'))->setValue($provider, 'secret');
@@ -88,6 +91,7 @@ class ZaloTest extends TestCase
     public function testExchangeCodeSendsSecretOnlyInHeaderAndParamsInBody(): void
     {
         $provider = $this->provider();
+        $provider->expects($this->never())->method('storeData');
         (new ReflectionProperty(Zalo::class, 'accessTokenUrl'))->setValue($provider, 'https://127.0.0.1:1/token');
         (new ReflectionProperty(Zalo::class, 'clientId'))->setValue($provider, 'app-1');
         (new ReflectionProperty(Zalo::class, 'clientSecret'))->setValue($provider, 'secret');

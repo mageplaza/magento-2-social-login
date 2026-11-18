@@ -26,6 +26,7 @@ use Hybridauth\Exception\ExceptionInterface;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -115,6 +116,11 @@ abstract class AbstractSocial extends Action
     protected $_escaper;
 
     /**
+     * @var CustomerResource
+     */
+    protected $customerResource;
+
+    /**
      * Login constructor.
      *
      * @param Context $context
@@ -128,6 +134,7 @@ abstract class AbstractSocial extends Action
      * @param Customer $customerModel
      * @param TokenFactory $tokenFactory
      * @param Escaper $escaper
+     * @param CustomerResource $customerResource
      */
     public function __construct(
         Context $context,
@@ -140,7 +147,8 @@ abstract class AbstractSocial extends Action
         RawFactory $resultRawFactory,
         Customer $customerModel,
         TokenFactory $tokenFactory,
-        Escaper $escaper
+        Escaper $escaper,
+        CustomerResource $customerResource
     ) {
         $this->storeManager     = $storeManager;
         $this->accountManager   = $accountManager;
@@ -152,6 +160,7 @@ abstract class AbstractSocial extends Action
         $this->customerModel    = $customerModel;
         $this->tokenFactory     = $tokenFactory;
         $this->_escaper         = $escaper;
+        $this->customerResource = $customerResource;
 
         parent::__construct($context);
     }
@@ -491,7 +500,8 @@ abstract class AbstractSocial extends Action
             return $this->_appendJs();
         }
 
-        $customerData  = $this->customerModel->load($customer->getId());
+        $this->customerResource->load($this->customerModel, $customer->getId());
+        $customerData = $this->customerModel;
         if ($customer->getId()) {
             $customerToken = $this->getCustomerToken($customer->getId());
         } else {

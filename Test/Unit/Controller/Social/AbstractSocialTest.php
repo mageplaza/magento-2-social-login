@@ -67,25 +67,15 @@ class AbstractSocialTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->apiObject = $this->getMockBuilder(Social::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getCustomerByEmail', 'setAuthorCustomer', 'createCustomerSocial', 'linkToCustomer'])
-            ->getMock();
-        $this->messageManager = $this->createMock(ManagerInterface::class);
-        $this->session        = $this->getMockBuilder(Session::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['isLoggedIn', 'getCustomerId', 'getCustomer'])
-            ->getMock();
-
-        $store = $this->getMockBuilder(Store::class)
-            ->disableOriginalConstructor()->onlyMethods(['getWebsiteId'])->getMock();
+        $this->apiObject = $this->createStub(Social::class);
+        $this->messageManager = $this->createStub(ManagerInterface::class);
+        $this->session = $this->createStub(Session::class);
+        $store = $this->createStub(Store::class);
         $store->method('getWebsiteId')->willReturn(1);
-
-        $this->controller = $this->getMockBuilder(Login::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getStore', '_redirect'])
-            ->getMock();
-        $this->controller->method('getStore')->willReturn($store);
+        $storeManager = $this->createStub(\Magento\Store\Model\StoreManagerInterface::class);
+        $storeManager->method('getStore')->willReturn($store);
+        $this->controller = (new \ReflectionClass(Login::class))->newInstanceWithoutConstructor();
+        (new ReflectionProperty(AbstractSocial::class, 'storeManager'))->setValue($this->controller, $storeManager);
 
         (new ReflectionProperty(AbstractSocial::class, 'apiObject'))->setValue($this->controller, $this->apiObject);
         (new ReflectionProperty(AbstractSocial::class, 'session'))->setValue($this->controller, $this->session);
@@ -101,8 +91,7 @@ class AbstractSocialTest extends TestCase
      */
     private function customer($id, $confirmation = null)
     {
-        $customer = $this->getMockBuilder(Customer::class)
-            ->disableOriginalConstructor()->onlyMethods(['getId', 'getData'])->getMock();
+        $customer = $this->createStub(Customer::class);
         $customer->method('getId')->willReturn($id);
         $customer->method('getData')->willReturn($confirmation);
 
@@ -130,9 +119,18 @@ class AbstractSocialTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider unverifiedProvider
+     */
     #[DataProvider('unverifiedProvider')]
     public function testGuestWithUnverifiedEmailIsNotLinkedToExistingAccount($emailVerified): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
+        $this->messageManager = $this->createMock(ManagerInterface::class);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
+            ->setValue($this->controller, $this->messageManager);
         $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7));
         $this->apiObject->expects($this->never())->method('setAuthorCustomer');
@@ -155,9 +153,18 @@ class AbstractSocialTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider verifiedProvider
+     */
     #[DataProvider('verifiedProvider')]
     public function testGuestWithProviderVerifiedEmailIsLinkedAndLoggedIn($emailVerified): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
+        $this->messageManager = $this->createMock(ManagerInterface::class);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
+            ->setValue($this->controller, $this->messageManager);
         $customer = $this->customer(7);
         $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($customer);
@@ -170,6 +177,12 @@ class AbstractSocialTest extends TestCase
 
     public function testGuestWithVerifiedEmailIsBlockedWhenCustomerAwaitsConfirmation(): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
+        $this->messageManager = $this->createMock(ManagerInterface::class);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
+            ->setValue($this->controller, $this->messageManager);
         $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7, 'abc123'));
         $this->apiObject->expects($this->never())->method('setAuthorCustomer');
@@ -180,6 +193,12 @@ class AbstractSocialTest extends TestCase
 
     public function testLoggedInOtherCustomerIsNotLinkedToExistingAccountByEmail(): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
+        $this->messageManager = $this->createMock(ManagerInterface::class);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
+            ->setValue($this->controller, $this->messageManager);
         $this->session->method('isLoggedIn')->willReturn(true);
         $this->session->method('getCustomerId')->willReturn(9);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(7));
@@ -191,6 +210,12 @@ class AbstractSocialTest extends TestCase
 
     public function testLoggedInOwnerIsLinkedToTheirAccountByEmail(): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
+        $this->messageManager = $this->createMock(ManagerInterface::class);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
+            ->setValue($this->controller, $this->messageManager);
         $customer = $this->customer(7);
         $this->session->method('isLoggedIn')->willReturn(true);
         $this->session->method('getCustomerId')->willReturn(7);
@@ -203,6 +228,9 @@ class AbstractSocialTest extends TestCase
 
     public function testNewAccountIsCreatedForGuestWithUnusedEmail(): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
         $newCustomer = $this->customer(8);
         $this->session->method('isLoggedIn')->willReturn(false);
         $this->apiObject->method('getCustomerByEmail')->willReturn($this->customer(null));
@@ -219,12 +247,11 @@ class AbstractSocialTest extends TestCase
      */
     private function controllerWithRealEmail($realEmail)
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $request->method('getParam')->willReturnCallback(
             static fn($key) => $key === 'realEmail' ? $realEmail : null
         );
-        $store = $this->getMockBuilder(Store::class)
-            ->disableOriginalConstructor()->onlyMethods(['getWebsiteId'])->getMock();
+        $store = $this->createStub(Store::class);
         $controller = $this->getMockBuilder(Login::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getStore', 'createCustomer'])
@@ -277,6 +304,9 @@ class AbstractSocialTest extends TestCase
 
     public function testLoggedInCustomerProcessLinksIdentityToCurrentCustomer(): void
     {
+        $this->apiObject = $this->createMock(Social::class);
+        (new ReflectionProperty(AbstractSocial::class, 'apiObject'))
+            ->setValue($this->controller, $this->apiObject);
         $this->session->method('isLoggedIn')->willReturn(true);
         $this->session->method('getCustomerId')->willReturn(7);
         $this->apiObject->expects($this->once())->method('linkToCustomer')->with('social-123', 7, 'Google');
@@ -291,6 +321,11 @@ class AbstractSocialTest extends TestCase
 
     public function testEmailRedirectOnlyAddsMessageAndDoesNotRedirectThePopup(): void
     {
+        $this->controller = $this->getMockBuilder(Login::class)
+            ->disableOriginalConstructor()->onlyMethods(['_redirect'])->getMock();
+        $this->messageManager = $this->createMock(ManagerInterface::class);
+        (new ReflectionProperty(\Magento\Framework\App\Action\Action::class, 'messageManager'))
+            ->setValue($this->controller, $this->messageManager);
         $this->controller->expects($this->never())->method('_redirect');
         $this->messageManager->expects($this->once())->method('addErrorMessage')->with('Refused');
 
@@ -300,7 +335,7 @@ class AbstractSocialTest extends TestCase
     public function testLoginRefusedResultClosesPopupAndSendsOpenerToLoginPage(): void
     {
         $url = $this->createMock(UrlInterface::class);
-        $url->method('getUrl')->with('customer/account/login')->willReturn('https://shop.test/customer/account/login');
+        $url->expects($this->once())->method('getUrl')->with('customer/account/login')->willReturn('https://shop.test/customer/account/login');
         $helper = $this->getMockBuilder(SocialHelper::class)
             ->disableOriginalConstructor()->onlyMethods(['generateBroadcastChannelScript'])->getMock();
         $helper->expects($this->once())->method('generateBroadcastChannelScript')
@@ -309,9 +344,8 @@ class AbstractSocialTest extends TestCase
         $raw = $this->getMockBuilder(Raw::class)->disableOriginalConstructor()->onlyMethods(['setContents'])->getMock();
         $raw->expects($this->once())->method('setContents')
             ->with('<script>broadcast</script><script>window.close();</script>')->willReturnSelf();
-        $factory = $this->getMockBuilder(RawFactory::class)->disableOriginalConstructor()->onlyMethods(['create'])
-            ->getMock();
-        $factory->method('create')->willReturn($raw);
+        $factory = $this->createMock(RawFactory::class);
+        $factory->expects($this->once())->method('create')->willReturn($raw);
 
         (new ReflectionProperty(AbstractSocial::class, 'apiHelper'))->setValue($this->controller, $helper);
         (new ReflectionProperty(AbstractSocial::class, 'resultRawFactory'))->setValue($this->controller, $factory);

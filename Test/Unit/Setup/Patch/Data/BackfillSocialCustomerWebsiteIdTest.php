@@ -26,43 +26,28 @@ namespace Mageplaza\SocialLogin\Test\Unit\Setup\Patch\Data;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Mageplaza\SocialLogin\Setup\Patch\Data\BackfillSocialCustomerWebsiteId;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class BackfillSocialCustomerWebsiteIdTest extends TestCase
 {
-    /**
-     * @var AdapterInterface|MockObject
-     */
-    private $connection;
-
-    /**
-     * @var LoggerInterface|MockObject
-     */
-    private $logger;
-
-    /**
-     * @var BackfillSocialCustomerWebsiteId
-     */
-    private $patch;
-
-    protected function setUp(): void
+    private function patch(AdapterInterface $connection, LoggerInterface $logger): BackfillSocialCustomerWebsiteId
     {
-        $this->connection = $this->createMock(AdapterInterface::class);
-        $this->logger     = $this->createMock(LoggerInterface::class);
-        $setup            = $this->createMock(ModuleDataSetupInterface::class);
-        $setup->method('getConnection')->willReturn($this->connection);
+        $setup = $this->createStub(ModuleDataSetupInterface::class);
+        $setup->method('getConnection')->willReturn($connection);
         $setup->method('getTable')->willReturnCallback(static function ($name) {
             return 'p_' . $name;
         });
 
-        $this->patch = new BackfillSocialCustomerWebsiteId($setup, $this->logger);
+        return new BackfillSocialCustomerWebsiteId($setup, $logger);
     }
 
     public function testUpdatesOnlyNullRowsFromCustomerWebsite(): void
     {
-        $this->connection->expects($this->once())->method('query')->with(
+        $connection = $this->createMock(AdapterInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $patch = $this->patch($connection, $logger);
+        $connection->expects($this->once())->method('query')->with(
             $this->callback(static function ($sql) {
                 return strpos($sql, 'UPDATE p_mageplaza_social_customer AS s') === 0
                     && strpos($sql, 'INNER JOIN p_customer_entity AS c ON c.entity_id = s.customer_id') !== false
@@ -70,23 +55,30 @@ class BackfillSocialCustomerWebsiteIdTest extends TestCase
                     && strpos($sql, 'WHERE s.website_id IS NULL') !== false;
             })
         );
-        $this->connection->method('fetchOne')->willReturn('0');
-        $this->logger->expects($this->never())->method('info');
+        $connection->method('fetchOne')->willReturn('0');
+        $logger->expects($this->never())->method('info');
 
-        $this->assertSame($this->patch, $this->patch->apply());
+        $this->assertSame($patch, $patch->apply());
     }
 
     public function testLogsRowsWithoutCustomer(): void
     {
-        $this->connection->method('fetchOne')->willReturn('2');
-        $this->logger->expects($this->once())->method('info')->with($this->stringContains('2 row(s)'));
+        $connection = $this->createStub(AdapterInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $patch = $this->patch($connection, $logger);
+        $connection->method('fetchOne')->willReturn('2');
+        $logger->expects($this->once())->method('info')->with($this->stringContains('2 row(s)'));
 
-        $this->patch->apply();
+        $patch->apply();
     }
 
     public function testNoDependenciesNoAliases(): void
     {
+        $patch = $this->patch(
+            $this->createStub(AdapterInterface::class),
+            $this->createStub(LoggerInterface::class)
+        );
         $this->assertSame([], BackfillSocialCustomerWebsiteId::getDependencies());
-        $this->assertSame([], $this->patch->getAliases());
+        $this->assertSame([], $patch->getAliases());
     }
 }

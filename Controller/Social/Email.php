@@ -25,6 +25,7 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Session;
@@ -102,6 +103,7 @@ class Email extends AbstractSocial implements HttpPostActionInterface
      * @param CustomerRepositoryInterface $_customerRepositoryInterface
      * @param CustomerRegistry $_customerRegistry
      * @param Escaper $escaper
+     * @param CustomerResource $customerResource
      */
     public function __construct(
         Context $context,
@@ -119,7 +121,8 @@ class Email extends AbstractSocial implements HttpPostActionInterface
         EncryptorInterface $encrypt,
         CustomerRepositoryInterface $_customerRepositoryInterface,
         CustomerRegistry $_customerRegistry,
-        \Magento\Framework\Escaper $escaper
+        \Magento\Framework\Escaper $escaper,
+        CustomerResource $customerResource
     ) {
         $this->resultJsonFactory            = $resultJsonFactory;
         $this->customerFactory              = $customerFactory;
@@ -138,7 +141,8 @@ class Email extends AbstractSocial implements HttpPostActionInterface
             $resultRawFactory,
             $customerModel,
             $tokenFactory,
-            $escaper
+            $escaper,
+            $customerResource
         );
     }
 
